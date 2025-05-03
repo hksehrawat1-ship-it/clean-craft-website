@@ -1,5 +1,5 @@
 
-import { Check } from 'lucide-react';
+import { Check, BadgeCheck, BadgePercent, CircleDollarSign } from 'lucide-react';
 
 const Guarantees = () => {
   const guaranteesList = [
@@ -29,11 +29,6 @@ const Guarantees = () => {
       description: "We help top performers get placed in Clean Craft stores or other partner locations across India."
     },
     {
-      id: 6,
-      title: "Money-Back Guarantee (Conditional)",
-      description: "If after the first two classes you feel this training isn't for you, we'll refund 100% of your fees. No questions asked."
-    },
-    {
       id: 7,
       title: "Lifetime Access Guarantee",
       description: "All students get lifetime access to updated training material via our online portal."
@@ -50,7 +45,22 @@ const Guarantees = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Money Back Guarantee Highlight */}
+        <div className="max-w-4xl mx-auto mb-12 transform hover:scale-[1.02] transition-all duration-300">
+          <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-6 md:p-8 rounded-xl shadow-md border border-orange-200 flex flex-col md:flex-row items-center gap-6">
+            <div className="bg-orange-500 rounded-full p-4 inline-flex">
+              <CircleDollarSign className="h-10 w-10 text-white" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-2xl md:text-3xl font-bold mb-2 text-gray-800">Money-Back Guarantee</h3>
+              <p className="text-lg text-gray-700">
+                If after the first two classes you feel this training isn't for you, we'll refund <span className="font-bold">100% of your fees</span>. No questions asked.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {guaranteesList.map((guarantee) => (
             <div 
               key={guarantee.id}
