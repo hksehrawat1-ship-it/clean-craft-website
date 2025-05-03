@@ -1,5 +1,6 @@
 
 import { Calendar, Clock, MapPin, Users, IndianRupee } from 'lucide-react';
+import FileText from '@/components/FileText';
 
 const CourseInfo = () => {
   return (
