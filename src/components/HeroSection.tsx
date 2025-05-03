@@ -30,7 +30,7 @@ const HeroSection = () => {
                 size="lg"
                 className="bg-primary hover:bg-primary-hover text-white text-lg px-8"
               >
-                <a href="#register">Register Now</a>
+                <a href="#register">Register with Rs. 500 only and confirm your seat</a>
               </Button>
             </div>
             <div className="flex items-center gap-4 mt-8">
@@ -47,8 +47,8 @@ const HeroSection = () => {
               <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-blue-100 opacity-60"></div>
               <div className="relative bg-white rounded-xl shadow-xl overflow-hidden border-8 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=600&q=80" 
-                  alt="Clean Craft Laundry Training" 
+                  src="/lovable-uploads/56259032-82fb-4843-a803-7ee5760a4d48.png" 
+                  alt="Clean Craft Laundry Training Facility" 
                   className="w-full h-[400px] object-cover"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
