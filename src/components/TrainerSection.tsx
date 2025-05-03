@@ -16,9 +16,9 @@ const TrainerSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="rounded-xl overflow-hidden shadow-lg">
             <img 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" 
+              src="/lovable-uploads/73900c5b-c9fc-44e4-a27d-fa62eba82bdb.png" 
               alt="Mr. Himanshu Sehrawat" 
-              className="w-full h-[400px] object-cover"
+              className="w-full h-auto object-cover"
             />
           </div>
           
