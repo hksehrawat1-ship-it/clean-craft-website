@@ -65,12 +65,12 @@ const FAQ = () => {
           <div className="mt-8 text-center">
             <p className="text-gray-600">
               Still have questions? Contact us at{" "}
-              <a href="mailto:info@cleancraft.com" className="text-primary hover:underline">
-                info@cleancraft.com
+              <a href="mailto:hello@cleancraftapp.com" className="text-primary hover:underline">
+                hello@cleancraftapp.com
               </a>{" "}
               or call{" "}
-              <a href="tel:+919876543210" className="text-primary hover:underline">
-                +91 98765 43210
+              <a href="tel:+918800771349" className="text-primary hover:underline">
+                +91 88-00-77-1349
               </a>
             </p>
           </div>

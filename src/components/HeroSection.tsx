@@ -13,9 +13,17 @@ const HeroSection = () => {
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4">
               Master the Art of <span className="text-primary">Laundry</span> Services
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-lg">
+            <p className="text-xl text-gray-600 mb-6 max-w-lg">
               Professional 5-day comprehensive training program in Delhi to help you start your own successful laundry business.
             </p>
+            <div className="bg-blue-50 rounded-lg p-4 mb-6">
+              <p className="text-lg text-gray-800 font-medium">Special Offer:</p>
+              <div className="flex items-center gap-4">
+                <span className="text-2xl text-gray-500 line-through">₹20,000</span>
+                <span className="text-3xl text-primary font-bold">₹15,000</span>
+                <span className="bg-primary text-white px-2 py-1 rounded text-sm">25% OFF</span>
+              </div>
+            </div>
             <div className="flex flex-wrap gap-4">
               <Button 
                 asChild
@@ -24,20 +32,9 @@ const HeroSection = () => {
               >
                 <a href="#register">Register Now</a>
               </Button>
-              <Button 
-                asChild
-                variant="outline"
-                size="lg"
-                className="text-gray-700 text-lg px-8"
-              >
-                <a href="#course">Learn More</a>
-              </Button>
             </div>
             <div className="flex items-center gap-4 mt-8">
               <span className="text-sm text-gray-500">Next Batch:</span>
-              <span className="py-1 px-3 rounded-full bg-blue-100 text-primary text-sm font-medium">
-                5th June, 2025
-              </span>
               <span className="py-1 px-3 rounded-full bg-blue-100 text-primary text-sm font-medium">
                 25th June, 2025
               </span>

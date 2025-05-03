@@ -1,4 +1,3 @@
-
 import { Calendar, Clock, MapPin, Users, IndianRupee } from 'lucide-react';
 import FileText from '@/components/FileText';
 
@@ -24,11 +23,11 @@ const CourseInfo = () => {
             <ul className="text-left w-full space-y-2">
               <li className="flex items-center text-gray-700">
                 <span className="mr-2 text-primary">•</span>
-                Training dates: 5th OR 25th of every month
+                Training dates: One batch every month
               </li>
               <li className="flex items-center text-gray-700">
                 <span className="mr-2 text-primary">•</span>
-                9:00 AM to 5:00 PM daily
+                10:00 AM to 6:00 PM daily
               </li>
               <li className="flex items-center text-gray-700">
                 <span className="mr-2 text-primary">•</span>

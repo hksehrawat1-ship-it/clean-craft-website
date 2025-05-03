@@ -2,6 +2,8 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import CourseInfo from '@/components/CourseInfo';
+import TrainerSection from '@/components/TrainerSection';
+import Testimonials from '@/components/Testimonials';
 import Curriculum from '@/components/Curriculum';
 import Guarantees from '@/components/Guarantees';
 import RegistrationForm from '@/components/RegistrationForm';
@@ -45,6 +47,14 @@ const Index = () => {
       
       <div className="fade-in-section">
         <CourseInfo />
+      </div>
+      
+      <div className="fade-in-section">
+        <TrainerSection />
+      </div>
+      
+      <div className="fade-in-section">
+        <Testimonials />
       </div>
       
       <div className="fade-in-section">
