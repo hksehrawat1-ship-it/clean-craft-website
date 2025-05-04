@@ -1,36 +1,39 @@
 
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const HeroSection = () => {
+  const isMobile = useIsMobile();
+  
   return (
-    <section className="pt-32 pb-16 md:pt-40 md:pb-20 bg-gradient-to-b from-blue-50 to-white">
-      <div className="container mx-auto">
+    <section className="pt-24 pb-12 md:pt-40 md:pb-20 bg-gradient-to-b from-blue-50 to-white">
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="animate-fade-in">
             <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-primary text-sm font-medium mb-4">
               #1 Laundry and Dry Cleaning Business Course in India
             </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
               Master the Art of <span className="text-primary">Laundry</span> Services
             </h1>
-            <p className="text-xl text-gray-600 mb-6 max-w-lg">
+            <p className="text-lg md:text-xl text-gray-600 mb-6 max-w-lg">
               Learn how to start a laundry business in India with our professional 5-day training program. Perfect for entrepreneurs seeking to open a profitable business in India 2025.
             </p>
             <div className="bg-blue-50 rounded-lg p-4 mb-6">
               <p className="text-lg text-gray-800 font-medium">Special Offer:</p>
-              <div className="flex items-center gap-4">
-                <span className="text-2xl text-gray-500 line-through">₹20,000</span>
-                <span className="text-3xl text-primary font-bold">₹15,000</span>
+              <div className="flex items-center gap-4 flex-wrap">
+                <span className="text-xl md:text-2xl text-gray-500 line-through">₹20,000</span>
+                <span className="text-2xl md:text-3xl text-primary font-bold">₹15,000</span>
                 <span className="bg-primary text-white px-2 py-1 rounded text-sm">25% OFF</span>
               </div>
             </div>
             <div className="flex flex-wrap gap-4">
               <Button 
                 asChild
-                size="lg"
-                className="bg-primary hover:bg-primary-hover text-white text-lg px-8"
+                size={isMobile ? "default" : "lg"}
+                className="bg-primary hover:bg-primary-hover text-white text-base md:text-lg px-4 md:px-8 w-full sm:w-auto"
               >
-                <a href="#register">Register with Rs. 500 only and confirm your seat</a>
+                <a href="#register">Register with Rs. 500</a>
               </Button>
             </div>
             <div className="flex items-center gap-4 mt-8">
