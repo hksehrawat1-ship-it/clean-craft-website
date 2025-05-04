@@ -9,81 +9,91 @@ const CourseInfo = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Course Details</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Everything you need to know about our comprehensive laundry training program
+            The best course to open a laundry business with comprehensive training on dry cleaning techniques and business operations
           </p>
         </div>
 
-        <div className="flex flex-col gap-6 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3 inline-flex">
                 <Calendar className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-1">Duration & Schedule</h3>
-                <p className="text-gray-700">5 Days Intensive Training | One batch every month | 10:00 AM to 6:00 PM daily</p>
+                <h3 className="text-xl font-bold mb-1">Schedule</h3>
+                <p className="text-gray-700">5 Days Intensive Training | 10:00 AM to 6:00 PM daily</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3 inline-flex">
                 <MapPin className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-1">Location</h3>
-                <p className="text-gray-700">Clean Craft Training Center | Delhi, India | Modern facilities with practical labs</p>
+                <p className="text-gray-700">Clean Craft Training Center | Delhi, India</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3 inline-flex">
                 <IndianRupee className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-1">Fee Structure</h3>
-                <p className="text-gray-700">₹500 registration fee | ₹14,500 balance on first day | All materials included</p>
+                <h3 className="text-xl font-bold mb-1">Investment</h3>
+                <p className="text-gray-700">Learn the laundry business cost in India & setup strategies</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3 inline-flex">
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-1">Batch Size</h3>
-                <p className="text-gray-700">Limited to 50 students per batch | Small groups for practical sessions | Personal attention</p>
+                <h3 className="text-xl font-bold mb-1">Limited Spots</h3>
+                <p className="text-gray-700">50 students per batch | Small groups for hands-on training</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3 inline-flex">
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-1">Course Curriculum</h3>
-                <p className="text-gray-700">38 Theoretical topics | 6 Hands-on practical sessions | Business setup guidance</p>
+                <h3 className="text-xl font-bold mb-1">Comprehensive</h3>
+                <p className="text-gray-700">Covers everything on how to run a successful laundry business</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3 inline-flex">
                 <FileText className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-1">Language Requirement</h3>
-                <p className="text-gray-700">Understanding of Hindi is mandatory | Training in Hindi | Materials in Hindi & English</p>
+                <h3 className="text-xl font-bold mb-1">Online Access</h3>
+                <p className="text-gray-700">Online laundry business course India resources included</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-12 max-w-3xl mx-auto text-center">
+          <div className="bg-blue-50 p-6 rounded-xl shadow-md">
+            <h3 className="text-2xl font-bold mb-3">Why Choose Our Dry Cleaning Training Course India?</h3>
+            <p className="text-gray-700">
+              We'll compare laundry franchise vs own setup options, explore diverse laundry business ideas in India, 
+              and provide dry cleaning business training online resources to complement the in-person experience.
+            </p>
           </div>
         </div>
       </div>

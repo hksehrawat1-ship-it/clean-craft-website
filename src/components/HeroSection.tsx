@@ -8,13 +8,13 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="animate-fade-in">
             <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-primary text-sm font-medium mb-4">
-              Professional Training Program
+              #1 Laundry and Dry Cleaning Business Course in India
             </span>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4">
               Master the Art of <span className="text-primary">Laundry</span> Services
             </h1>
             <p className="text-xl text-gray-600 mb-6 max-w-lg">
-              Professional 5-day comprehensive training program in Delhi to help you start your own successful laundry business.
+              Learn how to start a laundry business in India with our professional 5-day training program. Perfect for entrepreneurs seeking to open a profitable business in India 2025.
             </p>
             <div className="bg-blue-50 rounded-lg p-4 mb-6">
               <p className="text-lg text-gray-800 font-medium">Special Offer:</p>
