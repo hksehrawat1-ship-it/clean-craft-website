@@ -18,7 +18,6 @@ const RegistrationForm = () => {
     phone: '',
     address: '',
     knownHindi: 'yes',
-    batch: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +34,7 @@ const RegistrationForm = () => {
     setLoading(true);
     
     // Simple validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.batch) {
+    if (!formData.name || !formData.email || !formData.phone) {
       toast({
         title: "Error",
         description: "Please fill all required fields.",
@@ -68,7 +67,6 @@ const RegistrationForm = () => {
         phone: '',
         address: '',
         knownHindi: 'yes',
-        batch: '',
       });
     }, 1500);
   };
@@ -186,26 +184,6 @@ const RegistrationForm = () => {
                   {formData.knownHindi === 'no' && (
                     <p className="text-red-500 text-sm">Understanding Hindi is required for this training program.</p>
                   )}
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="batch" className="text-sm font-medium text-gray-700">
-                    Select Preferred Batch <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="batch"
-                    name="batch"
-                    value={formData.batch}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  >
-                    <option value="">Select a batch</option>
-                    <option value="5th June 2025">5th June 2025</option>
-                    <option value="25th June 2025">25th June 2025</option>
-                    <option value="5th July 2025">5th July 2025</option>
-                    <option value="25th July 2025">25th July 2025</option>
-                  </select>
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-md">
