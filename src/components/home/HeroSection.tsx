@@ -27,7 +27,7 @@ const HeroSection = () => {
             </Button>
             
             {/* Stats Section */}
-            <div className="grid grid-cols-3 gap-8 mt-8 w-full">
+            <div className="grid grid-cols-3 gap-8 mt-8 w-full px-[2px] mx-[184px] my-[33px]">
               <div className="flex flex-col items-center">
                 <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
                   10k+
