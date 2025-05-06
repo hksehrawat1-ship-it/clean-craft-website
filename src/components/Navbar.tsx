@@ -1,19 +1,19 @@
-
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '../components/ui/button';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useIsMobile } from '../hooks/use-mobile';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [learningOpen, setLearningOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -42,16 +42,33 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center z-20">
+        <Link to="/" className="flex items-center z-20">
           <span className="text-xl sm:text-2xl font-bold text-primary">Clean<span className="text-gray-800">Craft</span></span>
-        </a>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          <a href="#about" className="text-gray-700 hover:text-primary font-medium">About</a>
-          <a href="#course" className="text-gray-700 hover:text-primary font-medium">Course</a>
-          <a href="#guarantees" className="text-gray-700 hover:text-primary font-medium">Guarantees</a>
-          <a href="#faq" className="text-gray-700 hover:text-primary font-medium">FAQ</a>
+          <Link to="/" className="text-gray-700 hover:text-primary font-medium">Home</Link>
+          <div className="relative group">
+            <button
+              className="flex items-center text-gray-700 hover:text-primary font-medium focus:outline-none"
+              onMouseEnter={() => setLearningOpen(true)}
+              onMouseLeave={() => setLearningOpen(false)}
+              onClick={() => setLearningOpen((open) => !open)}
+              type="button"
+            >
+              Learning <ChevronDown size={16} className="ml-1" />
+            </button>
+            <div
+              className={`absolute left-0 mt-2 w-40 bg-white border rounded shadow-lg py-2 z-50 transition-opacity duration-200 ${learningOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} group-hover:opacity-100 group-hover:pointer-events-auto`}
+              onMouseEnter={() => setLearningOpen(true)}
+              onMouseLeave={() => setLearningOpen(false)}
+            >
+              <Link to="/learning/courses" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Courses</Link>
+              <Link to="/learning/book" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Book</Link>
+            </div>
+          </div>
+          <Link to="/policies" className="text-gray-700 hover:text-primary font-medium">Policies</Link>
           <Button 
             asChild
             className="bg-primary hover:bg-primary-hover text-white"
@@ -78,34 +95,35 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white/95 z-10 animate-fade-in mobile-menu-container">
           <div className="container mx-auto px-4 pt-20 flex flex-col space-y-6">
-            <a 
-              href="#about" 
+            <Link 
+              to="/" 
               className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
-              About
-            </a>
-            <a 
-              href="#course" 
+              Home
+            </Link>
+            <div className="relative">
+              <button
+                className="flex items-center text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 w-full focus:outline-none"
+                onClick={() => setLearningOpen((open) => !open)}
+                type="button"
+              >
+                Learning <ChevronDown size={16} className="ml-1" />
+              </button>
+              {learningOpen && (
+                <div className="ml-4 mt-2 w-36 bg-white border rounded shadow-lg py-2 z-50">
+                  <Link to="/learning/courses" className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>Courses</Link>
+                  <Link to="/learning/book" className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>Book</Link>
+                </div>
+              )}
+            </div>
+            <Link 
+              to="/policies" 
               className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
-              Course
-            </a>
-            <a 
-              href="#guarantees" 
-              className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Guarantees
-            </a>
-            <a 
-              href="#faq" 
-              className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              FAQ
-            </a>
+              Policies
+            </Link>
             <Button 
               asChild
               className="bg-primary hover:bg-primary-hover text-white w-full mt-4"
