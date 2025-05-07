@@ -30,7 +30,7 @@ const App = () => (
       <BrowserRouter>
         <CountryProvider>
           <Routes>
-            {/* Root route redirects to country selection */}
+            {/* Root route shows country selection */}
             <Route path="/" element={<CountryRedirect />} />
             
             {/* Country-specific routes */}

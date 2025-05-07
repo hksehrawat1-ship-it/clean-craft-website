@@ -18,7 +18,6 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
   // Group countries by region
   const groupedCountries = countries.reduce((acc, country) => {
     // Determine region based on country code
-    // This is a simple mapping - in production, you might want to store this in your database
     let region = 'GLOBAL';
     if (['in', 'au', 'sg', 'my'].includes(country.code)) {
       region = 'ASIA/PACIFIC';
@@ -37,7 +36,8 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
   
   // Handle redirection based on selected country
   useEffect(() => {
-    if (!isLoading && currentCountry) {
+    // Only redirect if we're not on the root path (/), and we have a country
+    if (!isLoading && currentCountry && window.location.pathname === '/') {
       navigate(`/${currentCountry.code}${path}`);
     }
   }, [currentCountry, isLoading, navigate, path]);
@@ -57,9 +57,8 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     setCurrentCountry(code);
   };
 
-  // Always show the country selection screen if we have countries available,
-  // or if there's an error or we've tried loading too many times
-  if (countries.length > 0 || error || (redirectAttempts >= 3 && isLoading)) {
+  // Always show the country selection screen if we are at the root path (/)
+  if (window.location.pathname === '/' || error || (redirectAttempts >= 3 && isLoading)) {
     if (error) {
       toast.error("Couldn't load country information. Please select one manually.");
     }
@@ -76,7 +75,7 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
                   <div className="bg-white h-16 w-full flex items-center px-4 shadow-sm">
                     <div className="w-[120px]">
                       <img 
-                        src="/cleancraft-logo.svg" 
+                        src="/lovable-uploads/b9620b89-debb-4cc2-bd6b-edec70fb1bed.png" 
                         alt="CleanCraft Logo" 
                         className="h-8"
                       />
@@ -115,11 +114,12 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
                 
                 {Object.entries(groupedCountries).length > 0 ? (
                   <div className="space-y-6">
-                    {Object.entries(groupedCountries).map(([region, regionCountries]) => (
-                      <div key={region}>
-                        <h3 className="text-sm font-bold text-gray-500 mb-2">{region}</h3>
+                    {/* First show Asia/Pacific region prominently */}
+                    {groupedCountries['ASIA/PACIFIC'] && (
+                      <div key="ASIA/PACIFIC" className="mb-8">
+                        <h3 className="text-sm font-bold text-gray-500 mb-2">ASIA/PACIFIC</h3>
                         <div className="grid grid-cols-2 gap-3">
-                          {regionCountries.map((country) => (
+                          {groupedCountries['ASIA/PACIFIC'].map((country) => (
                             <Button
                               key={country.code}
                               variant="outline"
@@ -132,7 +132,29 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
                           ))}
                         </div>
                       </div>
-                    ))}
+                    )}
+                    
+                    {/* Then show other regions */}
+                    {Object.entries(groupedCountries)
+                      .filter(([region]) => region !== 'ASIA/PACIFIC')
+                      .map(([region, regionCountries]) => (
+                        <div key={region}>
+                          <h3 className="text-sm font-bold text-gray-500 mb-2">{region}</h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {regionCountries.map((country) => (
+                              <Button
+                                key={country.code}
+                                variant="outline"
+                                className="justify-start h-12 px-4 w-full hover:bg-blue-50 hover:border-blue-300"
+                                onClick={() => handleCountrySelect(country.code)}
+                              >
+                                <Globe className="mr-2 h-4 w-4 text-gray-500" />
+                                <span>{country.name}</span>
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 ) : (
                   <div className="text-center p-4">

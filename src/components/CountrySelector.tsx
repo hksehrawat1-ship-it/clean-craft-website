@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 
 const CountrySelector: React.FC = () => {
-  const { currentCountry, countries, setCurrentCountry } = useCountry();
+  const { currentCountry, countries, setCurrentCountry, getCountryRegion } = useCountry();
 
   if (!currentCountry || countries.length <= 1) return null;
 
@@ -30,23 +30,41 @@ const CountrySelector: React.FC = () => {
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {countries.map((country) => (
-            <SelectItem 
-              key={country.code} 
-              value={country.code}
-              className="relative pl-8"
-            >
-              <div className="flex items-center justify-between w-full">
-                <span className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-gray-500" />
-                  {country.name}
-                </span>
-                {currentCountry.code === country.code && (
-                  <Check className="w-4 h-4 ml-2 text-primary" />
-                )}
+          {/* Group countries by region */}
+          {['ASIA/PACIFIC', 'EUROPE', 'NORTH AMERICA', 'GLOBAL'].map(region => {
+            // Get countries for this region
+            const regionCountries = countries.filter(c => 
+              getCountryRegion(c.code) === region
+            );
+            
+            if (regionCountries.length === 0) return null;
+            
+            return (
+              <div key={region}>
+                <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">
+                  {region}
+                </div>
+                {regionCountries.map((country) => (
+                  <SelectItem 
+                    key={country.code} 
+                    value={country.code}
+                    className="relative pl-8"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="flex items-center gap-2">
+                        <Globe className="h-4 w-4 text-gray-500" />
+                        {country.name}
+                      </span>
+                      {currentCountry.code === country.code && (
+                        <Check className="w-4 h-4 ml-2 text-primary" />
+                      )}
+                    </div>
+                  </SelectItem>
+                ))}
+                <div className="h-px bg-gray-100 my-1"></div>
               </div>
-            </SelectItem>
-          ))}
+            );
+          })}
         </SelectContent>
       </Select>
     </div>

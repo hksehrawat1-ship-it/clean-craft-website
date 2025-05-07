@@ -255,6 +255,7 @@ export type Database = {
           id: string
           is_active: boolean
           locale_id: string | null
+          minimum_price: number | null
           name: string
           order: number
         }
@@ -267,6 +268,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           locale_id?: string | null
+          minimum_price?: number | null
           name: string
           order?: number
         }
@@ -279,6 +281,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           locale_id?: string | null
+          minimum_price?: number | null
           name?: string
           order?: number
         }

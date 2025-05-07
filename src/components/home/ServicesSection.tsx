@@ -13,6 +13,7 @@ interface Service {
   icon_url: string | null;
   order: number;
   country_code: string;
+  minimum_price: number;
 }
 
 interface ServiceCardProps { 
@@ -87,15 +88,6 @@ const currencySymbols: Record<string, string> = {
   'it': '€'
 };
 
-// Default price ranges by service type
-const defaultPriceRanges: Record<string, number> = {
-  'Wash': 10,
-  'Wash & Iron': 3,
-  'Dry Cleaning': 8,
-  'Ironing only': 2,
-  'Duvets & Bulky Items': 15
-};
-
 // Default minimum order value by country
 const defaultMinOrderValues: Record<string, number> = {
   'in': 500,
@@ -116,6 +108,7 @@ const fallbackServices = [
     id: 'wash',
     name: 'Wash',
     description: 'For everyday laundry, bedsheets and towels.',
+    minimum_price: 399,
     icon: <ShowerHead className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#5294FF]'
   },
@@ -123,6 +116,7 @@ const fallbackServices = [
     id: 'wash-iron',
     name: 'Wash & Iron',
     description: 'For everyday laundry that requires ironing.',
+    minimum_price: 499,
     icon: <Droplet className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#F06292]'
   },
@@ -130,6 +124,7 @@ const fallbackServices = [
     id: 'dry-cleaning',
     name: 'Dry Cleaning',
     description: 'For delicate items and fabrics.',
+    minimum_price: 599,
     icon: <Ticket className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#26A69A]'
   },
@@ -137,6 +132,7 @@ const fallbackServices = [
     id: 'ironing',
     name: 'Ironing only',
     description: 'For items that are already clean.',
+    minimum_price: 299,
     icon: <Shirt className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#FFA726]'
   },
@@ -144,6 +140,7 @@ const fallbackServices = [
     id: 'duvets',
     name: 'Duvets & Bulky Items',
     description: 'For larger items that require extra care.',
+    minimum_price: 799,
     icon: <Droplet className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#90CAF9]'
   }
@@ -189,13 +186,9 @@ const ServicesSection: React.FC = () => {
             // Get currency symbol based on country code
             const currencySymbol = currencySymbols[currentCountry.code] || '$';
             
-            // Get price based on service type and country
-            const basePrice = defaultPriceRanges[service.name] || 5;
-            // Adjust price based on country (simplified logic - in real app, use prices from database)
-            let adjustedPrice = basePrice;
-            if (currentCountry.code === 'in') adjustedPrice = basePrice * 0.3 * 70; // Rough INR conversion
-            
-            const price = `from ${currencySymbol}${adjustedPrice}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+            // Format price using the minimum_price from database
+            const priceValue = service.minimum_price || 0;
+            const price = `from ${currencySymbol}${priceValue}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
             
             return {
               id: service.id,
@@ -214,12 +207,9 @@ const ServicesSection: React.FC = () => {
           const currencySymbol = currencySymbols[currentCountry.code] || '$';
           
           const formattedFallbacks = fallbackServices.map(service => {
-            const basePrice = defaultPriceRanges[service.name] || 5;
-            // Adjust price based on country
-            let adjustedPrice = basePrice;
-            if (currentCountry.code === 'in') adjustedPrice = basePrice * 0.3 * 70; // Rough INR conversion
-            
-            const price = `from ${currencySymbol}${adjustedPrice}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+            // Format price using the minimum_price from fallback
+            const priceValue = service.minimum_price || 0;
+            const price = `from ${currencySymbol}${priceValue}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
             
             return {
               ...service,
@@ -237,12 +227,9 @@ const ServicesSection: React.FC = () => {
           '$';
         
         const formattedFallbacks = fallbackServices.map(service => {
-          const basePrice = defaultPriceRanges[service.name] || 5;
-          // Adjust price based on country
-          let adjustedPrice = basePrice;
-          if (currentCountry?.code === 'in') adjustedPrice = basePrice * 0.3 * 70; // Rough INR conversion
-          
-          const price = `from ${currencySymbol}${adjustedPrice}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+          // Format price using the minimum_price from fallback
+          const priceValue = service.minimum_price || 0;
+          const price = `from ${currencySymbol}${priceValue}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
           
           return {
             ...service,

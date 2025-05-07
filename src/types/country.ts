@@ -5,6 +5,7 @@ export interface Country {
   name: string;
   default_locale: string;
   is_active: boolean;
+  region?: string;
 }
 
 export interface CountryContextType {
@@ -14,4 +15,5 @@ export interface CountryContextType {
   error: Error | null;
   setCurrentCountry: (countryCode: string) => void;
   getImageUrl: (path: string) => string;
+  getCountryRegion: (countryCode: string) => string;
 }

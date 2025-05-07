@@ -9,6 +9,21 @@ import { toast } from 'sonner';
 // Default country when no selection is available
 const DEFAULT_COUNTRY_CODE = 'in';
 
+// Define regions for countries
+export const COUNTRY_REGIONS = {
+  'in': 'ASIA/PACIFIC',
+  'au': 'ASIA/PACIFIC',
+  'sg': 'ASIA/PACIFIC',
+  'my': 'ASIA/PACIFIC',
+  'uk': 'EUROPE',
+  'de': 'EUROPE',
+  'fr': 'EUROPE',
+  'es': 'EUROPE',
+  'it': 'EUROPE',
+  'us': 'NORTH AMERICA',
+  'ca': 'NORTH AMERICA'
+};
+
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
 export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -44,7 +59,14 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (error) throw error;
         
         console.log('Fetched countries:', data);
-        setCountries(data || []);
+        
+        // Enhance countries with region info
+        const enhancedCountries = data?.map(country => ({
+          ...country,
+          region: COUNTRY_REGIONS[country.code as keyof typeof COUNTRY_REGIONS] || 'GLOBAL'
+        })) || [];
+        
+        setCountries(enhancedCountries);
       } catch (err) {
         console.error('Error fetching countries:', err);
         setError(err instanceof Error ? err : new Error('Failed to fetch countries'));
@@ -65,6 +87,26 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       
       console.log('Stored country code:', storedCountryCode);
       console.log('Available countries:', countries);
+      
+      // Check if we're at the root path - if so, we don't auto-select a country
+      if (window.location.pathname === '/') {
+        console.log('At root path, not auto-selecting country');
+        return;
+      }
+      
+      // Check if we're on a country-specific path
+      const pathCountryMatch = window.location.pathname.match(/^\/([a-z]{2})(\/.*)?$/);
+      if (pathCountryMatch && pathCountryMatch[1]) {
+        const pathCountryCode = pathCountryMatch[1];
+        const pathCountry = countries.find(c => c.code === pathCountryCode);
+        
+        if (pathCountry) {
+          console.log('Using country from URL path:', pathCountryCode);
+          setCurrentCountry(pathCountry);
+          localStorage.setItem('selectedCountry', pathCountry.code);
+          return;
+        }
+      }
       
       if (storedCountryCode && countries.some(c => c.code === storedCountryCode)) {
         console.log('Using stored country:', storedCountryCode);
@@ -128,6 +170,11 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return getStorageUrl(`${countryCode}/${path}`);
   };
 
+  // Get region of a country
+  const getCountryRegion = (countryCode: string): string => {
+    return COUNTRY_REGIONS[countryCode as keyof typeof COUNTRY_REGIONS] || 'GLOBAL';
+  };
+
   const value = {
     currentCountry,
     countries,
@@ -135,6 +182,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     error,
     setCurrentCountry: handleSetCurrentCountry,
     getImageUrl,
+    getCountryRegion,
   };
 
   return (
