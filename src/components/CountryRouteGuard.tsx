@@ -31,10 +31,20 @@ const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element
     return <Navigate to={`/${countryCode}/not-found`} replace />;
   }
 
-  // If we have an element with pageContent prop, pass the content to it
-  const elementWithContent = React.isValidElement(element) && 'pageContent' in (element.type as any).propTypes
-    ? React.cloneElement(element as React.ReactElement<any>, { pageContent })
-    : element;
+  // Safely pass pageContent to components that might accept it
+  let elementWithContent = element;
+  
+  if (React.isValidElement(element)) {
+    // Safe way to check if component accepts pageContent prop
+    const componentType = element.type as any;
+    
+    // Check if propTypes exists and contains pageContent
+    if (componentType && 
+        componentType.propTypes && 
+        'pageContent' in componentType.propTypes) {
+      elementWithContent = React.cloneElement(element as React.ReactElement<any>, { pageContent });
+    }
+  }
 
   return <>{elementWithContent}</>;
 };

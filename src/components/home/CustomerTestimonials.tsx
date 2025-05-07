@@ -1,6 +1,6 @@
-
 import * as React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import PropTypes from "prop-types";
 
 interface TestimonialProps {
   quote: string;
@@ -44,36 +44,68 @@ const Testimonial: React.FC<TestimonialProps> = ({
   );
 };
 
-const CustomerTestimonials: React.FC = () => {
+interface CustomerTestimonialsProps {
+  testimonials?: Array<{
+    author: string;
+    avatar?: string;
+    content: string;
+    rating?: number;
+  }>;
+}
+
+const CustomerTestimonials: React.FC<CustomerTestimonialsProps> = ({ testimonials = [] }) => {
+  // Use default testimonials if none are provided
+  const defaultTestimonials = [
+    {
+      quote: "Cleancraft saved me 5 hours every week. As a software engineer, time is money for me. Now I just schedule a pickup from my office, and by the time I'm home, fresh clothes are waiting. Absolutely love the convenience and quality!",
+      name: "Rajiv M.",
+      location: "Bengaluru",
+      occupation: "Software Engineer",
+      avatarSrc: "/lovable-uploads/afc6fb2e-8af2-44c6-9280-265a5d7c29ad.png"
+    },
+    {
+      quote: "I was skeptical about giving my clothes to a service, but Cleancraft proved me wrong. The clothes come back spotlessly clean and neatly packed. Even my delicate sarees and silk blouses are handled with great care. It's premium service on a budget.",
+      name: "Ananya S.",
+      location: "Mumbai",
+      occupation: "Homemaker",
+      avatarSrc: "/lovable-uploads/c1e1acbc-b795-4d59-9275-a1dd3a19a4f6.png"
+    },
+    {
+      quote: "Fast, reliable, and super affordable. As a college student, I don't have time (or patience) for laundry. Cleancraft's same-day delivery is a game-changer during exams. And they even got a tough coffee stain out of my favorite shirt!",
+      name: "Karan T.",
+      location: "Delhi",
+      occupation: "Student",
+      avatarSrc: "/lovable-uploads/fbb95d0a-c991-4e33-be76-805f71f12699.png"
+    }
+  ];
+  
+  // Map from API testimonials to component format if available
+  const displayTestimonials = testimonials.length > 0 
+    ? testimonials.map(t => ({
+        quote: t.content,
+        name: t.author,
+        location: t.author.includes(",") ? t.author.split(",")[1].trim() : "",
+        occupation: "",
+        avatarSrc: t.avatar
+      }))
+    : defaultTestimonials;
+
   return (
     <section className="py-20 px-8 md:px-16 lg:px-32 bg-gray-50">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-black text-center mb-12">Trusted by Busy Indians Nationwide</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <Testimonial 
-            quote="Cleancraft saved me 5 hours every week. As a software engineer, time is money for me. Now I just schedule a pickup from my office, and by the time I'm home, fresh clothes are waiting. Absolutely love the convenience and quality!"
-            name="Rajiv M."
-            location="Bengaluru"
-            occupation="Software Engineer"
-            avatarSrc="/lovable-uploads/afc6fb2e-8af2-44c6-9280-265a5d7c29ad.png"
-          />
-          
-          <Testimonial 
-            quote="I was skeptical about giving my clothes to a service, but Cleancraft proved me wrong. The clothes come back spotlessly clean and neatly packed. Even my delicate sarees and silk blouses are handled with great care. It's premium service on a budget."
-            name="Ananya S."
-            location="Mumbai"
-            occupation="Homemaker"
-            avatarSrc="/lovable-uploads/c1e1acbc-b795-4d59-9275-a1dd3a19a4f6.png"
-          />
-          
-          <Testimonial 
-            quote="Fast, reliable, and super affordable. As a college student, I don't have time (or patience) for laundry. Cleancraft's same-day delivery is a game-changer during exams. And they even got a tough coffee stain out of my favorite shirt!"
-            name="Karan T."
-            location="Delhi"
-            occupation="Student"
-            avatarSrc="/lovable-uploads/fbb95d0a-c991-4e33-be76-805f71f12699.png"
-          />
+          {displayTestimonials.map((testimonial, index) => (
+            <Testimonial 
+              key={index}
+              quote={testimonial.quote}
+              name={testimonial.name}
+              location={testimonial.location || "India"}
+              occupation={testimonial.occupation || "Customer"}
+              avatarSrc={testimonial.avatarSrc}
+            />
+          ))}
         </div>
         
         <div className="flex flex-col md:flex-row justify-between items-center border-t pt-8">
@@ -92,6 +124,10 @@ const CustomerTestimonials: React.FC = () => {
       </div>
     </section>
   );
+};
+
+CustomerTestimonials.propTypes = {
+  testimonials: PropTypes.array
 };
 
 export default CustomerTestimonials;

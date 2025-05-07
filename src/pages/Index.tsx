@@ -10,6 +10,7 @@ import LaundryServiceFeatures from '../components/home/LaundryServiceFeatures';
 import CustomerTestimonials from '../components/home/CustomerTestimonials';
 import GuaranteeSection from '../components/home/GuaranteeSection';
 import FAQSection from '../components/home/FAQSection';
+import PropTypes from 'prop-types';
 
 interface IndexProps {
   pageContent?: any;
@@ -30,6 +31,11 @@ const Index: React.FC<IndexProps> = ({ pageContent }) => {
       <FAQSection />
     </Layout>
   );
+};
+
+// Add propTypes definition for the component
+Index.propTypes = {
+  pageContent: PropTypes.any
 };
 
 export default Index;
