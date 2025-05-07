@@ -76,9 +76,6 @@ const Footer = () => {
             <p className="text-gray-400 mb-4">
               Professional laundry and dry cleaning services at your convenience.
             </p>
-            <div className="flex items-center mt-6">
-              <CountrySelector />
-            </div>
           </div>
           
           {/* Quick Links */}
@@ -139,11 +136,18 @@ const Footer = () => {
           </div>
         </div>
         
-        {/* Copyright Section */}
-        <div className="pt-8 border-t border-gray-800 text-center md:text-left">
-          <p className="text-sm text-gray-500">
+        {/* Copyright Section with Country Selector */}
+        <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-gray-500 mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} Clean Craft Laundry. All rights reserved.
           </p>
+          
+          <div className="flex items-center space-x-4">
+            <Link to="/policies" className="text-sm text-gray-500 hover:text-white">
+              All Policies
+            </Link>
+            <CountrySelector />
+          </div>
         </div>
       </div>
     </footer>

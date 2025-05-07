@@ -12,11 +12,14 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen">
       <EnhancedNavbar />
-      <OfferCarousel />
-      <main className="flex-grow">
-        {children}
-      </main>
-      <Footer />
+      {/* Add top margin to offset the fixed navbar */}
+      <div className="mt-24">
+        <OfferCarousel />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };

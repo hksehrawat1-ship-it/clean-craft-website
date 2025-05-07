@@ -6,7 +6,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import CountrySelector from '@/components/CountrySelector';
 
 const EnhancedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -103,7 +102,7 @@ const EnhancedNavbar = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-3'
+        isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-3'
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -169,11 +168,6 @@ const EnhancedNavbar = () => {
               Policies
             </Link>
           )}
-          
-          {/* Country Selector */}
-          <div className="ml-4">
-            <CountrySelector />
-          </div>
         </nav>
 
         {/* Action Buttons */}
@@ -272,11 +266,6 @@ const EnhancedNavbar = () => {
                 Policies
               </Link>
             )}
-            
-            {/* Country selector in mobile menu */}
-            <div className="py-4">
-              <CountrySelector />
-            </div>
             
             {/* Action buttons in mobile menu */}
             <div className="flex flex-col gap-3 mt-4">
