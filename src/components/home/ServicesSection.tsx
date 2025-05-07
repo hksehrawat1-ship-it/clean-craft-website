@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { Droplet, ArrowRight, ShowerHead, Shirt, Ticket } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { useCountry } from '@/contexts/CountryContext';
 import { toast } from 'sonner';
+import PropTypes from 'prop-types';
 
 interface Service {
   id: string;
@@ -14,6 +14,10 @@ interface Service {
   order: number;
   country_code: string;
   minimum_price: number;
+}
+
+interface ServiceProps {
+  services?: any[];
 }
 
 interface ServiceCardProps { 
@@ -88,7 +92,7 @@ const currencySymbols: Record<string, string> = {
   'it': '€'
 };
 
-// Default minimum order value by country
+// Default minimum order values by country
 const defaultMinOrderValues: Record<string, number> = {
   'in': 500,
   'us': 20,
@@ -164,7 +168,7 @@ const fallbackServices = [
   }
 ];
 
-const ServicesSection: React.FC = () => {
+const ServicesSection: React.FC<ServiceProps> = ({ services: propServices }) => {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { currentCountry } = useCountry();
@@ -196,6 +200,34 @@ const ServicesSection: React.FC = () => {
   };
 
   useEffect(() => {
+    // If we already have services from props, use them
+    if (propServices && propServices.length > 0) {
+      const formattedServices = propServices.map(service => {
+        // Find matching icon or use default
+        const iconConfig = serviceIcons[service.name] || {
+          icon: <Droplet className="text-white w-6 h-6" />,
+          bgColor: 'bg-[#5294FF]'
+        };
+        
+        // Format price using the minimum_price from database
+        const priceValue = service.minimum_price || 0;
+        const price = formatPrice(priceValue, service.name, currentCountry?.code || 'in');
+        
+        return {
+          id: service.id,
+          name: service.name,
+          description: service.description || 'Service description',
+          price: price,
+          icon: iconConfig.icon,
+          iconBgColor: iconConfig.bgColor
+        };
+      });
+      
+      setServices(formattedServices);
+      setLoading(false);
+      return;
+    }
+    
     const fetchServices = async () => {
       if (!currentCountry) {
         console.log('No current country, cannot fetch services');
@@ -281,7 +313,7 @@ const ServicesSection: React.FC = () => {
     };
 
     fetchServices();
-  }, [currentCountry]);
+  }, [currentCountry, propServices]);
 
   // Get the minimum order value based on country
   const getMinimumOrderValue = () => {
@@ -340,6 +372,10 @@ const ServicesSection: React.FC = () => {
       </div>
     </section>
   );
+};
+
+ServicesSection.propTypes = {
+  services: PropTypes.array
 };
 
 export default ServicesSection;

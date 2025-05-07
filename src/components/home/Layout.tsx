@@ -1,7 +1,8 @@
+
 import React from 'react';
-import Header from '../../components/Header';
+import Navbar from '../../components/Navbar';
 import OfferCarousel from './OfferCarousel';
-import Footer from '../../components/Footer';
+import Footer from '../../components/home/Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Navbar />
       <OfferCarousel />
       <main className="flex-grow">
         {children}

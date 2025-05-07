@@ -13,14 +13,18 @@ import FAQSection from '../components/home/FAQSection';
 import PropTypes from 'prop-types';
 
 interface IndexProps {
-  pageContent?: any;
+  pageContent?: {
+    services?: any[];
+    testimonials?: any[];
+    [key: string]: any;
+  };
 }
 
 const Index: React.FC<IndexProps> = ({ pageContent }) => {
-  // We can use pageContent to customize the page based on the country
   return (
     <Layout>
       <HeroSection />
+      {/* Pass the services prop correctly to ServicesSection */}
       <ServicesSection services={pageContent?.services || []} />
       <BenefitsSection />
       <ProcessStepsSection />
@@ -33,9 +37,12 @@ const Index: React.FC<IndexProps> = ({ pageContent }) => {
   );
 };
 
-// Add propTypes definition for the component
+// Update propTypes definition for the component
 Index.propTypes = {
-  pageContent: PropTypes.any
+  pageContent: PropTypes.shape({
+    services: PropTypes.array,
+    testimonials: PropTypes.array
+  })
 };
 
 export default Index;
