@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,10 +18,23 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
 
+  // Log debugging info
+  useEffect(() => {
+    console.log('CountryContext state:', { 
+      currentCountry, 
+      countriesCount: countries.length,
+      isLoading, 
+      error: error?.message 
+    });
+  }, [currentCountry, countries, isLoading, error]);
+
   // Load countries from Supabase
   useEffect(() => {
     const fetchCountries = async () => {
       try {
+        console.log('Fetching countries from Supabase...');
+        setIsLoading(true);
+        
         const { data, error } = await supabase
           .from('countries')
           .select('*')
@@ -29,6 +43,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           
         if (error) throw error;
         
+        console.log('Fetched countries:', data);
         setCountries(data || []);
       } catch (err) {
         console.error('Error fetching countries:', err);
@@ -48,7 +63,11 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // First check if a country is selected in localStorage
       const storedCountryCode = localStorage.getItem('selectedCountry');
       
+      console.log('Stored country code:', storedCountryCode);
+      console.log('Available countries:', countries);
+      
       if (storedCountryCode && countries.some(c => c.code === storedCountryCode)) {
+        console.log('Using stored country:', storedCountryCode);
         const country = countries.find(c => c.code === storedCountryCode) || null;
         setCurrentCountry(country);
         return;
@@ -56,27 +75,38 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       
       // If no stored country or it's invalid, use the default
       if (countries.length > 0) {
+        console.log('Using default country');
         const defaultCountry = countries.find(c => c.code === DEFAULT_COUNTRY_CODE) || countries[0];
         setCurrentCountry(defaultCountry);
         localStorage.setItem('selectedCountry', defaultCountry.code);
+      } else if (countries.length === 0 && !isLoading) {
+        console.error('No countries available in database');
+        setError(new Error('No countries available'));
       }
     };
     
-    if (countries.length > 0 && !currentCountry) {
+    if (countries.length > 0 && !currentCountry && !isLoading) {
+      console.log('Detecting user country...');
       detectUserCountry();
     }
-  }, [countries, currentCountry]);
+  }, [countries, currentCountry, isLoading]);
 
   const handleSetCurrentCountry = (countryCode: string) => {
+    console.log('Setting country to:', countryCode);
     const country = countries.find(c => c.code === countryCode);
+    
     if (country) {
       setCurrentCountry(country);
       localStorage.setItem('selectedCountry', country.code);
       
       // Update the URL to reflect the country change if needed
       const currentPath = window.location.pathname;
+      const pathWithoutCountry = currentPath.split('/').slice(2).join('/');
+      
       if (currentPath === '/' || currentPath.startsWith('/')) {
-        navigate(`/${country.code}${currentPath === '/' ? '' : currentPath}`);
+        const newPath = `/${country.code}${pathWithoutCountry ? `/${pathWithoutCountry}` : ''}`;
+        console.log('Navigating to:', newPath);
+        navigate(newPath);
       }
     } else {
       toast.error(`Country code ${countryCode} is not supported`);

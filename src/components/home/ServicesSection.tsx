@@ -12,6 +12,7 @@ interface Service {
   description: string;
   icon_url: string | null;
   order: number;
+  country_code: string;
 }
 
 interface ServiceCardProps { 
@@ -72,13 +73,37 @@ const serviceIcons: Record<string, { icon: React.ReactNode; bgColor: string }> =
   }
 };
 
+// Service pricing by country code
+const servicePricing: Record<string, Record<string, string>> = {
+  'in': {
+    'Wash': 'from ₹350/load',
+    'Wash & Iron': 'from ₹60/item',
+    'Dry Cleaning': 'from ₹150/item',
+    'Ironing only': 'from ₹40/item',
+    'Duvets & Bulky Items': 'from ₹450/item',
+  },
+  'us': {
+    'Wash': 'from $12/load',
+    'Wash & Iron': 'from $3/item',
+    'Dry Cleaning': 'from $8/item',
+    'Ironing only': 'from $2/item',
+    'Duvets & Bulky Items': 'from $20/item',
+  },
+  'uk': {
+    'Wash': 'from £10/load',
+    'Wash & Iron': 'from £1.95/item',
+    'Dry Cleaning': 'from £5/item',
+    'Ironing only': 'from £1.45/item',
+    'Duvets & Bulky Items': 'from £15/item',
+  }
+};
+
 // Default fallback service data
 const fallbackServices = [
   {
     id: 'wash',
     name: 'Wash',
     description: 'For everyday laundry, bedsheets and towels.',
-    price: 'from £17.95/6kg',
     icon: <ShowerHead className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#5294FF]'
   },
@@ -86,7 +111,6 @@ const fallbackServices = [
     id: 'wash-iron',
     name: 'Wash & Iron',
     description: 'For everyday laundry that requires ironing.',
-    price: 'from £1.95/item',
     icon: <Droplet className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#F06292]'
   },
@@ -94,7 +118,6 @@ const fallbackServices = [
     id: 'dry-cleaning',
     name: 'Dry Cleaning',
     description: 'For delicate items and fabrics.',
-    price: 'from £1.95/item',
     icon: <Ticket className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#26A69A]'
   },
@@ -102,7 +125,6 @@ const fallbackServices = [
     id: 'ironing',
     name: 'Ironing only',
     description: 'For items that are already clean.',
-    price: 'from £1.45/item',
     icon: <Shirt className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#FFA726]'
   },
@@ -110,21 +132,24 @@ const fallbackServices = [
     id: 'duvets',
     name: 'Duvets & Bulky Items',
     description: 'For larger items that require extra care.',
-    price: 'from £11.95/item',
     icon: <Droplet className="text-white w-6 h-6" />,
     iconBgColor: 'bg-[#90CAF9]'
   }
 ];
 
 const ServicesSection: React.FC = () => {
-  const [services, setServices] = useState<any[]>(fallbackServices);
+  const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { currentCountry } = useCountry();
 
   useEffect(() => {
     const fetchServices = async () => {
-      if (!currentCountry) return;
+      if (!currentCountry) {
+        console.log('No current country, cannot fetch services');
+        return;
+      }
       
+      console.log('Fetching services for country:', currentCountry.code);
       setLoading(true);
       
       try {
@@ -139,6 +164,8 @@ const ServicesSection: React.FC = () => {
           throw error;
         }
         
+        console.log('Fetched services:', data);
+        
         if (data && data.length > 0) {
           const formattedServices = data.map(service => {
             // Find matching icon or use default
@@ -147,21 +174,46 @@ const ServicesSection: React.FC = () => {
               bgColor: 'bg-[#5294FF]'
             };
             
+            // Get price based on country code and service name
+            const countryPricing = servicePricing[currentCountry.code] || servicePricing['uk'];
+            const price = countryPricing[service.name] || 'Price on request';
+            
             return {
               id: service.id,
               name: service.name,
               description: service.description || 'Service description',
-              price: 'from £1.95/item', // This would come from a pricing table in a real app
+              price: price,
               icon: iconConfig.icon,
               iconBgColor: iconConfig.bgColor
             };
           });
           
           setServices(formattedServices);
+        } else {
+          // If no services found for country, use fallbacks but with country-specific pricing
+          console.log('No services found, using fallbacks');
+          const countryPricing = servicePricing[currentCountry.code] || servicePricing['uk'];
+          
+          const formattedFallbacks = fallbackServices.map(service => ({
+            ...service,
+            price: countryPricing[service.name] || 'Price on request'
+          }));
+          
+          setServices(formattedFallbacks);
         }
       } catch (error) {
         console.error('Error fetching services:', error);
-        // Use fallback services if fetch fails
+        // Use fallback services with country-specific pricing
+        const countryPricing = currentCountry ? 
+          (servicePricing[currentCountry.code] || servicePricing['uk']) : 
+          servicePricing['uk'];
+        
+        const formattedFallbacks = fallbackServices.map(service => ({
+          ...service,
+          price: countryPricing[service.name] || 'Price on request'
+        }));
+        
+        setServices(formattedFallbacks);
         toast.error('Failed to load services');
       } finally {
         setLoading(false);
@@ -185,7 +237,11 @@ const ServicesSection: React.FC = () => {
           </button>
         </div>
         <p className="text-sm text-white/80 mt-10">
-          Our minimum order value is £20. All orders include free delivery.
+          {currentCountry?.code === 'in' ? 
+            'Our minimum order value is ₹500. All orders include free delivery.' :
+            currentCountry?.code === 'us' ? 
+            'Our minimum order value is $20. All orders include free delivery.' :
+            'Our minimum order value is £20. All orders include free delivery.'}
         </p>
       </div>
 
@@ -196,7 +252,7 @@ const ServicesSection: React.FC = () => {
           Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="w-full h-24 bg-gray-100 animate-pulse rounded-lg"></div>
           ))
-        ) : (
+        ) : services.length > 0 ? (
           // Render services
           services.map((service) => (
             <ServiceCard 
@@ -208,6 +264,12 @@ const ServicesSection: React.FC = () => {
               iconBgColor={service.iconBgColor}
             />
           ))
+        ) : (
+          // No services found
+          <div className="flex flex-col items-center justify-center p-10 bg-gray-50 rounded-lg">
+            <p className="text-gray-500 mb-2">No services available for this country</p>
+            <p className="text-sm text-gray-400">Please check the database configuration</p>
+          </div>
         )}
       </div>
     </section>

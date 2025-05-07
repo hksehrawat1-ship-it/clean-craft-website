@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useCountry } from '@/contexts/CountryContext';
+import { Check } from 'lucide-react';
 import { 
   Select,
   SelectContent,
@@ -15,21 +16,36 @@ const CountrySelector: React.FC = () => {
   if (!currentCountry || countries.length <= 1) return null;
 
   return (
-    <Select
-      value={currentCountry.code}
-      onValueChange={setCurrentCountry}
-    >
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select Country" />
-      </SelectTrigger>
-      <SelectContent>
-        {countries.map((country) => (
-          <SelectItem key={country.code} value={country.code}>
-            {country.name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="relative">
+      <Select
+        value={currentCountry.code}
+        onValueChange={setCurrentCountry}
+      >
+        <SelectTrigger className="w-[180px] bg-white/90 backdrop-blur-sm">
+          <SelectValue>
+            <span className="flex items-center gap-2">
+              {currentCountry.name}
+            </span>
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {countries.map((country) => (
+            <SelectItem 
+              key={country.code} 
+              value={country.code}
+              className="relative pl-8"
+            >
+              <div className="flex items-center justify-between w-full">
+                <span>{country.name}</span>
+                {currentCountry.code === country.code && (
+                  <Check className="w-4 h-4 ml-2 text-primary" />
+                )}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 };
 
