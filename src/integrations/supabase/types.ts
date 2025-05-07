@@ -442,6 +442,10 @@ export type Database = {
         Args: { required: string }
         Returns: boolean
       }
+      is_page_available: {
+        Args: { country_code: string; page_path: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
