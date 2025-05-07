@@ -16,17 +16,35 @@ const Footer = () => {
     queryFn: async () => {
       if (!currentCountry) return [];
       
-      const { data, error } = await supabase
-        .from('country_pages')
-        .select('page_path, is_available')
-        .eq('country_id', currentCountry.id);
-        
-      if (error) {
-        console.error('Error fetching available pages:', error);
-        return [];
+      // Define the pages to check
+      const pagesToCheck = [
+        '/learning/courses',
+        '/learning/book',
+        '/policies/privacy',
+        '/policies/terms-conditions',
+        '/policies/refund'
+      ];
+      
+      // Create an array to store results
+      const results = [];
+      
+      // Check each page
+      for (const page of pagesToCheck) {
+        const { data, error } = await supabase
+          .rpc('is_page_available', {
+            country_code: currentCountry.code.toLowerCase(),
+            page_path: page
+          });
+          
+        if (!error) {
+          results.push({
+            page_path: page,
+            is_available: !!data
+          });
+        }
       }
       
-      return data || [];
+      return results;
     },
     enabled: !!currentCountry,
     staleTime: 1000 * 60 * 5, // 5 minutes

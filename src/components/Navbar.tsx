@@ -20,21 +20,33 @@ const Navbar = () => {
     queryFn: async () => {
       if (!countryCode) return [];
       
-      const { data, error } = await supabase
-        .from('country_pages')
-        .select('page_path, is_available')
-        .eq('country_id', (await supabase
-          .from('countries')
-          .select('id')
-          .eq('code', countryCode.toLowerCase())
-          .single()).data?.id);
-        
-      if (error) {
-        console.error('Error fetching available pages:', error);
-        return [];
+      // Define the pages to check
+      const pagesToCheck = [
+        '/learning/courses',
+        '/learning/book',
+        '/policies'
+      ];
+      
+      // Create an array to store results
+      const results = [];
+      
+      // Check each page
+      for (const page of pagesToCheck) {
+        const { data, error } = await supabase
+          .rpc('is_page_available', {
+            country_code: countryCode.toLowerCase(),
+            page_path: page
+          });
+          
+        if (!error) {
+          results.push({
+            page_path: page,
+            is_available: !!data
+          });
+        }
       }
       
-      return data || [];
+      return results;
     },
     enabled: !!countryCode,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -50,9 +62,6 @@ const Navbar = () => {
     return page ? page.is_available : false;
   };
 
-  // Check if any learning pages are available
-  const hasLearningPages = isPageAvailable('/learning/courses') || isPageAvailable('/learning/book');
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -67,8 +76,10 @@ const Navbar = () => {
       setIsMenuOpen(false);
     }
     
-    const handleBodyClick = (e) => {
-      if (isMenuOpen && !e.target.closest('.mobile-menu-container') && !e.target.closest('.menu-toggle-btn')) {
+    const handleBodyClick = (e: MouseEvent) => {
+      if (isMenuOpen && 
+          !(e.target as HTMLElement).closest('.mobile-menu-container') && 
+          !(e.target as HTMLElement).closest('.menu-toggle-btn')) {
         setIsMenuOpen(false);
       }
     };
@@ -98,7 +109,8 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
           <Link to={createLink('')} className="text-gray-700 hover:text-primary font-medium">Home</Link>
           
-          {hasLearningPages && (
+          {/* Check if any learning pages are available */}
+          {(isPageAvailable('/learning/courses') || isPageAvailable('/learning/book')) && (
             <div className="relative group">
               <button
                 className="flex items-center text-gray-700 hover:text-primary font-medium focus:outline-none"
@@ -162,7 +174,8 @@ const Navbar = () => {
               Home
             </Link>
             
-            {hasLearningPages && (
+            {/* Check if any learning pages are available for mobile menu */}
+            {(isPageAvailable('/learning/courses') || isPageAvailable('/learning/book')) && (
               <div className="relative">
                 <button
                   className="flex items-center text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 w-full focus:outline-none"
