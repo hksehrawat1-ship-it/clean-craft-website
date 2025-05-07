@@ -1,26 +1,44 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { useCountry } from '@/contexts/CountryContext';
+import CountrySelector from '@/components/CountrySelector';
+
 const Header = () => {
-  return <header className="w-full bg-white shadow-sm py-4">
+  const { currentCountry } = useCountry();
+  
+  // Helper function to create country-specific links
+  const createLink = (path: string): string => {
+    if (!currentCountry) return '/';
+    return `/${currentCountry.code}${path}`;
+  };
+  
+  return (
+    <header className="w-full bg-white shadow-sm py-4">
       <div className="container mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center">
-          <img alt="Clean Craft Logo" className="h-14 w-auto" src="/lovable-uploads/b9620b89-debb-4cc2-bd6b-edec70fb1bed.png" />
+          <Link to={createLink('')}>
+            <img alt="Clean Craft Logo" className="h-14 w-auto" src="/lovable-uploads/b9620b89-debb-4cc2-bd6b-edec70fb1bed.png" />
+          </Link>
         </div>
 
         <nav className="hidden md:flex items-center space-x-10">
-          <Link to="/" className="text-[#0E0E0E] hover:text-blue-500 font-medium">
+          <Link to={createLink('')} className="text-[#0E0E0E] hover:text-blue-500 font-medium">
             Service & Pricing
           </Link>
-          <Link to="/" className="text-[#0E0E0E] hover:text-blue-500 font-medium">
+          <Link to={createLink('/locations')} className="text-[#0E0E0E] hover:text-blue-500 font-medium">
             Location
           </Link>
-          <Link to="/" className="text-[#0E0E0E] hover:text-blue-500 font-medium">
+          <Link to={createLink('/connect')} className="text-[#0E0E0E] hover:text-blue-500 font-medium">
             Connect
           </Link>
-          <Link to="/" className="text-[#0E0E0E] hover:text-blue-500 font-medium">
+          <Link to={createLink('/franchise')} className="text-[#0E0E0E] hover:text-blue-500 font-medium">
             Laundry Franchise
           </Link>
+          
+          {/* Add country selector to navigation */}
+          <CountrySelector />
         </nav>
 
         <div className="flex items-center gap-3">
@@ -32,6 +50,8 @@ const Header = () => {
           </Button>
         </div>
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default Header;

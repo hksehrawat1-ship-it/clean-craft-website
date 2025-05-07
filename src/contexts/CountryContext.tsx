@@ -99,11 +99,12 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setCurrentCountry(country);
       localStorage.setItem('selectedCountry', country.code);
       
-      // Update the URL to reflect the country change if needed
+      // Update the URL to reflect the country change
       const currentPath = window.location.pathname;
-      const pathWithoutCountry = currentPath.split('/').slice(2).join('/');
       
-      if (currentPath === '/' || currentPath.startsWith('/')) {
+      // If at the root path or already on a country path, navigate to the new country path
+      if (currentPath === '/' || /^\/[a-z]{2}(\/.*)?$/.test(currentPath)) {
+        const pathWithoutCountry = currentPath.split('/').slice(2).join('/');
         const newPath = `/${country.code}${pathWithoutCountry ? `/${pathWithoutCountry}` : ''}`;
         console.log('Navigating to:', newPath);
         navigate(newPath);

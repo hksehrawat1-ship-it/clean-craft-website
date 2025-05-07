@@ -73,32 +73,44 @@ const serviceIcons: Record<string, { icon: React.ReactNode; bgColor: string }> =
   }
 };
 
-// Service pricing by country code
-const servicePricing: Record<string, Record<string, string>> = {
-  'in': {
-    'Wash': 'from ₹350/load',
-    'Wash & Iron': 'from ₹60/item',
-    'Dry Cleaning': 'from ₹150/item',
-    'Ironing only': 'from ₹40/item',
-    'Duvets & Bulky Items': 'from ₹450/item',
-  },
-  'us': {
-    'Wash': 'from $12/load',
-    'Wash & Iron': 'from $3/item',
-    'Dry Cleaning': 'from $8/item',
-    'Ironing only': 'from $2/item',
-    'Duvets & Bulky Items': 'from $20/item',
-  },
-  'uk': {
-    'Wash': 'from £10/load',
-    'Wash & Iron': 'from £1.95/item',
-    'Dry Cleaning': 'from £5/item',
-    'Ironing only': 'from £1.45/item',
-    'Duvets & Bulky Items': 'from £15/item',
-  }
+// Currency symbols based on country code
+const currencySymbols: Record<string, string> = {
+  'in': '₹',
+  'us': '$',
+  'uk': '£',
+  'au': 'A$',
+  'sg': 'S$',
+  'my': 'RM',
+  'de': '€',
+  'fr': '€',
+  'es': '€',
+  'it': '€'
 };
 
-// Default fallback service data
+// Default price ranges by service type
+const defaultPriceRanges: Record<string, number> = {
+  'Wash': 10,
+  'Wash & Iron': 3,
+  'Dry Cleaning': 8,
+  'Ironing only': 2,
+  'Duvets & Bulky Items': 15
+};
+
+// Default minimum order value by country
+const defaultMinOrderValues: Record<string, number> = {
+  'in': 500,
+  'us': 20,
+  'uk': 20,
+  'au': 25,
+  'sg': 30,
+  'my': 60,
+  'de': 15,
+  'fr': 15,
+  'es': 15,
+  'it': 15
+};
+
+// Fallback services data
 const fallbackServices = [
   {
     id: 'wash',
@@ -174,9 +186,16 @@ const ServicesSection: React.FC = () => {
               bgColor: 'bg-[#5294FF]'
             };
             
-            // Get price based on country code and service name
-            const countryPricing = servicePricing[currentCountry.code] || servicePricing['uk'];
-            const price = countryPricing[service.name] || 'Price on request';
+            // Get currency symbol based on country code
+            const currencySymbol = currencySymbols[currentCountry.code] || '$';
+            
+            // Get price based on service type and country
+            const basePrice = defaultPriceRanges[service.name] || 5;
+            // Adjust price based on country (simplified logic - in real app, use prices from database)
+            let adjustedPrice = basePrice;
+            if (currentCountry.code === 'in') adjustedPrice = basePrice * 0.3 * 70; // Rough INR conversion
+            
+            const price = `from ${currencySymbol}${adjustedPrice}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
             
             return {
               id: service.id,
@@ -192,26 +211,44 @@ const ServicesSection: React.FC = () => {
         } else {
           // If no services found for country, use fallbacks but with country-specific pricing
           console.log('No services found, using fallbacks');
-          const countryPricing = servicePricing[currentCountry.code] || servicePricing['uk'];
+          const currencySymbol = currencySymbols[currentCountry.code] || '$';
           
-          const formattedFallbacks = fallbackServices.map(service => ({
-            ...service,
-            price: countryPricing[service.name] || 'Price on request'
-          }));
+          const formattedFallbacks = fallbackServices.map(service => {
+            const basePrice = defaultPriceRanges[service.name] || 5;
+            // Adjust price based on country
+            let adjustedPrice = basePrice;
+            if (currentCountry.code === 'in') adjustedPrice = basePrice * 0.3 * 70; // Rough INR conversion
+            
+            const price = `from ${currencySymbol}${adjustedPrice}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+            
+            return {
+              ...service,
+              price: price
+            };
+          });
           
           setServices(formattedFallbacks);
         }
       } catch (error) {
         console.error('Error fetching services:', error);
         // Use fallback services with country-specific pricing
-        const countryPricing = currentCountry ? 
-          (servicePricing[currentCountry.code] || servicePricing['uk']) : 
-          servicePricing['uk'];
+        const currencySymbol = currentCountry ? 
+          (currencySymbols[currentCountry.code] || '$') : 
+          '$';
         
-        const formattedFallbacks = fallbackServices.map(service => ({
-          ...service,
-          price: countryPricing[service.name] || 'Price on request'
-        }));
+        const formattedFallbacks = fallbackServices.map(service => {
+          const basePrice = defaultPriceRanges[service.name] || 5;
+          // Adjust price based on country
+          let adjustedPrice = basePrice;
+          if (currentCountry?.code === 'in') adjustedPrice = basePrice * 0.3 * 70; // Rough INR conversion
+          
+          const price = `from ${currencySymbol}${adjustedPrice}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+          
+          return {
+            ...service,
+            price: price
+          };
+        });
         
         setServices(formattedFallbacks);
         toast.error('Failed to load services');
@@ -222,6 +259,16 @@ const ServicesSection: React.FC = () => {
 
     fetchServices();
   }, [currentCountry]);
+
+  // Get the minimum order value based on country
+  const getMinimumOrderValue = () => {
+    if (!currentCountry) return "$20";
+    
+    const minValue = defaultMinOrderValues[currentCountry.code] || 20;
+    const currency = currencySymbols[currentCountry.code] || '$';
+    
+    return `${currency}${minValue}`;
+  };
 
   return (
     <section className="py-20 px-6 md:px-12 lg:px-28 xl:px-32 flex flex-col md:flex-row gap-8 lg:gap-16">
@@ -237,11 +284,7 @@ const ServicesSection: React.FC = () => {
           </button>
         </div>
         <p className="text-sm text-white/80 mt-10">
-          {currentCountry?.code === 'in' ? 
-            'Our minimum order value is ₹500. All orders include free delivery.' :
-            currentCountry?.code === 'us' ? 
-            'Our minimum order value is $20. All orders include free delivery.' :
-            'Our minimum order value is £20. All orders include free delivery.'}
+          Our minimum order value is {getMinimumOrderValue()}. All orders include free delivery.
         </p>
       </div>
 

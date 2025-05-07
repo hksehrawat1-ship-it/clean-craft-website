@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CountryProvider } from "./contexts/CountryContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -30,6 +30,9 @@ const App = () => (
       <BrowserRouter>
         <CountryProvider>
           <Routes>
+            {/* Root route redirects to country selection */}
+            <Route path="/" element={<CountryRedirect />} />
+            
             {/* Country-specific routes */}
             <Route path="/:countryCode" element={<Index />} />
             <Route path="/:countryCode/learning/courses" element={<Courses />} />
@@ -43,22 +46,6 @@ const App = () => (
             <Route path="/:countryCode/policies/ebook" element={<EbookPolicy />} />
             <Route path="/:countryCode/policies/privacy" element={<PrivacyPolicy />} />
             <Route path="/:countryCode/policies/terms-conditions" element={<TermsConditionPolicy />} />
-            
-            {/* Root route redirects to country-specific route */}
-            <Route path="/" element={<CountryRedirect />} />
-            
-            {/* Legacy routes - redirect to country-specific routes */}
-            <Route path="/learning/courses" element={<CountryRedirect path="/learning/courses" />} />
-            <Route path="/learning/book" element={<CountryRedirect path="/learning/book" />} />
-            <Route path="/policies" element={<CountryRedirect path="/policies" />} />
-            <Route path="/policies/warranty" element={<CountryRedirect path="/policies/warranty" />} />
-            <Route path="/policies/refund" element={<CountryRedirect path="/policies/refund" />} />
-            <Route path="/policies/cancellation" element={<CountryRedirect path="/policies/cancellation" />} />
-            <Route path="/policies/shipping" element={<CountryRedirect path="/policies/shipping" />} />
-            <Route path="/policies/coaching-registration" element={<CountryRedirect path="/policies/coaching-registration" />} />
-            <Route path="/policies/ebook" element={<CountryRedirect path="/policies/ebook" />} />
-            <Route path="/policies/privacy" element={<CountryRedirect path="/policies/privacy" />} />
-            <Route path="/policies/terms-conditions" element={<CountryRedirect path="/policies/terms-conditions" />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
