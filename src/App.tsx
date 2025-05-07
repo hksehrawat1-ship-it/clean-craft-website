@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CountryProvider } from "./contexts/CountryContext";
+import { CookieConsentProvider } from "./contexts/CookieConsentContext";
+import CookieConsentBanner from "./components/CookieConsentBanner";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Courses from "./pages/learning/Courses";
@@ -29,27 +31,32 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <CountryProvider>
-          <Routes>
-            {/* Root route shows country selection */}
-            <Route path="/" element={<CountryRedirect />} />
+          <CookieConsentProvider>
+            <Routes>
+              {/* Root route shows country selection */}
+              <Route path="/" element={<CountryRedirect />} />
+              
+              {/* Country-specific routes */}
+              <Route path="/:countryCode" element={<Index />} />
+              <Route path="/:countryCode/learning/courses" element={<Courses />} />
+              <Route path="/:countryCode/learning/book" element={<Book />} />
+              <Route path="/:countryCode/policies" element={<Policies />} />
+              <Route path="/:countryCode/policies/warranty" element={<WarrantyPolicy />} />
+              <Route path="/:countryCode/policies/refund" element={<RefundPolicy />} />
+              <Route path="/:countryCode/policies/cancellation" element={<CancellationPolicy />} />
+              <Route path="/:countryCode/policies/shipping" element={<ShippingPolicy />} />
+              <Route path="/:countryCode/policies/coaching-registration" element={<CoachingRegistration />} />
+              <Route path="/:countryCode/policies/ebook" element={<EbookPolicy />} />
+              <Route path="/:countryCode/policies/privacy" element={<PrivacyPolicy />} />
+              <Route path="/:countryCode/policies/terms-conditions" element={<TermsConditionPolicy />} />
+              
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
             
-            {/* Country-specific routes */}
-            <Route path="/:countryCode" element={<Index />} />
-            <Route path="/:countryCode/learning/courses" element={<Courses />} />
-            <Route path="/:countryCode/learning/book" element={<Book />} />
-            <Route path="/:countryCode/policies" element={<Policies />} />
-            <Route path="/:countryCode/policies/warranty" element={<WarrantyPolicy />} />
-            <Route path="/:countryCode/policies/refund" element={<RefundPolicy />} />
-            <Route path="/:countryCode/policies/cancellation" element={<CancellationPolicy />} />
-            <Route path="/:countryCode/policies/shipping" element={<ShippingPolicy />} />
-            <Route path="/:countryCode/policies/coaching-registration" element={<CoachingRegistration />} />
-            <Route path="/:countryCode/policies/ebook" element={<EbookPolicy />} />
-            <Route path="/:countryCode/policies/privacy" element={<PrivacyPolicy />} />
-            <Route path="/:countryCode/policies/terms-conditions" element={<TermsConditionPolicy />} />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+            {/* Cookie Banner */}
+            <CookieConsentBanner />
+          </CookieConsentProvider>
         </CountryProvider>
       </BrowserRouter>
     </TooltipProvider>

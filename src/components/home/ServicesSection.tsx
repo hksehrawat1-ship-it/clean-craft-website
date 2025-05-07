@@ -79,7 +79,7 @@ const currencySymbols: Record<string, string> = {
   'in': '₹',
   'us': '$',
   'uk': '£',
-  'au': 'A$',
+  'au': '$',
   'sg': 'S$',
   'my': 'RM',
   'de': '€',
@@ -100,6 +100,24 @@ const defaultMinOrderValues: Record<string, number> = {
   'fr': 15,
   'es': 15,
   'it': 15
+};
+
+// Country specific price unit formats
+const priceUnitFormats: Record<string, Record<string, string>> = {
+  'au': {
+    'Wash': 'kg',
+    'Wash & Iron': 'kg',
+    'Dry Cleaning': 'item',
+    'Ironing only': 'item',
+    'Duvets & Bulky Items': 'item'
+  },
+  'default': {
+    'Wash': 'load',
+    'Wash & Iron': 'load',
+    'Dry Cleaning': 'item',
+    'Ironing only': 'item',
+    'Duvets & Bulky Items': 'item'
+  }
 };
 
 // Fallback services data
@@ -151,6 +169,32 @@ const ServicesSection: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { currentCountry } = useCountry();
 
+  // Format price based on country and service type
+  const formatPrice = (price: number, serviceName: string, countryCode: string): string => {
+    const currencySymbol = currencySymbols[countryCode] || '$';
+    
+    // Get the appropriate unit format based on country and service
+    const countryFormats = priceUnitFormats[countryCode] || priceUnitFormats.default;
+    const unit = countryFormats[serviceName] || 
+                 (serviceName.toLowerCase().includes('iron') ? 'item' : 'load');
+    
+    // Format numbers based on country conventions
+    let formattedPrice = '';
+    
+    if (countryCode === 'au') {
+      // Australian format (e.g., "$12.50/kg")
+      formattedPrice = `${currencySymbol}${price.toFixed(2)}/${unit}`;
+    } else if (countryCode === 'in') {
+      // Indian format (e.g., "₹399/load")
+      formattedPrice = `${currencySymbol}${price}/${unit}`;
+    } else {
+      // Default format (e.g., "$20/load")
+      formattedPrice = `${currencySymbol}${price}/${unit}`;
+    }
+    
+    return `from ${formattedPrice}`;
+  };
+
   useEffect(() => {
     const fetchServices = async () => {
       if (!currentCountry) {
@@ -183,12 +227,9 @@ const ServicesSection: React.FC = () => {
               bgColor: 'bg-[#5294FF]'
             };
             
-            // Get currency symbol based on country code
-            const currencySymbol = currencySymbols[currentCountry.code] || '$';
-            
             // Format price using the minimum_price from database
             const priceValue = service.minimum_price || 0;
-            const price = `from ${currencySymbol}${priceValue}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+            const price = formatPrice(priceValue, service.name, currentCountry.code);
             
             return {
               id: service.id,
@@ -204,12 +245,11 @@ const ServicesSection: React.FC = () => {
         } else {
           // If no services found for country, use fallbacks but with country-specific pricing
           console.log('No services found, using fallbacks');
-          const currencySymbol = currencySymbols[currentCountry.code] || '$';
           
           const formattedFallbacks = fallbackServices.map(service => {
             // Format price using the minimum_price from fallback
             const priceValue = service.minimum_price || 0;
-            const price = `from ${currencySymbol}${priceValue}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+            const price = formatPrice(priceValue, service.name, currentCountry.code);
             
             return {
               ...service,
@@ -222,14 +262,10 @@ const ServicesSection: React.FC = () => {
       } catch (error) {
         console.error('Error fetching services:', error);
         // Use fallback services with country-specific pricing
-        const currencySymbol = currentCountry ? 
-          (currencySymbols[currentCountry.code] || '$') : 
-          '$';
-        
         const formattedFallbacks = fallbackServices.map(service => {
           // Format price using the minimum_price from fallback
           const priceValue = service.minimum_price || 0;
-          const price = `from ${currencySymbol}${priceValue}/${service.name.toLowerCase().includes('iron') ? 'item' : 'load'}`;
+          const price = formatPrice(priceValue, service.name, currentCountry?.code || 'in');
           
           return {
             ...service,

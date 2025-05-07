@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      cookie_consents: {
+        Row: {
+          analytics: boolean
+          country_code: string | null
+          created_at: string
+          essential: boolean
+          id: string
+          ip_address: string | null
+          marketing: boolean
+          preferences: boolean
+          session_id: string
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          analytics?: boolean
+          country_code?: string | null
+          created_at?: string
+          essential?: boolean
+          id?: string
+          ip_address?: string | null
+          marketing?: boolean
+          preferences?: boolean
+          session_id: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          analytics?: boolean
+          country_code?: string | null
+          created_at?: string
+          essential?: boolean
+          id?: string
+          ip_address?: string | null
+          marketing?: boolean
+          preferences?: boolean
+          session_id?: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       countries: {
         Row: {
           code: string

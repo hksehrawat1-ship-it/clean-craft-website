@@ -24,6 +24,9 @@ export const COUNTRY_REGIONS = {
   'ca': 'NORTH AMERICA'
 };
 
+// IP-based geolocation API
+const GEOLOCATION_API = 'https://api.ipgeolocation.io/ipgeo?apiKey=6548f106674f41508284d6ef9f08fd36';
+
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
 export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -31,6 +34,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [countries, setCountries] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [geoDetectionAttempted, setGeoDetectionAttempted] = useState(false);
   const navigate = useNavigate();
 
   // Log debugging info
@@ -79,9 +83,41 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     fetchCountries();
   }, []);
 
+  // Try to detect user's country via IP geolocation
+  const detectCountryViaGeoIP = async (): Promise<string | null> => {
+    try {
+      console.log('Attempting IP geolocation detection');
+      
+      const response = await fetch(GEOLOCATION_API);
+      if (!response.ok) {
+        throw new Error('Geolocation API response not OK');
+      }
+      
+      const data = await response.json();
+      const detectedCountryCode = data.country_code2?.toLowerCase();
+      
+      console.log('IP geolocation detected country:', detectedCountryCode);
+      
+      // Check if the detected country is supported in our app
+      if (detectedCountryCode && countries.some(c => c.code === detectedCountryCode)) {
+        return detectedCountryCode;
+      }
+      
+      return null;
+    } catch (err) {
+      console.error('IP geolocation detection failed:', err);
+      return null;
+    }
+  };
+
   // Detect user's country on initial load
   useEffect(() => {
     const detectUserCountry = async () => {
+      // If we've already attempted geo detection or countries aren't loaded yet, exit
+      if (geoDetectionAttempted || countries.length === 0) {
+        return;
+      }
+
       // First check if a country is selected in localStorage
       const storedCountryCode = localStorage.getItem('selectedCountry');
       
@@ -114,8 +150,22 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setCurrentCountry(country);
         return;
       }
+
+      // Try IP-based geolocation to detect country
+      setGeoDetectionAttempted(true);
+      const detectedCountryCode = await detectCountryViaGeoIP();
       
-      // If no stored country or it's invalid, use the default
+      if (detectedCountryCode) {
+        console.log('Using geolocation detected country:', detectedCountryCode);
+        const country = countries.find(c => c.code === detectedCountryCode) || null;
+        if (country) {
+          setCurrentCountry(country);
+          localStorage.setItem('selectedCountry', country.code);
+          return;
+        }
+      }
+      
+      // If we still don't have a country, use the default
       if (countries.length > 0) {
         console.log('Using default country');
         const defaultCountry = countries.find(c => c.code === DEFAULT_COUNTRY_CODE) || countries[0];
@@ -131,7 +181,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       console.log('Detecting user country...');
       detectUserCountry();
     }
-  }, [countries, currentCountry, isLoading]);
+  }, [countries, currentCountry, isLoading, geoDetectionAttempted]);
 
   const handleSetCurrentCountry = (countryCode: string) => {
     console.log('Setting country to:', countryCode);
