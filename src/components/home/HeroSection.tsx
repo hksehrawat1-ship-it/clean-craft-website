@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import { Star, StarHalf, ArrowRight } from "lucide-react";
 import { motion } from 'framer-motion';
+import { useCountry } from '@/contexts/CountryContext';
 
 const services = [
   'DRY CLEANING',
@@ -50,6 +52,8 @@ function useTypewriter(words, typingSpeed = 80, pause = 2000) {
 }
 
 const HeroSection = () => {
+  const { currentCountry, getImageUrl } = useCountry();
+
   return <section className="flex flex-col items-center py-24 px-6 md:px-12 lg:px-28 xl:px-32 w-full">
       <div className="max-w-7xl w-full">
         <div className="relative flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-24 rounded-2xl p-6 md:p-10 bg-white shadow-md overflow-hidden">
@@ -117,7 +121,14 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="w-full lg:w-1/2 flex justify-center items-center z-10"
           >
-            <img src="/lovable-uploads/7d652b3e-f996-4aa4-978d-e311436d329f.png" alt="Dry Cleaning App" className="w-full max-w-[350px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[450px] 2xl:max-w-[500px] h-auto drop-shadow-lg" />
+            <img 
+              src={getImageUrl("hero-phone-mockup.png")} 
+              alt="Dry Cleaning App" 
+              className="w-full max-w-[350px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[450px] 2xl:max-w-[500px] h-auto drop-shadow-lg"
+              onError={(e) => {
+                e.currentTarget.src = "/lovable-uploads/7d652b3e-f996-4aa4-978d-e311436d329f.png";
+              }} 
+            />
           </motion.div>
         </div>
         

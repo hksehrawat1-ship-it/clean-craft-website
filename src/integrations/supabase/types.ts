@@ -247,6 +247,7 @@ export type Database = {
       }
       services: {
         Row: {
+          country_code: string
           country_id: string
           created_at: string | null
           description: string | null
@@ -258,6 +259,7 @@ export type Database = {
           order: number
         }
         Insert: {
+          country_code?: string
           country_id: string
           created_at?: string | null
           description?: string | null
@@ -269,6 +271,7 @@ export type Database = {
           order?: number
         }
         Update: {
+          country_code?: string
           country_id?: string
           created_at?: string | null
           description?: string | null

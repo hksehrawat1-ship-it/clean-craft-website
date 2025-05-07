@@ -1,20 +1,33 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Droplet, ArrowRight, ShowerHead, Shirt, Ticket } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import { useCountry } from '@/contexts/CountryContext';
+import { toast } from 'sonner';
 
-const ServiceCard = ({ 
-  title, 
-  description, 
-  price, 
-  icon, 
-  iconBgColor 
-}: { 
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  icon_url: string | null;
+  order: number;
+}
+
+interface ServiceCardProps { 
   title: string; 
   description: string; 
   price: string; 
   icon: React.ReactNode; 
   iconBgColor: string; 
+}
+
+const ServiceCard: React.FC<ServiceCardProps> = ({ 
+  title, 
+  description, 
+  price, 
+  icon, 
+  iconBgColor 
 }) => {
   return (
     <Card className="w-full border border-[#E9E9E9] rounded-lg hover:shadow-md transition-shadow">
@@ -35,7 +48,129 @@ const ServiceCard = ({
   );
 };
 
-const ServicesSection = () => {
+// Icon map to match service names with icons
+const serviceIcons: Record<string, { icon: React.ReactNode; bgColor: string }> = {
+  'Wash': { 
+    icon: <ShowerHead className="text-white w-6 h-6" />, 
+    bgColor: 'bg-[#5294FF]' 
+  },
+  'Wash & Iron': { 
+    icon: <Droplet className="text-white w-6 h-6" />, 
+    bgColor: 'bg-[#F06292]' 
+  },
+  'Dry Cleaning': { 
+    icon: <Ticket className="text-white w-6 h-6" />, 
+    bgColor: 'bg-[#26A69A]' 
+  },
+  'Ironing only': { 
+    icon: <Shirt className="text-white w-6 h-6" />, 
+    bgColor: 'bg-[#FFA726]' 
+  },
+  'Duvets & Bulky Items': { 
+    icon: <Droplet className="text-white w-6 h-6" />, 
+    bgColor: 'bg-[#90CAF9]' 
+  }
+};
+
+// Default fallback service data
+const fallbackServices = [
+  {
+    id: 'wash',
+    name: 'Wash',
+    description: 'For everyday laundry, bedsheets and towels.',
+    price: 'from £17.95/6kg',
+    icon: <ShowerHead className="text-white w-6 h-6" />,
+    iconBgColor: 'bg-[#5294FF]'
+  },
+  {
+    id: 'wash-iron',
+    name: 'Wash & Iron',
+    description: 'For everyday laundry that requires ironing.',
+    price: 'from £1.95/item',
+    icon: <Droplet className="text-white w-6 h-6" />,
+    iconBgColor: 'bg-[#F06292]'
+  },
+  {
+    id: 'dry-cleaning',
+    name: 'Dry Cleaning',
+    description: 'For delicate items and fabrics.',
+    price: 'from £1.95/item',
+    icon: <Ticket className="text-white w-6 h-6" />,
+    iconBgColor: 'bg-[#26A69A]'
+  },
+  {
+    id: 'ironing',
+    name: 'Ironing only',
+    description: 'For items that are already clean.',
+    price: 'from £1.45/item',
+    icon: <Shirt className="text-white w-6 h-6" />,
+    iconBgColor: 'bg-[#FFA726]'
+  },
+  {
+    id: 'duvets',
+    name: 'Duvets & Bulky Items',
+    description: 'For larger items that require extra care.',
+    price: 'from £11.95/item',
+    icon: <Droplet className="text-white w-6 h-6" />,
+    iconBgColor: 'bg-[#90CAF9]'
+  }
+];
+
+const ServicesSection: React.FC = () => {
+  const [services, setServices] = useState<any[]>(fallbackServices);
+  const [loading, setLoading] = useState(true);
+  const { currentCountry } = useCountry();
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      if (!currentCountry) return;
+      
+      setLoading(true);
+      
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select('*')
+          .eq('country_code', currentCountry.code)
+          .eq('is_active', true)
+          .order('order');
+          
+        if (error) {
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+          const formattedServices = data.map(service => {
+            // Find matching icon or use default
+            const iconConfig = serviceIcons[service.name] || {
+              icon: <Droplet className="text-white w-6 h-6" />,
+              bgColor: 'bg-[#5294FF]'
+            };
+            
+            return {
+              id: service.id,
+              name: service.name,
+              description: service.description || 'Service description',
+              price: 'from £1.95/item', // This would come from a pricing table in a real app
+              icon: iconConfig.icon,
+              iconBgColor: iconConfig.bgColor
+            };
+          });
+          
+          setServices(formattedServices);
+        }
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        // Use fallback services if fetch fails
+        toast.error('Failed to load services');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, [currentCountry]);
+
   return (
     <section className="py-20 px-6 md:px-12 lg:px-28 xl:px-32 flex flex-col md:flex-row gap-8 lg:gap-16">
       {/* Left Column */}
@@ -56,45 +191,24 @@ const ServicesSection = () => {
 
       {/* Right Column */}
       <div className="w-full md:w-2/3 space-y-4">
-        <ServiceCard 
-          title="Wash" 
-          description="For everyday laundry, bedsheets and towels." 
-          price="from £17.95/6kg"
-          icon={<ShowerHead className="text-white w-6 h-6" />}
-          iconBgColor="bg-[#5294FF]"
-        />
-        
-        <ServiceCard 
-          title="Wash & Iron" 
-          description="For everyday laundry that requires ironing." 
-          price="from £1.95/item"
-          icon={<Droplet className="text-white w-6 h-6" />}
-          iconBgColor="bg-[#F06292]"
-        />
-        
-        <ServiceCard 
-          title="Dry Cleaning" 
-          description="For delicate items and fabrics." 
-          price="from £1.95/item"
-          icon={<Ticket className="text-white w-6 h-6" />}
-          iconBgColor="bg-[#26A69A]"
-        />
-        
-        <ServiceCard 
-          title="Ironing only" 
-          description="For items that are already clean." 
-          price="from £1.45/item"
-          icon={<Shirt className="text-white w-6 h-6" />}
-          iconBgColor="bg-[#FFA726]"
-        />
-        
-        <ServiceCard 
-          title="Duvets & Bulky Items" 
-          description="For larger items that require extra care." 
-          price="from £11.95/item"
-          icon={<Droplet className="text-white w-6 h-6" />}
-          iconBgColor="bg-[#90CAF9]"
-        />
+        {loading ? (
+          // Loading skeleton
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="w-full h-24 bg-gray-100 animate-pulse rounded-lg"></div>
+          ))
+        ) : (
+          // Render services
+          services.map((service) => (
+            <ServiceCard 
+              key={service.id}
+              title={service.name}
+              description={service.description}
+              price={service.price}
+              icon={service.icon}
+              iconBgColor={service.iconBgColor}
+            />
+          ))
+        )}
       </div>
     </section>
   );

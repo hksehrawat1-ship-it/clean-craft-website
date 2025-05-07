@@ -1,0 +1,122 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { getStorageUrl } from '@/utils/storageUtils';
+import { Country, CountryContextType } from '@/types/country';
+import { toast } from 'sonner';
+
+// Default country when no selection is available
+const DEFAULT_COUNTRY_CODE = 'in';
+
+const CountryContext = createContext<CountryContextType | undefined>(undefined);
+
+export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const navigate = useNavigate();
+
+  // Load countries from Supabase
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('countries')
+          .select('*')
+          .eq('is_active', true)
+          .order('name');
+          
+        if (error) throw error;
+        
+        setCountries(data || []);
+      } catch (err) {
+        console.error('Error fetching countries:', err);
+        setError(err instanceof Error ? err : new Error('Failed to fetch countries'));
+        toast.error('Failed to load country data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
+  // Detect user's country on initial load
+  useEffect(() => {
+    const detectUserCountry = async () => {
+      // First check if a country is selected in localStorage
+      const storedCountryCode = localStorage.getItem('selectedCountry');
+      
+      if (storedCountryCode && countries.some(c => c.code === storedCountryCode)) {
+        const country = countries.find(c => c.code === storedCountryCode) || null;
+        setCurrentCountry(country);
+        return;
+      }
+      
+      // If no stored country or it's invalid, use the default
+      if (countries.length > 0) {
+        const defaultCountry = countries.find(c => c.code === DEFAULT_COUNTRY_CODE) || countries[0];
+        setCurrentCountry(defaultCountry);
+        localStorage.setItem('selectedCountry', defaultCountry.code);
+      }
+    };
+    
+    if (countries.length > 0 && !currentCountry) {
+      detectUserCountry();
+    }
+  }, [countries, currentCountry]);
+
+  const handleSetCurrentCountry = (countryCode: string) => {
+    const country = countries.find(c => c.code === countryCode);
+    if (country) {
+      setCurrentCountry(country);
+      localStorage.setItem('selectedCountry', country.code);
+      
+      // Update the URL to reflect the country change if needed
+      const currentPath = window.location.pathname;
+      if (currentPath === '/' || currentPath.startsWith('/')) {
+        navigate(`/${country.code}${currentPath === '/' ? '' : currentPath}`);
+      }
+    } else {
+      toast.error(`Country code ${countryCode} is not supported`);
+    }
+  };
+
+  // Helper function to get country-specific image URL
+  const getImageUrl = (path: string): string => {
+    if (!path) return '';
+    
+    // If path already includes country code or is external, use it directly
+    if (path.startsWith('http') || path.includes('/')) {
+      return getStorageUrl(path);
+    }
+    
+    // Otherwise, prepend current country code
+    const countryCode = currentCountry?.code || DEFAULT_COUNTRY_CODE;
+    return getStorageUrl(`${countryCode}/${path}`);
+  };
+
+  const value = {
+    currentCountry,
+    countries,
+    isLoading,
+    error,
+    setCurrentCountry: handleSetCurrentCountry,
+    getImageUrl,
+  };
+
+  return (
+    <CountryContext.Provider value={value}>
+      {children}
+    </CountryContext.Provider>
+  );
+};
+
+export const useCountry = (): CountryContextType => {
+  const context = useContext(CountryContext);
+  if (context === undefined) {
+    throw new Error('useCountry must be used within a CountryProvider');
+  }
+  return context;
+};
