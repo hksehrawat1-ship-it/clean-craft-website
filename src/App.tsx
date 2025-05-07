@@ -45,12 +45,16 @@ const App = () => {
                 <Route path="/:countryCode" element={
                   <CountryRouteGuard pagePath="/" element={<Index />} />
                 } />
+
+                {/* Learning routes - available only for India */}
                 <Route path="/:countryCode/learning/courses" element={
                   <CountryRouteGuard pagePath="/learning/courses" element={<Courses />} />
                 } />
                 <Route path="/:countryCode/learning/book" element={
                   <CountryRouteGuard pagePath="/learning/book" element={<Book />} />
                 } />
+                
+                {/* Policy routes - available for both India and Australia */}
                 <Route path="/:countryCode/policies" element={
                   <CountryRouteGuard pagePath="/policies" element={<Policies />} />
                 } />

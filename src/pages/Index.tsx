@@ -17,18 +17,17 @@ interface IndexProps {
 
 const Index: React.FC<IndexProps> = ({ pageContent }) => {
   // We can use pageContent to customize the page based on the country
-  // For now, we'll just render the standard components
   return (
     <Layout>
-      <HeroSection content={pageContent?.sections} />
-      <ServicesSection services={pageContent?.services} />
-      <BenefitsSection content={pageContent?.sections} />
-      <ProcessStepsSection content={pageContent?.sections} />
-      <YourFirstPickupEssentials content={pageContent?.sections} />
-      <LaundryServiceFeatures content={pageContent?.sections} />
-      <GuaranteeSection content={pageContent?.sections} />
-      <CustomerTestimonials testimonials={pageContent?.testimonials} />
-      <FAQSection content={pageContent?.sections} />
+      <HeroSection />
+      <ServicesSection services={pageContent?.services || []} />
+      <BenefitsSection />
+      <ProcessStepsSection />
+      <YourFirstPickupEssentials />
+      <LaundryServiceFeatures />
+      <GuaranteeSection />
+      <CustomerTestimonials testimonials={pageContent?.testimonials || []} />
+      <FAQSection />
     </Layout>
   );
 };

@@ -31,26 +31,24 @@ export const usePageAvailability = (pagePath: string) => {
         if (availabilityError) {
           console.error('Error checking page availability:', availabilityError);
           setIsAvailable(false);
-        } else {
-          setIsAvailable(!!isAvailable);
-          
-          // If page is available, try to load its content
-          if (isAvailable) {
-            const { data: content, error: contentError } = await supabase
-              .rpc('get_page_content', {
-                p_country_code: countryCode.toLowerCase(),
-                p_slug: pagePath
-              });
-              
-            if (!contentError && content) {
-              setPageContent(content);
-            } else if (contentError) {
-              console.error('Error loading page content:', contentError);
-            }
-          } else {
-            // If page is not available, redirect to country homepage
-            toast.error(`This feature is not available in your region.`);
-            navigate(`/${countryCode}`);
+          setIsLoading(false);
+          return;
+        }
+
+        setIsAvailable(!!isAvailable);
+        
+        // If page is available, try to load its content
+        if (isAvailable) {
+          const { data: content, error: contentError } = await supabase
+            .rpc('get_page_content', {
+              p_country_code: countryCode.toLowerCase(),
+              p_slug: pagePath
+            });
+            
+          if (!contentError && content) {
+            setPageContent(content);
+          } else if (contentError) {
+            console.error('Error loading page content:', contentError);
           }
         }
       } catch (error) {

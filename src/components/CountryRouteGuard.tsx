@@ -27,11 +27,12 @@ const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element
   }
 
   if (!isAvailable) {
-    return <Navigate to={`/${countryCode}`} replace />;
+    // If the page is not available for this country, redirect to the NotFound page
+    return <Navigate to={`/${countryCode}/not-found`} replace />;
   }
 
-  // If we have an element with pageContentProp, pass the content to it
-  const elementWithContent = React.isValidElement(element) && pageContent
+  // If we have an element with pageContent prop, pass the content to it
+  const elementWithContent = React.isValidElement(element) && 'pageContent' in (element.type as any).propTypes
     ? React.cloneElement(element as React.ReactElement<any>, { pageContent })
     : element;
 
