@@ -1,39 +1,103 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Star, StarHalf, ArrowRight } from "lucide-react";
+import { motion } from 'framer-motion';
+
+const services = [
+  'DRY CLEANING',
+  'WASH AND FOLD',
+  'IRONING',
+  'SHOE CLEANING',
+];
+
+function useTypewriter(words, typingSpeed = 80, pause = 2000) {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayed, setDisplayed] = useState('');
+  const [typing, setTyping] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    let timeout;
+
+    if (typing && !deleting) {
+      if (displayed.length < words[wordIndex].length) {
+        // Typing the word
+        timeout = setTimeout(() => {
+          setDisplayed(words[wordIndex].slice(0, displayed.length + 1));
+        }, typingSpeed);
+      } else {
+        // Word fully typed, wait before deleting
+        timeout = setTimeout(() => {
+          setDeleting(true);
+        }, pause);
+      }
+    } else if (deleting) {
+      if (displayed.length > 0) {
+        // Deleting the word
+        timeout = setTimeout(() => {
+          setDisplayed(displayed.slice(0, -1));
+        }, typingSpeed / 2);
+      } else {
+        // Word fully deleted, move to next word
+        setDeleting(false);
+        setWordIndex((i) => (i + 1) % words.length);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayed, typing, deleting, wordIndex, words, typingSpeed, pause]);
+
+  return displayed;
+}
+
 const HeroSection = () => {
   return <section className="flex flex-col items-center py-24 px-6 md:px-12 lg:px-28 xl:px-32 w-full">
       <div className="max-w-7xl w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16 xl:gap-24">
+        <div className="relative flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-24 rounded-2xl p-6 md:p-10 bg-white shadow-md overflow-hidden">
+          {/* Animated, subtle background element */}
+          <motion.div
+            className="hidden lg:block absolute -top-16 -left-24 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-[#eaf3fb] to-[#b3d8fa] blur-3xl opacity-60 z-[-2]"
+            animate={{ y: [0, 20, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          {/* Line streaks gradient (decorative, not full background) */}
+          <div className="hidden lg:block absolute top-0 left-1/4 w-1/2 h-full pointer-events-none z-[-1]" style={{background: 'repeating-linear-gradient(120deg, #eaf3fb 0px, #eaf3fb 2px, transparent 2px, transparent 24px)', opacity: 0.5, borderRadius: '2rem'}}></div>
           {/* Hero Content */}
-          <div className="flex flex-col justify-center items-start gap-8 lg:gap-10 w-full lg:w-1/2">
-            <h1 className="text-4xl md:text-5xl xl:text-6xl font-product-sans-black text-[#1869D3] leading-tight text-center">
-              DRY CLEANING
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col justify-center items-start gap-3 w-full lg:w-1/2 text-left z-10"
+          >
+            {/* Animated Service Heading */}
+            <h1
+              className="text-4xl md:text-5xl xl:text-6xl font-product-sans-black text-[#1869D3] leading-tight mb-1 uppercase"
+              style={{ maxWidth: '16ch', minHeight: '1.2em', whiteSpace: 'nowrap', overflow: 'hidden' }}
+            >
+              {useTypewriter(services)}
             </h1>
-            <h2 className="text-2xl md:text-3xl xl:text-4xl font-bold text-[#0E0E0E] leading-snug">
+            <h2 className="text-2xl md:text-3xl xl:text-4xl font-bold text-[#0E0E0E] leading-snug mb-1">
               at your fingertips
             </h2>
-            <p className="text-base font-product-sans-light text-[#212121] capitalize">
+            <p className="text-base md:text-lg font-product-sans-light text-[#212121] capitalize mb-2">
               "30-MINUTE PICKUP, SAME-DAY CLEAN & DELIVERY!"
             </p>
-            
             {/* CTA Button */}
-            <div className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[320px] shadow-md">
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col">
-                  <span className="text-base font-medium text-[#0E0E0E]">Pickup</span>
-                  <span className="text-xs text-[#999999]">Tomorrow</span>
-                </div>
-                <div className="w-px h-8 bg-[#E9E9E9] mx-2"></div>
-                <div className="flex flex-col">
-                  <span className="text-base font-medium text-[#0E0E0E]">Where</span>
-                  <span className="text-xs text-[#999999]">Add address</span>
-                </div>
-              </div>
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#1A73E8] to-[#1355A3] flex items-center justify-center text-white">
+            <button className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white">
+              <span className="flex items-center gap-3">
+                <span className="flex flex-col">
+                  <span className="text-base font-medium text-[#0E0E0E] group-hover:text-white">Pickup</span>
+                  <span className="text-xs text-[#999999] group-hover:text-white">Tomorrow</span>
+                </span>
+                <span className="w-px h-8 bg-[#E9E9E9] mx-2"></span>
+                <span className="flex flex-col">
+                  <span className="text-base font-medium text-[#0E0E0E] group-hover:text-white">Where</span>
+                  <span className="text-xs text-[#999999] group-hover:text-white">Add address</span>
+                </span>
+              </span>
+              <span className="w-14 h-14 rounded-full bg-gradient-to-br from-[#1A73E8] to-[#1355A3] flex items-center justify-center text-white">
                 <ArrowRight className="w-5 h-5" />
-              </div>
-            </div>
-            
+              </span>
+            </button>
             {/* Rating */}
             <div className="flex items-center gap-2 mt-2">
               <div className="flex">
@@ -45,12 +109,16 @@ const HeroSection = () => {
               </div>
               <span className="text-[#171717] text-base">4.8/5 G2 Rating</span>
             </div>
-          </div>
-          
+          </motion.div>
           {/* Phone Mockup */}
-          <div className="w-full lg:w-1/2 flex justify-center">
-            <img src="/lovable-uploads/7d652b3e-f996-4aa4-978d-e311436d329f.png" alt="Dry Cleaning App" className="w-full max-w-[350px] h-auto" />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="w-full lg:w-1/2 flex justify-center items-center z-10"
+          >
+            <img src="/lovable-uploads/7d652b3e-f996-4aa4-978d-e311436d329f.png" alt="Dry Cleaning App" className="w-full max-w-[350px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[450px] 2xl:max-w-[500px] h-auto drop-shadow-lg" />
+          </motion.div>
         </div>
         
         {/* Stats Section - Modified to stay horizontal on all screens */}
