@@ -21,46 +21,51 @@ import EbookPolicy from "./pages/policies/EbookPolicy";
 import PrivacyPolicy from "./pages/policies/PrivacyPolicy";
 import TermsConditionPolicy from "./pages/policies/TermsConditionPolicy";
 import CountryRedirect from "./components/CountryRedirect";
+import { useState } from "react";
 
-const queryClient = new QueryClient();
+const App = () => {
+  // Create a new QueryClient instance inside the component
+  // This ensures it's properly initialized within the React component lifecycle
+  const [queryClient] = useState(() => new QueryClient());
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <CountryProvider>
-          <CookieConsentProvider>
-            <Routes>
-              {/* Root route shows country selection */}
-              <Route path="/" element={<CountryRedirect />} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <CountryProvider>
+            <CookieConsentProvider>
+              <Routes>
+                {/* Root route shows country selection */}
+                <Route path="/" element={<CountryRedirect />} />
+                
+                {/* Country-specific routes */}
+                <Route path="/:countryCode" element={<Index />} />
+                <Route path="/:countryCode/learning/courses" element={<Courses />} />
+                <Route path="/:countryCode/learning/book" element={<Book />} />
+                <Route path="/:countryCode/policies" element={<Policies />} />
+                <Route path="/:countryCode/policies/warranty" element={<WarrantyPolicy />} />
+                <Route path="/:countryCode/policies/refund" element={<RefundPolicy />} />
+                <Route path="/:countryCode/policies/cancellation" element={<CancellationPolicy />} />
+                <Route path="/:countryCode/policies/shipping" element={<ShippingPolicy />} />
+                <Route path="/:countryCode/policies/coaching-registration" element={<CoachingRegistration />} />
+                <Route path="/:countryCode/policies/ebook" element={<EbookPolicy />} />
+                <Route path="/:countryCode/policies/privacy" element={<PrivacyPolicy />} />
+                <Route path="/:countryCode/policies/terms-conditions" element={<TermsConditionPolicy />} />
+                
+                {/* Catch-all route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
               
-              {/* Country-specific routes */}
-              <Route path="/:countryCode" element={<Index />} />
-              <Route path="/:countryCode/learning/courses" element={<Courses />} />
-              <Route path="/:countryCode/learning/book" element={<Book />} />
-              <Route path="/:countryCode/policies" element={<Policies />} />
-              <Route path="/:countryCode/policies/warranty" element={<WarrantyPolicy />} />
-              <Route path="/:countryCode/policies/refund" element={<RefundPolicy />} />
-              <Route path="/:countryCode/policies/cancellation" element={<CancellationPolicy />} />
-              <Route path="/:countryCode/policies/shipping" element={<ShippingPolicy />} />
-              <Route path="/:countryCode/policies/coaching-registration" element={<CoachingRegistration />} />
-              <Route path="/:countryCode/policies/ebook" element={<EbookPolicy />} />
-              <Route path="/:countryCode/policies/privacy" element={<PrivacyPolicy />} />
-              <Route path="/:countryCode/policies/terms-conditions" element={<TermsConditionPolicy />} />
-              
-              {/* Catch-all route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            
-            {/* Cookie Banner */}
-            <CookieConsentBanner />
-          </CookieConsentProvider>
-        </CountryProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+              {/* Cookie Banner */}
+              <CookieConsentBanner />
+            </CookieConsentProvider>
+          </CountryProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
