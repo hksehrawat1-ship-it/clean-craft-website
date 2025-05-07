@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Navbar from '../../components/Navbar';
+import EnhancedNavbar from '../../components/EnhancedNavbar';
 import OfferCarousel from './OfferCarousel';
 import Footer from '../../components/home/Footer';
 
@@ -11,7 +11,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <EnhancedNavbar />
       <OfferCarousel />
       <main className="flex-grow">
         {children}

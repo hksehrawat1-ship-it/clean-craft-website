@@ -15,6 +15,17 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
   const navigate = useNavigate();
   const [redirectAttempts, setRedirectAttempts] = useState(0);
   const [detectionInProgress, setDetectionInProgress] = useState(true);
+  const [detectionError, setDetectionError] = useState<Error | null>(null);
+  
+  useEffect(() => {
+    console.log('CountryRedirect component mounted, current state:', {
+      countries: countries.length,
+      isLoading,
+      currentCountry,
+      error,
+      detectionInProgress
+    });
+  }, [countries, isLoading, currentCountry, error, detectionInProgress]);
   
   // Group countries by region
   const groupedCountries = countries.reduce((acc, country) => {
@@ -35,27 +46,53 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     return acc;
   }, {} as Record<string, typeof countries>);
   
-  // Auto-detect country and redirect
+  // Auto-detect country and redirect with improved error handling
   useEffect(() => {
     const autoDetectCountry = async () => {
+      // Skip detection if not on root path
       if (window.location.pathname !== '/') {
+        console.log('Not on root path, skipping country detection');
         setDetectionInProgress(false);
         return;
       }
       
       if (!isLoading && countries.length > 0) {
         try {
+          console.log('Starting country detection...');
           setDetectionInProgress(true);
+          setDetectionError(null);
+          
+          // Set a timeout to ensure we don't get stuck in loading state
+          const detectionTimeout = setTimeout(() => {
+            console.log('Country detection timeout reached');
+            setDetectionInProgress(false);
+            setDetectionError(new Error('Country detection timed out'));
+          }, 8000); // 8 second timeout
+          
           const detectedCountry = await detectUserCountry();
           
+          // Clear the timeout since we got a response
+          clearTimeout(detectionTimeout);
+          
+          console.log('Country detection completed:', detectedCountry);
+          
           if (detectedCountry) {
+            console.log('Navigating to detected country:', detectedCountry);
             navigate(`/${detectedCountry}${path}`);
+          } else {
+            console.warn('No country detected');
+            setDetectionError(new Error('Could not detect country'));
+            setDetectionInProgress(false);
           }
         } catch (error) {
           console.error('Country detection failed:', error);
+          setDetectionError(error as Error);
+          setDetectionInProgress(false);
         } finally {
           setDetectionInProgress(false);
         }
+      } else {
+        console.log('Waiting for countries to load...');
       }
     };
     
@@ -66,6 +103,7 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
   useEffect(() => {
     if ((isLoading || detectionInProgress) && redirectAttempts < 3) {
       const timer = setTimeout(() => {
+        console.log('Incrementing redirect attempts due to continued loading');
         setRedirectAttempts(prev => prev + 1);
       }, 2000);
       return () => clearTimeout(timer);
@@ -74,16 +112,30 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
 
   // Helper to select a country
   const handleCountrySelect = (code: string) => {
+    console.log('User selected country:', code);
     setCurrentCountry(code);
     navigate(`/${code}${path}`);
   };
 
   // Show country selection for root path or if detection failed
-  const showCountrySelector = window.location.pathname === '/' || error || 
-    (redirectAttempts >= 3 && (isLoading || detectionInProgress));
+  const showCountrySelector = 
+    window.location.pathname === '/' || 
+    error || 
+    detectionError || 
+    (redirectAttempts >= 2 && (isLoading || detectionInProgress));
+  
+  console.log('Should show country selector?', showCountrySelector, {
+    path: window.location.pathname,
+    error,
+    detectionError,
+    redirectAttempts,
+    isLoading,
+    detectionInProgress
+  });
   
   if (showCountrySelector) {
-    if (error) {
+    if (error || detectionError) {
+      console.error('Error detected, showing error toast');
       toast.error("Couldn't load country information. Please select one manually.");
     }
     
@@ -201,6 +253,18 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#1869D3] text-white">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
       <p>Loading country information...</p>
+      {redirectAttempts > 0 && (
+        <p className="text-blue-200 mt-2">This is taking longer than expected...</p>
+      )}
+      {redirectAttempts > 1 && (
+        <Button 
+          variant="outline" 
+          className="mt-4 border-white text-white hover:bg-blue-700"
+          onClick={() => window.location.reload()}
+        >
+          Refresh Page
+        </Button>
+      )}
     </div>
   );
 };
