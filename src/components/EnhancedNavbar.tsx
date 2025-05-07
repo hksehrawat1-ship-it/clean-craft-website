@@ -2,23 +2,24 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Menu, X, ChevronDown } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useCountry } from '@/contexts/CountryContext';
 
 const EnhancedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [learningOpen, setLearningOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { countryCode } = useParams();
+  const { currentCountry } = useCountry();
   
   // Fetch available pages for the current country
-  const { data: availablePages, isLoading } = useQuery({
-    queryKey: ['available-pages', countryCode],
+  const { data: availablePages } = useQuery({
+    queryKey: ['available-pages', currentCountry?.code],
     queryFn: async () => {
-      if (!countryCode) return [];
+      if (!currentCountry) return [];
       
       // Define the pages to check
       const pagesToCheck = [
@@ -34,7 +35,7 @@ const EnhancedNavbar = () => {
       for (const page of pagesToCheck) {
         const { data, error } = await supabase
           .rpc('is_page_available', {
-            country_code: countryCode.toLowerCase(),
+            country_code: currentCountry.code.toLowerCase(),
             page_path: page
           });
           
@@ -48,7 +49,7 @@ const EnhancedNavbar = () => {
       
       return results;
     },
-    enabled: !!countryCode,
+    enabled: !!currentCountry,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
   
@@ -90,7 +91,7 @@ const EnhancedNavbar = () => {
 
   // Helper function to create links with the country code
   const createLink = (path: string) => {
-    return countryCode ? `/${countryCode}${path}` : '/';
+    return currentCountry ? `/${currentCountry.code}${path}` : '/';
   };
   
   // Determine if Learning section should be shown (if any of its sub-pages are available)

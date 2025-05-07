@@ -107,6 +107,54 @@ export type Database = {
           },
         ]
       }
+      media: {
+        Row: {
+          alt: string
+          created_at: string
+          filename: string | null
+          filesize: number | null
+          focal_x: number | null
+          focal_y: number | null
+          height: number | null
+          id: number
+          mime_type: string | null
+          thumbnail_u_r_l: string | null
+          updated_at: string
+          url: string | null
+          width: number | null
+        }
+        Insert: {
+          alt: string
+          created_at?: string
+          filename?: string | null
+          filesize?: number | null
+          focal_x?: number | null
+          focal_y?: number | null
+          height?: number | null
+          id?: number
+          mime_type?: string | null
+          thumbnail_u_r_l?: string | null
+          updated_at?: string
+          url?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt?: string
+          created_at?: string
+          filename?: string | null
+          filesize?: number | null
+          focal_x?: number | null
+          focal_y?: number | null
+          height?: number | null
+          id?: number
+          mime_type?: string | null
+          thumbnail_u_r_l?: string | null
+          updated_at?: string
+          url?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
       page_content: {
         Row: {
           content: Json
@@ -226,6 +274,163 @@ export type Database = {
           slug?: string
         }
         Relationships: []
+      }
+      payload_locked_documents: {
+        Row: {
+          created_at: string
+          global_slug: string | null
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          global_slug?: string | null
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          global_slug?: string | null
+          id?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      payload_locked_documents_rels: {
+        Row: {
+          id: number
+          media_id: number | null
+          order: number | null
+          parent_id: number
+          path: string
+          users_id: number | null
+        }
+        Insert: {
+          id?: number
+          media_id?: number | null
+          order?: number | null
+          parent_id: number
+          path: string
+          users_id?: number | null
+        }
+        Update: {
+          id?: number
+          media_id?: number | null
+          order?: number | null
+          parent_id?: number
+          path?: string
+          users_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payload_locked_documents_rels_media_fk"
+            columns: ["media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payload_locked_documents_rels_parent_fk"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "payload_locked_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payload_locked_documents_rels_users_fk"
+            columns: ["users_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payload_migrations: {
+        Row: {
+          batch: number | null
+          created_at: string
+          id: number
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          batch?: number | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          batch?: number | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      payload_preferences: {
+        Row: {
+          created_at: string
+          id: number
+          key: string | null
+          updated_at: string
+          value: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          key?: string | null
+          updated_at?: string
+          value?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          key?: string | null
+          updated_at?: string
+          value?: Json | null
+        }
+        Relationships: []
+      }
+      payload_preferences_rels: {
+        Row: {
+          id: number
+          order: number | null
+          parent_id: number
+          path: string
+          users_id: number | null
+        }
+        Insert: {
+          id?: number
+          order?: number | null
+          parent_id: number
+          path: string
+          users_id?: number | null
+        }
+        Update: {
+          id?: number
+          order?: number | null
+          parent_id?: number
+          path?: string
+          users_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payload_preferences_rels_parent_fk"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "payload_preferences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payload_preferences_rels_users_fk"
+            columns: ["users_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       policies: {
         Row: {
@@ -424,6 +629,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          hash: string | null
+          id: number
+          lock_until: string | null
+          login_attempts: number | null
+          reset_password_expiration: string | null
+          reset_password_token: string | null
+          salt: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          hash?: string | null
+          id?: number
+          lock_until?: string | null
+          login_attempts?: number | null
+          reset_password_expiration?: string | null
+          reset_password_token?: string | null
+          salt?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          hash?: string | null
+          id?: number
+          lock_until?: string | null
+          login_attempts?: number | null
+          reset_password_expiration?: string | null
+          reset_password_token?: string | null
+          salt?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {

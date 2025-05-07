@@ -1,8 +1,10 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import Layout from "@/components/home/Layout";
+import { useCountry } from '@/contexts/CountryContext';
 
 interface PolicyLayoutProps {
   children: React.ReactNode;
@@ -15,12 +17,20 @@ const PolicyLayout: React.FC<PolicyLayoutProps> = ({
   title,
   description,
 }) => {
+  const { currentCountry } = useCountry();
+  
+  // Helper function to create country-specific links
+  const createLink = (path: string): string => {
+    if (!currentCountry) return '/policies';
+    return `/${currentCountry.code}/policies`;
+  };
+  
   return (
-    <div className="min-h-screen bg-gray-50">
+    <Layout showOfferCarousel={false}>
       {/* Main content */}
       <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
-          <Link to="/policies" className="flex items-center text-google-blue hover:text-google-blue-dark">
+          <Link to={createLink('')} className="flex items-center text-google-blue hover:text-google-blue-dark">
             <ChevronLeft className="h-4 w-4 mr-1" />
             Back to policies
           </Link>
@@ -50,15 +60,7 @@ const PolicyLayout: React.FC<PolicyLayoutProps> = ({
           </div>
         </div>
       </main>
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-10">
-        <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} Clean Craft. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+    </Layout>
   );
 };
 

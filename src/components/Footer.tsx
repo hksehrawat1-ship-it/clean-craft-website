@@ -1,9 +1,20 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Linkedin, MapPin, Phone, Mail, Copyright } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useCountry } from '@/contexts/CountryContext';
+import CountrySelector from '@/components/CountrySelector';
 
 const Footer: React.FC = () => {
+  const { currentCountry } = useCountry();
+  
+  // Helper function to create country-specific links
+  const createLink = (path: string): string => {
+    if (!currentCountry) return '/';
+    return `/${currentCountry.code}${path}`;
+  };
+  
   return (
     <footer className="bg-white py-12 px-8 md:px-16 lg:px-32">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -38,23 +49,23 @@ const Footer: React.FC = () => {
           <h3 className="font-semibold text-xl mb-6 text-gray-800">Company</h3>
           <ul className="space-y-4">
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
-                Discover Cleancraft
+              <Link to={createLink('')} className="text-gray-600 hover:text-blue-500 transition-colors">
+                Service & Pricing
               </Link>
             </li>
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
-                Blogs
+              <Link to={createLink('/locations')} className="text-gray-600 hover:text-blue-500 transition-colors">
+                Location
               </Link>
             </li>
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
-                Buy Book
+              <Link to={createLink('/connect')} className="text-gray-600 hover:text-blue-500 transition-colors">
+                Connect
               </Link>
             </li>
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
-                Apply for Franchise
+              <Link to={createLink('/franchise')} className="text-gray-600 hover:text-blue-500 transition-colors">
+                Laundry Franchise
               </Link>
             </li>
           </ul>
@@ -65,23 +76,23 @@ const Footer: React.FC = () => {
           <h3 className="font-semibold text-xl mb-6 text-gray-800">Support</h3>
           <ul className="space-y-4">
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
+              <Link to={createLink('/policies/privacy')} className="text-gray-600 hover:text-blue-500 transition-colors">
                 Privacy policy
               </Link>
             </li>
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
+              <Link to={createLink('/policies/terms-conditions')} className="text-gray-600 hover:text-blue-500 transition-colors">
                 Terms & Conditions
               </Link>
             </li>
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
-                Cookie Policy
+              <Link to={createLink('/policies/refund')} className="text-gray-600 hover:text-blue-500 transition-colors">
+                Refund Policy
               </Link>
             </li>
             <li>
-              <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
-                Refund and return policy
+              <Link to={createLink('/policies/cancellation')} className="text-gray-600 hover:text-blue-500 transition-colors">
+                Cancellation Policy
               </Link>
             </li>
           </ul>
@@ -117,8 +128,11 @@ const Footer: React.FC = () => {
           <span>{new Date().getFullYear()}-{new Date().getFullYear() + 1} Clean Craft | All rights reserved</span>
         </div>
         
-        <div className="mt-6 flex flex-wrap gap-4 justify-center text-sm text-gray-500">
-          <Link to="/policies" className="hover:text-blue-500">All Policies</Link>
+        <div className="flex items-center space-x-6">
+          <Link to={createLink('/policies')} className="text-sm text-gray-500 hover:text-blue-500">
+            All Policies
+          </Link>
+          <CountrySelector />
         </div>
       </div>
     </footer>
