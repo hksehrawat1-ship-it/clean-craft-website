@@ -1,238 +1,129 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { getStorageUrl } from '@/utils/storageUtils';
+import { useNavigate } from 'react-router-dom';
 import { Country, CountryContextType } from '@/types/country';
 import { toast } from 'sonner';
 
-// Default country when no selection is available
-const DEFAULT_COUNTRY_CODE = 'in';
+// Create the context
+const CountryContext = createContext<CountryContextType | null>(null);
 
-// Define regions for countries
-export const COUNTRY_REGIONS = {
-  'in': 'ASIA/PACIFIC',
-  'au': 'ASIA/PACIFIC',
-  'sg': 'ASIA/PACIFIC',
-  'my': 'ASIA/PACIFIC',
-  'uk': 'EUROPE',
-  'de': 'EUROPE',
-  'fr': 'EUROPE',
-  'es': 'EUROPE',
-  'it': 'EUROPE',
-  'us': 'NORTH AMERICA',
-  'ca': 'NORTH AMERICA'
-};
-
-// IP-based geolocation API
-const GEOLOCATION_API = 'https://api.ipgeolocation.io/ipgeo?apiKey=6548f106674f41508284d6ef9f08fd36';
-
-const CountryContext = createContext<CountryContextType | undefined>(undefined);
-
+// Create a provider component
 export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
   const [countries, setCountries] = useState<Country[]>([]);
+  const [currentCountry, setCurrentCountryState] = useState<Country | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [geoDetectionAttempted, setGeoDetectionAttempted] = useState(false);
   const navigate = useNavigate();
 
-  // Log debugging info
-  useEffect(() => {
-    console.log('CountryContext state:', { 
-      currentCountry, 
-      countriesCount: countries.length,
-      isLoading, 
-      error: error?.message 
-    });
-  }, [currentCountry, countries, isLoading, error]);
-
-  // Load countries from Supabase
+  // Fetch all countries
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        console.log('Fetching countries from Supabase...');
         setIsLoading(true);
+        setError(null);
         
         const { data, error } = await supabase
           .from('countries')
           .select('*')
           .eq('is_active', true)
           .order('name');
-          
+        
         if (error) throw error;
         
-        console.log('Fetched countries:', data);
-        
-        // Enhance countries with region info
-        const enhancedCountries = data?.map(country => ({
-          ...country,
-          region: COUNTRY_REGIONS[country.code as keyof typeof COUNTRY_REGIONS] || 'GLOBAL'
-        })) || [];
-        
-        setCountries(enhancedCountries);
+        setCountries(data || []);
       } catch (err) {
         console.error('Error fetching countries:', err);
-        setError(err instanceof Error ? err : new Error('Failed to fetch countries'));
-        toast.error('Failed to load country data');
+        setError(err as Error);
+        toast.error('Failed to load countries. Please refresh the page.');
       } finally {
         setIsLoading(false);
       }
     };
-
+    
     fetchCountries();
   }, []);
 
-  // Try to detect user's country via IP geolocation
-  const detectCountryViaGeoIP = async (): Promise<string | null> => {
-    try {
-      console.log('Attempting IP geolocation detection');
-      
-      const response = await fetch(GEOLOCATION_API);
-      if (!response.ok) {
-        throw new Error('Geolocation API response not OK');
-      }
-      
-      const data = await response.json();
-      const detectedCountryCode = data.country_code2?.toLowerCase();
-      
-      console.log('IP geolocation detected country:', detectedCountryCode);
-      
-      // Check if the detected country is supported in our app
-      if (detectedCountryCode && countries.some(c => c.code === detectedCountryCode)) {
-        return detectedCountryCode;
-      }
-      
-      return null;
-    } catch (err) {
-      console.error('IP geolocation detection failed:', err);
-      return null;
-    }
-  };
-
-  // Detect user's country on initial load
-  useEffect(() => {
-    const detectUserCountry = async () => {
-      // If we've already attempted geo detection or countries aren't loaded yet, exit
-      if (geoDetectionAttempted || countries.length === 0) {
-        return;
-      }
-
-      // First check if a country is selected in localStorage
-      const storedCountryCode = localStorage.getItem('selectedCountry');
-      
-      console.log('Stored country code:', storedCountryCode);
-      console.log('Available countries:', countries);
-      
-      // Check if we're at the root path - if so, we don't auto-select a country
-      if (window.location.pathname === '/') {
-        console.log('At root path, not auto-selecting country');
-        return;
-      }
-      
-      // Check if we're on a country-specific path
-      const pathCountryMatch = window.location.pathname.match(/^\/([a-z]{2})(\/.*)?$/);
-      if (pathCountryMatch && pathCountryMatch[1]) {
-        const pathCountryCode = pathCountryMatch[1];
-        const pathCountry = countries.find(c => c.code === pathCountryCode);
-        
-        if (pathCountry) {
-          console.log('Using country from URL path:', pathCountryCode);
-          setCurrentCountry(pathCountry);
-          localStorage.setItem('selectedCountry', pathCountry.code);
-          return;
-        }
-      }
-      
-      if (storedCountryCode && countries.some(c => c.code === storedCountryCode)) {
-        console.log('Using stored country:', storedCountryCode);
-        const country = countries.find(c => c.code === storedCountryCode) || null;
-        setCurrentCountry(country);
-        return;
-      }
-
-      // Try IP-based geolocation to detect country
-      setGeoDetectionAttempted(true);
-      const detectedCountryCode = await detectCountryViaGeoIP();
-      
-      if (detectedCountryCode) {
-        console.log('Using geolocation detected country:', detectedCountryCode);
-        const country = countries.find(c => c.code === detectedCountryCode) || null;
-        if (country) {
-          setCurrentCountry(country);
-          localStorage.setItem('selectedCountry', country.code);
-          return;
-        }
-      }
-      
-      // If we still don't have a country, use the default
-      if (countries.length > 0) {
-        console.log('Using default country');
-        const defaultCountry = countries.find(c => c.code === DEFAULT_COUNTRY_CODE) || countries[0];
-        setCurrentCountry(defaultCountry);
-        localStorage.setItem('selectedCountry', defaultCountry.code);
-      } else if (countries.length === 0 && !isLoading) {
-        console.error('No countries available in database');
-        setError(new Error('No countries available'));
-      }
-    };
-    
-    if (countries.length > 0 && !currentCountry && !isLoading) {
-      console.log('Detecting user country...');
-      detectUserCountry();
-    }
-  }, [countries, currentCountry, isLoading, geoDetectionAttempted]);
-
-  const handleSetCurrentCountry = (countryCode: string) => {
-    console.log('Setting country to:', countryCode);
-    const country = countries.find(c => c.code === countryCode);
+  // Set current country based on code
+  const setCurrentCountry = useCallback((countryCode: string) => {
+    const country = countries.find((c) => c.code.toLowerCase() === countryCode.toLowerCase());
     
     if (country) {
-      setCurrentCountry(country);
+      // Update local storage
       localStorage.setItem('selectedCountry', country.code);
       
-      // Update the URL to reflect the country change
-      const currentPath = window.location.pathname;
-      
-      // If at the root path or already on a country path, navigate to the new country path
-      if (currentPath === '/' || /^\/[a-z]{2}(\/.*)?$/.test(currentPath)) {
-        const pathWithoutCountry = currentPath.split('/').slice(2).join('/');
-        const newPath = `/${country.code}${pathWithoutCountry ? `/${pathWithoutCountry}` : ''}`;
-        console.log('Navigating to:', newPath);
-        navigate(newPath);
-      }
+      // Update state
+      setCurrentCountryState(country);
     } else {
-      toast.error(`Country code ${countryCode} is not supported`);
+      console.warn(`Country code ${countryCode} not found`);
+      // If country not found, use default country or first available
+      const defaultCountry = countries.find(c => c.code === 'in') || countries[0];
+      
+      if (defaultCountry) {
+        localStorage.setItem('selectedCountry', defaultCountry.code);
+        setCurrentCountryState(defaultCountry);
+      }
     }
-  };
+  }, [countries]);
 
-  // Helper function to get country-specific image URL
-  const getImageUrl = (path: string): string => {
+  // Handle region-specific image paths
+  const getImageUrl = (path: string) => {
     if (!path) return '';
+    if (path.startsWith('http')) return path;
+
+    const regionPrefix = currentCountry ? `/${currentCountry.code.toLowerCase()}` : '';
+    return `${regionPrefix}${path}`;
+  };
+
+  // Get country region for grouping
+  const getCountryRegion = (countryCode: string): string => {
+    if (!countryCode) return 'Other';
     
-    // If path already includes country code or is external, use it directly
-    if (path.startsWith('http') || path.includes('/')) {
-      return getStorageUrl(path);
+    countryCode = countryCode.toLowerCase();
+    
+    if (['in', 'au', 'sg', 'my'].includes(countryCode)) {
+      return 'ASIA/PACIFIC';
+    }
+    if (['uk', 'de', 'fr', 'es', 'it'].includes(countryCode)) {
+      return 'EUROPE';
+    }
+    if (['us', 'ca'].includes(countryCode)) {
+      return 'NORTH AMERICA';
     }
     
-    // Otherwise, prepend current country code
-    const countryCode = currentCountry?.code || DEFAULT_COUNTRY_CODE;
-    return getStorageUrl(`${countryCode}/${path}`);
+    return 'GLOBAL';
   };
 
-  // Get region of a country
-  const getCountryRegion = (countryCode: string): string => {
-    return COUNTRY_REGIONS[countryCode as keyof typeof COUNTRY_REGIONS] || 'GLOBAL';
-  };
+  // Initialize from local storage or URL
+  useEffect(() => {
+    const path = window.location.pathname;
+    const pathParts = path.split('/').filter(Boolean);
+    
+    if (pathParts.length > 0) {
+      const countryCodeFromPath = pathParts[0].toLowerCase();
+      
+      // Only set from URL if it's a valid country code format (2 chars)
+      if (countryCodeFromPath.length === 2) {
+        setCurrentCountry(countryCodeFromPath);
+        return;
+      }
+    }
+    
+    // Otherwise try from localStorage
+    const savedCountry = localStorage.getItem('selectedCountry');
+    if (savedCountry && countries.length > 0) {
+      setCurrentCountry(savedCountry);
+    }
+  }, [countries, setCurrentCountry]);
 
-  const value = {
+  // Provide the context value
+  const value: CountryContextType = {
     currentCountry,
     countries,
     isLoading,
     error,
-    setCurrentCountry: handleSetCurrentCountry,
+    setCurrentCountry,
     getImageUrl,
-    getCountryRegion,
+    getCountryRegion
   };
 
   return (
@@ -242,10 +133,13 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   );
 };
 
+// Custom hook to use the country context
 export const useCountry = (): CountryContextType => {
   const context = useContext(CountryContext);
-  if (context === undefined) {
+  
+  if (!context) {
     throw new Error('useCountry must be used within a CountryProvider');
   }
+  
   return context;
 };
