@@ -14,6 +14,7 @@ export interface CountryContextType {
   isLoading: boolean;
   error: Error | null;
   setCurrentCountry: (countryCode: string) => void;
+  detectUserCountry: () => Promise<string | null>;
   getImageUrl: (path: string) => string;
   getCountryRegion: (countryCode: string) => string;
 }

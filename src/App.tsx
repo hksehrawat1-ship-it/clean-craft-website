@@ -38,11 +38,13 @@ const App = () => {
           <CountryProvider>
             <CookieConsentProvider>
               <Routes>
-                {/* Root route shows country selection */}
+                {/* Root route for country detection and selection */}
                 <Route path="/" element={<CountryRedirect />} />
                 
                 {/* Country-specific routes with availability guards */}
-                <Route path="/:countryCode" element={<Index />} />
+                <Route path="/:countryCode" element={
+                  <CountryRouteGuard pagePath="/" element={<Index />} />
+                } />
                 <Route path="/:countryCode/learning/courses" element={
                   <CountryRouteGuard pagePath="/learning/courses" element={<Courses />} />
                 } />

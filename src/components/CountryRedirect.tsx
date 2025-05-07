@@ -11,9 +11,10 @@ interface CountryRedirectProps {
 }
 
 const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
-  const { currentCountry, countries, setCurrentCountry, isLoading, error } = useCountry();
+  const { currentCountry, countries, setCurrentCountry, detectUserCountry, isLoading, error } = useCountry();
   const navigate = useNavigate();
   const [redirectAttempts, setRedirectAttempts] = useState(0);
+  const [detectionInProgress, setDetectionInProgress] = useState(true);
   
   // Group countries by region
   const groupedCountries = countries.reduce((acc, country) => {
@@ -34,31 +35,54 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     return acc;
   }, {} as Record<string, typeof countries>);
   
-  // Handle redirection based on selected country
+  // Auto-detect country and redirect
   useEffect(() => {
-    // Only redirect if we're not on the root path (/), and we have a country
-    if (!isLoading && currentCountry && window.location.pathname === '/') {
-      navigate(`/${currentCountry.code}${path}`);
-    }
-  }, [currentCountry, isLoading, navigate, path]);
+    const autoDetectCountry = async () => {
+      if (window.location.pathname !== '/') {
+        setDetectionInProgress(false);
+        return;
+      }
+      
+      if (!isLoading && countries.length > 0) {
+        try {
+          setDetectionInProgress(true);
+          const detectedCountry = await detectUserCountry();
+          
+          if (detectedCountry) {
+            navigate(`/${detectedCountry}${path}`);
+          }
+        } catch (error) {
+          console.error('Country detection failed:', error);
+        } finally {
+          setDetectionInProgress(false);
+        }
+      }
+    };
+    
+    autoDetectCountry();
+  }, [isLoading, countries, detectUserCountry, navigate, path]);
 
   // Increment redirect attempts to prevent infinite loading
   useEffect(() => {
-    if (isLoading && redirectAttempts < 3) {
+    if ((isLoading || detectionInProgress) && redirectAttempts < 3) {
       const timer = setTimeout(() => {
         setRedirectAttempts(prev => prev + 1);
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [isLoading, redirectAttempts]);
+  }, [isLoading, detectionInProgress, redirectAttempts]);
 
   // Helper to select a country
   const handleCountrySelect = (code: string) => {
     setCurrentCountry(code);
+    navigate(`/${code}${path}`);
   };
 
-  // Always show the country selection screen if we are at the root path (/)
-  if (window.location.pathname === '/' || error || (redirectAttempts >= 3 && isLoading)) {
+  // Show country selection for root path or if detection failed
+  const showCountrySelector = window.location.pathname === '/' || error || 
+    (redirectAttempts >= 3 && (isLoading || detectionInProgress));
+  
+  if (showCountrySelector) {
     if (error) {
       toast.error("Couldn't load country information. Please select one manually.");
     }

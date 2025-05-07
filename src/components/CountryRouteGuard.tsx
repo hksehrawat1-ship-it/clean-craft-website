@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Outlet, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { usePageAvailability } from '@/hooks/usePageAvailability';
 import { Loader2 } from 'lucide-react';
 
@@ -11,7 +11,7 @@ interface CountryRouteGuardProps {
 
 const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element }) => {
   const { countryCode } = useParams();
-  const { isLoading, isAvailable } = usePageAvailability(pagePath);
+  const { isLoading, isAvailable, pageContent } = usePageAvailability(pagePath);
 
   if (isLoading) {
     return (
@@ -30,7 +30,12 @@ const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element
     return <Navigate to={`/${countryCode}`} replace />;
   }
 
-  return <>{element}</>;
+  // If we have an element with pageContentProp, pass the content to it
+  const elementWithContent = React.isValidElement(element) && pageContent
+    ? React.cloneElement(element as React.ReactElement<any>, { pageContent })
+    : element;
+
+  return <>{elementWithContent}</>;
 };
 
 export default CountryRouteGuard;

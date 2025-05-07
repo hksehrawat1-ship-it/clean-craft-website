@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -93,26 +94,45 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return 'GLOBAL';
   };
 
-  // Initialize from local storage or URL
-  useEffect(() => {
-    const path = window.location.pathname;
-    const pathParts = path.split('/').filter(Boolean);
-    
-    if (pathParts.length > 0) {
-      const countryCodeFromPath = pathParts[0].toLowerCase();
-      
-      // Only set from URL if it's a valid country code format (2 chars)
-      if (countryCodeFromPath.length === 2) {
-        setCurrentCountry(countryCodeFromPath);
-        return;
-      }
-    }
-    
-    // Otherwise try from localStorage
+  // Try to detect user's country if not already set
+  const detectUserCountry = useCallback(async () => {
+    // First check if we have a selected country in local storage
     const savedCountry = localStorage.getItem('selectedCountry');
     if (savedCountry && countries.length > 0) {
       setCurrentCountry(savedCountry);
+      return savedCountry;
     }
+    
+    // If no saved country, try to get from geolocation API
+    try {
+      const response = await fetch('https://ipapi.co/json/');
+      const data = await response.json();
+      
+      if (data && data.country_code && countries.length > 0) {
+        const countryCode = data.country_code.toLowerCase();
+        const foundCountry = countries.find(c => 
+          c.code.toLowerCase() === countryCode
+        );
+        
+        if (foundCountry) {
+          setCurrentCountry(foundCountry.code);
+          return foundCountry.code;
+        }
+      }
+    } catch (error) {
+      console.error('Error detecting country:', error);
+    }
+    
+    // If no country detected or not available, use default
+    if (countries.length > 0) {
+      const defaultCountry = countries.find(c => c.code === 'in') || countries[0];
+      if (defaultCountry) {
+        setCurrentCountry(defaultCountry.code);
+        return defaultCountry.code;
+      }
+    }
+    
+    return null;
   }, [countries, setCurrentCountry]);
 
   // Provide the context value
@@ -122,6 +142,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     isLoading,
     error,
     setCurrentCountry,
+    detectUserCountry,
     getImageUrl,
     getCountryRegion
   };
