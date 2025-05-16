@@ -1,100 +1,93 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CountryProvider } from "./contexts/CountryContext";
 import { CookieConsentProvider } from "./contexts/CookieConsentContext";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import CountryRouteGuard from "./components/CountryRouteGuard";
+import CountryRedirect from "./components/CountryRedirect";
+import { useState } from "react";
+import { HelmetProvider } from 'react-helmet-async';
+
+// Page imports
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Courses from "./pages/learning/Courses";
 import Book from "./pages/learning/Book";
-import Policies from "./pages/policies/index";
-import WarrantyPolicy from "./pages/policies/WarrantyPolicy";
-import RefundPolicy from "./pages/policies/RefundPolicy";
-import CancellationPolicy from "./pages/policies/CancellationPolicy";
-import ShippingPolicy from "./pages/policies/ShippingPolicy";
-import CoachingRegistration from "./pages/policies/CoachingRegistration";
-import EbookPolicy from "./pages/policies/EbookPolicy";
-import PrivacyPolicy from "./pages/policies/PrivacyPolicy";
-import TermsConditionPolicy from "./pages/policies/TermsConditionPolicy";
-import CountryRedirect from "./components/CountryRedirect";
-import { useState } from "react";
+import Policies from "./pages/Policies";
+import PolicyDetails from "./pages/PolicyDetails";
 
-const App = () => {
-  // Create a new QueryClient instance inside the component
-  // This ensures it's properly initialized within the React component lifecycle
-  const [queryClient] = useState(() => new QueryClient());
+// Here's what's happening in this App component:
+
+// 1. Setup and Configuration:
+// - Creates a QueryClient instance for handling API requests/caching
+// - Sets up various UI providers (Toaster, Tooltip) for notifications and tooltips
+function App() {
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        refetchOnWindowFocus: false,
+      },
+    },
+  }));
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <CountryProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
             <CookieConsentProvider>
-              <Routes>
-                {/* Root route for country detection and selection */}
-                <Route path="/" element={<CountryRedirect />} />
-                
-                {/* Country-specific routes with availability guards */}
-                <Route path="/:countryCode" element={
-                  <CountryRouteGuard pagePath="/" element={<Index />} />
-                } />
+              <CountryProvider>
+                <Routes>
+                  {/* Root route - handles initial country detection */}
+                  <Route path="/" element={<CountryRedirect />} />
+                  
+                  {/* Country-specific routes */}
+                  <Route path="/:countryCode">
+                    {/* Main landing page for each country */}
+                    <Route index element={
+                      <CountryRouteGuard pagePath="/" element={<Index />} />
+                    } />
 
-                {/* Learning routes - available only for India */}
-                <Route path="/:countryCode/learning/courses" element={
-                  <CountryRouteGuard pagePath="/learning/courses" element={<Courses />} />
-                } />
-                <Route path="/:countryCode/learning/book" element={
-                  <CountryRouteGuard pagePath="/learning/book" element={<Book />} />
-                } />
+                    {/* Learning Routes - only available for India */}
+                    <Route path="learning">
+                      <Route path="courses" element={
+                        <CountryRouteGuard pagePath="/learning/courses" element={<Courses />} />
+                      } />
+                      <Route path="book" element={
+                        <CountryRouteGuard pagePath="/learning/book" element={<Book />} />
+                      } />
+                    </Route>
+                    
+                    {/* Policy Routes - available for both India and Australia */}
+                    <Route path="policies">
+                      <Route index element={
+                        <CountryRouteGuard pagePath="/policies" element={<Policies />} />
+                      } />
+                      <Route path=":slug" element={
+                        <CountryRouteGuard pagePath="/policies" element={<PolicyDetails />} />
+                      } />
+                    </Route>
+                  </Route>
+                  
+                  {/* Catch-all route for 404 errors */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
                 
-                {/* Policy routes - available for both India and Australia */}
-                <Route path="/:countryCode/policies" element={
-                  <CountryRouteGuard pagePath="/policies" element={<Policies />} />
-                } />
-                <Route path="/:countryCode/policies/warranty" element={
-                  <CountryRouteGuard pagePath="/policies/warranty" element={<WarrantyPolicy />} />
-                } />
-                <Route path="/:countryCode/policies/refund" element={
-                  <CountryRouteGuard pagePath="/policies/refund" element={<RefundPolicy />} />
-                } />
-                <Route path="/:countryCode/policies/cancellation" element={
-                  <CountryRouteGuard pagePath="/policies/cancellation" element={<CancellationPolicy />} />
-                } />
-                <Route path="/:countryCode/policies/shipping" element={
-                  <CountryRouteGuard pagePath="/policies/shipping" element={<ShippingPolicy />} />
-                } />
-                <Route path="/:countryCode/policies/coaching-registration" element={
-                  <CountryRouteGuard pagePath="/policies/coaching-registration" element={<CoachingRegistration />} />
-                } />
-                <Route path="/:countryCode/policies/ebook" element={
-                  <CountryRouteGuard pagePath="/policies/ebook" element={<EbookPolicy />} />
-                } />
-                <Route path="/:countryCode/policies/privacy" element={
-                  <CountryRouteGuard pagePath="/policies/privacy" element={<PrivacyPolicy />} />
-                } />
-                <Route path="/:countryCode/policies/terms-conditions" element={
-                  <CountryRouteGuard pagePath="/policies/terms-conditions" element={<TermsConditionPolicy />} />
-                } />
-                
-                {/* Catch-all route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              
-              {/* Cookie Banner */}
-              <CookieConsentBanner />
+                {/* Global Components */}
+                <CookieConsentBanner />
+              </CountryProvider>
             </CookieConsentProvider>
-          </CountryProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
-};
+}
 
 export default App;

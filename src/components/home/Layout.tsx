@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EnhancedNavbar from '../../components/EnhancedNavbar';
 import OfferCarousel from './OfferCarousel';
@@ -13,9 +12,8 @@ const Layout = ({ children, showOfferCarousel = true }: LayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen">
       <EnhancedNavbar />
-      {/* Add top margin to offset the fixed navbar */}
-      <div className="mt-24">
-        {showOfferCarousel && <OfferCarousel />}
+      <div>
+        {/* {showOfferCarousel && <OfferCarousel />} */}
         <main className="flex-grow">
           {children}
         </main>

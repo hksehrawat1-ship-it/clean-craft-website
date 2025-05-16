@@ -50,20 +50,19 @@ const ProcessStepsSection = () => {
     const isActive = activeStep === index;
     return (
       <Card 
-        className={`min-w-[320px] max-w-[320px] mx-3 p-5 transition-all duration-300 cursor-pointer rounded-2xl ${
-          isActive ? 'border-[#1869D3] shadow-lg bg-white scale-105' : 'border-gray-200 bg-gray-50 scale-100'
+        className={`snap-center min-w-[280px] max-w-[280px] mx-2 p-4 transition-all duration-300 cursor-pointer rounded-2xl ${
+          isActive ? 'border-[#1869D3] shadow-lg bg-white' : 'border-gray-200 bg-gray-50'
         }`}
-        style={{ minHeight: 160 }}
         onClick={() => handleStepClick(index)}
       >
-        <div className="flex items-center gap-4">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
             isActive ? 'bg-[#1869D3]' : 'bg-gray-300'
           }`}>
             <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-700'}`}>{index + 1}</span>
           </div>
           <div>
-            <h3 className={`text-lg font-semibold ${isActive ? 'text-[#0E0E0E]' : 'text-gray-700'}`}>{step.title}</h3>
+            <h3 className={`text-base font-semibold ${isActive ? 'text-[#0E0E0E]' : 'text-gray-700'}`}>{step.title}</h3>
             <p className={`text-sm ${isActive ? 'text-[#212121]' : 'text-gray-500'}`}>{step.description}</p>
           </div>
         </div>
@@ -72,12 +71,12 @@ const ProcessStepsSection = () => {
   };
 
   return (
-    <section className="py-20 px-6 md:px-12 lg:px-28 xl:px-32 bg-[#E8F1FD]">
+    <section className="py-16 md:py-20 px-4 md:px-12 lg:px-28 xl:px-32 bg-[#E8F1FD]">
       <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-black mb-6">Laundry Done in 4 Simple Steps</h2>
-          <p className="text-[#4D4D4D] mb-6">We believe processes should be simple yet smart to deliver services in</p>
-          <div className="flex justify-center items-center space-x-4">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-5xl font-black mb-4 md:mb-6">Laundry Done in 4 Simple Steps</h2>
+          <p className="text-[#4D4D4D] mb-4 md:mb-6">We believe processes should be simple yet smart to deliver services in</p>
+          <div className="flex justify-center items-center space-x-4 text-sm md:text-base">
             <span className="text-[#4D4D4D]">Absolute Quality</span>
             <span className="text-[#4D4D4D]">|</span>
             <span className="text-[#4D4D4D]">Min. time</span>
@@ -87,23 +86,31 @@ const ProcessStepsSection = () => {
         </div>
 
         {isMobile ? (
-          <div className="w-full">
-            {/* Image for current step */}
-            <div className="w-full aspect-square mb-8 overflow-hidden rounded-xl shadow-md transition-all duration-500 bg-white flex items-center justify-center" style={{ minHeight: 260 }}>
-              <img 
-                src={steps[activeStep].imageSrc} 
-                alt={steps[activeStep].title}
-                className="w-full h-full object-contain transition-opacity duration-300 max-h-[320px]"
-              />
+          <div className="flex flex-col gap-6">
+            {/* Images stack */}
+            <div className="relative h-[200px] flex items-center justify-center">
+              {steps.map((step, index) => (
+                <img 
+                  key={step.id}
+                  src={step.imageSrc} 
+                  alt={step.title}
+                  className={`absolute w-auto h-full max-h-[200px] object-contain transition-all duration-300 ${
+                    activeStep === index 
+                      ? 'opacity-100 scale-100' 
+                      : 'opacity-0 scale-95'
+                  }`}
+                />
+              ))}
             </div>
+            
             {/* Scrollable steps */}
-            <ScrollArea className="w-full overflow-x-auto pb-2">
-              <div className="flex pb-4 space-x-2">
+            <div className="overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4">
+              <div className="flex space-x-3">
                 {steps.map((step, index) => (
                   <MobileStepItem key={step.id} step={step} index={index} />
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col md:flex-row items-center justify-between gap-10">

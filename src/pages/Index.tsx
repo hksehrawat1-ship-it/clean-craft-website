@@ -1,5 +1,6 @@
-
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useCountry } from '@/contexts/CountryContext';
 import Layout from '../components/home/Layout';
 import HeroSection from '../components/home/HeroSection';
 import ServicesSection from '../components/home/ServicesSection';
@@ -10,39 +11,92 @@ import LaundryServiceFeatures from '../components/home/LaundryServiceFeatures';
 import CustomerTestimonials from '../components/home/CustomerTestimonials';
 import GuaranteeSection from '../components/home/GuaranteeSection';
 import FAQSection from '../components/home/FAQSection';
-import PropTypes from 'prop-types';
+import { SEO } from '@/components/SEO';
+import { cn } from '@/lib/utils';
 
-interface IndexProps {
-  pageContent?: {
-    services?: any[];
-    testimonials?: any[];
-    [key: string]: any;
-  };
+interface SectionWrapperProps {
+  children: React.ReactNode;
+  className?: string;
+  noPadding?: boolean;
 }
 
-const Index: React.FC<IndexProps> = ({ pageContent }) => {
+const SectionWrapper: React.FC<SectionWrapperProps> = ({ children, className, noPadding }) => (
+  <div className={cn(
+    'w-full',
+    !noPadding && 'py-12 md:py-16', // Reduced padding from py-20 to py-16
+    className
+  )}>
+    {children}
+  </div>
+);
+
+export default function Index() {
+  const { countryCode } = useParams<{ countryCode: string }>();
+  const { currentCountry, setCurrentCountry } = useCountry();
+
+  // Ensure country is set
+  React.useEffect(() => {
+    if (countryCode && (!currentCountry || currentCountry.code !== countryCode)) {
+      setCurrentCountry(countryCode);
+    }
+  }, [countryCode, currentCountry, setCurrentCountry]);
+
   return (
-    <Layout>
-      <HeroSection />
-      {/* Pass the services prop correctly to ServicesSection */}
-      <ServicesSection services={pageContent?.services || []} />
-      <BenefitsSection />
-      <ProcessStepsSection />
-      <YourFirstPickupEssentials />
-      <LaundryServiceFeatures />
-      <GuaranteeSection />
-      <CustomerTestimonials testimonials={pageContent?.testimonials || []} />
-      <FAQSection />
-    </Layout>
+    <>
+      <SEO 
+        slug="home"
+        defaultTitle={`CleanCraft - Professional Laundry Services${currentCountry ? ` in ${currentCountry.name}` : ''}`}
+        defaultDescription={`Experience premium laundry services with CleanCraft${currentCountry ? ` in ${currentCountry.name}` : ''}. Professional cleaning, expert care, and convenient solutions for all your laundry needs.`}
+      />
+      
+      <Layout>
+        <div className="flex flex-col w-full">
+          {/* Hero section doesn't need standard padding */}
+          <SectionWrapper noPadding>
+            <HeroSection />
+          </SectionWrapper>
+
+          {/* Services section with blue background */}
+          <SectionWrapper className="bg-[#1E3A8A]">
+            <ServicesSection />
+          </SectionWrapper>
+
+          {/* Benefits section */}
+          <SectionWrapper className="bg-white">
+            <BenefitsSection />
+          </SectionWrapper>
+
+          {/* Process steps with light blue background */}
+          <SectionWrapper className="bg-[#E8F1FD]">
+            <ProcessStepsSection />
+          </SectionWrapper>
+
+          {/* First pickup essentials */}
+          <SectionWrapper className="bg-white">
+            <YourFirstPickupEssentials />
+          </SectionWrapper>
+
+          {/* Features with alternating background */}
+          <SectionWrapper className="bg-[#F8FAFC]">
+            <LaundryServiceFeatures />
+          </SectionWrapper>
+
+          {/* Guarantee section */}
+          <SectionWrapper className="bg-white">
+            <GuaranteeSection />
+          </SectionWrapper>
+
+          {/* Testimonials with light background */}
+          <SectionWrapper className="bg-[#F8FAFC]">
+            <CustomerTestimonials />
+          </SectionWrapper>
+
+          {/* FAQ section */}
+          <SectionWrapper className="bg-white">
+            <FAQSection />
+          </SectionWrapper>
+        </div>
+      </Layout>
+    </>
   );
-};
-
-// Update propTypes definition for the component
-Index.propTypes = {
-  pageContent: PropTypes.shape({
-    services: PropTypes.array,
-    testimonials: PropTypes.array
-  })
-};
-
-export default Index;
+}

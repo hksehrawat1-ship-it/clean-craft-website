@@ -1,0 +1,50 @@
+# Global pages available by default
+global:
+  pages:
+    - path: "/"
+      navbar: true
+      title: "Home"
+      order: 1
+    # - path: "/services"
+    #   navbar: true
+    #   title: "Services"
+    #   order: 2
+    - path: "/policies"
+      navbar: true
+      title: "Policies"
+      order: 3
+    # - path: "/locations"
+    #   navbar: true
+    #   title: "Location"
+    #   order: 4
+    # - path: "/connect"
+    #   navbar: true
+    #   title: "Connect"
+    #   order: 5
+
+# Country-specific page availability
+au:
+  pages: []  # Uses only global pages
+
+in:
+  pages:
+    - path: "/franchise"
+      navbar: true
+      title: "Laundry Franchise"
+      order: 6
+    - path: "/learning"
+      navbar: true
+      title: "Learning"
+      order: 7
+      children:
+        - path: "/learning/courses"
+          navbar: true
+          title: "Courses"
+          order: 1
+        - path: "/learning/book"
+          navbar: true
+          title: "Book"
+          order: 2
+
+sg:
+  pages: []  # Uses only global pages 

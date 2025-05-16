@@ -1,68 +1,21 @@
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useCountry } from '@/contexts/CountryContext';
+import { usePagesConfig } from '@/hooks/use-pages-config';
 
 const EnhancedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [learningOpen, setLearningOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
+  const { getNavbarItems } = usePagesConfig();
   
-  // Fetch available pages for the current country
-  const { data: availablePages } = useQuery({
-    queryKey: ['available-pages', currentCountry?.code],
-    queryFn: async () => {
-      if (!currentCountry) return [];
-      
-      // Define the pages to check
-      const pagesToCheck = [
-        '/learning/courses',
-        '/learning/book',
-        '/policies'
-      ];
-      
-      // Create an array to store results
-      const results = [];
-      
-      // Check each page
-      for (const page of pagesToCheck) {
-        const { data, error } = await supabase
-          .rpc('is_page_available', {
-            country_code: currentCountry.code.toLowerCase(),
-            page_path: page
-          });
-          
-        if (!error) {
-          results.push({
-            page_path: page,
-            is_available: !!data
-          });
-        }
-      }
-      
-      return results;
-    },
-    enabled: !!currentCountry,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
+  const navItems = getNavbarItems();
   
-  // Helper function to check if a path is available
-  const isPageAvailable = (path: string): boolean => {
-    if (!availablePages || !availablePages.length) {
-      return true; // Default to showing all links if data isn't loaded yet
-    }
-    
-    const page = availablePages.find(p => p.page_path === path);
-    return page ? page.is_available : false;
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -93,12 +46,6 @@ const EnhancedNavbar = () => {
   const createLink = (path: string) => {
     return currentCountry ? `/${currentCountry.code}${path}` : '/';
   };
-  
-  // Determine if Learning section should be shown (if any of its sub-pages are available)
-  const showLearningSection = isPageAvailable('/learning/courses') || isPageAvailable('/learning/book');
-  
-  // Determine if Policies section should be shown
-  const showPoliciesSection = isPageAvailable('/policies');
 
   return (
     <header 
@@ -109,177 +56,149 @@ const EnhancedNavbar = () => {
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
         <Link to={createLink('')} className="flex items-center z-20">
-          <img alt="Clean Craft Logo" className="h-12 w-auto" src="/lovable-uploads/b9620b89-debb-4cc2-bd6b-edec70fb1bed.png" />
+          <img 
+            alt="Clean Craft Logo" 
+            className="h-8 w-8 md:hidden" 
+            src="/lovable-uploads/cleancraft-icon.png" 
+          />
+          <img 
+            alt="Clean Craft Logo" 
+            className="hidden md:block h-12 w-auto" 
+            src="/lovable-uploads/cleancraft-full-logo.png" 
+          />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          {/* Fixed navigation links from Header */}
-          <Link to={createLink('')} className="text-gray-700 hover:text-primary font-medium">
-            Service & Pricing
-          </Link>
-          
-          <Link to={createLink('/locations')} className="text-gray-700 hover:text-primary font-medium">
-            Location
-          </Link>
-          
-          <Link to={createLink('/connect')} className="text-gray-700 hover:text-primary font-medium">
-            Connect
-          </Link>
-          
-          <Link to={createLink('/franchise')} className="text-gray-700 hover:text-primary font-medium">
-            Laundry Franchise
-          </Link>
-          
-          {/* Dynamic sections based on country availability */}
-          {showLearningSection && (
-            <div className="relative group">
-              <button
-                className="flex items-center text-gray-700 hover:text-primary font-medium focus:outline-none"
-                onMouseEnter={() => setLearningOpen(true)}
-                onMouseLeave={() => setLearningOpen(false)}
-                onClick={() => setLearningOpen((open) => !open)}
-                type="button"
+          {navItems.map((item) => (
+            item.children ? (
+              <div 
+                key={item.path}
+                className="relative group"
+                onMouseEnter={() => setOpenDropdown(item.path)}
+                onMouseLeave={() => setOpenDropdown(null)}
               >
-                Learning <ChevronDown size={16} className="ml-1" />
-              </button>
-              <div
-                className={`absolute left-0 mt-2 w-40 bg-white border rounded shadow-lg py-2 z-50 transition-opacity duration-200 ${
-                  learningOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                } group-hover:opacity-100 group-hover:pointer-events-auto`}
-                onMouseEnter={() => setLearningOpen(true)}
-                onMouseLeave={() => setLearningOpen(false)}
-              >
-                {isPageAvailable('/learning/courses') && (
-                  <Link to={createLink('/learning/courses')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Courses
-                  </Link>
-                )}
-                {isPageAvailable('/learning/book') && (
-                  <Link to={createLink('/learning/book')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Book
-                  </Link>
-                )}
-              </div>
-            </div>
-          )}
-          
-          {showPoliciesSection && (
-            <Link to={createLink('/policies')} className="text-gray-700 hover:text-primary font-medium">
-              Policies
-            </Link>
-          )}
-        </nav>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-[#1A73E8] text-[#1A73E8] hover:bg-blue-50">
-            Login
-          </Button>
-          <Button className="bg-[#1A73E8] text-white hover:bg-blue-600">
-            Book
-          </Button>
-          
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsMenuOpen(!isMenuOpen);
-            }}
-            className="md:hidden text-gray-700 z-20 menu-toggle-btn ml-2"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu - Improved with sliding animation */}
-      {isMenuOpen && (
-        <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white/95 z-10 animate-fade-in mobile-menu-container">
-          <div className="container mx-auto px-4 pt-20 flex flex-col space-y-6">
-            {/* Fixed navigation links */}
-            <Link 
-              to={createLink('')} 
-              className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Service & Pricing
-            </Link>
-            
-            <Link 
-              to={createLink('/locations')} 
-              className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Location
-            </Link>
-            
-            <Link 
-              to={createLink('/connect')} 
-              className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Connect
-            </Link>
-            
-            <Link 
-              to={createLink('/franchise')} 
-              className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Laundry Franchise
-            </Link>
-            
-            {/* Dynamic sections based on country availability */}
-            {showLearningSection && (
-              <div className="relative">
                 <button
-                  className="flex items-center text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 w-full focus:outline-none"
-                  onClick={() => setLearningOpen((open) => !open)}
+                  className="flex items-center text-gray-700 hover:text-primary transition-colors duration-200 font-medium focus:outline-none"
+                  onClick={() => setOpenDropdown(openDropdown === item.path ? null : item.path)}
                   type="button"
                 >
-                  Learning <ChevronDown size={16} className="ml-1" />
+                  {item.title} <ChevronDown size={16} className={`ml-1 transition-transform duration-200 ${openDropdown === item.path ? 'rotate-180' : ''}`} />
                 </button>
-                {learningOpen && (
-                  <div className="ml-4 mt-2 w-36 bg-white border rounded shadow-lg py-2 z-50">
-                    {isPageAvailable('/learning/courses') && (
-                      <Link to={createLink('/learning/courses')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-                        Courses
-                      </Link>
-                    )}
-                    {isPageAvailable('/learning/book') && (
-                      <Link to={createLink('/learning/book')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-                        Book
-                      </Link>
-                    )}
-                  </div>
-                )}
+                <div
+                  className={`absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50 transition-all duration-200 ${
+                    openDropdown === item.path ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
+                  } group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto`}
+                >
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.path}
+                      to={createLink(child.path)}
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200"
+                    >
+                      {child.title}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            )}
-            
-            {showPoliciesSection && (
-              <Link 
-                to={createLink('/policies')} 
-                className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
-                onClick={() => setIsMenuOpen(false)}
+            ) : (
+              <Link
+                key={item.path}
+                to={createLink(item.path)}
+                className="text-gray-700 hover:text-primary transition-colors duration-200 font-medium"
               >
-                Policies
+                {item.title}
               </Link>
-            )}
+            )
+          ))}
+        </nav>
+
+        {/* Action Buttons - Only visible on desktop */}
+        <div className="hidden md:flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            className="border-primary text-primary hover:bg-primary/10 transition-colors duration-200"
+          >
+            Login
+          </Button>
+          <Button 
+            className="bg-primary text-white hover:bg-primary/90 transition-colors duration-200"
+          >
+            Book Now
+          </Button>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsMenuOpen(!isMenuOpen);
+          }}
+          className="md:hidden text-gray-700 z-20 menu-toggle-btn"
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-10 animate-fade-in mobile-menu-container">
+          <div className="container mx-auto px-4 pt-20 flex flex-col space-y-4">
+            {navItems.map((item) => (
+              item.children ? (
+                <div key={item.path} className="relative">
+                  <button
+                    className="flex items-center justify-between text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 w-full focus:outline-none transition-colors duration-200"
+                    onClick={() => setOpenDropdown(openDropdown === item.path ? null : item.path)}
+                    type="button"
+                  >
+                    {item.title}
+                    <ChevronDown size={16} className={`transition-transform duration-200 ${openDropdown === item.path ? 'rotate-180' : ''}`} />
+                  </button>
+                  <div
+                    className={`overflow-hidden transition-all duration-200 ${
+                      openDropdown === item.path ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="py-2 pl-4">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.path}
+                          to={createLink(child.path)}
+                          className="block py-2 text-gray-700 hover:text-primary transition-colors duration-200"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {child.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={createLink(item.path)}
+                  className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.title}
+                </Link>
+              )
+            ))}
             
             {/* Action buttons in mobile menu */}
-            <div className="flex flex-col gap-3 mt-4">
+            <div className="flex flex-col gap-3 mt-6">
               <Button 
                 variant="outline"
-                className="border-[#1A73E8] text-[#1A73E8] hover:bg-blue-50 w-full"
+                className="border-primary text-primary hover:bg-primary/10 transition-colors duration-200 w-full"
               >
                 Login
               </Button>
               <Button 
-                className="bg-[#1A73E8] text-white hover:bg-blue-600 w-full"
+                className="bg-primary text-white hover:bg-primary/90 transition-colors duration-200 w-full"
               >
-                Book
+                Book Now
               </Button>
             </div>
           </div>

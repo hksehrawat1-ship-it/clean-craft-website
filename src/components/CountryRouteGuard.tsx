@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { usePageAvailability } from '@/hooks/usePageAvailability';
 import { Loader2 } from 'lucide-react';
+import { usePagesConfig } from '@/hooks/use-pages-config';
 
 interface CountryRouteGuardProps {
   pagePath: string;
@@ -11,7 +11,8 @@ interface CountryRouteGuardProps {
 
 const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element }) => {
   const { countryCode } = useParams();
-  const { isLoading, isAvailable, pageContent } = usePageAvailability(pagePath);
+  const { isPageEnabled } = usePagesConfig();
+  const { isLoading, isAvailable } = usePageAvailability(pagePath);
 
   if (isLoading) {
     return (
@@ -26,27 +27,17 @@ const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element
     return <Navigate to="/" replace />;
   }
 
-  if (!isAvailable) {
-    // If the page is not available for this country, redirect to the NotFound page
+  // Check if the page is enabled in the pages config
+  if (!isPageEnabled(pagePath)) {
     return <Navigate to={`/${countryCode}/not-found`} replace />;
   }
 
-  // Safely pass pageContent to components that might accept it
-  let elementWithContent = element;
-  
-  if (React.isValidElement(element)) {
-    // Safe way to check if component accepts pageContent prop
-    const componentType = element.type as any;
-    
-    // Check if propTypes exists and contains pageContent
-    if (componentType && 
-        componentType.propTypes && 
-        'pageContent' in componentType.propTypes) {
-      elementWithContent = React.cloneElement(element as React.ReactElement<any>, { pageContent });
-    }
+  // Also check Strapi availability if needed
+  if (!isAvailable) {
+    return <Navigate to={`/${countryCode}/not-found`} replace />;
   }
 
-  return <>{elementWithContent}</>;
+  return <>{element}</>;
 };
 
 export default CountryRouteGuard;

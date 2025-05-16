@@ -1,14 +1,15 @@
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import HeroSection from '../../components/HeroSection';
-import CourseInfo from '../../components/CourseInfo';
-import TrainerSection from '../../components/TrainerSection';
-import Testimonials from '../../components/Testimonials';
-import Curriculum from '../../components/Curriculum';
-import Guarantees from '../../components/Guarantees';
-import RegistrationForm from '../../components/RegistrationForm';
-import FAQ from '../../components/FAQ';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import EnhancedNavbar from '@/components/EnhancedNavbar';
+import Footer from '@/components/Footer';
+import HeroSection from '@/components/HeroSection';
+import CourseInfo from '@/components/CourseInfo';
+import TrainerSection from '@/components/TrainerSection';
+import Testimonials from '@/components/Testimonials';
+import Curriculum from '@/components/Curriculum';
+import Guarantees from '@/components/Guarantees';
+import RegistrationForm from '@/components/RegistrationForm';
+import FAQ from '@/components/FAQ';
+import { SEO } from '@/components/SEO';
 
 const Courses = () => {
   useEffect(() => {
@@ -51,34 +52,41 @@ const Courses = () => {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden flex flex-col bg-white">
-      <Header />
+    <>
+      <SEO 
+        slug="learning/courses"
+        defaultTitle="Professional Laundry Training in Delhi | CleanCraft"
+        defaultDescription="Join our comprehensive laundry training program in Delhi. Learn from industry experts and start your successful laundry business."
+      />
+      <EnhancedNavbar />
       <main className="flex-1">
-        <HeroSection />
-        <div className="fade-in-section">
-          <CourseInfo />
-        </div>
-        <div className="fade-in-section">
-          <TrainerSection />
-        </div>
-        <div className="fade-in-section">
-          <Testimonials />
-        </div>
-        <div className="fade-in-section">
-          <Curriculum />
-        </div>
-        <div className="fade-in-section">
-          <Guarantees />
-        </div>
-        <div className="fade-in-section">
-          <RegistrationForm />
-        </div>
-        <div className="fade-in-section">
-          <FAQ />
+        <div className="space-y-16 md:space-y-24">
+          <HeroSection />
+          <div className="fade-in-section">
+            <CourseInfo />
+          </div>
+          <div className="fade-in-section bg-blue-50/30">
+            <TrainerSection />
+          </div>
+          <div className="fade-in-section">
+            <Curriculum />
+          </div>
+          <div className="fade-in-section bg-blue-50/30">
+            <Testimonials />
+          </div>
+          <div className="fade-in-section">
+            <Guarantees />
+          </div>
+          <div className="fade-in-section bg-primary/5">
+            <RegistrationForm />
+          </div>
+          <div className="fade-in-section">
+            <FAQ />
+          </div>
         </div>
       </main>
       <Footer />
-    </div>
+    </>
   );
 };
 

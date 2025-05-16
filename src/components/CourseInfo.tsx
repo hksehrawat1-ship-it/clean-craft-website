@@ -1,4 +1,3 @@
-
 import { Calendar, Clock, MapPin, Users, IndianRupee } from 'lucide-react';
 import FileText from '@/components/FileText';
 
@@ -89,7 +88,7 @@ const CourseInfo = () => {
 
         <div className="mt-12 max-w-3xl mx-auto text-center">
           <div className="bg-blue-50 p-6 rounded-xl shadow-md">
-            <h3 className="text-2xl font-bold mb-3">Why Choose Our Dry Cleaning Training Course India?</h3>
+            <h3 className="text-2xl font-bold mb-3 text-primary">Why Choose Our Dry Cleaning Training Course India?</h3>
             <p className="text-gray-700">
               We'll compare laundry franchise vs own setup options, explore diverse laundry business ideas in India, 
               and provide dry cleaning business training online resources to complement the in-person experience.

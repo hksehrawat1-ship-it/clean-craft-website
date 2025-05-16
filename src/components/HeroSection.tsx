@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -6,7 +5,7 @@ const HeroSection = () => {
   const isMobile = useIsMobile();
   
   return (
-    <section className="pt-24 pb-12 md:pt-40 md:pb-20 bg-gradient-to-b from-blue-50 to-white">
+    <section className="pt-16 pb-12 md:pt-24 md:pb-20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="animate-fade-in">
@@ -46,15 +45,15 @@ const HeroSection = () => {
           
           <div className="hidden md:block">
             <div className="relative">
-              <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-blue-200 opacity-60"></div>
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-blue-100 opacity-60"></div>
-              <div className="relative bg-white rounded-xl shadow-xl overflow-hidden border-8 border-white">
+              <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-blue-100/50"></div>
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-blue-50/50"></div>
+              <div className="relative rounded-2xl overflow-hidden">
                 <img 
                   src="/lovable-uploads/56259032-82fb-4843-a803-7ee5760a4d48.png" 
                   alt="Clean Craft Laundry Training Facility" 
                   className="w-full h-[400px] object-cover"
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white">
                   <p className="text-xl font-bold">Hands-on Training</p>
                   <p>Learn from industry experts in Delhi</p>
                 </div>

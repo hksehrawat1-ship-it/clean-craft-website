@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
   // Helper function to create country-specific links
   const createLink = (path: string): string => {
     if (!currentCountry) return '/';
-    return `/${currentCountry.code}${path}`;
+    return `/${currentCountry.code.toLowerCase()}${path}`;
   };
   
   return (

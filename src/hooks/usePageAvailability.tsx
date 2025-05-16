@@ -1,18 +1,16 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { usePagesConfig } from './use-pages-config';
 
 export const usePageAvailability = (pagePath: string) => {
   const { countryCode } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isAvailable, setIsAvailable] = useState(false);
-  const [pageContent, setPageContent] = useState<any>(null);
+  const { isPageEnabled } = usePagesConfig();
 
   useEffect(() => {
-    const checkPageAvailability = async () => {
+    const checkPageAvailability = () => {
       if (!countryCode) {
         navigate('/');
         return;
@@ -20,37 +18,8 @@ export const usePageAvailability = (pagePath: string) => {
 
       try {
         setIsLoading(true);
-        
-        // Check if this page is available for the current country
-        const { data: isAvailable, error: availabilityError } = await supabase
-          .rpc('is_page_available', {
-            country_code: countryCode.toLowerCase(),
-            page_path: pagePath
-          });
-
-        if (availabilityError) {
-          console.error('Error checking page availability:', availabilityError);
-          setIsAvailable(false);
-          setIsLoading(false);
-          return;
-        }
-
-        setIsAvailable(!!isAvailable);
-        
-        // If page is available, try to load its content
-        if (isAvailable) {
-          const { data: content, error: contentError } = await supabase
-            .rpc('get_page_content', {
-              p_country_code: countryCode.toLowerCase(),
-              p_slug: pagePath
-            });
-            
-          if (!contentError && content) {
-            setPageContent(content);
-          } else if (contentError) {
-            console.error('Error loading page content:', contentError);
-          }
-        }
+        const available = isPageEnabled(pagePath);
+        setIsAvailable(available);
       } catch (error) {
         console.error('Error in page availability check:', error);
         setIsAvailable(false);
@@ -60,7 +29,7 @@ export const usePageAvailability = (pagePath: string) => {
     };
 
     checkPageAvailability();
-  }, [countryCode, pagePath, navigate]);
+  }, [countryCode, pagePath, navigate, isPageEnabled]);
 
-  return { isLoading, isAvailable, pageContent };
+  return { isLoading, isAvailable };
 };

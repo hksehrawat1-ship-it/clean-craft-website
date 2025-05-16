@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FileText, RefreshCw, Calendar, Truck, BookCheck, BookOpen, Shield } from "lucide-react";
-import Header from "../../components/Header";
+import EnhancedNavbar from "../../components/EnhancedNavbar";
 import Footer from "../../components/Footer";
 
 
@@ -58,8 +58,8 @@ const policies = [
 const PoliciesIndex = () => {
   return (
     <div className="min-h-screen bg-blue-50 flex flex-col">
-      <Header />
-      <main className="flex-1 flex flex-col items-center justify-center py-12 px-2">
+      <EnhancedNavbar />
+      <main className="flex-1 flex flex-col items-center justify-center py-12 px-2 mt-16">
         <div className="max-w-3xl w-full mx-auto text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-black text-blue-500 mb-2">Clean Craft Policies</h1>
           <p className="text-lg md:text-xl text-grey-700 mb-6">Information about our terms, policies, and procedures</p>
