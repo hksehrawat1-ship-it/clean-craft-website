@@ -18,7 +18,7 @@ interface StrapiResponse<T> {
 
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.code.toLowerCase();
 
   return useQuery({
     queryKey: ['page', slug, countryCode],
@@ -27,13 +27,13 @@ export function useStrapiPage(slug: string) {
       return pageService.getPage(slug, countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!countryCode // Only run query if we have a country code
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
 export function useStrapiPageSEO(slug: string) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.code.toLowerCase();
 
   return useQuery({
     queryKey: ['pageSEO', slug, countryCode],
@@ -42,13 +42,13 @@ export function useStrapiPageSEO(slug: string) {
       return pageService.getPageSEO(slug, countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!countryCode // Only run query if we have a country code
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
 export function useStrapiServices() {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.code.toLowerCase();
 
   return useQuery({
     queryKey: ['services', countryCode],
@@ -56,7 +56,7 @@ export function useStrapiServices() {
       return contentService.getServices(countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!countryCode // Only run query if we have a country code
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -67,7 +67,7 @@ export function useStrapiTestimonials(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.code.toLowerCase();
 
   return useQuery<StrapiResponse<StrapiTestimonial>>({
     queryKey: ['testimonials', countryCode, options],
@@ -75,7 +75,7 @@ export function useStrapiTestimonials(options?: {
       return contentService.getTestimonials(countryCode, options);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!countryCode // Only run query if we have a country code
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -85,7 +85,7 @@ export function useStrapiFAQs(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.code.toLowerCase();
 
   return useQuery<StrapiResponse<StrapiFAQ>>({
     queryKey: ['faqs', countryCode, options],
@@ -93,7 +93,7 @@ export function useStrapiFAQs(options?: {
       return contentService.getFAQs(countryCode, options);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!countryCode // Only run query if we have a country code
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -116,6 +116,6 @@ export function useStrapiPolicies() {
       }));
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!countryCode // Only run query if we have a country code
+    enabled: !!currentCountry // Only run query if we have a country
   });
 } 

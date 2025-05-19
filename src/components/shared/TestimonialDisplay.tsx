@@ -63,7 +63,7 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
         </div>
 
         {/* Desktop: Grid layout */}
-        <div className="hidden md:grid md:grid-cols-3 gap-6">
+        <div className={`hidden md:grid gap-6 ${testimonials.length === 1 ? 'grid-cols-1 justify-center' : testimonials.length === 2 ? 'grid-cols-2 justify-center' : 'grid-cols-3'}`}>
           {testimonials.map((testimonial) => (
             <div 
               key={testimonial.id} 

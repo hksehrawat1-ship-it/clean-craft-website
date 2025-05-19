@@ -72,12 +72,14 @@ const HeroSection = () => {
           className="flex flex-col justify-center items-center lg:items-start gap-3 w-full lg:w-1/2 text-center lg:text-left z-10"
         >
           {/* Animated Service Heading */}
-          <h1
-            className="text-3xl md:text-5xl xl:text-6xl font-product-sans-black text-[#1869D3] leading-tight mb-1 uppercase"
-            style={{ maxWidth: '16ch', minHeight: '1.2em', whiteSpace: 'nowrap', overflow: 'hidden' }}
-          >
-            {useTypewriter(services)}
-          </h1>
+          <div style={{ minWidth: '22ch', maxWidth: '22ch', display: 'inline-block' }} className="mb-2">
+            <h1
+              className="text-3xl md:text-5xl xl:text-6xl font-product-sans-black text-[#1869D3] leading-tight uppercase"
+              style={{ width: '100%', whiteSpace: 'nowrap' }}
+            >
+              {useTypewriter(services) || '\u00A0'}
+            </h1>
+          </div>
           <h2 className="text-xl md:text-3xl xl:text-4xl font-bold text-[#0E0E0E] leading-snug mb-1">
             at your fingertips
           </h2>

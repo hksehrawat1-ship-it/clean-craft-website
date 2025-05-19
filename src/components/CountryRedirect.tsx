@@ -146,51 +146,76 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     }
   };
 
-  // Show country selector if:
-  // 1. On root path
-  // 2. Detection failed or cookies not accepted
-  // 3. Countries are loaded but something went wrong
-  const showCountrySelector = 
-    window.location.pathname === '/' && 
-    !isLoading && 
-    countries.length > 0 && 
-    (!hasConsent('preferences') || detectionError || error || redirectAttempts >= 2);
-  
-  if (showCountrySelector) {
+  // Show loading spinner only while countries are loading
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#1869D3] flex items-center">
-        <div className="container px-4 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left Column - Content */}
-            <div className="text-white">
-              <div className="mb-6">
-                <img 
-                  src="/lovable-uploads/cleancraft-icon.png" 
-                  alt="Cleancraft"
-                  className="h-10 md:h-12 [filter:brightness(0)_invert(1)_sepia(1)_saturate(10000%)_hue-rotate(45deg)]"
-                />
-              </div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#1869D3] text-white">
+        <Loader2 className="h-12 w-12 animate-spin mb-4" />
+        <p className="text-xl font-medium mb-2">Loading countries...</p>
+      </div>
+    );
+  }
 
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight">
-                Laundry and Dry
-                <br />
-                cleaning.
-                <br />
-                Delivered in 24h.
-              </h1>
+  // If essential cookies are present and a country is already set, redirect immediately
+  if (hasConsent('essential') && currentCountry) {
+    navigate(`/${currentCountry}${path}`);
+    return null;
+  }
 
-              <p className="text-lg text-blue-100 mb-6">
-                Find us in countries around the world
-              </p>
-              
-              {/* Country Selection */}
-              <div className="space-y-4">
-                {/* Show Asia/Pacific region first */}
-                {groupedCountries['ASIA/PACIFIC'] && (
-                  <div>
-                    <h3 className="text-sm font-bold text-blue-200 mb-2">ASIA/PACIFIC</h3>
+  // If no country is set, always wait for the fetch to complete and show the country selection page
+  // (cookie banner is global)
+  return (
+    <div className="min-h-screen bg-[#1869D3] flex items-center">
+      <div className="container px-4 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Column - Content */}
+          <div className="text-white">
+            <div className="mb-6">
+              <img 
+                src="/lovable-uploads/cleancraft-icon.png" 
+                alt="Cleancraft"
+                className="h-10 md:h-12 [filter:brightness(0)_invert(1)_sepia(1)_saturate(10000%)_hue-rotate(45deg)]"
+              />
+            </div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight">
+              Laundry and Dry
+              <br />
+              cleaning.
+              <br />
+              Delivered in 24h.
+            </h1>
+            <p className="text-lg text-blue-100 mb-6">
+              Find us in countries around the world
+            </p>
+            {/* Country Selection */}
+            <div className="space-y-4">
+              {/* Show Asia/Pacific region first */}
+              {groupedCountries['ASIA/PACIFIC'] && (
+                <div>
+                  <h3 className="text-sm font-bold text-blue-200 mb-2">ASIA/PACIFIC</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {groupedCountries['ASIA/PACIFIC'].map((country) => (
+                      <Button
+                        key={country.code}
+                        variant="outline"
+                        className="w-full justify-start text-left bg-white/10 hover:bg-white/20 border-white/20 h-10"
+                        onClick={() => handleCountrySelect(country.code)}
+                      >
+                        <Globe className="w-4 h-4 mr-2 shrink-0" />
+                        <span className="truncate">{country.name}</span>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Other regions */}
+              {Object.entries(groupedCountries)
+                .filter(([region]) => region !== 'ASIA/PACIFIC')
+                .map(([region, regionCountries]) => (
+                  <div key={region}>
+                    <h3 className="text-sm font-bold text-blue-200 mb-2">{region}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {groupedCountries['ASIA/PACIFIC'].map((country) => (
+                      {regionCountries.map((country) => (
                         <Button
                           key={country.code}
                           variant="outline"
@@ -203,92 +228,48 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
                       ))}
                     </div>
                   </div>
-                )}
-                
-                {/* Other regions */}
-                {Object.entries(groupedCountries)
-                  .filter(([region]) => region !== 'ASIA/PACIFIC')
-                  .map(([region, regionCountries]) => (
-                    <div key={region}>
-                      <h3 className="text-sm font-bold text-blue-200 mb-2">{region}</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {regionCountries.map((country) => (
-                          <Button
-                            key={country.code}
-                            variant="outline"
-                            className="w-full justify-start text-left bg-white/10 hover:bg-white/20 border-white/20 h-10"
-                            onClick={() => handleCountrySelect(country.code)}
-                          >
-                            <Globe className="w-4 h-4 mr-2 shrink-0" />
-                            <span className="truncate">{country.name}</span>
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-              </div>
+                ))}
             </div>
-
-            {/* Right Column - App Preview */}
-            <div className="hidden lg:flex lg:justify-center">
-              <div className="relative w-[240px] h-[480px]">
-                {/* App Screenshot */}
+          </div>
+          {/* Right Column - App Preview */}
+          <div className="hidden lg:flex lg:justify-center">
+            <div className="relative w-[240px] h-[480px]">
+              {/* App Screenshot */}
+              <img 
+                src="/lovable-uploads/cleancraft-laundry-app.png"
+                alt="Cleancraft Mobile App"
+                className="w-full h-full object-contain"
+                style={{ imageRendering: 'crisp-edges' }}
+              />
+              {/* Floating Icons */}
+              <div className="absolute -right-12 top-16 transform-gpu">
                 <img 
-                  src="/lovable-uploads/cleancraft-laundry-app.png"
-                  alt="Cleancraft Mobile App"
-                  className="w-full h-full object-contain"
+                  src="/lovable-uploads/wash-and-fold.png" 
+                  alt="" 
+                  className="w-16 h-16 animate-float object-contain"
                   style={{ imageRendering: 'crisp-edges' }}
                 />
-                {/* Floating Icons */}
-                <div className="absolute -right-12 top-16 transform-gpu">
-                  <img 
-                    src="/lovable-uploads/wash-and-fold.png" 
-                    alt="" 
-                    className="w-16 h-16 animate-float object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
-                  />
-                </div>
-                <div className="absolute -left-12 top-1/2 -translate-y-1/2 transform-gpu">
-                  <img 
-                    src="/lovable-uploads/dry-cleaning.png" 
-                    alt="" 
-                    className="w-16 h-16 animate-float-delayed object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
-                  />
-                </div>
-                <div className="absolute -right-10 bottom-24 transform-gpu">
-                  <img 
-                    src="/lovable-uploads/ironing.png" 
-                    alt="" 
-                    className="w-16 h-16 animate-float object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
-                  />
-                </div>
+              </div>
+              <div className="absolute -left-12 top-1/2 -translate-y-1/2 transform-gpu">
+                <img 
+                  src="/lovable-uploads/dry-cleaning.png" 
+                  alt="" 
+                  className="w-16 h-16 animate-float-delayed object-contain"
+                  style={{ imageRendering: 'crisp-edges' }}
+                />
+              </div>
+              <div className="absolute -right-10 bottom-24 transform-gpu">
+                <img 
+                  src="/lovable-uploads/ironing.png" 
+                  alt="" 
+                  className="w-16 h-16 animate-float object-contain"
+                  style={{ imageRendering: 'crisp-edges' }}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-  
-  // Show loading state
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#1869D3] text-white">
-      <Loader2 className="h-12 w-12 animate-spin mb-4" />
-      <p className="text-xl font-medium mb-2">Loading...</p>
-      {detectionInProgress && (
-        <p className="text-blue-200">Detecting your location...</p>
-      )}
-      {redirectAttempts > 1 && (
-        <Button 
-          variant="outline" 
-          className="mt-4 border-white text-white hover:bg-blue-700"
-          onClick={() => window.location.reload()}
-        >
-          Refresh Page
-        </Button>
-      )}
     </div>
   );
 };

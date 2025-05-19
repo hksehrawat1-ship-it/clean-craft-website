@@ -16,7 +16,7 @@ const BenefitsSection = () => {
   return (
     <div className="container mx-auto">
       <div className="w-full overflow-hidden">
-        <div className="flex justify-between items-center gap-4 md:gap-8 min-w-[320px] max-w-[1200px] mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8 min-w-[320px] max-w-[1200px] mx-auto">
           <div className="flex-1 min-w-[160px] md:min-w-[200px] flex justify-center">
             <BenefitCard 
               title="Odour-Free" 

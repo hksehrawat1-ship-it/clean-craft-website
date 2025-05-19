@@ -2,7 +2,7 @@ import { strapi } from '@strapi/client';
 import qs from 'qs';
 import axios from 'axios';
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
+const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 if (!STRAPI_URL) {

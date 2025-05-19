@@ -61,13 +61,6 @@ export default function Index() {
     sortOrder: 'desc'
   });
 
-  // Ensure country is set
-  React.useEffect(() => {
-    if (countryCode && (!currentCountry || currentCountry.code !== countryCode)) {
-      setCurrentCountry(countryCode);
-    }
-  }, [countryCode, currentCountry, setCurrentCountry]);
-
   // Check if we have testimonials to display
   const hasTestimonials = testimonials?.data?.length > 0;
 

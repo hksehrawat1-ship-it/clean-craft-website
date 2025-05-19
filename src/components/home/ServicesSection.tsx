@@ -4,17 +4,19 @@ import { useCountry } from '@/contexts/CountryContext';
 import { toast } from 'sonner';
 import { useStrapiServices } from '@/hooks/useStrapi';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { FaTshirt, FaSoap, FaBoxOpen, FaRegSnowflake, FaBroom } from 'react-icons/fa';
+import { IconType } from 'react-icons';
 
 interface ServiceCardProps { 
   name: string; 
   description: string; 
   price_from: number;
   price_type?: string;
-  icon?: React.ReactNode;
+  icon?: IconType;
   iconUrl?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ name, description, price_from, price_type = 'kg', icon, iconUrl }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ name, description, price_from, price_type = 'kg', icon: Icon }) => {
   const { currentCountry } = useCountry();
   const currencySymbol = currentCountry ? currencySymbols[currentCountry.code.toLowerCase()] || '$' : '$';
 
@@ -22,9 +24,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ name, description, price_from
     <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-4">
-          {iconUrl ? (
-            <img src={iconUrl} alt={name} className="w-10 h-10" />
-          ) : icon}
+          {Icon && React.createElement(Icon as any, { className: "w-10 h-10 text-[#5294FF]" })}
           <h3 className="text-lg font-semibold">{name}</h3>
         </div>
         <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -43,13 +43,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ name, description, price_from
 };
 
 // Icon map to match service names with icons
-const serviceIcons: Record<string, React.ReactNode> = {
-  'Wash': <Waves className="w-10 h-10 text-[#5294FF]" />,
-  'Wash & Iron': <Shirt className="w-10 h-10 text-[#F06292]" />,
-  'Dry Cleaning': <ArrowRight className="w-10 h-10 text-[#26A69A]" />,
-  'Ironing only': <Shirt className="w-10 h-10 text-[#FFA726]" />,
-  'Duvets & Bulky Items': <Box className="w-10 h-10 text-[#90CAF9]" />,
-  'Wash, Dry & Fold': <Waves className="w-10 h-10 text-[#5294FF]" />
+const serviceIcons: Record<string, IconType> = {
+  'Wash': FaSoap,
+  'Wash & Iron': FaTshirt,
+  'Dry Cleaning': FaRegSnowflake,
+  'Ironing only': FaBroom,
+  'Duvets & Bulky Items': FaBoxOpen,
+  'Wash, Dry & Fold': FaTshirt
 };
 
 // Currency symbols based on country code
@@ -169,7 +169,6 @@ const ServicesSection: React.FC = () => {
                   price_from={service.price_from}
                   price_type={service.price_type || 'kg'}
                   icon={serviceIcons[service.name]}
-                  iconUrl={service.icon?.[0]?.url}
                 />
               </div>
             ))}
@@ -211,7 +210,6 @@ const ServicesSection: React.FC = () => {
                   price_from={service.price_from}
                   price_type={service.price_type || 'kg'}
                   icon={serviceIcons[service.name]}
-                  iconUrl={service.icon?.[0]?.url}
                 />
               ))}
             </div>

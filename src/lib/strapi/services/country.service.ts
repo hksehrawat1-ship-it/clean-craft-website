@@ -42,8 +42,7 @@ export class CountryService {
       const response = await getCollection<Country>('countries', {
         filters: {
           is_active: { $eq: true }
-        },
-        sort: ['name:asc']
+        }
       });
       
       // Extract the data array from the response

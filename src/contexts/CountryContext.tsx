@@ -73,12 +73,14 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         c.code.toLowerCase() === urlCountryCode.toLowerCase()
       );
       if (urlCountry) {
-        console.log('Setting country from URL:', urlCountryCode);
         setCurrentCountryState(urlCountry);
-        // Only store in localStorage if we have preferences consent
         if (hasConsent('preferences')) {
           localStorage.setItem('selectedCountry', urlCountry.code);
         }
+        return; // Do NOT call navigate here!
+      } else {
+        toast.error('Invalid country selected. Please choose your country.');
+        setCurrentCountryState(null);
         return;
       }
     }
@@ -91,38 +93,31 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           c.code.toLowerCase() === storedCountry.toLowerCase()
         );
         if (country) {
-          console.log('Setting country from localStorage:', storedCountry);
           setCurrentCountryState(country);
           navigate(`/${country.code.toLowerCase()}`);
+          return;
+        } else {
+          toast.error('Invalid country selected. Please choose your country.');
+          setCurrentCountryState(null);
           return;
         }
       }
     }
 
-    // Priority 3: Default to India or first available
-    const defaultCountry = countries.find(c => c.code.toLowerCase() === 'in') || countries[0];
-    if (defaultCountry) {
-      console.log('Setting default country:', defaultCountry.code);
-      setCurrentCountryState(defaultCountry);
-      navigate(`/${defaultCountry.code.toLowerCase()}`);
-      if (hasConsent('preferences')) {
-        localStorage.setItem('selectedCountry', defaultCountry.code);
-      }
-    }
-  }, [countries, urlCountryCode, hasConsent]);
+    // Priority 3: Wait for manual selection or cookie acceptance
+    setCurrentCountryState(null);
+  }, [countries, urlCountryCode, hasConsent, navigate]);
 
   // Handle country selection from UI
   const setCurrentCountry = (countryCode: string) => {
+    if (!countries.length) return;
     const country = countries.find(c => 
       c.code.toLowerCase() === countryCode.toLowerCase()
     );
 
     if (country) {
-      // Update state and redirect
       setCurrentCountryState(country);
       navigate(`/${country.code.toLowerCase()}`);
-      
-      // Store preference if allowed
       if (hasConsent('preferences')) {
         localStorage.setItem('selectedCountry', country.code);
       }
@@ -131,23 +126,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  const getImageUrl = (path: string) => {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-    const regionPrefix = currentCountry ? `/${currentCountry.code.toLowerCase()}` : '';
-    return `${regionPrefix}${path}`;
-  };
-
-  const getCountryRegion = (countryCode: string): string => {
-    if (!countryCode) return 'Other';
-    countryCode = countryCode.toLowerCase();
-    if (['in', 'au', 'sg', 'my'].includes(countryCode)) return 'ASIA/PACIFIC';
-    if (['uk', 'de', 'fr', 'es', 'it'].includes(countryCode)) return 'EUROPE';
-    if (['us', 'ca'].includes(countryCode)) return 'AMERICAS';
-    if (['ae', 'sa', 'qa', 'kw', 'bh'].includes(countryCode)) return 'MIDDLE EAST';
-    return 'OTHER REGIONS';
-  };
-
+  // When cookies are accepted, use GeoIP to detect country
   const detectUserCountry = async (): Promise<string | null> => {
     try {
       const response = await fetch('https://ipapi.co/json/');
@@ -171,6 +150,44 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       console.error('Error detecting user country:', error);
       return null;
     }
+  };
+
+  useEffect(() => {
+    if (!countries.length) return;
+    if (!hasConsent('essential')) return;
+    if (currentCountry) return; // already set (manual or from url/localStorage)
+
+    (async () => {
+      const detectedCode = await detectUserCountry();
+      if (detectedCode) {
+        const detectedCountry = countries.find(c => c.code.toLowerCase() === detectedCode);
+        if (detectedCountry) {
+          setCurrentCountryState(detectedCountry);
+          navigate(`/${detectedCountry.code.toLowerCase()}`);
+          if (hasConsent('preferences')) {
+            localStorage.setItem('selectedCountry', detectedCountry.code);
+          }
+        }
+        // If detected country is not in Strapi list, do nothing (wait for manual selection)
+      }
+    })();
+  }, [countries, hasConsent, currentCountry, detectUserCountry, navigate]);
+
+  const getImageUrl = (path: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    const regionPrefix = currentCountry ? `/${currentCountry.code.toLowerCase()}` : '';
+    return `${regionPrefix}${path}`;
+  };
+
+  const getCountryRegion = (countryCode: string): string => {
+    if (!countryCode) return 'Other';
+    countryCode = countryCode.toLowerCase();
+    if (['in', 'au', 'sg', 'my'].includes(countryCode)) return 'ASIA/PACIFIC';
+    if (['uk', 'de', 'fr', 'es', 'it'].includes(countryCode)) return 'EUROPE';
+    if (['us', 'ca'].includes(countryCode)) return 'AMERICAS';
+    if (['ae', 'sa', 'qa', 'kw', 'bh'].includes(countryCode)) return 'MIDDLE EAST';
+    return 'OTHER REGIONS';
   };
 
   const value: CountryContextType = {
