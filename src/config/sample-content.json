@@ -1,0 +1,85 @@
+{
+  "faqs": {
+    "in": {}
+  },
+  "testimonials": {
+    "in": {
+      "home": [
+        {
+          "id": 1,
+          "content": "The service is incredibly reliable. My clothes always come back perfectly clean and well-pressed.",
+          "rating": 5,
+          "author_name": "Priya Sharma",
+          "author_location": "Delhi",
+          "platform": "Google"
+        },
+        {
+          "id": 2,
+          "content": "Best laundry service I've used in Mumbai. The app makes scheduling super easy.",
+          "rating": 5,
+          "author_name": "Rahul Mehta",
+          "author_location": "Mumbai",
+          "platform": "App Store"
+        }
+      ],
+      "franchise": [
+        {
+          "id": 3,
+          "content": "The franchise support team is excellent. They helped me set up my business and continue to provide valuable guidance.",
+          "rating": 5,
+          "author_name": "Amit Patel",
+          "author_location": "Pune",
+          "platform": "LinkedIn"
+        },
+        {
+          "id": 4,
+          "content": "Running a CleanCraft franchise has been very profitable. Their systems and processes are well-optimized.",
+          "rating": 5,
+          "author_name": "Sneha Reddy",
+          "author_location": "Hyderabad",
+          "platform": "Google"
+        }
+      ],
+      "courses": [
+        {
+          "id": 5,
+          "content": "The training was comprehensive and practical. I learned everything needed to start my laundry business.",
+          "rating": 5,
+          "author_name": "Rajesh Kumar",
+          "author_location": "Bangalore",
+          "platform": "Google"
+        }
+      ],
+      "book": [
+        {
+          "id": 6,
+          "content": "The book provides detailed insights into running a laundry business in India. Very practical advice.",
+          "rating": 5,
+          "author_name": "Vikram Singh",
+          "author_location": "Chennai",
+          "platform": "Amazon"
+        }
+      ]
+    },
+    "au": {
+      "home": [
+        {
+          "id": 7,
+          "content": "Excellent service! They handle my business shirts perfectly every time.",
+          "rating": 5,
+          "author_name": "James Wilson",
+          "author_location": "Sydney",
+          "platform": "Google"
+        },
+        {
+          "id": 8,
+          "content": "Very professional service and their eco-friendly approach is appreciated.",
+          "rating": 5,
+          "author_name": "Sarah Thompson",
+          "author_location": "Melbourne",
+          "platform": "Trustpilot"
+        }
+      ]
+    }
+  }
+} 

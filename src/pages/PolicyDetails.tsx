@@ -25,7 +25,7 @@ export default function PolicyDetails() {
     );
   }
 
-  const policy = policies?.find(p => p.attributes.policy_type.data.attributes.slug === slug);
+  const policy = policies?.find(p => p.slug === slug);
 
   if (!policy) {
     return (
@@ -41,37 +41,39 @@ export default function PolicyDetails() {
     );
   }
 
-  const policyName = policy.attributes.policy_type.data.attributes.name;
-  const policyDescription = policy.attributes.policy_type.data.attributes.description;
-  const policyContent = stripHtml(policy.attributes.body).slice(0, 160); // First 160 chars for meta description
+  const policyName = policy.name;
+  const policyDescription = policy.description;
+  const policyContent = stripHtml(policy.content).slice(0, 160);
+
+  // Helper to get a valid date string
+  const getEffectiveDate = () => {
+    const dateStr = policy.publishedAt;
+    const date = dateStr ? new Date(dateStr) : null;
+    return date && !isNaN(date.getTime()) ? format(date, 'MMM d, yyyy') : 'Date not available';
+  };
 
   return (
     <>
       <SEO 
-        slug={`policies/${slug}`}
-        defaultTitle={`${policyName} | CleanCraft Legal Policies`}
-        defaultDescription={`${policyDescription}. ${policyContent}...`}
+        slug={`policies/${policy.slug}`}
+        defaultTitle={`${policyName} | CleanCraft`}
+        defaultDescription={policyDescription}
       />
       <EnhancedNavbar />
       <div className="bg-gray-50">
         <div className="container mx-auto px-4 py-12 md:py-16">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-3xl md:text-4xl font-black mb-4">
-              {policy.attributes.policy_type.data.attributes.name}
-            </h1>
-            
-            <div className="flex items-center text-sm text-gray-500 mb-8">
-              <CalendarIcon className="w-4 h-4 mr-2" />
-              <span>
-                Effective: {format(new Date(policy.attributes.effective_date), 'MMMM d, yyyy')}
-              </span>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm p-6 md:p-8">
-              <div 
-                className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(policy.attributes.body) }}
-              />
+            <div className="bg-white rounded-lg shadow-sm p-8">
+              <h1 className="text-3xl md:text-4xl font-black mb-4">
+                {policyName}
+              </h1>
+              <div className="flex items-center text-sm text-gray-500 mb-6">
+                <CalendarIcon className="w-4 h-4 mr-2" />
+                <span>
+                  Effective: {getEffectiveDate()}
+                </span>
+              </div>
+              <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(policy.content) }} />
             </div>
           </div>
         </div>

@@ -10,9 +10,24 @@ import YourFirstPickupEssentials from '../components/home/YourFirstPickupEssenti
 import LaundryServiceFeatures from '../components/home/LaundryServiceFeatures';
 import CustomerTestimonials from '../components/home/CustomerTestimonials';
 import GuaranteeSection from '../components/home/GuaranteeSection';
-import FAQSection from '../components/home/FAQSection';
+import FaqSection from '../components/home/FAQSection';
 import { SEO } from '@/components/SEO';
 import { cn } from '@/lib/utils';
+import { useStrapiPage, useStrapiFAQs, useStrapiTestimonials } from '@/hooks/useStrapi';
+import TestimonialSection from '@/components/home/TestimonialSection';
+import { StrapiFAQ, StrapiTestimonial } from '@/types/strapi';
+
+interface StrapiResponse<T> {
+  data: T[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
 
 interface SectionWrapperProps {
   children: React.ReactNode;
@@ -20,19 +35,31 @@ interface SectionWrapperProps {
   noPadding?: boolean;
 }
 
-const SectionWrapper: React.FC<SectionWrapperProps> = ({ children, className, noPadding }) => (
-  <div className={cn(
-    'w-full',
-    !noPadding && 'py-12 md:py-16', // Reduced padding from py-20 to py-16
-    className
-  )}>
-    {children}
-  </div>
-);
+const SectionWrapper: React.FC<SectionWrapperProps> = ({ children, className, noPadding }) => {
+  return (
+    <section className={cn('w-full', !noPadding && 'py-16 md:py-24', className)}>
+      {children}
+    </section>
+  );
+};
 
 export default function Index() {
   const { countryCode } = useParams<{ countryCode: string }>();
   const { currentCountry, setCurrentCountry } = useCountry();
+  const { data: pageData } = useStrapiPage('/');
+  
+  // Fetch FAQs and testimonials for home page
+  const { data: faqs, isLoading: faqsLoading } = useStrapiFAQs({
+    category: 'home',
+    sortBy: 'order',
+    sortOrder: 'asc'
+  });
+
+  const { data: testimonials, isLoading: testimonialsLoading } = useStrapiTestimonials({
+    category: 'home',
+    sortBy: 'rating',
+    sortOrder: 'desc'
+  });
 
   // Ensure country is set
   React.useEffect(() => {
@@ -40,6 +67,9 @@ export default function Index() {
       setCurrentCountry(countryCode);
     }
   }, [countryCode, currentCountry, setCurrentCountry]);
+
+  // Check if we have testimonials to display
+  const hasTestimonials = testimonials?.data?.length > 0;
 
   return (
     <>
@@ -88,12 +118,16 @@ export default function Index() {
 
           {/* Testimonials with light background */}
           <SectionWrapper className="bg-[#F8FAFC]">
-            <CustomerTestimonials />
+            {!testimonialsLoading && hasTestimonials && testimonials && (
+              <TestimonialSection testimonials={testimonials.data} />
+            )}
           </SectionWrapper>
 
           {/* FAQ section */}
           <SectionWrapper className="bg-white">
-            <FAQSection />
+            {!faqsLoading && faqs?.data?.length > 0 && (
+              <FaqSection faqs={faqs} />
+            )}
           </SectionWrapper>
         </div>
       </Layout>

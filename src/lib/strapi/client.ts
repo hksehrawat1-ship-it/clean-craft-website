@@ -1,7 +1,8 @@
+import { strapi } from '@strapi/client';
 import qs from 'qs';
 import axios from 'axios';
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
+const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 if (!STRAPI_URL) {
@@ -29,25 +30,26 @@ interface StrapiSingleResponse<T> {
   meta: {};
 }
 
+export const strapiClient = strapi({
+  baseURL: STRAPI_URL
+});
+
 // Helper functions for common operations
 export const getCollection = async <T>(
-  collectionName: string, 
-  params?: Record<string, any>
-): Promise<T[]> => {
-  const queryString = params ? `?${qs.stringify(params)}` : '';
-  const response = await fetch(`${STRAPI_URL}/${collectionName}${queryString}`, {
-    headers: {
-      'Authorization': `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${collectionName}: ${response.statusText}`);
+  endpoint: string,
+  params: Record<string, any> = {}
+): Promise<StrapiResponse<T>> => {
+  try {
+    console.log(`Fetching ${endpoint} with params:`, params);
+    console.log('Final URL:', `${STRAPI_URL}/${endpoint}${params ? `?${qs.stringify(params)}` : ''}`)
+    const collection = strapiClient.collection(endpoint);
+    const response = await collection.find(params) as unknown as StrapiResponse<T>;
+    console.log(`${endpoint} response:`, response);
+    return response;
+  } catch (error) {
+    console.error(`Error fetching ${endpoint}:`, error);
+    throw error;
   }
-
-  const json = await response.json() as StrapiResponse<T>;
-  return json.data;
 };
 
 export const getSingle = async <T>(
@@ -131,20 +133,4 @@ export const deleteEntry = async <T>(
 
   const json = await response.json() as StrapiSingleResponse<T>;
   return json.data;
-};
-
-export const strapiClient = axios.create({
-  baseURL: STRAPI_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add response interceptor for error handling
-strapiClient.interceptors.response.use(
-  response => response,
-  error => {
-    console.error('Strapi API Error:', error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-); 
+}; 

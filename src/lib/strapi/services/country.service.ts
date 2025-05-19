@@ -1,5 +1,17 @@
 import { getCollection } from '../client';
 
+interface StrapiResponse<T> {
+  data: T[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
 export interface Country {
   id: number;
   code: string;
@@ -27,13 +39,15 @@ export class CountryService {
     }
 
     try {
-      const countries = await getCollection<Country>('countries', {
+      const response = await getCollection<Country>('countries', {
         filters: {
           is_active: { $eq: true }
         },
         sort: ['name:asc']
       });
       
+      // Extract the data array from the response
+      const countries = response.data || [];
       this.countries = countries;
       return countries;
     } catch (error) {
@@ -53,7 +67,7 @@ export class CountryService {
       }
     };
 
-    const countries = await getCollection<Country>('countries', params);
-    return countries[0] || null;
+    const response = await getCollection<Country>('countries', params);
+    return response.data?.[0] || null;
   }
 } 

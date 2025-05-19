@@ -1,10 +1,17 @@
-const TestimonialSection = () => (
-  <section className="w-full py-12 bg-blue-50 text-center">
-    <div className="container mx-auto">
-      <h2 className="text-2xl font-semibold">Testimonial Section Placeholder</h2>
-      {/* TODO: Implement Testimonial section as per Figma */}
-    </div>
-  </section>
-);
+import React from 'react';
+import { StrapiTestimonial } from '@/types/strapi';
+import TestimonialDisplay from '../shared/TestimonialDisplay';
+
+interface TestimonialSectionProps {
+  testimonials: StrapiTestimonial[];
+}
+
+const TestimonialSection: React.FC<TestimonialSectionProps> = ({ testimonials }) => {
+  if (!testimonials?.length) {
+    return null;
+  }
+
+  return <TestimonialDisplay testimonials={testimonials} variant="home" />;
+};
 
 export default TestimonialSection; 

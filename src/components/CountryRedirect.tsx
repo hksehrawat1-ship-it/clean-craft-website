@@ -13,7 +13,7 @@ interface CountryRedirectProps {
 
 const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
   const { currentCountry, countries, setCurrentCountry, detectUserCountry, isLoading, error } = useCountry();
-  const { hasConsent, consent } = useCookieConsent();
+  const { hasConsent } = useCookieConsent();
   const navigate = useNavigate();
   const [redirectAttempts, setRedirectAttempts] = useState(0);
   const [detectionInProgress, setDetectionInProgress] = useState(false);
@@ -165,9 +165,9 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
             <div className="text-white">
               <div className="mb-6">
                 <img 
-                  src="/lovable-uploads/logo.svg" 
+                  src="/lovable-uploads/cleancraft-icon.png" 
                   alt="Cleancraft"
-                  className="h-10 md:h-12 [filter:brightness(0)_invert(1)_sepia(1)_saturate(10000%)_hue-rotate(30deg)]"
+                  className="h-10 md:h-12 [filter:brightness(0)_invert(1)_sepia(1)_saturate(10000%)_hue-rotate(45deg)]"
                 />
               </div>
 

@@ -7,9 +7,10 @@ import { usePagesConfig } from '@/hooks/use-pages-config';
 interface CountryRouteGuardProps {
   pagePath: string;
   element: React.ReactNode;
+  allowEmptyContent?: boolean;
 }
 
-const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element }) => {
+const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element, allowEmptyContent = false }) => {
   const { countryCode } = useParams();
   const { isPageEnabled } = usePagesConfig();
   const { isLoading, isAvailable } = usePageAvailability(pagePath);
@@ -32,7 +33,12 @@ const CountryRouteGuard: React.FC<CountryRouteGuardProps> = ({ pagePath, element
     return <Navigate to={`/${countryCode}/not-found`} replace />;
   }
 
-  // Also check Strapi availability if needed
+  // For pages that should show their own "no content" state
+  if (allowEmptyContent) {
+    return <>{element}</>;
+  }
+
+  // For other pages, redirect to not-found if content is not available
   if (!isAvailable) {
     return <Navigate to={`/${countryCode}/not-found`} replace />;
   }

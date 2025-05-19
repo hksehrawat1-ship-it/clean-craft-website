@@ -9,33 +9,33 @@ interface ServiceCardProps {
   name: string; 
   description: string; 
   price_from: number;
-  price_type: string;
-  icon: React.ReactNode;
+  price_type?: string;
+  icon?: React.ReactNode;
+  iconUrl?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ 
-  name, 
-  description, 
-  price_from,
-  price_type,
-  icon
-}) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ name, description, price_from, price_type = 'kg', icon, iconUrl }) => {
   const { currentCountry } = useCountry();
-  const currencySymbol = currencySymbols[currentCountry.code.toLowerCase()] || '$';
+  const currencySymbol = currentCountry ? currencySymbols[currentCountry.code.toLowerCase()] || '$' : '$';
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all cursor-pointer">
-      <div className="flex items-start gap-4 p-6">
-        <div className="flex-shrink-0">
-          {icon}
+    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-4">
+          {iconUrl ? (
+            <img src={iconUrl} alt={name} className="w-10 h-10" />
+          ) : icon}
+          <h3 className="text-lg font-semibold">{name}</h3>
         </div>
-        <div className="flex-grow">
-          <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
-          <p className="text-sm text-gray-600 mt-1">{description}</p>
-          <p className="text-sm text-gray-900 mt-2">from {currencySymbol}{price_from}/{price_type}</p>
-        </div>
-        <div className="flex-shrink-0">
-          <ChevronRight className="w-5 h-5 text-blue-600" />
+        <ChevronRight className="w-5 h-5 text-gray-400" />
+      </div>
+      <p className="text-gray-600 mb-4 min-h-[48px]">{description}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-sm text-gray-500">From</span>
+          <div className="text-lg font-semibold">
+            {currencySymbol}{price_from}/{price_type}
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +70,16 @@ const ServicesSection: React.FC = () => {
   const { currentCountry } = useCountry();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
 
-  if (!currentCountry || isLoading) {
+  // Debug logging
+  console.log('ServicesSection render:', {
+    currentCountry,
+    strapiServices,
+    isLoading,
+    error
+  });
+
+  // Show loading state while we're loading data
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
         <LoadingSpinner />
@@ -82,6 +91,13 @@ const ServicesSection: React.FC = () => {
     console.error('Error loading services:', error);
     toast.error('Failed to load services');
   }
+
+  // Debug logging for services data
+  console.log('Display services data:', {
+    hasData: strapiServices?.data?.length > 0,
+    strapiServicesData: strapiServices?.data,
+    willUseFallback: !strapiServices?.data?.length
+  });
 
   // Fallback services data
   const fallbackServices = [
@@ -127,7 +143,8 @@ const ServicesSection: React.FC = () => {
     }
   ];
 
-  const displayServices = strapiServices?.length > 0 ? strapiServices : fallbackServices;
+  const displayServices = strapiServices?.data?.length > 0 ? strapiServices.data : fallbackServices;
+  const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
   return (
     <section className="w-full py-16 px-4 md:px-8">
@@ -150,15 +167,16 @@ const ServicesSection: React.FC = () => {
                   name={service.name}
                   description={service.description}
                   price_from={service.price_from}
-                  price_type={service.price_type}
+                  price_type={service.price_type || 'kg'}
                   icon={serviceIcons[service.name]}
+                  iconUrl={service.icon?.[0]?.url}
                 />
               </div>
             ))}
           </div>
 
           <p className="text-sm text-white/75 mt-8">
-            Our minimum order value is £20. All orders include free delivery.
+            Our minimum order value is {currencySymbols[countryCode]}20. All orders include free delivery.
           </p>
         </div>
       </div>
@@ -178,7 +196,7 @@ const ServicesSection: React.FC = () => {
               Explore pricing <ArrowRight className="ml-2 w-5 h-5" />
             </button>
             <p className="mt-auto pt-16 text-sm opacity-75">
-              Our minimum order value is £20. All orders include free delivery.
+              Our minimum order value is {currencySymbols[countryCode]}20. All orders include free delivery.
             </p>
           </div>
 
@@ -191,8 +209,9 @@ const ServicesSection: React.FC = () => {
                   name={service.name}
                   description={service.description}
                   price_from={service.price_from}
-                  price_type={service.price_type}
+                  price_type={service.price_type || 'kg'}
                   icon={serviceIcons[service.name]}
+                  iconUrl={service.icon?.[0]?.url}
                 />
               ))}
             </div>

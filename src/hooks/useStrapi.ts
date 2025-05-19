@@ -1,7 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { PageService } from '@/lib/strapi/services/page.service';
-import { ContentService } from '@/lib/strapi/services/content.service';
+import { contentService, ContentCategory } from '@/lib/strapi/services/content.service';
 import { useCountry } from '@/contexts/CountryContext';
+import { StrapiFAQ, StrapiService, StrapiTestimonial, StrapiPolicy } from '@/types/strapi';
+
+interface StrapiResponse<T> {
+  data: T[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
 
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
@@ -14,6 +27,7 @@ export function useStrapiPage(slug: string) {
       return pageService.getPage(slug, countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!countryCode // Only run query if we have a country code
   });
 }
 
@@ -28,6 +42,7 @@ export function useStrapiPageSEO(slug: string) {
       return pageService.getPageSEO(slug, countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!countryCode // Only run query if we have a country code
   });
 }
 
@@ -38,51 +53,69 @@ export function useStrapiServices() {
   return useQuery({
     queryKey: ['services', countryCode],
     queryFn: async () => {
-      const contentService = ContentService.getInstance();
       return contentService.getServices(countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!countryCode // Only run query if we have a country code
   });
 }
 
-export function useStrapiTestimonials(platform?: string) {
+export function useStrapiTestimonials(options?: {
+  category?: ContentCategory;
+  platform?: string;
+  sortBy?: 'rating' | 'order';
+  sortOrder?: 'asc' | 'desc';
+}) {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
-  return useQuery({
-    queryKey: ['testimonials', countryCode, platform],
+  return useQuery<StrapiResponse<StrapiTestimonial>>({
+    queryKey: ['testimonials', countryCode, options],
     queryFn: async () => {
-      const contentService = ContentService.getInstance();
-      return contentService.getTestimonials(countryCode, platform);
+      return contentService.getTestimonials(countryCode, options);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!countryCode // Only run query if we have a country code
   });
 }
 
-export function useStrapiFAQs(category?: string) {
+export function useStrapiFAQs(options?: {
+  category?: ContentCategory;
+  sortBy?: 'order';
+  sortOrder?: 'asc' | 'desc';
+}) {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
-  return useQuery({
-    queryKey: ['faqs', countryCode, category],
+  return useQuery<StrapiResponse<StrapiFAQ>>({
+    queryKey: ['faqs', countryCode, options],
     queryFn: async () => {
-      const contentService = ContentService.getInstance();
-      return contentService.getFAQs(countryCode, category);
+      return contentService.getFAQs(countryCode, options);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!countryCode // Only run query if we have a country code
   });
 }
 
 export function useStrapiPolicies() {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.code.toLowerCase();
 
   return useQuery({
     queryKey: ['policies', countryCode],
     queryFn: async () => {
-      const contentService = ContentService.getInstance();
-      return contentService.getPolicies(countryCode);
+      if (!countryCode) {
+        return [];
+      }
+      const response = await contentService.getPolicies(countryCode);
+      // Transform the Strapi response to flatten the data structure
+      return response.data.map(policy => ({
+        id: policy.id,
+        ...policy,
+        country: policy.country
+      }));
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!countryCode // Only run query if we have a country code
   });
 } 

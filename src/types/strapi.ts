@@ -26,65 +26,120 @@ export interface StrapiImage {
   
   export interface StrapiCountry {
     id: number;
-    documentId: string;
     code: string;
     name: string;
+    flag_emoji: string;
+    documentId: string;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-    default_locale?: StrapiLocale;
-    locales?: { data: StrapiLocale[] };
   }
   
   export interface StrapiService {
     id: number;
-    attributes: {
-      slug: string;
+    documentId: string;
+    name: string;
+    description: string;
+    price_from: number;
+    price_type?: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    country: {
+      id: number;
+      code: string;
       name: string;
-      description: string;
-      price_from: number;
-      country: { data: StrapiCountry };
+      createdAt: string;
+      updatedAt: string;
+      documentId: string;
+      publishedAt: string;
+      is_active: boolean;
     };
+    icon?: {
+      id: number;
+      name: string;
+      alternativeText: string;
+      caption: string | null;
+      width: number;
+      height: number;
+      formats: any;
+      hash: string;
+      ext: string;
+      mime: string;
+      size: number;
+      url: string;
+      previewUrl: string | null;
+      provider: string;
+      provider_metadata: any;
+      createdAt: string;
+      updatedAt: string;
+      documentId: string;
+      publishedAt: string;
+    }[];
   }
   
   export interface StrapiTestimonial {
     id: number;
-    attributes: {
-      author: string;
-      content: string;
-      rating: number;
-      platform: 'website' | 'google' | 'facebook' | 'instagram' | 'yelp' | 'trustpilot' | 'other';
-      country: { data: StrapiCountry };
+    documentId: string;
+    name: string;
+    content: string;
+    rating: number;
+    platform?: string;
+    category: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    country: {
+      id: number;
+      code: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+      documentId: string;
+      publishedAt: string;
+      is_active: boolean;
     };
   }
   
   export interface StrapiFAQ {
     id: number;
-    attributes: {
-      question: string;
-      answer: string;
-      category: string;
-      order: number;
-      country: { data: StrapiCountry };
+    documentId: string;
+    question: string;
+    answer: string | null;
+    category: string;
+    order: number;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    country: {
+      id: number;
+      code: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+      documentId: string;
+      publishedAt: string;
+      is_active: boolean;
     };
   }
   
   export interface StrapiPolicy {
     id: number;
-    attributes: {
-      body: string;
-      effective_date: string;
-      policy_type: {
-        data: {
-          id: number;
-          attributes: {
-            name: string;
-            slug: string;
-            description: string;
-          }
-        }
-      };
-      country: { data: StrapiCountry };
+    name: string;
+    slug: string;
+    description: string;
+    content: string;
+    publishedAt: string;
+    country?: {
+      id: number;
+      code: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+      documentId: string;
+      publishedAt: string;
+      is_active: boolean;
     };
   }
   
@@ -96,6 +151,6 @@ export interface StrapiImage {
       seo_title: string;
       seo_description: string;
       sections: any[]; // This will be defined based on your dynamic zones
-      country: { data: StrapiCountry };
+      country: StrapiCountry;
     };
   } 

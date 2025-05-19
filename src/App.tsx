@@ -67,7 +67,7 @@ function App() {
                     {/* Policy Routes - available for both India and Australia */}
                     <Route path="policies">
                       <Route index element={
-                        <CountryRouteGuard pagePath="/policies" element={<Policies />} />
+                        <CountryRouteGuard pagePath="/policies" element={<Policies />} allowEmptyContent={true} />
                       } />
                       <Route path=":slug" element={
                         <CountryRouteGuard pagePath="/policies" element={<PolicyDetails />} />

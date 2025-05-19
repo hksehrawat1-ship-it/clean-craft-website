@@ -5,6 +5,11 @@ global:
       navbar: true
       title: "Home"
       order: 1
+      sections:
+        - type: "faq"
+          category: "home"
+        - type: "testimonial"
+          category: "home"
     # - path: "/services"
     #   navbar: true
     #   title: "Services"
@@ -32,6 +37,11 @@ in:
       navbar: true
       title: "Laundry Franchise"
       order: 6
+      sections:
+        - type: "faq"
+          category: "franchise"
+        - type: "testimonial"
+          category: "franchise"
     - path: "/learning"
       navbar: true
       title: "Learning"
@@ -41,10 +51,20 @@ in:
           navbar: true
           title: "Courses"
           order: 1
+          sections:
+            - type: "faq"
+              category: "courses"
+            - type: "testimonial"
+              category: "courses"
         - path: "/learning/book"
           navbar: true
           title: "Book"
           order: 2
+          sections:
+            - type: "faq"
+              category: "book"
+            - type: "testimonial"
+              category: "book"
 
 sg:
   pages: []  # Uses only global pages 

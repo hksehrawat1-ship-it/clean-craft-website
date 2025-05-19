@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ const EnhancedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
   const { getNavbarItems } = usePagesConfig();
@@ -47,10 +48,23 @@ const EnhancedNavbar = () => {
     return currentCountry ? `/${currentCountry.code}${path}` : '/';
   };
 
+  const handleDropdownEnter = (path: string) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    setOpenDropdown(path);
+  };
+
+  const handleDropdownLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 150);
+  };
+
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-3'
+        isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-3'
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -74,9 +88,9 @@ const EnhancedNavbar = () => {
             item.children ? (
               <div 
                 key={item.path}
-                className="relative group"
-                onMouseEnter={() => setOpenDropdown(item.path)}
-                onMouseLeave={() => setOpenDropdown(null)}
+                className="relative"
+                onMouseEnter={() => handleDropdownEnter(item.path)}
+                onMouseLeave={handleDropdownLeave}
               >
                 <button
                   className="flex items-center text-gray-700 hover:text-primary transition-colors duration-200 font-medium focus:outline-none"
@@ -85,21 +99,21 @@ const EnhancedNavbar = () => {
                 >
                   {item.title} <ChevronDown size={16} className={`ml-1 transition-transform duration-200 ${openDropdown === item.path ? 'rotate-180' : ''}`} />
                 </button>
-                <div
-                  className={`absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50 transition-all duration-200 ${
-                    openDropdown === item.path ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
-                  } group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto`}
-                >
-                  {item.children.map((child) => (
-                    <Link
-                      key={child.path}
-                      to={createLink(child.path)}
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200"
-                    >
-                      {child.title}
-                    </Link>
-                  ))}
-                </div>
+                {openDropdown === item.path && (
+                  <div
+                    className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50"
+                  >
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.path}
+                        to={createLink(child.path)}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200"
+                      >
+                        {child.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
               <Link
@@ -179,7 +193,7 @@ const EnhancedNavbar = () => {
                 <Link
                   key={item.path}
                   to={createLink(item.path)}
-                  className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 transition-colors duration-200"
+                  className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.title}

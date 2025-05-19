@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { CountryService } from '@/lib/strapi/services/country.service';
-import { CookieService } from '@/lib/services/cookie.service';
 import { StrapiCountry } from '@/types/strapi';
-import { useCookieConsent } from '@/contexts/CookieConsentContext';
+import { useQuery } from '@tanstack/react-query';
+import { useCookieConsent } from './CookieConsentContext';
 
 interface CountryContextType {
   currentCountry: StrapiCountry | null;
@@ -12,249 +12,176 @@ interface CountryContextType {
   setCurrentCountry: (code: string) => void;
   isLoading: boolean;
   error: Error | null;
-  detectUserCountry: () => Promise<string | null>;
   getImageUrl: (path: string) => string;
   getCountryRegion: (countryCode: string) => string;
+  detectUserCountry: () => Promise<string | null>;
 }
 
 const CountryContext = createContext<CountryContextType | null>(null);
+const countryService = CountryService.getInstance();
 
-function useCountry(): CountryContextType {
-  const context = useContext(CountryContext);
-  if (!context) {
-    throw new Error('useCountry must be used within a CountryProvider');
-  }
-  return context;
-}
+// Helper function to convert basic country to Strapi country
+const toStrapiCountry = (country: any): StrapiCountry => ({
+  id: country.id,
+  code: country.code,
+  name: country.name,
+  flag_emoji: country.flag_emoji || '',
+  documentId: country.documentId || country.id?.toString() || '',
+  createdAt: country.createdAt || new Date().toISOString(),
+  updatedAt: country.updatedAt || new Date().toISOString(),
+  publishedAt: country.publishedAt || new Date().toISOString()
+});
 
-function CountryProvider({ children }: { children: React.ReactNode }) {
-  const [countries, setCountries] = useState<StrapiCountry[]>([]);
+export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentCountry, setCurrentCountryState] = useState<StrapiCountry | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
-  const countryService = CountryService.getInstance();
-  const cookieService = CookieService.getInstance();
+  const { countryCode: urlCountryCode } = useParams();
   const { hasConsent } = useCookieConsent();
 
-  // Fetch all countries
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        console.log('Fetching countries from Strapi...');
-        const data = await countryService.getCountries();
-        
-        if (!data || data.length === 0) {
-          console.warn('No active countries found in database');
-          throw new Error('No countries available');
-        }
-        
-        console.log('Countries fetched:', data);
-        setCountries(data);
-
-        // Only try to auto-detect if we have necessary cookie consents
-        if (hasConsent('essential') && hasConsent('preferences')) {
-          // Check for saved country preference
-          const savedCountry = cookieService.getStoredCountry();
-          if (savedCountry) {
-            const country = data.find(c => c.code.toLowerCase() === savedCountry.toLowerCase());
-            if (country) {
-              setCurrentCountryState(country);
-              if (window.location.pathname === '/') {
-                navigate(`/${country.code.toLowerCase()}`);
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Error fetching countries:', err);
-        setError(err as Error);
-        toast.error('Failed to load countries. Please refresh the page.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchCountries();
-  }, [hasConsent, navigate, countryService, cookieService]);
-
-  // Set current country based on code
-  const setCurrentCountry = async (countryCode: string) => {
-    try {
-      console.log('Setting current country to:', countryCode);
-      const country = await countryService.getCountryByCode(countryCode);
+  // Fetch countries with React Query
+  const { 
+    data: countries = [], 
+    isLoading,
+    error: queryError
+  } = useQuery({
+    queryKey: ['countries'],
+    queryFn: async () => {
+      console.log('Fetching countries from Strapi...');
+      const countries = await countryService.getCountries();
       
-      if (country) {
-        console.log('Country found:', country);
-        
-        // Get current path without country code
-        const currentPath = window.location.pathname;
-        const pathWithoutCountry = currentPath.replace(/^\/[a-z]{2}/, '');
-        
-        // Set the country in state and storage
-        if (hasConsent('preferences')) {
-          cookieService.storeCountry(country.code);
-          setCurrentCountryState(country);
-        } else {
-          console.log('Preferences cookies not enabled, not storing country');
-          setCurrentCountryState(country);
-          toast.info("Your country selection won't be saved until you accept preferences cookies.", {
-            id: 'preferences-required',
-            duration: 5000,
-          });
-        }
+      if (!countries || countries.length === 0) {
+        console.warn('No active countries found in database');
+        throw new Error('No countries available');
+      }
+      
+      return countries.map(toStrapiCountry);
+    },
+    staleTime: Infinity, // Never consider the data stale
+    gcTime: 1000 * 60 * 60 * 24, // Keep in cache for 24 hours
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
+  });
 
-        // Navigate to the same path but with new country code
-        const newPath = `/${country.code.toLowerCase()}${pathWithoutCountry || ''}`;
-        navigate(newPath);
-      } else {
-        console.warn(`Country code ${countryCode} not found`);
-        // If country not found, use default country or first available
-        const defaultCountry = countries.find(c => 
-          c.code.toLowerCase() === 'in'
-        ) || countries[0];
-        
-        if (defaultCountry) {
-          console.log('Using default country:', defaultCountry);
-          if (hasConsent('preferences')) {
-            cookieService.storeCountry(defaultCountry.code);
-          }
-          setCurrentCountryState(defaultCountry);
-          navigate(`/${defaultCountry.code.toLowerCase()}`);
-        } else {
-          console.error('No default country available and no countries in the list');
+  // Initial setup - check URL and cookies
+  useEffect(() => {
+    if (!countries.length) return;
+
+    // Priority 1: URL country code
+    if (urlCountryCode) {
+      const urlCountry = countries.find(c => 
+        c.code.toLowerCase() === urlCountryCode.toLowerCase()
+      );
+      if (urlCountry) {
+        console.log('Setting country from URL:', urlCountryCode);
+        setCurrentCountryState(urlCountry);
+        // Only store in localStorage if we have preferences consent
+        if (hasConsent('preferences')) {
+          localStorage.setItem('selectedCountry', urlCountry.code);
+        }
+        return;
+      }
+    }
+
+    // Priority 2: Check localStorage (if we have preferences consent)
+    if (hasConsent('preferences')) {
+      const storedCountry = localStorage.getItem('selectedCountry');
+      if (storedCountry) {
+        const country = countries.find(c => 
+          c.code.toLowerCase() === storedCountry.toLowerCase()
+        );
+        if (country) {
+          console.log('Setting country from localStorage:', storedCountry);
+          setCurrentCountryState(country);
+          navigate(`/${country.code.toLowerCase()}`);
+          return;
         }
       }
-    } catch (err) {
-      console.error('Error setting country:', err);
-      toast.error('Failed to set country. Please try again.');
+    }
+
+    // Priority 3: Default to India or first available
+    const defaultCountry = countries.find(c => c.code.toLowerCase() === 'in') || countries[0];
+    if (defaultCountry) {
+      console.log('Setting default country:', defaultCountry.code);
+      setCurrentCountryState(defaultCountry);
+      navigate(`/${defaultCountry.code.toLowerCase()}`);
+      if (hasConsent('preferences')) {
+        localStorage.setItem('selectedCountry', defaultCountry.code);
+      }
+    }
+  }, [countries, urlCountryCode, hasConsent]);
+
+  // Handle country selection from UI
+  const setCurrentCountry = (countryCode: string) => {
+    const country = countries.find(c => 
+      c.code.toLowerCase() === countryCode.toLowerCase()
+    );
+
+    if (country) {
+      // Update state and redirect
+      setCurrentCountryState(country);
+      navigate(`/${country.code.toLowerCase()}`);
+      
+      // Store preference if allowed
+      if (hasConsent('preferences')) {
+        localStorage.setItem('selectedCountry', country.code);
+      }
+    } else {
+      toast.error('Invalid country selected');
     }
   };
 
-  // Handle region-specific image paths
   const getImageUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-
     const regionPrefix = currentCountry ? `/${currentCountry.code.toLowerCase()}` : '';
     return `${regionPrefix}${path}`;
   };
 
-  // Get country region for grouping
   const getCountryRegion = (countryCode: string): string => {
     if (!countryCode) return 'Other';
-    
     countryCode = countryCode.toLowerCase();
-    
-    if (['in', 'au', 'sg', 'my'].includes(countryCode)) {
-      return 'ASIA/PACIFIC';
-    }
-    if (['uk', 'de', 'fr', 'es', 'it'].includes(countryCode)) {
-      return 'EUROPE';
-    }
-    if (['us', 'ca'].includes(countryCode)) {
-      return 'NORTH AMERICA';
-    }
-    
-    return 'GLOBAL';
+    if (['in', 'au', 'sg', 'my'].includes(countryCode)) return 'ASIA/PACIFIC';
+    if (['uk', 'de', 'fr', 'es', 'it'].includes(countryCode)) return 'EUROPE';
+    if (['us', 'ca'].includes(countryCode)) return 'AMERICAS';
+    if (['ae', 'sa', 'qa', 'kw', 'bh'].includes(countryCode)) return 'MIDDLE EAST';
+    return 'OTHER REGIONS';
   };
 
-  // Try to detect user's country with improved error handling and fallbacks
-  const detectUserCountry = async () => {
-    console.log('Detecting user country...');
-    
+  const detectUserCountry = async (): Promise<string | null> => {
     try {
-      // First check if we have necessary cookie consents
-      if (!hasConsent('essential') || !hasConsent('preferences')) {
-        console.log('Missing required cookie consents for country detection');
-        return null;
-      }
-
-      // Check if we have a selected country in local storage
-      const savedCountry = cookieService.getStoredCountry();
-      
-      if (savedCountry) {
-        console.log('Found saved country in localStorage:', savedCountry);
-        
-        if (countries.length > 0) {
-          const isValidSavedCountry = countries.some(c => 
-            c.code.toLowerCase() === savedCountry.toLowerCase()
-          );
-          
-          if (isValidSavedCountry) {
-            console.log('Valid saved country, using it:', savedCountry);
-            setCurrentCountry(savedCountry);
-            return savedCountry;
-          } else {
-            console.log('Saved country not valid in current countries list');
-            cookieService.clearStoredCountry();
-          }
-        }
-      }
-      
-      // If no valid saved country, try to get from IP geolocation API with a timeout
-      console.log('Trying to detect country from IP geolocation API...');
-      
-      // Create a promise that rejects after a timeout
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Geolocation API timeout')), 5000);
-      });
-      
-      // Create the fetch promise
-      const fetchPromise = fetch('https://ipapi.co/json/');
-      
-      // Race them - whichever resolves/rejects first wins
-      const response = await Promise.race([fetchPromise, timeoutPromise]) as Response;
+      const response = await fetch('https://ipapi.co/json/');
       const data = await response.json();
       
-      console.log('Geolocation API response:', data);
+      // Get the country code from the API response
+      const detectedCode = data.country_code?.toLowerCase();
       
-      if (data && data.country_code && countries.length > 0) {
-        const countryCode = data.country_code.toLowerCase();
-        console.log('Detected country code:', countryCode);
-        
-        const foundCountry = countries.find(c => 
-          c.code.toLowerCase() === countryCode
-        );
-        
-        if (foundCountry) {
-          console.log('Found country in our database:', foundCountry);
-          setCurrentCountry(foundCountry.code);
-          return foundCountry.code;
-        }
+      // Check if we support this country
+      const supportedCountry = countries.find(c => 
+        c.code.toLowerCase() === detectedCode
+      );
+      
+      if (supportedCountry) {
+        return supportedCountry.code.toLowerCase();
       }
+      
+      // If country not supported, return null
+      return null;
     } catch (error) {
-      console.error('Error detecting country:', error);
+      console.error('Error detecting user country:', error);
+      return null;
     }
-    
-    // If no country detected or API failed, use default
-    console.log('Using default country fallback...');
-    
-    if (countries.length > 0) {
-      const defaultCountry = countries.find(c => c.code === 'in') || countries[0];
-      if (defaultCountry) {
-        console.log('Using default country:', defaultCountry);
-        setCurrentCountry(defaultCountry.code);
-        return defaultCountry.code;
-      }
-    }
-    
-    console.warn('Could not detect or set any country');
-    return null;
   };
 
   const value: CountryContextType = {
     currentCountry,
     countries,
-    isLoading,
-    error,
     setCurrentCountry,
-    detectUserCountry,
+    isLoading,
+    error: queryError,
     getImageUrl,
-    getCountryRegion
+    getCountryRegion,
+    detectUserCountry
   };
 
   return (
@@ -262,6 +189,12 @@ function CountryProvider({ children }: { children: React.ReactNode }) {
       {children}
     </CountryContext.Provider>
   );
-}
+};
 
-export { CountryProvider, useCountry };
+export const useCountry = () => {
+  const context = useContext(CountryContext);
+  if (!context) {
+    throw new Error('useCountry must be used within a CountryProvider');
+  }
+  return context;
+};
