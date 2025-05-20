@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useFAQs } from '@/hooks/use-faqs';
-import { Loader2 } from 'lucide-react';
+import { useFAQs } from "@/hooks/use-faqs";
+import { Loader2 } from "lucide-react";
 
 export function FAQAccordion() {
   const { faqsByCategory, isLoading, error } = useFAQs();
@@ -39,7 +39,7 @@ export function FAQAccordion() {
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div 
+                  <div
                     className="prose prose-sm max-w-none"
                     dangerouslySetInnerHTML={{ __html: faq.answer }}
                   />
@@ -51,4 +51,4 @@ export function FAQAccordion() {
       ))}
     </div>
   );
-} 
+}

@@ -1,102 +1,87 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCountry } from '@/contexts/CountryContext';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { Globe, Loader2 } from 'lucide-react';
-import { StrapiCountry } from '@/types/strapi';
-import { useCookieConsent } from '@/contexts/CookieConsentContext';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCountry } from "@/contexts/CountryContext";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Globe, Loader2 } from "lucide-react";
+import { StrapiCountry } from "@/types/strapi";
+import { useCookieConsent } from "@/contexts/CookieConsentContext";
 
 interface CountryRedirectProps {
   path?: string;
 }
 
-const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
-  const {
-    currentCountry,
-    countries,
-    detectUserCountry,
-    isLoading,
-    error,
-  } = useCountry();
-
+const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = "" }) => {
+  const { currentCountry, countries, detectUserCountry, isLoading, error } =
+    useCountry();
   const { hasConsent } = useCookieConsent();
   const navigate = useNavigate();
 
   const [detectionInProgress, setDetectionInProgress] = useState(false);
   const [detectionError, setDetectionError] = useState<Error | null>(null);
 
-  /* ---------------------------------------------------- */
-  /* Toasts                                               */
-  /* ---------------------------------------------------- */
+  /* --------------------- Toasts --------------------- */
   useEffect(() => {
     if (error || detectionError) {
-      console.error('Error detected:', error || detectionError);
-      toast.error("Couldn't load country information. Please select one manually.", {
-        id: 'country-error',
-        duration: 5000,
-      });
-    } else if (!hasConsent('essential') && window.location.pathname === '/') {
-      console.log('Essential cookies not enabled');
+      console.error("Error detected:", error || detectionError);
+      toast.error(
+        "Couldn't load country information. Please select one manually.",
+        {
+          id: "country-error",
+          duration: 5000,
+        }
+      );
+    } else if (!hasConsent("essential") && window.location.pathname === "/") {
       toast.info(
-        'We use one essential cookie to remember your country during this visit.',
-        { id: 'essential-required', duration: 5000 },
+        "We use one essential cookie to remember your country during this visit.",
+        { id: "essential-required", duration: 5000 }
       );
     }
   }, [error, detectionError, hasConsent]);
 
-  /* ---------------------------------------------------- */
-  /* Country groups (for manual picker UI)                */
-  /* ---------------------------------------------------- */
+  /* ----------------- Country Groups ----------------- */
   const groupedCountries = countries.reduce<Record<string, StrapiCountry[]>>(
     (acc, country) => {
       if (!country?.code) return acc;
       const code = country.code.toLowerCase();
-
-      const region =
-        ['in', 'au', 'sg', 'my'].includes(code)
-          ? 'ASIA/PACIFIC'
-          : ['uk', 'de', 'fr', 'es', 'it'].includes(code)
-          ? 'EUROPE'
-          : ['us', 'ca'].includes(code)
-          ? 'AMERICAS'
-          : ['ae', 'sa', 'qa', 'kw', 'bh'].includes(code)
-          ? 'MIDDLE EAST'
-          : 'OTHER REGIONS';
-
+      const region = ["in", "au", "sg", "my"].includes(code)
+        ? "ASIA/PACIFIC"
+        : ["uk", "de", "fr", "es", "it"].includes(code)
+        ? "EUROPE"
+        : ["us", "ca"].includes(code)
+        ? "AMERICAS"
+        : ["ae", "sa", "qa", "kw", "bh"].includes(code)
+        ? "MIDDLE EAST"
+        : "OTHER REGIONS";
       (acc[region] ||= []).push(country);
       return acc;
     },
-    {},
+    {}
   );
 
-  /* ---------------------------------------------------- */
-  /* Auto-detect on “/”                                   */
-  /* ---------------------------------------------------- */
+  /* -------- Auto-detect on "/" with consent -------- */
   useEffect(() => {
-    if (window.location.pathname !== '/') return;         // run only on the root
-    if (isLoading || countries.length === 0) return;      // wait for list
-    if (detectionInProgress) return;                      // avoid duplicate run
-    if (!hasConsent('essential')) {                       // need essential only
-      setDetectionError(new Error('Cookie consent required'));
+    if (window.location.pathname !== "/") return;
+    if (isLoading || countries.length === 0 || detectionInProgress) return;
+
+    if (!hasConsent("essential")) {
+      console.warn("Skipping auto-detection: no essential consent");
       return;
     }
 
     const runDetection = async () => {
       try {
         setDetectionInProgress(true);
-        setDetectionError(null);
+        setDetectionError(null); // clear previous error
 
-        const detectedCode = await detectUserCountry();   // "in", "au", …
+        const detectedCode = await detectUserCountry();
         if (detectedCode) {
           navigate(`/${detectedCode}${path}`);
-
-          // save only if user allowed preferences
-          if (hasConsent('preferences')) {
-            localStorage.setItem('selectedCountry', detectedCode.toUpperCase());
+          if (hasConsent("preferences")) {
+            localStorage.setItem("selectedCountry", detectedCode.toUpperCase());
           }
         } else {
-          setDetectionError(new Error('Could not detect country'));
+          setDetectionError(new Error("Could not detect country"));
         }
       } catch (e) {
         setDetectionError(e as Error);
@@ -116,17 +101,18 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     detectionInProgress,
   ]);
 
-  /* ---------------------------------------------------- */
-  /* Early redirect: essential consent + context already set */
-  /* ---------------------------------------------------- */
-  if (hasConsent('essential') && currentCountry) {
-    navigate(`/${currentCountry.code.toLowerCase()}${path}`);
-    return null;
-  }
+  /* --------- Redirect if currentCountry set --------- */
+  useEffect(() => {
+    if (
+      window.location.pathname === "/" &&
+      hasConsent("essential") &&
+      currentCountry
+    ) {
+      navigate(`/${currentCountry.code.toLowerCase()}${path}`);
+    }
+  }, [currentCountry, hasConsent, navigate, path]);
 
-  /* ---------------------------------------------------- */
-  /* Loading state – countries list                       */
-  /* ---------------------------------------------------- */
+  /* ------------------ Loading UI ------------------ */
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#1869D3] text-white">
@@ -136,16 +122,14 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     );
   }
 
-  /* ---------------------------------------------------- */
-  /* Manual country picker                                */
-  /* ---------------------------------------------------- */
+  /* -------------- Manual Country Picker ------------- */
   const handleManualSelect = (code: string) => navigate(`/${code}${path}`);
 
   return (
     <div className="min-h-screen bg-[#1869D3] flex items-center">
       <div className="container px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left (text + buttons) */}
+          {/* Left Side */}
           <div className="text-white">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight">
               Laundry and Dry
@@ -159,7 +143,13 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
             </p>
 
             <div className="space-y-4">
-              {['ASIA/PACIFIC', 'EUROPE', 'AMERICAS', 'MIDDLE EAST', 'OTHER REGIONS']
+              {[
+                "ASIA/PACIFIC",
+                "EUROPE",
+                "AMERICAS",
+                "MIDDLE EAST",
+                "OTHER REGIONS",
+              ]
                 .filter((r) => groupedCountries[r])
                 .map((region) => (
                   <div key={region}>
@@ -184,14 +174,14 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
             </div>
           </div>
 
-          {/* Right (phone mock-up) */}
+          {/* Right Side */}
           <div className="hidden lg:flex lg:justify-center">
             <div className="relative w-[240px] h-[480px]">
               <img
                 src="/lovable-uploads/cleancraft-laundry-app.png"
                 alt="Cleancraft Mobile App"
                 className="w-full h-full object-contain"
-                style={{ imageRendering: 'crisp-edges' }}
+                style={{ imageRendering: "crisp-edges" }}
               />
             </div>
           </div>

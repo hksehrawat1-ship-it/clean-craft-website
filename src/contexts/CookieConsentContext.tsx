@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CookieService } from '@/lib/services/cookie.service';
-import { CookieConsent } from '@/types/cookies';
-import { toast } from 'sonner';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { CookieService } from "@/lib/services/cookie.service";
+import { CookieConsent } from "@/types/cookies";
+import { toast } from "sonner";
 
 interface CookieConsentContextType {
   consent: CookieConsent | null;
@@ -11,12 +11,16 @@ interface CookieConsentContextType {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const CookieConsentContext = createContext<CookieConsentContextType | null>(null);
+const CookieConsentContext = createContext<CookieConsentContextType | null>(
+  null
+);
 
 function useCookieConsent() {
   const context = useContext(CookieConsentContext);
   if (!context) {
-    throw new Error('useCookieConsent must be used within a CookieConsentProvider');
+    throw new Error(
+      "useCookieConsent must be used within a CookieConsentProvider"
+    );
   }
   return context;
 }
@@ -34,7 +38,7 @@ function CookieConsentProvider({ children }: { children: React.ReactNode }) {
           setConsent(storedConsent);
         }
       } catch (error) {
-        console.error('Error initializing consent:', error);
+        console.error("Error initializing consent:", error);
       }
     };
 
@@ -45,9 +49,14 @@ function CookieConsentProvider({ children }: { children: React.ReactNode }) {
     try {
       setConsent(newConsent);
       cookieService.storeConsent(newConsent);
+
+      // ✅ Store in actual browser cookie for server/client usage
+      document.cookie = `cookie_consent=${encodeURIComponent(
+        JSON.stringify(newConsent)
+      )}; path=/; SameSite=Lax; Secure; max-age=${60 * 60 * 24 * 365}`;
     } catch (error) {
-      console.error('Error updating consent:', error);
-      toast.error('Failed to update preferences. Please try again.');
+      console.error("Error updating consent:", error);
+      toast.error("Failed to update preferences. Please try again.");
     }
   };
 
@@ -58,13 +67,15 @@ function CookieConsentProvider({ children }: { children: React.ReactNode }) {
   const isConsentRequired = !consent;
 
   return (
-    <CookieConsentContext.Provider value={{
-      consent,
-      updateConsent,
-      isConsentRequired,
-      hasConsent,
-      setIsOpen
-    }}>
+    <CookieConsentContext.Provider
+      value={{
+        consent,
+        updateConsent,
+        isConsentRequired,
+        hasConsent,
+        setIsOpen,
+      }}
+    >
       {children}
     </CookieConsentContext.Provider>
   );
