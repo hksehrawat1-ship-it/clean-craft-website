@@ -12,27 +12,23 @@ interface CountryRedirectProps {
 }
 
 const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
-  const { currentCountry, countries, setCurrentCountry, detectUserCountry, isLoading, error } = useCountry();
+  const {
+    currentCountry,
+    countries,
+    detectUserCountry,
+    isLoading,
+    error,
+  } = useCountry();
+
   const { hasConsent } = useCookieConsent();
   const navigate = useNavigate();
-  const [redirectAttempts, setRedirectAttempts] = useState(0);
+
   const [detectionInProgress, setDetectionInProgress] = useState(false);
   const [detectionError, setDetectionError] = useState<Error | null>(null);
-  
-  // Debug logging
-  useEffect(() => {
-    console.log('CountryRedirect component state:', {
-      countries: countries.length,
-      isLoading,
-      currentCountry,
-      error,
-      detectionInProgress,
-      redirectAttempts,
-      pathname: window.location.pathname
-    });
-  }, [countries, isLoading, currentCountry, error, detectionInProgress, redirectAttempts]);
-  
-  // Show toasts for errors and cookie consent
+
+  /* ---------------------------------------------------- */
+  /* Toasts                                               */
+  /* ---------------------------------------------------- */
   useEffect(() => {
     if (error || detectionError) {
       console.error('Error detected:', error || detectionError);
@@ -40,113 +36,97 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
         id: 'country-error',
         duration: 5000,
       });
-    } else if (!hasConsent('preferences') && window.location.pathname === '/') {
-      console.log('Preferences cookies not enabled');
-      toast.info("Please accept preferences cookies to save your country selection.", {
-        id: 'preferences-required',
-        duration: 5000,
-      });
+    } else if (!hasConsent('essential') && window.location.pathname === '/') {
+      console.log('Essential cookies not enabled');
+      toast.info(
+        'We use one essential cookie to remember your country during this visit.',
+        { id: 'essential-required', duration: 5000 },
+      );
     }
   }, [error, detectionError, hasConsent]);
 
-  // Group countries by region
-  const groupedCountries = countries.reduce<Record<string, StrapiCountry[]>>((acc, country) => {
-    if (!country?.code) return acc;
-    
-    let region = 'OTHER REGIONS';
-    const countryCode = country.code.toLowerCase();
-    
-    if (['in', 'au', 'sg', 'my'].includes(countryCode)) {
-      region = 'ASIA/PACIFIC';
-    } else if (['uk', 'de', 'fr', 'es', 'it'].includes(countryCode)) {
-      region = 'EUROPE';
-    } else if (['us', 'ca'].includes(countryCode)) {
-      region = 'AMERICAS';
-    } else if (['ae', 'sa', 'qa', 'kw', 'bh'].includes(countryCode)) {
-      region = 'MIDDLE EAST';
-    }
-    
-    if (!acc[region]) acc[region] = [];
-    acc[region].push(country);
-    return acc;
-  }, {});
-  
-  // Auto-detect country and redirect
+  /* ---------------------------------------------------- */
+  /* Country groups (for manual picker UI)                */
+  /* ---------------------------------------------------- */
+  const groupedCountries = countries.reduce<Record<string, StrapiCountry[]>>(
+    (acc, country) => {
+      if (!country?.code) return acc;
+      const code = country.code.toLowerCase();
+
+      const region =
+        ['in', 'au', 'sg', 'my'].includes(code)
+          ? 'ASIA/PACIFIC'
+          : ['uk', 'de', 'fr', 'es', 'it'].includes(code)
+          ? 'EUROPE'
+          : ['us', 'ca'].includes(code)
+          ? 'AMERICAS'
+          : ['ae', 'sa', 'qa', 'kw', 'bh'].includes(code)
+          ? 'MIDDLE EAST'
+          : 'OTHER REGIONS';
+
+      (acc[region] ||= []).push(country);
+      return acc;
+    },
+    {},
+  );
+
+  /* ---------------------------------------------------- */
+  /* Auto-detect on “/”                                   */
+  /* ---------------------------------------------------- */
   useEffect(() => {
-    const autoDetectCountry = async () => {
-      // Only run detection on root path
-      if (window.location.pathname !== '/') {
-        setDetectionInProgress(false);
-        return;
-      }
-      
-      // Skip if countries haven't loaded or already detecting
-      if (isLoading || countries.length === 0 || detectionInProgress) {
-        return;
-      }
-      
-      // Skip if we don't have necessary cookie consents
-      if (!hasConsent('essential') || !hasConsent('preferences')) {
-        setDetectionError(new Error('Cookie consent required'));
-        return;
-      }
-      
+    if (window.location.pathname !== '/') return;         // run only on the root
+    if (isLoading || countries.length === 0) return;      // wait for list
+    if (detectionInProgress) return;                      // avoid duplicate run
+    if (!hasConsent('essential')) {                       // need essential only
+      setDetectionError(new Error('Cookie consent required'));
+      return;
+    }
+
+    const runDetection = async () => {
       try {
-        console.log('Starting country detection...');
         setDetectionInProgress(true);
         setDetectionError(null);
-        
-        // Set a shorter timeout for better UX
-        const detectionTimeout = setTimeout(() => {
-          console.log('Country detection timeout reached');
-          setDetectionInProgress(false);
-          setDetectionError(new Error('Country detection timed out'));
-        }, 5000);
-        
-        const detectedCountry = await detectUserCountry();
-        clearTimeout(detectionTimeout);
-        
-        if (detectedCountry) {
-          console.log('Navigating to detected country:', detectedCountry);
-          navigate(`/${detectedCountry}${path}`);
+
+        const detectedCode = await detectUserCountry();   // "in", "au", …
+        if (detectedCode) {
+          navigate(`/${detectedCode}${path}`);
+
+          // save only if user allowed preferences
+          if (hasConsent('preferences')) {
+            localStorage.setItem('selectedCountry', detectedCode.toUpperCase());
+          }
         } else {
-          console.warn('No country detected');
           setDetectionError(new Error('Could not detect country'));
         }
-      } catch (error) {
-        console.error('Country detection failed:', error);
-        setDetectionError(error as Error);
+      } catch (e) {
+        setDetectionError(e as Error);
       } finally {
         setDetectionInProgress(false);
       }
     };
-    
-    autoDetectCountry();
-  }, [isLoading, countries, detectUserCountry, navigate, path, hasConsent, detectionInProgress]);
 
-  // Increment redirect attempts to prevent infinite loading
-  useEffect(() => {
-    if ((isLoading || detectionInProgress) && redirectAttempts < 3) {
-      const timer = setTimeout(() => {
-        console.log('Incrementing redirect attempts');
-        setRedirectAttempts(prev => prev + 1);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading, detectionInProgress, redirectAttempts]);
+    runDetection();
+  }, [
+    isLoading,
+    countries,
+    detectUserCountry,
+    navigate,
+    path,
+    hasConsent,
+    detectionInProgress,
+  ]);
 
-  const handleCountrySelect = (code: string) => {
-    try {
-      console.log('User selected country:', code);
-      setCurrentCountry(code);
-      navigate(`/${code}${path}`);
-    } catch (error) {
-      console.error('Error selecting country:', error);
-      toast.error('Failed to set country. Please try again.');
-    }
-  };
+  /* ---------------------------------------------------- */
+  /* Early redirect: essential consent + context already set */
+  /* ---------------------------------------------------- */
+  if (hasConsent('essential') && currentCountry) {
+    navigate(`/${currentCountry.code.toLowerCase()}${path}`);
+    return null;
+  }
 
-  // Show loading spinner only while countries are loading
+  /* ---------------------------------------------------- */
+  /* Loading state – countries list                       */
+  /* ---------------------------------------------------- */
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#1869D3] text-white">
@@ -156,27 +136,17 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
     );
   }
 
-  // If essential cookies are present and a country is already set, redirect immediately
-  if (hasConsent('essential') && currentCountry) {
-    navigate(`/${currentCountry}${path}`);
-    return null;
-  }
+  /* ---------------------------------------------------- */
+  /* Manual country picker                                */
+  /* ---------------------------------------------------- */
+  const handleManualSelect = (code: string) => navigate(`/${code}${path}`);
 
-  // If no country is set, always wait for the fetch to complete and show the country selection page
-  // (cookie banner is global)
   return (
     <div className="min-h-screen bg-[#1869D3] flex items-center">
       <div className="container px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Column - Content */}
+          {/* Left (text + buttons) */}
           <div className="text-white">
-            <div className="mb-6">
-              <img 
-                src="/lovable-uploads/cleancraft-icon.png" 
-                alt="Cleancraft"
-                className="h-10 md:h-12 [filter:brightness(0)_invert(1)_sepia(1)_saturate(10000%)_hue-rotate(45deg)]"
-              />
-            </div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight">
               Laundry and Dry
               <br />
@@ -187,43 +157,25 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
             <p className="text-lg text-blue-100 mb-6">
               Find us in countries around the world
             </p>
-            {/* Country Selection */}
+
             <div className="space-y-4">
-              {/* Show Asia/Pacific region first */}
-              {groupedCountries['ASIA/PACIFIC'] && (
-                <div>
-                  <h3 className="text-sm font-bold text-blue-200 mb-2">ASIA/PACIFIC</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {groupedCountries['ASIA/PACIFIC'].map((country) => (
-                      <Button
-                        key={country.code}
-                        variant="outline"
-                        className="w-full justify-start text-left bg-white/10 hover:bg-white/20 border-white/20 h-10"
-                        onClick={() => handleCountrySelect(country.code)}
-                      >
-                        <Globe className="w-4 h-4 mr-2 shrink-0" />
-                        <span className="truncate">{country.name}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {/* Other regions */}
-              {Object.entries(groupedCountries)
-                .filter(([region]) => region !== 'ASIA/PACIFIC')
-                .map(([region, regionCountries]) => (
+              {['ASIA/PACIFIC', 'EUROPE', 'AMERICAS', 'MIDDLE EAST', 'OTHER REGIONS']
+                .filter((r) => groupedCountries[r])
+                .map((region) => (
                   <div key={region}>
-                    <h3 className="text-sm font-bold text-blue-200 mb-2">{region}</h3>
+                    <h3 className="text-sm font-bold text-blue-200 mb-2">
+                      {region}
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {regionCountries.map((country) => (
+                      {groupedCountries[region].map((c) => (
                         <Button
-                          key={country.code}
+                          key={c.code}
                           variant="outline"
-                          className="w-full justify-start text-left bg-white/10 hover:bg-white/20 border-white/20 h-10"
-                          onClick={() => handleCountrySelect(country.code)}
+                          className="w-full justify-start bg-white/10 hover:bg-white/20 border-white/20 h-10"
+                          onClick={() => handleManualSelect(c.code)}
                         >
-                          <Globe className="w-4 h-4 mr-2 shrink-0" />
-                          <span className="truncate">{country.name}</span>
+                          <Globe className="w-4 h-4 mr-2" />
+                          <span className="truncate">{c.name}</span>
                         </Button>
                       ))}
                     </div>
@@ -231,41 +183,16 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = '' }) => {
                 ))}
             </div>
           </div>
-          {/* Right Column - App Preview */}
+
+          {/* Right (phone mock-up) */}
           <div className="hidden lg:flex lg:justify-center">
             <div className="relative w-[240px] h-[480px]">
-              {/* App Screenshot */}
-              <img 
+              <img
                 src="/lovable-uploads/cleancraft-laundry-app.png"
                 alt="Cleancraft Mobile App"
                 className="w-full h-full object-contain"
                 style={{ imageRendering: 'crisp-edges' }}
               />
-              {/* Floating Icons */}
-              <div className="absolute -right-12 top-16 transform-gpu">
-                <img 
-                  src="/lovable-uploads/wash-and-fold.png" 
-                  alt="" 
-                  className="w-16 h-16 animate-float object-contain"
-                  style={{ imageRendering: 'crisp-edges' }}
-                />
-              </div>
-              <div className="absolute -left-12 top-1/2 -translate-y-1/2 transform-gpu">
-                <img 
-                  src="/lovable-uploads/dry-cleaning.png" 
-                  alt="" 
-                  className="w-16 h-16 animate-float-delayed object-contain"
-                  style={{ imageRendering: 'crisp-edges' }}
-                />
-              </div>
-              <div className="absolute -right-10 bottom-24 transform-gpu">
-                <img 
-                  src="/lovable-uploads/ironing.png" 
-                  alt="" 
-                  className="w-16 h-16 animate-float object-contain"
-                  style={{ imageRendering: 'crisp-edges' }}
-                />
-              </div>
             </div>
           </div>
         </div>

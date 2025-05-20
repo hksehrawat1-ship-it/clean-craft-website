@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useCookieConsent } from '@/contexts/CookieConsentContext';
-import { useCountry } from '@/contexts/CountryContext';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -9,7 +8,6 @@ import { toast } from 'sonner';
 
 export default function CookieConsentBanner() {
   const { consent, updateConsent, isConsentRequired } = useCookieConsent();
-  const { currentCountry, isLoading } = useCountry();
   const [showDetails, setShowDetails] = useState(false);
   const [preferences, setPreferences] = useState({
     essential: true, // Always true
@@ -62,8 +60,7 @@ export default function CookieConsentBanner() {
             <p className="text-sm text-gray-600">
               {window.location.pathname === '/' ? (
                 <>
-                  <strong>Country selection requires preferences cookies.</strong>{' '}
-                  We use cookies to enhance your experience and remember your country preference. Essential cookies are always enabled as they are required for the website to function. Please accept preferences cookies to continue.
+                  We use one <strong>essential cookie</strong> to remember your country for this visit. You can also allow analytics, marketing or preference cookies, but they are optional.
                 </>
               ) : (
                 'We use cookies to enhance your experience. Essential cookies are always enabled as they are required for the website to function. By continuing to visit this site you agree to our use of cookies.'
