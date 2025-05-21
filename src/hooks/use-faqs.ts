@@ -28,7 +28,8 @@ export function useFAQs() {
   const { data, isLoading, error } = useQuery<FAQResponse>({
     queryKey: ['faqs'],
     queryFn: async () => {
-      const response = await strapiClient.get('/api/faqs', {
+      const response = await strapiClient.request('/api/faqs', {
+        method: 'GET',
         params: {
           sort: ['category:asc', 'order:asc'],
           populate: '*'

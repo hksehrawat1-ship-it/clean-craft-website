@@ -1,3 +1,4 @@
+
 import { useStrapiTestimonials } from '@/hooks/useStrapi';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { StrapiTestimonial } from '@/types/strapi';
@@ -35,7 +36,11 @@ const fallbackTestimonials = [
 ];
 
 export default function CustomerTestimonials() {
-  const { data: testimonials, isLoading, error } = useStrapiTestimonials('website');
+  const { data: testimonials, isLoading, error } = useStrapiTestimonials({
+    platform: 'website',
+    sortBy: 'rating',
+    sortOrder: 'desc'
+  });
 
   if (isLoading) {
     return (
@@ -46,7 +51,7 @@ export default function CustomerTestimonials() {
   }
 
   // Use fallback testimonials if no testimonials are available
-  const displayTestimonials = testimonials?.length > 0 ? testimonials : fallbackTestimonials;
+  const displayTestimonials = testimonials?.data?.length > 0 ? testimonials.data : fallbackTestimonials;
 
   return (
     <section className="py-16 bg-gray-50">
