@@ -1,28 +1,41 @@
-import React from 'react';
+import React from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { StrapiFAQ } from '@/types/strapi';
+import { StrapiFAQ } from "@/types/strapi";
 
 interface FAQDisplayProps {
   faqs: StrapiFAQ[];
-  variant?: 'home' | 'courses' | 'book';
+  variant?: "home" | "courses" | "book";
 }
 
-const FAQDisplay: React.FC<FAQDisplayProps> = ({ 
-  faqs,
-  variant = 'home'
-}) => {
-  if (!faqs?.length) {
-    return null;
-  }
+const FAQDisplay: React.FC<FAQDisplayProps> = ({ faqs, variant = "home" }) => {
+  if (!faqs?.length) return null;
 
-  const title = variant === 'home' ? 'Frequently Asked Questions' : 
-                variant === 'courses' ? 'Course FAQs' : 
-                'Book FAQs';
+  const title =
+    variant === "home"
+      ? "Frequently Asked Questions"
+      : variant === "courses"
+      ? "Course FAQs"
+      : "Book FAQs";
+
+  const getAnswerText = (answer: any): string => {
+    if (typeof answer === "string") return answer;
+
+    // ✅ Correctly parse the array of blocks
+    if (Array.isArray(answer)) {
+      return answer
+        .map((block) =>
+          block?.children?.map((child: any) => child.text).join(" ")
+        )
+        .join("\n");
+    }
+
+    return "No answer provided yet.";
+  };
 
   return (
     <section className="w-full py-16 px-4 md:px-8 bg-white">
@@ -30,11 +43,11 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({
         <h2 className="text-4xl md:text-5xl font-black text-center mb-16">
           Your questions, <span className="text-[#1869D3]">answered</span>
         </h2>
-        
+
         <Accordion type="single" collapsible className="w-full space-y-4">
           {faqs.map((faq) => (
-            <AccordionItem 
-              key={faq.id} 
+            <AccordionItem
+              key={faq.id}
               value={faq.id.toString()}
               className="border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm data-[state=open]:shadow-md transition-shadow"
             >
@@ -44,7 +57,7 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({
                 </span>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 text-gray-600 text-base">
-                {faq.answer || 'No answer provided yet.'}
+                {getAnswerText(faq.answer)}
               </AccordionContent>
             </AccordionItem>
           ))}
@@ -54,4 +67,4 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({
   );
 };
 
-export default FAQDisplay; 
+export default FAQDisplay;
