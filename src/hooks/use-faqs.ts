@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { strapiClient } from '@/lib/strapi/client';
 
@@ -50,9 +51,13 @@ export function useFAQs() {
     return acc;
   }, {} as Record<string, FAQ[]>);
 
+  // Extract unique categories
+  const categories = Array.from(new Set(faqs.map(faq => faq.category))).sort();
+
   return {
     faqs,
     faqsByCategory,
+    categories,
     isLoading,
     error
   };

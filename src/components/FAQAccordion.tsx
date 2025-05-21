@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Accordion,
@@ -8,10 +9,25 @@ import {
 import { useFAQs } from "@/hooks/use-faqs";
 import { Loader2 } from "lucide-react";
 
-export function FAQAccordion() {
-  const { faqsByCategory, isLoading, error } = useFAQs();
+interface FAQ {
+  id: number;
+  question: string;
+  answer: string;
+  category: string;
+  order: number;
+}
 
-  if (isLoading) {
+interface FAQAccordionProps {
+  faqsByCategory?: Record<string, FAQ[]>;
+}
+
+export function FAQAccordion({ faqsByCategory: propsFaqsByCategory }: FAQAccordionProps) {
+  const { faqsByCategory: hookFaqsByCategory, isLoading, error } = useFAQs();
+  
+  // Use either the props or the data from the hook
+  const faqsByCategory = propsFaqsByCategory || hookFaqsByCategory;
+
+  if (isLoading && !propsFaqsByCategory) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -19,7 +35,7 @@ export function FAQAccordion() {
     );
   }
 
-  if (error) {
+  if (error && !propsFaqsByCategory) {
     return (
       <div className="text-center text-red-500">
         Failed to load FAQs. Please try again later.

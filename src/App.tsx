@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import {
   BrowserRouter,
@@ -26,6 +27,7 @@ import Courses from './pages/learning/Courses';
 import Book from './pages/learning/Book';
 import Policies from './pages/Policies';
 import PolicyDetails from './pages/PolicyDetails';
+import FaqPage from './pages/Faq';
 
 /* layout that just renders routed content */
 const CountryLayout = () => <Outlet />;
@@ -107,6 +109,19 @@ function App() {
                         }
                       />
                     </Route>
+                    
+                    {/* FAQ page route */}
+                    <Route 
+                      path="faq"
+                      element={
+                        <CountryRouteGuard
+                          pagePath="/faq"
+                          element={<FaqPage />}
+                          allowEmptyContent
+                        />
+                      }
+                    />
+                    
                     <Route path="*" element={<NotFound />} />
                   </Route>
 
