@@ -1,6 +1,4 @@
-
 import { useQuery } from '@tanstack/react-query';
-import { strapiClient } from '@/lib/strapi/client';
 
 interface FAQ {
   id: number;
@@ -13,51 +11,49 @@ interface FAQ {
 interface FAQResponse {
   data: {
     id: number;
-    attributes: Omit<FAQ, 'id'>;
+    question: string;
+    answer: string | null;
+    category: string | null;
+    order: number | null;
   }[];
-  meta: {
-    pagination: {
-      page: number;
-      pageSize: number;
-      total: number;
-    };
-  };
+  meta: any;
 }
+
+const API_URL = 'https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc';
 
 export function useFAQs() {
   const { data, isLoading, error } = useQuery<FAQResponse>({
     queryKey: ['faqs'],
     queryFn: async () => {
-      // Fix: Using the collection API instead of the non-existent request method
-      const response = await strapiClient.collection('faqs').find({
-        sort: ['category:asc', 'order:asc'],
-        populate: '*'
-      });
-      return response as FAQResponse;
-    }
+      const res = await fetch(API_URL);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const json = await res.json();
+      return json;
+    },
   });
 
-  const faqs = data?.data.map(item => ({
-    id: item.id,
-    ...item.attributes
-  })) ?? [];
+  // Data transform kar rahe hain
+  const faqs: FAQ[] = data?.data
+    .filter(faq => faq.question) // question hona zaroori hai
+    .map(faq => ({
+      id: faq.id,
+      question: faq.question,
+      answer: faq.answer ?? "Answer coming soon",
+      category: faq.category ?? "Uncategorized",
+      order: faq.order ?? 0,
+    })) ?? [];
 
+  // FAQs ko category wise group karna
   const faqsByCategory = faqs.reduce((acc, faq) => {
-    if (!acc[faq.category]) {
-      acc[faq.category] = [];
-    }
+    if (!acc[faq.category]) acc[faq.category] = [];
     acc[faq.category].push(faq);
     return acc;
   }, {} as Record<string, FAQ[]>);
 
-  // Extract unique categories
-  const categories = Array.from(new Set(faqs.map(faq => faq.category))).sort();
+  // Categories ko alphabetically sort kar rahe hain
+  const categories = Object.keys(faqsByCategory).sort();
 
-  return {
-    faqs,
-    faqsByCategory,
-    categories,
-    isLoading,
-    error
-  };
+  return { faqs, faqsByCategory, categories, isLoading, error };
 }
