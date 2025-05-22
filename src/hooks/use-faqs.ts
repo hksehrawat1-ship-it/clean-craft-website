@@ -45,11 +45,11 @@ export function useFAQs() {
     })) ?? [];
 
   // FAQs ko category wise group karna
-  const faqsByCategory = faqs.reduce((acc, faq) => {
+  const faqsByCategory = faqs.reduce<Record<string, FAQ[]>>((acc, faq) => {
     if (!acc[faq.category]) acc[faq.category] = [];
     acc[faq.category].push(faq);
     return acc;
-  }, {} as Record<string, FAQ[]>);
+  }, {});
 
   // Categories ko alphabetically sort kar rahe hain
   const categories = Object.keys(faqsByCategory).sort();

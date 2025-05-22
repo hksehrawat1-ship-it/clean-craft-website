@@ -3,7 +3,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/home/Layout";
 import { useStrapiFAQs, useStrapiTestimonials } from "@/hooks/useStrapi";
-import { Loader2, Check, X } from "lucide-react";
+import { Check, X, DollarSign, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FAQDisplay from "@/components/shared/FAQDisplay";
 import TestimonialDisplay from "@/components/shared/TestimonialDisplay";
@@ -21,6 +21,131 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
 
+// ROI Calculator Form Schema
+const calculatorSchema = z.object({
+  initialInvestment: z.string().min(1, {
+    message: "Investment amount is required",
+  }),
+  monthlyRevenue: z.string().min(1, {
+    message: "Monthly revenue is required",
+  }),
+});
+
+const ROICalculator: React.FC = () => {
+  const form = useForm<z.infer<typeof calculatorSchema>>({
+    resolver: zodResolver(calculatorSchema),
+    defaultValues: {
+      initialInvestment: "15,00,000",
+      monthlyRevenue: "2,50,000",
+    },
+  });
+
+  function onCalculate(values: z.infer<typeof calculatorSchema>) {
+    toast.success("ROI calculation in progress!");
+    console.log(values);
+    // In a real application, you would calculate the ROI here
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
+      <div className="flex justify-center mb-4">
+        <img 
+          src="/lovable-uploads/cleancraft-icon.png" 
+          alt="Clean Craft" 
+          className="w-10 h-10" 
+        />
+      </div>
+      <h3 className="text-xl font-bold text-center text-gray-800 mb-6">
+        <span className="text-amber-500">Laundry Franchise</span> ROI Calculator
+      </h3>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onCalculate)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="initialInvestment"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 text-xs font-medium">1.</div>
+                  <FormLabel className="text-gray-700">Initial Investment</FormLabel>
+                </div>
+                <FormControl>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                    <Input placeholder="15,00,000" className="pl-8" {...field} />
+                  </div>
+                </FormControl>
+                <p className="text-xs text-gray-500 mt-1">Typical range: ₹15-25 Lakh</p>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="monthlyRevenue"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 text-xs font-medium">2.</div>
+                  <FormLabel className="text-gray-700">Expected Monthly Revenue</FormLabel>
+                </div>
+                <FormControl>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                    <Input placeholder="2,50,000" className="pl-8" {...field} />
+                  </div>
+                </FormControl>
+                <p className="text-xs text-gray-500 mt-1">Average: ₹2.5-5 Lakh monthly</p>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="pt-2">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="h-6 w-6 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-xs font-medium">3.</div>
+              <p className="text-gray-700 font-medium">Profit Margin per month</p>
+            </div>
+            <div className="flex gap-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="flex-1 bg-gray-50 hover:bg-gray-100"
+                onClick={() => toast.info("Calculating profit margins...")}
+              >
+                Calculate to see results
+              </Button>
+              <div className="px-4 py-2 bg-gray-50 rounded text-sm text-gray-400 flex items-center justify-center">
+                Waiting
+              </div>
+            </div>
+          </div>
+
+          <Button 
+            type="submit" 
+            className="w-full bg-amber-400 hover:bg-amber-500 text-amber-900 font-medium py-3 mt-4"
+          >
+            Calculate ROI
+          </Button>
+
+          <div className="text-center text-sm text-gray-600 mt-2">
+            Schedule a franchise consultation today
+          </div>
+
+          <div className="flex items-center gap-2 justify-center px-4 py-2 bg-white border rounded-lg mt-4">
+            <div className="bg-green-100 text-green-600 text-xs px-2 py-1 rounded">Zero Risk</div>
+            <div className="text-sm">100% Royalty Free Guarantee</div>
+          </div>
+          <p className="text-center text-xs text-gray-500">The Perfect Time is Now</p>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+// Main Franchise Inquiry Form Schema
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -109,7 +234,7 @@ const FranchiseForm: React.FC<{ className?: string }> = ({ className }) => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+          <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600">
             Request Information
           </Button>
         </div>
@@ -144,38 +269,76 @@ const Franchise: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-50 to-white py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-[#fffdf5]">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-black mb-6 text-gray-900 leading-tight">
-                Own a <span className="text-primary">Thriving</span> Laundry Business
-              </h1>
-              <p className="text-lg md:text-xl mb-8 text-gray-700">
-                Join our network of successful entrepreneurs with a proven laundry
-                business model. Low investment, high returns.
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="md:w-1/2 space-y-8">
+              <div>
+                <span className="inline-block py-1 px-3 rounded-full bg-amber-100 text-amber-800 text-sm font-medium mb-4">
+                  Premium Laundry Franchise Opportunity
+                </span>
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                  Own a <span className="text-blue-500">Thriving</span>{" "}
+                  <span className="text-blue-500">Laundry</span>
+                  <br />
+                  <span className="text-green-600">&amp; Dry Cleaning</span>
+                  <br />
+                  <span className="text-gray-900">Franchise</span>
+                </h1>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
+                    <Check className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-blue-600 font-bold">Zero Risk Promise:</h3>
+                    <p className="text-gray-700">
+                      Assured Break Even in 7 Months or Get 100% Royalty Free for Life Time
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Check className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-blue-600 font-bold">India's Best Laundry Franchise:</h3>
+                    <p className="text-gray-700">
+                      Revolutionary Laundry Business Solutions With Global Recognition
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-lg text-gray-800">
+                Partner with India's Most Trusted Laundry Industry Leader – 
+                Recognized and Respected Internationally.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-white px-8"
+
+              <div className="space-y-6">
+                <Button 
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3"
                 >
                   Request Information
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary/10"
-                >
-                  Watch Video
-                </Button>
+
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center bg-amber-100 text-amber-800 px-2 py-1 rounded">
+                    <span className="text-lg font-bold">9.5/10</span>
+                    <span className="text-yellow-500 ml-1">★</span>
+                  </div>
+                  <span className="text-gray-600 text-sm">
+                    <span className="font-semibold">99%</span> of happy store owners recommend us
+                  </span>
+                </div>
               </div>
             </div>
+
             <div className="md:w-1/2">
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-xl font-bold mb-4 text-center">Get Franchise Information</h3>
-                <FranchiseForm className="mt-4" />
-              </div>
+              <ROICalculator />
             </div>
           </div>
         </div>
@@ -186,43 +349,72 @@ const Franchise: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              This Franchise is Perfect <span className="text-primary">IF YOU ARE:</span>
+              This Franchise Is <span className="text-[#4a9c7f]">Perfect</span> <span className="text-green-500">IF YOU ARE:</span>
             </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Join hundreds of successful franchise owners who found their perfect business match
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              {
-                icon: "check",
-                title: "Downowner",
-                description: "Looking to own a business in your community"
-              },
-              {
-                icon: "check",
-                title: "Self-Starter",
-                description: "With entrepreneurial spirit and drive to succeed"
-              },
-              {
-                icon: "check",
-                title: "First-Time Investor",
-                description: "Seeking a proven business model with support"
-              },
-              {
-                icon: "check",
-                title: "Freedom Seeker",
-                description: "Ready for financial independence & flexibility"
-              }
-            ].map((item, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Check className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-                <p className="text-gray-600">
-                  {item.description}
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white border border-gray-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 mx-auto mb-4 bg-blue-50 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="18" height="14" x="3" y="4" rx="2" />
+                  <path d="M16 8v-.8A2.2 2.2 0 0 0 13.8 5h-3.6A2.2 2.2 0 0 0 8 7.2v.8" />
+                </svg>
               </div>
-            ))}
+              <h3 className="text-xl font-bold mb-3">Business Owner</h3>
+              <p className="text-gray-600">
+                A businessman tired of rising competition and low margins
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 mx-auto mb-4 bg-red-50 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="5" />
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Salaried Professional</h3>
+              <p className="text-gray-600">
+                A salaried professional looking for a stable side business
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 mx-auto mb-4 bg-green-50 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                  <path d="M9 18c-4.51 2-5-2-7-2" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">First-Time Entrepreneur</h3>
+              <p className="text-gray-600">
+                A first-time entrepreneur seeking a proven system
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 mx-auto mb-4 bg-yellow-50 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m16 8-2 6-6 2 6-6 2-2Z" />
+                  <path d="M9.01 11.5a3 3 0 0 0 4.5 4.5" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Freedom Seeker</h3>
+              <p className="text-gray-600">
+                Someone wanting financial freedom with minimal risk
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Button className="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-8">
+              Get Case Studies from People Like You
+            </Button>
           </div>
         </div>
       </section>
@@ -468,7 +660,7 @@ const Franchise: React.FC = () => {
       {/* FAQ Section */}
       {faqsLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="h-8 w-8 animate-spin text-primary border-4 border-primary border-t-transparent rounded-full"></div>
         </div>
       ) : faqsData?.data?.length ? (
         <FAQDisplay faqs={faqsData.data} variant="home" />
@@ -477,7 +669,7 @@ const Franchise: React.FC = () => {
       {/* Testimonials Section */}
       {testimonialsLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="h-8 w-8 animate-spin text-primary border-4 border-primary border-t-transparent rounded-full"></div>
         </div>
       ) : testimonialsData?.data?.length ? (
         <TestimonialDisplay testimonials={testimonialsData.data} variant="home" />
