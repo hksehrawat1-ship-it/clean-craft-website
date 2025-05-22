@@ -23,8 +23,6 @@ interface FAQResponse {
   meta: any;
 }
 
-const API_URL = 'https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc';
-
 export function useFAQs() {
   const { data, isLoading, error } = useQuery<FAQResponse>({
     queryKey: ['faqs'],

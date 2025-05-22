@@ -7,6 +7,116 @@ import { Loader2, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FAQDisplay from "@/components/shared/FAQDisplay";
 import TestimonialDisplay from "@/components/shared/TestimonialDisplay";
+import { 
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage 
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { toast } from "sonner";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email.",
+  }),
+  phone: z.string().min(10, {
+    message: "Please enter a valid phone number.",
+  }),
+  city: z.string().min(1, {
+    message: "City is required.",
+  }),
+});
+
+const FranchiseForm: React.FC<{ className?: string }> = ({ className }) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      city: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    toast.success("Franchise inquiry submitted!");
+    console.log(values);
+    // In a real application, you would send this to your backend
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={className}>
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your full name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="your@email.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your phone number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your city" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+            Request Information
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
 
 const Franchise: React.FC = () => {
   // Fetch franchise-specific FAQs and testimonials
@@ -62,11 +172,10 @@ const Franchise: React.FC = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              <img
-                src="/lovable-uploads/cleancraft-laundry-app.png"
-                alt="Clean Craft Franchise"
-                className="rounded-lg shadow-xl mx-auto"
-              />
+              <div className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-xl font-bold mb-4 text-center">Get Franchise Information</h3>
+                <FranchiseForm className="mt-4" />
+              </div>
             </div>
           </div>
         </div>
@@ -81,36 +190,39 @@ const Franchise: React.FC = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              {
+                icon: "check",
+                title: "Downowner",
+                description: "Looking to own a business in your community"
+              },
+              {
+                icon: "check",
+                title: "Self-Starter",
+                description: "With entrepreneurial spirit and drive to succeed"
+              },
+              {
+                icon: "check",
+                title: "First-Time Investor",
+                description: "Seeking a proven business model with support"
+              },
+              {
+                icon: "check",
+                title: "Freedom Seeker",
+                description: "Ready for financial independence & flexibility"
+              }
+            ].map((item, index) => (
+              <div key={index} className="bg-gray-50 rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                <p className="text-gray-600">
+                  {item.description}
+                </p>
               </div>
-              <h3 className="text-xl font-bold mb-3">Aspiring Entrepreneur</h3>
-              <p className="text-gray-600">
-                Looking to start your own business with minimal risk and proven systems
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Investor</h3>
-              <p className="text-gray-600">
-                Seeking a high-return business opportunity with recurring revenue
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Business Owner</h3>
-              <p className="text-gray-600">
-                Looking to diversify with a recession-resistant essential service
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -120,7 +232,7 @@ const Franchise: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Why Choose <span className="text-primary">Clean Craft</span> Franchise?
+              2025 Franchise <span className="text-primary">Comparison</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Compare our franchise opportunity with other options in the market
@@ -198,7 +310,7 @@ const Franchise: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Smart Choice For <span className="text-primary">Your Franchise</span>
+              The Smart Choice For <span className="text-primary">Your Franchise</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               We provide everything you need to succeed in the laundry business
