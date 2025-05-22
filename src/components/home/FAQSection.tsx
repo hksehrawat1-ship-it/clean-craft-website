@@ -1,6 +1,6 @@
-import React from 'react';
-import { StrapiFAQ } from '@/types/strapi';
-import FAQDisplay from '../shared/FAQDisplay';
+import React from "react";
+import { StrapiFAQ } from "@/types/strapi";
+import FAQDisplay from "../shared/FAQDisplay";
 
 interface FAQSectionProps {
   faqs: { data: StrapiFAQ[] };
@@ -12,9 +12,10 @@ const FAQSection: React.FC<FAQSectionProps> = ({ faqs }) => {
   }
 
   // Filter out FAQs with null answers in production
-  const validFaqs = process.env.NODE_ENV === 'production' 
-    ? faqs.data.filter(faq => faq.answer !== null)
-    : faqs.data;
+  const validFaqs =
+    process.env.NODE_ENV === "production"
+      ? faqs.data.filter((faq) => faq.answer !== null)
+      : faqs.data;
 
   if (!validFaqs.length) {
     return null;
