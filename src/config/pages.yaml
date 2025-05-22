@@ -3,7 +3,7 @@
 global:
   pages:
     - path: "/"
-      navbar: true
+      navbar: false
       title: "Home"
       order: 1
       sections:
@@ -11,16 +11,16 @@ global:
           category: "home"
         - type: "testimonial"
           category: "home"
-    # - path: "/services"
-    #   navbar: true
-    #   title: "Services"
-    #   order: 2
-    - path: "/faq"
+    - path: "/services"
       navbar: true
+      title: "Services"
+      order: 2
+    - path: "/faq"
+      navbar: false
       title: "FAQ"
       order: 2
     - path: "/policies"
-      navbar: true
+      navbar: false
       title: "Policies"
       order: 3
     # - path: "/locations"
@@ -40,7 +40,7 @@ in:
   pages:
     - path: "/franchise"
       navbar: true
-      title: "Laundry Franchise"
+      title: "⁠Apply for franchise"
       order: 6
       sections:
         - type: "faq"

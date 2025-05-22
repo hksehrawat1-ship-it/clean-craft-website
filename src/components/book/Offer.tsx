@@ -1,5 +1,5 @@
-import React from 'react';
-import { Gift } from 'lucide-react';
+import React from "react";
+import { Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Offer = () => {
@@ -12,35 +12,55 @@ const Offer = () => {
               <Gift className="h-12 w-12 text-blue-500" />
             </div>
           </div>
-          
+
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
             EXCLUSIVE <span className="text-blue-500">OFFER</span>
           </h2>
-          
+
           <div className="text-center mb-8">
             <p className="text-2xl mb-2">
-              Learn <span className="font-semibold">How to Start Laundry Business in India</span> from <span className="font-bold">Himanshu Sir</span>
+              Learn{" "}
+              <span className="font-semibold">
+                How to Start Laundry Business in India
+              </span>{" "}
+              from <span className="font-bold">Himanshu Sir</span>
             </p>
             <p className="text-xl text-blue-500 font-bold mb-6">
               25% OFF on Premium Training Program
             </p>
             <p className="text-grey-900 max-w-2xl mx-auto mb-8">
-              Master your <span className="font-semibold">laundry business plan India</span> with personalized guidance,
-              strategy sessions on <span className="font-semibold">how to run laundry business successfully</span>, and insider knowledge on
-              <span className="font-semibold"> laundry setup cost India</span> directly from India's top laundry business expert.
+              Master your{" "}
+              <span className="font-semibold">laundry business plan India</span>{" "}
+              with personalized guidance, strategy sessions on{" "}
+              <span className="font-semibold">
+                how to run laundry business successfully
+              </span>
+              , and insider knowledge on
+              <span className="font-semibold">
+                {" "}
+                laundry setup cost India
+              </span>{" "}
+              directly from India's top laundry business expert.
             </p>
-            
-            <Button 
-              size="lg" 
+
+            <Button
+              size="lg"
               className="bg-blue-500 hover:bg-blue-500/90 text-white text-lg py-6 px-8"
             >
-              KNOW MORE
+              <a
+                href=" https://www.cleancraftapp.com/in/learning/courses"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                KNOW MORE
+              </a>
             </Button>
           </div>
-          
+
           <div className="bg-blue-50 rounded-lg p-4 text-center">
             <p className="text-grey-900">
-              <span className="font-semibold">Limited time offer:</span> Only available for the first 50 bookings each month
+              <span className="font-semibold">Limited time offer:</span> Only
+              available for the first 50 bookings each month
             </p>
           </div>
         </div>
