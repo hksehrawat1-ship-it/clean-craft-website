@@ -28,14 +28,12 @@ export function useFAQs() {
   const { data, isLoading, error } = useQuery<FAQResponse>({
     queryKey: ['faqs'],
     queryFn: async () => {
-      const response = await strapiClient.request('/api/faqs', {
-        method: 'GET',
-        params: {
-          sort: ['category:asc', 'order:asc'],
-          populate: '*'
-        }
+      // Fix: Using the collection API instead of the non-existent request method
+      const response = await strapiClient.collection('faqs').find({
+        sort: ['category:asc', 'order:asc'],
+        populate: '*'
       });
-      return response.data;
+      return response as FAQResponse;
     }
   });
 
@@ -62,4 +60,4 @@ export function useFAQs() {
     isLoading,
     error
   };
-} 
+}
