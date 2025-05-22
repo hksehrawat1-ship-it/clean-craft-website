@@ -3,7 +3,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/home/Layout";
 import { useStrapiFAQs, useStrapiTestimonials } from "@/hooks/useStrapi";
-import { Check, X, DollarSign, Calculator } from "lucide-react";
+import { Check, X, DollarSign, Calculator, Trophy, ShirtIcon, BarChart2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FAQDisplay from "@/components/shared/FAQDisplay";
 import TestimonialDisplay from "@/components/shared/TestimonialDisplay";
@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // ROI Calculator Form Schema
 const calculatorSchema = z.object({
@@ -243,6 +244,65 @@ const FranchiseForm: React.FC<{ className?: string }> = ({ className }) => {
   );
 };
 
+// Franchise comparison table data
+const comparisonData = [
+  { 
+    category: "Laundry", 
+    lowInvestment: true, 
+    quickBreakeven: true,
+    highProfit: true,
+    easyOperations: true,
+    recurringRevenue: true,
+    riskFactor: "Low",
+    preference: "#1",
+    preferenceColor: "bg-blue-500" 
+  },
+  { 
+    category: "Food", 
+    lowInvestment: false, 
+    quickBreakeven: false,
+    highProfit: true,
+    easyOperations: false,
+    recurringRevenue: false,
+    riskFactor: "High",
+    preference: "#3",
+    preferenceColor: "bg-amber-400" 
+  },
+  { 
+    category: "Preschool", 
+    lowInvestment: false, 
+    quickBreakeven: false,
+    highProfit: true,
+    easyOperations: false,
+    recurringRevenue: true,
+    riskFactor: "Medium",
+    preference: "#4",
+    preferenceColor: "bg-amber-400" 
+  },
+  { 
+    category: "Beauty & Wellness", 
+    lowInvestment: true, 
+    quickBreakeven: false,
+    highProfit: false,
+    easyOperations: true,
+    recurringRevenue: true,
+    riskFactor: "Medium",
+    preference: "#5",
+    preferenceColor: "bg-red-500" 
+  },
+  { 
+    category: "Retail", 
+    lowInvestment: false, 
+    quickBreakeven: false,
+    highProfit: false,
+    easyOperations: true,
+    recurringRevenue: false,
+    riskFactor: "High",
+    preference: "#2",
+    preferenceColor: "bg-green-500" 
+  }
+];
+
 const Franchise: React.FC = () => {
   // Fetch franchise-specific FAQs and testimonials
   const { data: faqsData, isLoading: faqsLoading } = useStrapiFAQs({
@@ -344,6 +404,206 @@ const Franchise: React.FC = () => {
         </div>
       </section>
 
+      {/* Franchise Comparison Table - New Design */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              2025 Franchise <span className="text-[#5293C7]">Com</span><span className="text-[#57B894]">parison</span>
+            </h2>
+            <p className="text-lg text-gray-600">
+              See why laundry is the most preferred franchise business in 2025
+            </p>
+          </div>
+
+          <div className="overflow-x-auto bg-white shadow-md rounded-lg mb-4 max-w-4xl mx-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-white border-b">
+                  <TableHead className="font-semibold text-gray-700">Category</TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>Low</span>
+                      <span>Investment</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>Quick</span>
+                      <span>Breakeven</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>High</span>
+                      <span>Profit</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>Easy</span>
+                      <span>Operations</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>Recurring</span>
+                      <span>Revenue</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>Risk</span>
+                      <span>Factor</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-semibold text-gray-700">
+                    <div className="flex flex-col items-center">
+                      <span>2025</span>
+                      <span>Preference</span>
+                    </div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {comparisonData.map((item, index) => (
+                  <TableRow key={index} className="border-b hover:bg-gray-50">
+                    <TableCell className={`font-medium ${item.category === "Laundry" ? "text-[#5293C7]" : "text-gray-700"}`}>
+                      {item.category}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.lowInvestment ? (
+                        <Check className="h-5 w-5 text-green-500 mx-auto" />
+                      ) : (
+                        <X className="h-5 w-5 text-red-500 mx-auto" />
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.quickBreakeven ? (
+                        <Check className="h-5 w-5 text-green-500 mx-auto" />
+                      ) : (
+                        <X className="h-5 w-5 text-red-500 mx-auto" />
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.highProfit ? (
+                        <Check className="h-5 w-5 text-green-500 mx-auto" />
+                      ) : (
+                        <X className="h-5 w-5 text-red-500 mx-auto" />
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.easyOperations ? (
+                        <Check className="h-5 w-5 text-green-500 mx-auto" />
+                      ) : (
+                        <X className="h-5 w-5 text-red-500 mx-auto" />
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.recurringRevenue ? (
+                        <Check className="h-5 w-5 text-green-500 mx-auto" />
+                      ) : (
+                        <X className="h-5 w-5 text-red-500 mx-auto" />
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <span className={`px-2 py-1 rounded text-sm font-medium ${
+                        item.riskFactor === "Low" 
+                          ? "text-green-600" 
+                          : item.riskFactor === "Medium" 
+                            ? "text-amber-500"
+                            : "text-red-500"
+                      }`}>
+                        {item.riskFactor}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-white font-medium ${item.preferenceColor}`}>
+                        {item.preference}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          
+          <div className="text-center mt-4">
+            <p className="text-lg font-medium text-gray-700">
+              Laundry Franchise: #1 Choice for Entrepreneurs in 2025
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Smart Choice Section - New Design from Image */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-4">
+            <span className="inline-block px-4 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
+              Our Value Proposition
+            </span>
+          </div>
+          
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              The Smart Choice For Your Franchise Investment
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Make an informed decision with our industry-leading guarantees and exceptional profit potential
+            </p>
+          </div>
+
+          <div className="mt-16 text-center mb-12">
+            <div className="inline-flex items-center justify-center bg-blue-50 rounded-full p-3 mb-2">
+              <Trophy className="w-6 h-6 text-blue-500" />
+            </div>
+            <h3 className="text-2xl font-bold mb-2">Why Buy This?</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Always In Demand */}
+            <div className="relative p-8 border-l-4 border-blue-400 rounded-r-lg bg-white shadow-sm">
+              <div className="absolute -left-4 top-8 w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center">
+                <ShirtIcon className="w-4 h-4 text-white" />
+              </div>
+              <h4 className="text-xl font-bold mb-4 mt-2">Always In Demand</h4>
+              <p className="text-gray-600">
+                Unlike food or fashion, laundry is a non-optional, weekly need – everyone wears clothes and needs them cleaned. You're solving a daily life problem, not chasing trends.
+              </p>
+            </div>
+
+            {/* High Profit Margins */}
+            <div className="relative p-8 border-l-4 border-green-400 rounded-r-lg bg-white shadow-sm">
+              <div className="absolute -left-4 top-8 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center">
+                <BarChart2 className="w-4 h-4 text-white" />
+              </div>
+              <h4 className="text-xl font-bold mb-4 mt-2">High Profit Margins</h4>
+              <p className="text-gray-600">
+                With 60%+ profit margins, low manpower, and zero dependency on seasons, this is one of the safest, steadiest and smartest franchises you can start in India today.
+              </p>
+            </div>
+
+            {/* No Technical Background Needed */}
+            <div className="relative p-8 border-l-4 border-red-400 rounded-r-lg bg-white shadow-sm">
+              <div className="absolute -left-4 top-8 w-8 h-8 bg-red-400 rounded-full flex items-center justify-center">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <h4 className="text-xl font-bold mb-4 mt-2">No Technical Background Needed</h4>
+              <p className="text-gray-600">
+                No perishables, no cooking licenses, no wastage. Just pure service + system + scale. If you can manage a small team and follow simple systems, this business will work for you.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3">
+              Request Franchise Information
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Ideal Franchise Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -415,196 +675,6 @@ const Franchise: React.FC = () => {
             <Button className="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-8">
               Get Case Studies from People Like You
             </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison Table */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              2025 Franchise <span className="text-primary">Comparison</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Compare our franchise opportunity with other options in the market
-            </p>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse bg-white rounded-lg shadow-md">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="p-4 text-left border-b border-gray-200">Features</th>
-                  <th className="p-4 text-center border-b border-gray-200 bg-primary/10">
-                    <span className="text-primary font-bold">Clean Craft</span>
-                  </th>
-                  <th className="p-4 text-center border-b border-gray-200">Other Franchises</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="p-4 border-b border-gray-200">Initial Investment</td>
-                  <td className="p-4 text-center border-b border-gray-200 bg-primary/5">
-                    <span className="font-semibold">₹15-25 Lakhs</span>
-                  </td>
-                  <td className="p-4 text-center border-b border-gray-200">₹30-50 Lakhs</td>
-                </tr>
-                <tr>
-                  <td className="p-4 border-b border-gray-200">ROI Timeline</td>
-                  <td className="p-4 text-center border-b border-gray-200 bg-primary/5">
-                    <span className="font-semibold">12-18 months</span>
-                  </td>
-                  <td className="p-4 text-center border-b border-gray-200">24-36 months</td>
-                </tr>
-                <tr>
-                  <td className="p-4 border-b border-gray-200">Technology Support</td>
-                  <td className="p-4 text-center border-b border-gray-200 bg-primary/5">
-                    <Check className="w-6 h-6 text-green-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center border-b border-gray-200">
-                    <X className="w-6 h-6 text-red-500 mx-auto" />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="p-4 border-b border-gray-200">Marketing Support</td>
-                  <td className="p-4 text-center border-b border-gray-200 bg-primary/5">
-                    <Check className="w-6 h-6 text-green-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center border-b border-gray-200">
-                    <Check className="w-6 h-6 text-green-500 mx-auto" />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="p-4 border-b border-gray-200">Training & Support</td>
-                  <td className="p-4 text-center border-b border-gray-200 bg-primary/5">
-                    <span className="font-semibold">Comprehensive</span>
-                  </td>
-                  <td className="p-4 text-center border-b border-gray-200">Basic</td>
-                </tr>
-                <tr>
-                  <td className="p-4 border-b border-gray-200">Mobile App</td>
-                  <td className="p-4 text-center border-b border-gray-200 bg-primary/5">
-                    <Check className="w-6 h-6 text-green-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center border-b border-gray-200">
-                    <X className="w-6 h-6 text-red-500 mx-auto" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* Smart Choice Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              The Smart Choice For <span className="text-primary">Your Franchise</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              We provide everything you need to succeed in the laundry business
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Complete Business System",
-                description:
-                  "Our turnkey business system includes equipment, software, and operational procedures to get you started quickly.",
-              },
-              {
-                title: "Proprietary Technology",
-                description:
-                  "Get access to our custom mobile app and management software that streamlines operations and enhances customer experience.",
-              },
-              {
-                title: "Comprehensive Training",
-                description:
-                  "Receive hands-on training in all aspects of laundry operations, management, and customer service.",
-              },
-              {
-                title: "Marketing Support",
-                description:
-                  "Benefit from our national marketing campaigns and localized marketing strategies to attract customers.",
-              },
-              {
-                title: "Ongoing Support",
-                description:
-                  "Our team provides continuous operational support, business coaching, and technical assistance.",
-              },
-              {
-                title: "Location Selection",
-                description:
-                  "We help you select the optimal location based on demographic analysis and market research.",
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Buy Now Section */}
-      <section className="py-16 bg-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Why <span className="text-primary">Buy Now</span>?
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <img
-                src="/lovable-uploads/cleancraft-laundry-app.png"
-                alt="Clean Craft Franchise Opportunity"
-                className="rounded-lg shadow-xl mx-auto"
-              />
-            </div>
-            <div className="space-y-6">
-              {[
-                {
-                  title: "Growing Industry",
-                  description:
-                    "The laundry service market is expanding at 4.5% CAGR with increasing demand for convenient services.",
-                },
-                {
-                  title: "Limited Competition",
-                  description:
-                    "Be among the first to establish a modern tech-enabled laundry business in your area.",
-                },
-                {
-                  title: "Recession-Resistant",
-                  description:
-                    "Laundry is an essential service that remains stable even during economic downturns.",
-                },
-                {
-                  title: "Exclusive Territories",
-                  description:
-                    "Secure exclusive rights to your territory before someone else does.",
-                },
-              ].map((item, index) => (
-                <div key={index} className="flex gap-4">
-                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-1">{item.title}</h3>
-                    <p className="text-gray-600">{item.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
