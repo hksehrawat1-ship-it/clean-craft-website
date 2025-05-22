@@ -38,15 +38,15 @@ au:
 
 in:
   pages:
-    # - path: "/franchise"
-    #   navbar: true
-    #   title: "Laundry Franchise"
-    #   order: 6
-    #   sections:
-    #     - type: "faq"
-    #       category: "franchise"
-    #     - type: "testimonial"
-    #       category: "franchise"
+    - path: "/franchise"
+      navbar: true
+      title: "Laundry Franchise"
+      order: 6
+      sections:
+        - type: "faq"
+          category: "franchise"
+        - type: "testimonial"
+          category: "franchise"
     - path: "/learning"
       navbar: true
       title: "Learning"

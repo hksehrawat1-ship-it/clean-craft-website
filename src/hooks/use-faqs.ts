@@ -1,4 +1,6 @@
+
 import { useQuery } from '@tanstack/react-query';
+import { getCollection } from '@/lib/strapi/client';
 
 interface FAQ {
   id: number;
@@ -11,10 +13,12 @@ interface FAQ {
 interface FAQResponse {
   data: {
     id: number;
-    question: string;
-    answer: string | null;
-    category: string | null;
-    order: number | null;
+    attributes: {
+      question: string;
+      answer: string | null;
+      category: string | null;
+      order: number | null;
+    }
   }[];
   meta: any;
 }
@@ -25,24 +29,21 @@ export function useFAQs() {
   const { data, isLoading, error } = useQuery<FAQResponse>({
     queryKey: ['faqs'],
     queryFn: async () => {
-      const res = await fetch(API_URL);
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const json = await res.json();
-      return json;
+      return getCollection('faqs', {
+        sort: ['order:asc']
+      });
     },
   });
 
-  // Data transform kar rahe hain
+  // Transform the data structure to match our internal format
   const faqs: FAQ[] = data?.data
-    .filter(faq => faq.question) // question hona zaroori hai
-    .map(faq => ({
-      id: faq.id,
-      question: faq.question,
-      answer: faq.answer ?? "Answer coming soon",
-      category: faq.category ?? "Uncategorized",
-      order: faq.order ?? 0,
+    .filter(item => item.attributes.question) // question hona zaroori hai
+    .map(item => ({
+      id: item.id,
+      question: item.attributes.question,
+      answer: item.attributes.answer ?? "Answer coming soon",
+      category: item.attributes.category ?? "Uncategorized",
+      order: item.attributes.order ?? 0,
     })) ?? [];
 
   // FAQs ko category wise group karna

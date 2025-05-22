@@ -28,6 +28,7 @@ import Book from './pages/learning/Book';
 import Policies from './pages/Policies';
 import PolicyDetails from './pages/PolicyDetails';
 import FaqPage from './pages/Faq';
+import Franchise from './pages/Franchise';
 
 /* layout that just renders routed content */
 const CountryLayout = () => <Outlet />;
@@ -117,6 +118,18 @@ function App() {
                         <CountryRouteGuard
                           pagePath="/faq"
                           element={<FaqPage />}
+                          allowEmptyContent
+                        />
+                      }
+                    />
+                    
+                    {/* Franchise page route */}
+                    <Route 
+                      path="franchise"
+                      element={
+                        <CountryRouteGuard
+                          pagePath="/franchise"
+                          element={<Franchise />}
                           allowEmptyContent
                         />
                       }
