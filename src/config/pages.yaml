@@ -40,7 +40,7 @@ in:
   pages:
     - path: "/franchise"
       navbar: true
-      title: "⁠Apply for franchise"
+      title: "⁠Apply for Franchise"
       order: 6
       sections:
         - type: "faq"

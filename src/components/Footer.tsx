@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
             </a>
 
             <a
-              href="/"
+              href="https://in.linkedin.com/in/himanshu-sehrawat-3b1227319?trk=people-guest_people_search-card"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-blue-700 hover:bg-blue-100 transition-all duration-200"
@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
                 to={createLink("")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                DISCOVER CLEAN CRAFT
+                Discover Clean Craft
               </Link>
             </li>
             <li>
@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
                 to={createLink("/locations")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                BUY LAUNDRY BOOK
+                Buy Laundry Book
               </Link>
             </li>
             <li>
@@ -107,7 +107,7 @@ const Footer: React.FC = () => {
                 to={createLink("/connect")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                OPEN MY STORE
+                Open My Store
               </Link>
             </li>
             <li>
@@ -130,23 +130,21 @@ const Footer: React.FC = () => {
                 to={createLink("/")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                BLOGS
+                Blogs
               </Link>
             </li>
             <li>
               <Link
                 to={createLink("/policies/terms-conditions")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                FAQ
-              </Link>
+              ></Link>
             </li>
             <li>
               <Link
                 to={createLink("/policies/privacy")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                ALL POLICIES
+                All Policies
               </Link>
             </li>
             {/* <li>
