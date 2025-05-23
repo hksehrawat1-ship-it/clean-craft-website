@@ -8,6 +8,7 @@ import {
   Phone,
   Mail,
   Copyright,
+  Youtube, // ✅ Add this line
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useCountry } from "@/contexts/CountryContext";
@@ -39,25 +40,45 @@ const Footer: React.FC = () => {
             and where you need us, we will be there. 99.9% of all standard
             laundry and dry cleaning is delivered the next day.
           </p>
-          <div className="flex space-x-4">
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-blue-500 transition-colors"
+          <div className="flex items-center space-x-4">
+            <a
+              href="https://www.youtube.com/@thecleancraft"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-100 transition-all duration-200"
+              aria-label="YouTube"
             >
-              <Facebook size={20} />
-            </Link>
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-blue-500 transition-colors"
+              <Youtube size={20} />
+            </a>
+            <a
+              href="https://www.instagram.com/clean.craft?igsh=MWxxYTYzdnZtZ2ludA=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-pink-500 hover:bg-pink-100 transition-all duration-200"
+              aria-label="Instagram"
             >
               <Instagram size={20} />
-            </Link>
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-blue-500 transition-colors"
+            </a>
+
+            <a
+              href="https://www.facebook.com/share/1CJKTFbd2S/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-all duration-200"
+              aria-label="Facebook"
+            >
+              <Facebook size={20} />
+            </a>
+
+            <a
+              href="https://in.linkedin.com/in/himanshu-sehrawat-3b1227319?trk=people-guest_people_search-card"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-blue-700 hover:bg-blue-100 transition-all duration-200"
+              aria-label="LinkedIn"
             >
               <Linkedin size={20} />
-            </Link>
+            </a>
           </div>
         </div>
 
@@ -70,7 +91,7 @@ const Footer: React.FC = () => {
                 to={createLink("")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                Service & Pricing
+                Discover Clean Craft
               </Link>
             </li>
             <li>
@@ -78,7 +99,7 @@ const Footer: React.FC = () => {
                 to={createLink("/locations")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                Learning
+                Buy Laundry Book
               </Link>
             </li>
             <li>
@@ -86,7 +107,7 @@ const Footer: React.FC = () => {
                 to={createLink("/connect")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                Open my store
+                Open My Store
               </Link>
             </li>
             <li>
@@ -94,7 +115,7 @@ const Footer: React.FC = () => {
                 to={createLink("/franchise")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                Discover Cleancraft
+                {/* Discover Cleancraft */}
               </Link>
             </li>
           </ul>
@@ -106,26 +127,24 @@ const Footer: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                to={createLink("/policies/privacy")}
+                to={createLink("/")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                FAQ
+                Blogs
               </Link>
             </li>
             <li>
               <Link
                 to={createLink("/policies/terms-conditions")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                Support Ticket
-              </Link>
+              ></Link>
             </li>
             <li>
               <Link
-                to={createLink("/policies/refund")}
+                to={createLink("/policies/privacy")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                Blog
+                All Policies
               </Link>
             </li>
             {/* <li>
@@ -149,16 +168,16 @@ const Footer: React.FC = () => {
               <MapPin className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <span className="text-gray-600">
                 Plot no 9, Police enclave, Kotla Vihar Phase 4, Tilangpur Kotla,
-                Delhi, 11004
+                Delhi, 110043
               </span>
             </li>
             <li className="flex gap-3">
               <Phone className="text-blue-500 mt-1 flex-shrink-0" size={18} />
-              <span className="text-gray-600">(91) 98765 4321 54</span>
+              <span className="text-gray-600">(91) 88-00-77-1349</span>
             </li>
             <li className="flex gap-3">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />
-              <span className="text-gray-600">support@cleancraft.com</span>
+              <span className="text-gray-600">hello@cleancraftaap.com</span>
             </li>
           </ul>
         </div>
