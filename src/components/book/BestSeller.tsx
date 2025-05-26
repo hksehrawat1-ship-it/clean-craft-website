@@ -9,20 +9,20 @@ const BestSeller = () => {
           <div className="bg-white border border-blue-200 rounded-2xl shadow p-6 md:p-10 relative overflow-hidden">
             {/* Best Seller Badge */}
             <div className="flex justify-center mb-4">
-              <div className="bg-blue-500 text-white px-4 py-1.5 rounded-full flex items-center gap-2 text-base font-bold shadow-sm">
+              <div className="bg-[#1A73E8] text-white px-4 py-1.5 rounded-full flex items-center gap-2 text-base font-bold shadow-sm">
                 <Award className="h-5 w-5" />
                 BEST SELLER
               </div>
             </div>
             {/* Heading */}
             <h2 className="text-[32px] md:text-[36px] font-black text-center mb-2">
-              #1 in the <span className="text-blue-500">Laundry Business</span> Category
+              #1 in the <span className="text-[#1A73E8]">Laundry Business</span> Category
             </h2>
             {/* Stars */}
             <div className="flex justify-center mb-4">
               <div className="flex gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-6 w-6 text-blue-400 fill-blue-400" />
+                  <Star key={i} className="h-6 w-6 text-[#1A73E8] fill-[#1A73E8]" />
                 ))}
               </div>
             </div>

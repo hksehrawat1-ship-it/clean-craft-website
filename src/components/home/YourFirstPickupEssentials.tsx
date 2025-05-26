@@ -89,7 +89,7 @@ const YourFirstPickupEssentials: React.FC = () => {
             </div>
 
             <button
-              className="w-full mt-8 bg-[#1869D3] text-white py-4 rounded-lg font-medium flex items-center justify-center gap-2"
+              className="button-primary w-full mt-8 flex items-center justify-center"
               onClick={() => console.log('Booking initiated')}
             >
               Book For Today

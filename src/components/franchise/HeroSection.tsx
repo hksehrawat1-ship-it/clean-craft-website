@@ -1,87 +1,88 @@
-
-import React from "react";
-import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ROICalculator from "./ROICalculator";
+import { Badge } from "@/components/ui/badge";
+import { ShieldCheck, Star, Award } from "lucide-react";
+import LaundryRoiCalculator from "./LaundryRoiCalculator";
 
-const HeroSection: React.FC = () => {
+const HeroSection = () => {
   return (
-    <section className="py-16 md:py-24 bg-[#fffdf5]">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          <div className="md:w-1/2 space-y-8">
-            <div>
-              <span className="inline-block py-1 px-3 rounded-full bg-amber-100 text-amber-800 text-sm font-medium mb-4">
-                Premium Laundry Franchise Opportunity
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                Own a <span className="text-blue-500">Thriving</span>{" "}
-                <span className="text-blue-500">Laundry</span>
-                <br />
-                <span className="text-green-600">&amp; Dry Cleaning</span>
-                <br />
-                <span className="text-gray-900">Franchise</span>
-              </h1>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
-                  <Check className="h-4 w-4 text-green-600" />
+    <section className="relative overflow-hidden bg-gradient-to-b from-cleancraft-light via-white to-white pt-32 pb-20" aria-label="Top Laundry Franchise Opportunity in India">
+      <div className="container">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8 franchise-fade-in">
+            <Badge variant="outline" className="bg-cleancraft-light text-cleancraft-darkgold px-6 py-2 text-base font-medium">
+              Premium Laundry Franchise Opportunity
+            </Badge>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              Own a Thriving <span className="gradient-text">Laundry &amp; Dry Cleaning</span> Franchise
+            </h1>
+            
+            <div className="franchise-card hover:shadow-md">
+              <div className="flex items-start space-x-4">
+                <div className="franchise-icon-container franchise-icon-green">
+                  <ShieldCheck className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-blue-600 font-bold">Zero Risk Promise:</h3>
+                  <h3 className="text-xl font-bold text-google-blue mb-2">Zero Risk Promise:</h3>
                   <p className="text-gray-700">
-                    Assured Break Even in 7 Months or Get 100% Royalty Free for
-                    Life Time
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Check className="h-4 w-4 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-blue-600 font-bold">
-                    India's Best Laundry Franchise:
-                  </h3>
-                  <p className="text-gray-700">
-                    Revolutionary Laundry Business Solutions With Global
-                    Recognition
+                    Assured Break Even in 7 Months or Get 100% Royalty Free for Life Time
                   </p>
                 </div>
               </div>
             </div>
 
-            <p className="text-lg text-gray-800">
-              Partner with India's Most Trusted Laundry Industry Leader –
-              Recognized and Respected Internationally.
+            <div className="franchise-card hover:shadow-md">
+              <div className="flex items-start space-x-4">
+                <div className="franchise-icon-container franchise-icon-blue">
+                  <Award className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-google-blue mb-2">India's Best Laundry Franchise:</h3>
+                  <p className="text-gray-700">
+                    Revolutionary Laundry Business Solutions With Global Recognition
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+              Partner with India's Most Trusted Laundry Industry Leader – Recognized and Respected Internationally.
             </p>
-
-            <div className="space-y-6">
-              <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3">
+            
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button className="franchise-button-primary franchise-pulse-soft text-lg px-8 py-4 h-auto">
                 Request Information
               </Button>
-
-              <div className="flex items-center gap-2">
-                <div className="flex items-center bg-amber-100 text-amber-800 px-2 py-1 rounded">
-                  <span className="text-lg font-bold">9.5/10</span>
-                  <span className="text-yellow-500 ml-1">★</span>
-                </div>
-                <span className="text-gray-600 text-sm">
-                  <span className="font-semibold">99%</span> of happy store
-                  owners recommend us
-                </span>
+            </div>
+            
+            <div className="flex items-center space-x-4 pt-2">
+              <div className="rating-badge">
+                <Star className="h-5 w-5 mr-1.5 fill-white" />
+                <span className="font-semibold">9.5/10</span>
               </div>
+              <p className="text-base md:text-lg text-gray-600">
+                <span className="font-semibold">99% of happy store owners</span> recommend us
+              </p>
             </div>
           </div>
-
-          <div className="md:w-1/2">
-            <ROICalculator />
+          
+          <div className="relative franchise-fade-in hidden md:block" style={{ animationDelay: "0.3s" }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-cleancraft-light/40 to-cleancraft-light/20 rounded-2xl"></div>
+            <div className="relative h-full flex items-center justify-center p-8">
+              <LaundryRoiCalculator />
+            </div>
+          </div>
+          
+          {/* Mobile version of calculator - shows below content */}
+          <div className="md:hidden franchise-fade-in mt-6" style={{ animationDelay: "0.3s" }}>
+            <LaundryRoiCalculator />
           </div>
         </div>
       </div>
+      
+      {/* Background elements */}
+      <div className="absolute top-40 left-0 w-64 h-64 bg-cleancraft-light rounded-full opacity-40 blur-3xl -z-10"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-cleancraft-light rounded-full opacity-30 blur-3xl -z-10"></div>
     </section>
   );
 };

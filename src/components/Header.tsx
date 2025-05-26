@@ -101,15 +101,15 @@ const Header = () => {
         <div className="flex items-center gap-3 min-w-[160px] justify-end">
           <a
             href="#login"
-            className="px-5 py-1.5 border border-[#1A73E8] text-[#1A73E8] rounded-full font-medium text-sm hover:bg-blue-50 transition-colors"
+            className="header-login-button px-5 py-1.5"
           >
             Login
           </a>
           <a
             href="#book"
-            className="px-5 py-1.5 bg-[#1A73E8] text-white rounded-full font-medium text-sm shadow hover:bg-[#1765c1] transition-colors"
+            className="header-book-button px-5 py-1.5"
           >
-            Book
+            Book Now
           </a>
         </div>
       </div>

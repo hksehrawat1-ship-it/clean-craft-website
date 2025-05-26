@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import {
   BrowserRouter,
@@ -9,7 +8,6 @@ import {
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 
@@ -46,105 +44,102 @@ function App() {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
+        <Toaster />
+        <Sonner />
 
-          <BrowserRouter>
-            <CookieConsentProvider>
-              <CountryProvider>
-                <CookieConsentBanner />
+        <BrowserRouter>
+          <CookieConsentProvider>
+            <CountryProvider>
+              <CookieConsentBanner />
 
-                <Routes>
-                  {/* root → geo-IP redirect or manual picker */}
-                  <Route path="/" element={<CountryRedirect />} />
+              <Routes>
+                {/* root → geo-IP redirect or manual picker */}
+                <Route path="/" element={<CountryRedirect />} />
 
-                  {/* country-specific section */}
-                  <Route path=":countryCode/*" element={<CountryLayout />}>
+                {/* country-specific section */}
+                <Route path=":countryCode/*" element={<CountryLayout />}>
+                  <Route
+                    index
+                    element={
+                      <CountryRouteGuard pagePath="/" element={<Index />} />
+                    }
+                  />
+
+                  <Route path="learning">
+                    <Route
+                      path="courses"
+                      element={
+                        <CountryRouteGuard
+                          pagePath="/learning/courses"
+                          element={<Courses />}
+                        />
+                      }
+                    />
+                    <Route
+                      path="book"
+                      element={
+                        <CountryRouteGuard
+                          pagePath="/learning/book"
+                          element={<Book />}
+                        />
+                      }
+                    />
+                  </Route>
+
+                  <Route path="policies">
                     <Route
                       index
                       element={
-                        <CountryRouteGuard pagePath="/" element={<Index />} />
-                      }
-                    />
-
-                    <Route path="learning">
-                      <Route
-                        path="courses"
-                        element={
-                          <CountryRouteGuard
-                            pagePath="/learning/courses"
-                            element={<Courses />}
-                          />
-                        }
-                      />
-                      <Route
-                        path="book"
-                        element={
-                          <CountryRouteGuard
-                            pagePath="/learning/book"
-                            element={<Book />}
-                          />
-                        }
-                      />
-                    </Route>
-
-                    <Route path="policies">
-                      <Route
-                        index
-                        element={
-                          <CountryRouteGuard
-                            pagePath="/policies"
-                            element={<Policies />}
-                            allowEmptyContent
-                          />
-                        }
-                      />
-                      <Route
-                        path=":slug"
-                        element={
-                          <CountryRouteGuard
-                            pagePath="/policies"
-                            element={<PolicyDetails />}
-                          />
-                        }
-                      />
-                    </Route>
-                    
-                    {/* FAQ page route */}
-                    <Route 
-                      path="faq"
-                      element={
                         <CountryRouteGuard
-                          pagePath="/faq"
-                          element={<FaqPage />}
+                          pagePath="/policies"
+                          element={<Policies />}
                           allowEmptyContent
                         />
                       }
                     />
-                    
-                    {/* Franchise page route */}
-                    <Route 
-                      path="franchise"
+                    <Route
+                      path=":slug"
                       element={
                         <CountryRouteGuard
-                          pagePath="/franchise"
-                          element={<Franchise />}
-                          allowEmptyContent
+                          pagePath="/policies"
+                          element={<PolicyDetails />}
                         />
                       }
                     />
-                    
-                    <Route path="*" element={<NotFound />} />
                   </Route>
-
-                  {/* 404 fallback */}
+                  
+                  {/* FAQ page route */}
+                  <Route 
+                    path="faq"
+                    element={
+                      <CountryRouteGuard
+                        pagePath="/faq"
+                        element={<FaqPage />}
+                        allowEmptyContent
+                      />
+                    }
+                  />
+                  
+                  {/* Franchise page route */}
+                  <Route 
+                    path="franchise"
+                    element={
+                      <CountryRouteGuard
+                        pagePath="/franchise"
+                        element={<Franchise />}
+                        allowEmptyContent
+                      />
+                    }
+                  />                    
                   <Route path="*" element={<NotFound />} />
-                </Routes>
-              </CountryProvider>
-            </CookieConsentProvider>
-          </BrowserRouter>
-        </TooltipProvider>
+                </Route>
+
+                {/* 404 fallback */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </CountryProvider>
+          </CookieConsentProvider>
+        </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>
   );

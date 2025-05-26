@@ -5,12 +5,16 @@ import axios from 'axios';
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
-if (!STRAPI_URL) {
-  throw new Error('VITE_STRAPI_URL is not defined');
-}
+// Don't throw errors for missing env vars in development
+const isDev = import.meta.env.DEV;
+if (!isDev) {
+  if (!STRAPI_URL) {
+    throw new Error('VITE_STRAPI_URL is not defined');
+  }
 
-if (!STRAPI_TOKEN) {
-  throw new Error('VITE_STRAPI_API_TOKEN is not defined');
+  if (!STRAPI_TOKEN) {
+    throw new Error('VITE_STRAPI_API_TOKEN is not defined');
+  }
 }
 
 interface StrapiResponse<T> {
@@ -40,6 +44,10 @@ export const getCollection = async <T>(
   params: Record<string, any> = {}
 ): Promise<StrapiResponse<T>> => {
   try {
+    if (isDev && !STRAPI_TOKEN) {
+      throw new Error('Development mode: No Strapi token available');
+    }
+
     console.log(`Fetching ${endpoint} with params:`, params);
     console.log('Final URL:', `${STRAPI_URL}/${endpoint}${params ? `?${qs.stringify(params)}` : ''}`)
     const collection = strapiClient.collection(endpoint);

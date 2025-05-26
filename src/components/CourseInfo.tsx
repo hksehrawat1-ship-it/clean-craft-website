@@ -13,9 +13,9 @@ const CourseInfo = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-primary rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <Calendar className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -25,9 +25,9 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-primary rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <MapPin className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -37,9 +37,9 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-primary rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <IndianRupee className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -49,9 +49,9 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-primary rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -61,9 +61,9 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-primary rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -73,9 +73,9 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-primary">
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-primary rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <FileText className="h-6 w-6 text-white" />
               </div>
               <div>

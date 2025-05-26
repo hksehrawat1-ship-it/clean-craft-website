@@ -6,15 +6,15 @@ const Offer = () => {
   return (
     <section className="py-16 bg-blue-50">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl border-2 border-blue-500">
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl border-2 border-[#1A73E8]">
           <div className="flex justify-center mb-6">
-            <div className="bg-blue-500/10 p-4 rounded-full">
-              <Gift className="h-12 w-12 text-blue-500" />
+            <div className="bg-[#1A73E8]/10 p-4 rounded-full">
+              <Gift className="h-12 w-12 text-[#1A73E8]" />
             </div>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
-            EXCLUSIVE <span className="text-blue-500">OFFER</span>
+            EXCLUSIVE <span className="text-[#1A73E8]">OFFER</span>
           </h2>
 
           <div className="text-center mb-8">
@@ -45,7 +45,7 @@ const Offer = () => {
 
             <Button
               size="lg"
-              className="bg-blue-500 hover:bg-blue-500/90 text-white text-lg py-6 px-8"
+              className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-lg py-6 px-8"
             >
               <a
                 href=" https://www.cleancraftapp.com/in/learning/courses"

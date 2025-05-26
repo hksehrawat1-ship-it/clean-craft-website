@@ -89,7 +89,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Button
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-white text-base py-4 px-8 font-bold rounded-lg"
+                className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-base py-4 px-8 font-bold rounded-lg"
                 onClick={() =>
                   document
                     .getElementById("download-section")

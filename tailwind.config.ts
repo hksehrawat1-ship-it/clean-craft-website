@@ -13,12 +13,28 @@ const config: Config = {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: {
+				DEFAULT: '1rem',
+				sm: '2rem',
+				lg: '4rem',
+				xl: '5rem',
+				'2xl': '6rem',
+			},
 			screens: {
+				sm: '640px',
+				md: '768px',
+				lg: '1024px',
+				xl: '1280px',
 				'2xl': '1400px'
 			}
 		},
 		extend: {
+			padding: {
+				'section-y-mobile': '40px',
+				'section-y-desktop': '90px',
+				'section-x-mobile': '20px',
+				'section-x-desktop': '20px',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -62,10 +78,33 @@ const config: Config = {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				google: {
+					blue: '#4285F4',
+					red: '#EA4335',
+					yellow: '#FBBC05',
+					green: '#34A853',
+					gray: '#5F6368',
+					lightgray: '#F1F1F1',
+				},
+				cleancraft: {
+					gold: '#F5B014',
+					darkgold: '#E09F0F',
+					light: '#FFF9E6',
 				}
 			},
 			fontFamily: {
 				sans: ['Product Sans', 'system-ui', 'sans-serif']
+			},
+			fontSize: {
+				'heading': ['64px', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+				'heading-mobile': ['40px', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
+				'subheading': ['20px', { lineHeight: '1.5', letterSpacing: '-0.01em' }],
+				'subheading-mobile': ['18px', { lineHeight: '1.5', letterSpacing: '-0.01em' }],
+				'p': ['18px', { lineHeight: '1.6' }],
+				'p-mobile': ['16px', { lineHeight: '1.6' }],
+				'button': ['17px', { lineHeight: '1.5' }],
+				'button-mobile': ['16px', { lineHeight: '1.5' }]
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -74,20 +113,12 @@ const config: Config = {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				},
 				'fade-in': {
 					'0%': {

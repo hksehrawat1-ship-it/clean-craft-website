@@ -42,7 +42,7 @@ const HeroSection = () => {
               <Button
                 asChild
                 size={isMobile ? "default" : "lg"}
-                className="bg-primary hover:bg-primary-hover text-white text-base md:text-lg px-4 md:px-8 w-full sm:w-auto"
+                className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-base md:text-lg px-4 md:px-8 w-full sm:w-auto"
               >
                 <a
                   href="https://cleancraft.mojo.page/best-laundry-training-institute-in-india"

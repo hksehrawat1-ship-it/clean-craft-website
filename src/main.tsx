@@ -1,6 +1,6 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import './styles/base.css'
 import './index.css'
 
 const rootElement = document.getElementById('root')
@@ -11,11 +11,7 @@ if (!rootElement) {
 const root = createRoot(rootElement)
 
 try {
-  root.render(
-    <StrictMode>
-      <App />
-    </StrictMode>
-  )
+  root.render(<App />)
 } catch (error) {
   console.error('Failed to render app:', error)
   // Show a user-friendly error message
