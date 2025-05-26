@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import EnhancedNavbar from "@/components/EnhancedNavbar";
+import Footer from "@/components/Footer";
 
 const FAQ = () => {
   const faqs = [
@@ -35,18 +37,21 @@ const FAQ = () => {
   ];
 
   return (
-    <section id="faq" className="py-12 bg-white">
-      <div className="container mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
-            Find answers to common questions about our laundry training program
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-white">
+      <EnhancedNavbar />
 
-        <div className="max-w-2xl mx-auto">
+      <main className="flex-grow py-12 px-4">
+        <section id="faq" className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold mb-3">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-base">
+              Find answers to common questions about our laundry training
+              program
+            </p>
+          </div>
+
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, index) => (
               <AccordionItem
@@ -64,7 +69,7 @@ const FAQ = () => {
             ))}
           </Accordion>
 
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center">
             <p className="text-gray-600 text-sm">
               Still have questions? Contact us at{" "}
               <a
@@ -82,9 +87,11 @@ const FAQ = () => {
               </a>
             </p>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
   );
 };
 

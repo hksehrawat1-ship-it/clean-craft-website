@@ -1,32 +1,28 @@
-import { useState } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Outlet,
-} from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as Sonner } from '@/components/ui/sonner';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 
-import { CookieConsentProvider } from './contexts/CookieConsentContext';
-import { CountryProvider } from './contexts/CountryContext';
+import { CookieConsentProvider } from "./contexts/CookieConsentContext";
+import { CountryProvider } from "./contexts/CountryContext";
 
-import CookieConsentBanner from './components/CookieConsentBanner';
-import CountryRedirect from './components/CountryRedirect';
-import CountryRouteGuard from './components/CountryRouteGuard';
+import CookieConsentBanner from "./components/CookieConsentBanner";
+import CountryRedirect from "./components/CountryRedirect";
+import CountryRouteGuard from "./components/CountryRouteGuard";
 
 /* pages */
-import Index from './pages/Index';
-import NotFound from './pages/NotFound';
-import Courses from './pages/learning/Courses';
-import Book from './pages/learning/Book';
-import Policies from './pages/Policies';
-import PolicyDetails from './pages/PolicyDetails';
-import FaqPage from './pages/Faq';
-import Franchise from './pages/Franchise';
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import Courses from "./pages/learning/Courses";
+import Book from "./pages/learning/Book";
+import Policies from "./pages/Policies";
+import PolicyDetails from "./pages/PolicyDetails";
+import FaqPage from "./pages/Faq";
+import Franchise from "./pages/Franchise";
+import ServicesNavbar from "./pages/ServicesNavbar";
 
 /* layout that just renders routed content */
 const CountryLayout = () => <Outlet />;
@@ -38,7 +34,7 @@ function App() {
         defaultOptions: {
           queries: { retry: 1, refetchOnWindowFocus: false },
         },
-      }),
+      })
   );
 
   return (
@@ -107,9 +103,9 @@ function App() {
                       }
                     />
                   </Route>
-                  
+
                   {/* FAQ page route */}
-                  <Route 
+                  <Route
                     path="faq"
                     element={
                       <CountryRouteGuard
@@ -119,9 +115,21 @@ function App() {
                       />
                     }
                   />
-                  
+                  {/* serviceNavbar
+                   */}
+                  <Route
+                    path="services"
+                    element={
+                      <CountryRouteGuard
+                        pagePath="/services"
+                        element={<ServicesNavbar />}
+                        allowEmptyContent
+                      />
+                    }
+                  />
+
                   {/* Franchise page route */}
-                  <Route 
+                  <Route
                     path="franchise"
                     element={
                       <CountryRouteGuard
@@ -130,7 +138,7 @@ function App() {
                         allowEmptyContent
                       />
                     }
-                  />                    
+                  />
                   <Route path="*" element={<NotFound />} />
                 </Route>
 

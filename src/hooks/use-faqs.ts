@@ -1,6 +1,4 @@
-
 import { useQuery } from '@tanstack/react-query';
-import { getCollection } from '@/lib/strapi/client';
 
 interface FAQ {
   id: number;
@@ -13,43 +11,46 @@ interface FAQ {
 interface FAQResponse {
   data: {
     id: number;
-    attributes: {
-      question: string;
-      answer: string | null;
-      category: string | null;
-      order: number | null;
-    }
+    question: string;
+    answer: string | null;
+    category: string | null;
+    order: number | null;
   }[];
   meta: any;
 }
+
+const API_URL = 'https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc';
 
 export function useFAQs() {
   const { data, isLoading, error } = useQuery<FAQResponse>({
     queryKey: ['faqs'],
     queryFn: async () => {
-      return getCollection('faqs', {
-        sort: ['order:asc']
-      });
+      const res = await fetch(API_URL);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const json = await res.json();
+      return json;
     },
   });
 
-  // Transform the data structure to match our internal format
+  // Data transform kar rahe hain
   const faqs: FAQ[] = data?.data
-    .filter(item => item.attributes.question) // question hona zaroori hai
-    .map(item => ({
-      id: item.id,
-      question: item.attributes.question,
-      answer: item.attributes.answer ?? "Answer coming soon",
-      category: item.attributes.category ?? "Uncategorized",
-      order: item.attributes.order ?? 0,
+    .filter(faq => faq.question) 
+    .map(faq => ({
+      id: faq.id,
+      question: faq.question,
+      answer: faq.answer ?? "Answer coming soon",
+      category: faq.category ?? "Uncategorized",
+      order: faq.order ?? 0,
     })) ?? [];
 
   // FAQs ko category wise group karna
-  const faqsByCategory = faqs.reduce<Record<string, FAQ[]>>((acc, faq) => {
+  const faqsByCategory = faqs.reduce((acc, faq) => {
     if (!acc[faq.category]) acc[faq.category] = [];
     acc[faq.category].push(faq);
     return acc;
-  }, {});
+  }, {} as Record<string, FAQ[]>);
 
   // Categories ko alphabetically sort kar rahe hain
   const categories = Object.keys(faqsByCategory).sort();

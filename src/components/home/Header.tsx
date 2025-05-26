@@ -63,7 +63,10 @@ const Header = () => {
           >
             Login
           </Button>
-          <Button className="bg-[#1A73E8] text-white hover:bg-blue-600">
+          <Button
+            className="bg-[#1A73E8] text-white hover:bg-blue-600 rounded-md hhgyff"
+            style={{ borderRadius: "12px !important" }}
+          >
             Book
           </Button>
         </div>

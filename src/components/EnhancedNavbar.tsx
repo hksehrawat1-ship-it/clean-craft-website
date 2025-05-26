@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button } from './ui/button';
-import { Menu, X, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useIsMobile } from '../hooks/use-mobile';
-import { useCountry } from '@/contexts/CountryContext';
-import { usePagesConfig } from '@/hooks/use-pages-config';
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "./ui/button";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useIsMobile } from "../hooks/use-mobile";
+import { useCountry } from "@/contexts/CountryContext";
+import { usePagesConfig } from "@/hooks/use-pages-config";
 
 const EnhancedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,38 +14,38 @@ const EnhancedNavbar = () => {
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
   const { getNavbarItems } = usePagesConfig();
-  
+
   const navItems = getNavbarItems();
-  
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     if (!isMobile) {
       setIsMenuOpen(false);
     }
-    
+
     const handleBodyClick = (e: MouseEvent) => {
-      if (isMenuOpen && 
-          !(e.target as HTMLElement).closest('.mobile-menu-container') && 
-          !(e.target as HTMLElement).closest('.menu-toggle-btn')) {
+      if (
+        isMenuOpen &&
+        !(e.target as HTMLElement).closest(".mobile-menu-container") &&
+        !(e.target as HTMLElement).closest(".menu-toggle-btn")
+      ) {
         setIsMenuOpen(false);
       }
     };
-    
-    document.body.addEventListener('click', handleBodyClick);
-    return () => document.body.removeEventListener('click', handleBodyClick);
+
+    document.body.addEventListener("click", handleBodyClick);
+    return () => document.body.removeEventListener("click", handleBodyClick);
   }, [isMenuOpen, isMobile]);
 
-  // Helper function to create links with the country code
   const createLink = (path: string) => {
-    return currentCountry ? `/${currentCountry.code}${path}` : '/';
+    return currentCountry ? `/${currentCountry.code}${path}` : "/";
   };
 
   const handleDropdownEnter = (path: string) => {
@@ -62,31 +62,31 @@ const EnhancedNavbar = () => {
   };
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-3'
+        isScrolled ? "bg-white shadow-md py-2" : "bg-transparent py-3"
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
-        <Link to={createLink('')} className="flex items-center z-20">
-          <img 
-            alt="Clean Craft Logo" 
-            className="h-8 w-8 md:hidden" 
-            src="/lovable-uploads/cleancraft-icon.png" 
+        <Link to={createLink("")} className="flex items-center z-20">
+          <img
+            alt="Clean Craft Logo"
+            className="h-8 w-8 md:hidden"
+            src="/lovable-uploads/cleancraft-icon.png"
           />
-          <img 
-            alt="Clean Craft Logo" 
-            className="hidden md:block h-12 w-auto" 
-            src="/lovable-uploads/cleancraft-full-logo.png" 
+          <img
+            alt="Clean Craft Logo"
+            className="hidden md:block h-12 w-auto"
+            src="/lovable-uploads/cleancraft-full-logo.png"
           />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          {navItems.map((item) => (
+          {navItems.map((item) =>
             item.children ? (
-              <div 
+              <div
                 key={item.path}
                 className="relative"
                 onMouseEnter={() => handleDropdownEnter(item.path)}
@@ -94,15 +94,23 @@ const EnhancedNavbar = () => {
               >
                 <button
                   className="flex items-center text-gray-700 hover:text-primary transition-colors duration-200 font-medium focus:outline-none"
-                  onClick={() => setOpenDropdown(openDropdown === item.path ? null : item.path)}
+                  onClick={() =>
+                    setOpenDropdown(
+                      openDropdown === item.path ? null : item.path
+                    )
+                  }
                   type="button"
                 >
-                  {item.title} <ChevronDown size={16} className={`ml-1 transition-transform duration-200 ${openDropdown === item.path ? 'rotate-180' : ''}`} />
+                  {item.title}{" "}
+                  <ChevronDown
+                    size={16}
+                    className={`ml-1 transition-transform duration-200 ${
+                      openDropdown === item.path ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
                 {openDropdown === item.path && (
-                  <div
-                    className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50"
-                  >
+                  <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
                     {item.children.map((child) => (
                       <Link
                         key={child.path}
@@ -124,26 +132,24 @@ const EnhancedNavbar = () => {
                 {item.title}
               </Link>
             )
-          ))}
+          )}
         </nav>
 
-        {/* Action Buttons - Only visible on desktop */}
+        {/* Action Buttons - Desktop */}
         <div className="hidden md:flex items-center gap-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200"
           >
             Login
           </Button>
-          <Button 
-            className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200"
-          >
+          <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px]">
             Book Now
           </Button>
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           onClick={(e) => {
             e.stopPropagation();
             setIsMenuOpen(!isMenuOpen);
@@ -159,20 +165,31 @@ const EnhancedNavbar = () => {
       {isMenuOpen && (
         <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-10 animate-fade-in mobile-menu-container">
           <div className="container mx-auto px-4 pt-20 flex flex-col space-y-4">
-            {navItems.map((item) => (
+            {navItems.map((item) =>
               item.children ? (
                 <div key={item.path} className="relative">
                   <button
                     className="flex items-center justify-between text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 w-full focus:outline-none transition-colors duration-200"
-                    onClick={() => setOpenDropdown(openDropdown === item.path ? null : item.path)}
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === item.path ? null : item.path
+                      )
+                    }
                     type="button"
                   >
                     {item.title}
-                    <ChevronDown size={16} className={`transition-transform duration-200 ${openDropdown === item.path ? 'rotate-180' : ''}`} />
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform duration-200 ${
+                        openDropdown === item.path ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
                   <div
                     className={`overflow-hidden transition-all duration-200 ${
-                      openDropdown === item.path ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                      openDropdown === item.path
+                        ? "max-h-96 opacity-100"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
                     <div className="py-2 pl-4">
@@ -199,19 +216,17 @@ const EnhancedNavbar = () => {
                   {item.title}
                 </Link>
               )
-            ))}
-            
-            {/* Action buttons in mobile menu */}
+            )}
+
+            {/* Action buttons - Mobile */}
             <div className="flex flex-col gap-3 mt-6">
-              <Button 
+              <Button
                 variant="outline"
                 className="border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
               >
                 Login
               </Button>
-              <Button 
-                className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 w-full"
-              >
+              <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 w-full rounded-[13px]">
                 Book Now
               </Button>
             </div>

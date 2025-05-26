@@ -41,7 +41,7 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({ faqs, variant = "home" }) => {
     <section className="w-full py-16 px-4 md:px-8 bg-white">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-black text-center mb-16">
-          Your questions, <span className="text-[#1869D3]">answered</span>
+          Your Questions, <span className="text-[#1869D3]">Answered</span>
         </h2>
 
         <Accordion type="single" collapsible className="w-full space-y-4">
