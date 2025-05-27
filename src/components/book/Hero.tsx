@@ -9,7 +9,7 @@ const Hero = () => {
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           <div className="w-full md:w-1/2 text-center md:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4">
-              <span className="text-primary">SPOTLESS PROFIT</span>{" "}
+              <span className="text-[#1A73E8]">SPOTLESS PROFIT</span>{" "}
               <span className="text-gray-900">IN LAUNDRY</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-900 font-bold mb-4">
@@ -20,7 +20,7 @@ const Hero = () => {
             </p>
             <p className="text-lg text-gray-700 mb-8">
               Learn the exact{" "}
-              <span className="text-primary font-bold">
+              <span className="text-[#1A73E8] font-bold">
                 laundry business plan India
               </span>{" "}
               experts use and discover{" "}
@@ -39,7 +39,7 @@ const Hero = () => {
                 <span className="text-lg text-gray-400 line-through mr-2">
                   ₹799
                 </span>
-                <span className="bg-primary text-white text-sm font-bold px-2 py-1 rounded">
+                <span className="bg-[#1A73E8] text-white text-sm font-bold px-2 py-1 rounded">
                   40% OFF
                 </span>
               </div>

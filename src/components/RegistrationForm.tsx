@@ -1,6 +1,5 @@
-
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,47 +7,48 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from "@/components/ui/use-toast";
 
 const RegistrationForm = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    knownHindi: 'yes',
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    knownHindi: "yes",
   });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     // Simple validation
     if (!formData.name || !formData.email || !formData.phone) {
       toast({
         title: "Error",
         description: "Please fill all required fields.",
-        variant: "destructive"
+        variant: "destructive",
       });
       setLoading(false);
       return;
     }
 
-    if (formData.knownHindi !== 'yes') {
+    if (formData.knownHindi !== "yes") {
       toast({
         title: "Important Notice",
-        description: "Understanding Hindi is required for this training program.",
-        variant: "destructive"
+        description:
+          "Understanding Hindi is required for this training program.",
+        variant: "destructive",
       });
       setLoading(false);
       return;
@@ -58,26 +58,32 @@ const RegistrationForm = () => {
     setTimeout(() => {
       toast({
         title: "Registration Successful!",
-        description: "We've sent you an email with payment instructions for your ₹500 registration fee.",
+        description:
+          "We've sent you an email with payment instructions for your ₹500 registration fee.",
       });
       setLoading(false);
       setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        knownHindi: 'yes',
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        knownHindi: "yes",
       });
     }, 1500);
   };
 
   return (
-    <section id="register" className="py-16 bg-gradient-to-b from-white to-blue-50">
+    <section
+      id="register"
+      className="py-16 bg-gradient-to-b from-white to-blue-50"
+    >
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Register Now</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Register with <span className="font-bold text-primary">₹500 only</span> and confirm your seat. Limited seats available!
+            Register with{" "}
+            <span className="font-bold text-[#1A73E8]">₹500 only</span> and
+            confirm your seat. Limited seats available!
           </p>
         </div>
 
@@ -86,14 +92,18 @@ const RegistrationForm = () => {
             <CardHeader>
               <CardTitle>Training Registration Form</CardTitle>
               <CardDescription>
-                Fill in your details to enroll in our professional laundry training program
+                Fill in your details to enroll in our professional laundry
+                training program
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="name"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Full Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -108,7 +118,10 @@ const RegistrationForm = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -123,7 +136,10 @@ const RegistrationForm = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="phone"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Phone Number <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -138,7 +154,10 @@ const RegistrationForm = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="address" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="address"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Address
                     </label>
                     <input
@@ -155,7 +174,8 @@ const RegistrationForm = () => {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700">
-                    Do you understand Hindi? <span className="text-red-500">*</span>
+                    Do you understand Hindi?{" "}
+                    <span className="text-red-500">*</span>
                   </label>
                   <div className="flex gap-4">
                     <label className="flex items-center">
@@ -163,7 +183,7 @@ const RegistrationForm = () => {
                         type="radio"
                         name="knownHindi"
                         value="yes"
-                        checked={formData.knownHindi === 'yes'}
+                        checked={formData.knownHindi === "yes"}
                         onChange={handleChange}
                         className="mr-2"
                       />
@@ -174,30 +194,35 @@ const RegistrationForm = () => {
                         type="radio"
                         name="knownHindi"
                         value="no"
-                        checked={formData.knownHindi === 'no'}
+                        checked={formData.knownHindi === "no"}
                         onChange={handleChange}
                         className="mr-2"
                       />
                       No
                     </label>
                   </div>
-                  {formData.knownHindi === 'no' && (
-                    <p className="text-red-500 text-sm">Understanding Hindi is required for this training program.</p>
+                  {formData.knownHindi === "no" && (
+                    <p className="text-red-500 text-sm">
+                      Understanding Hindi is required for this training program.
+                    </p>
                   )}
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-md">
                   <p className="text-gray-700 text-sm">
-                    <strong>Note:</strong> After submitting this form, you will receive payment instructions to complete your ₹500 registration fee. The remaining amount will be collected on the first day of training.
+                    <strong>Note:</strong> After submitting this form, you will
+                    receive payment instructions to complete your ₹500
+                    registration fee. The remaining amount will be collected on
+                    the first day of training.
                   </p>
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full bg-primary hover:bg-primary-hover text-white"
+                <Button
+                  type="submit"
+                  className="w-full bg-[#1A73E8] hover:bg-primary-hover text-white"
                   disabled={loading}
                 >
-                  {loading ? 'Processing...' : 'Submit Registration'}
+                  {loading ? "Processing..." : "Submit Registration"}
                 </Button>
               </form>
             </CardContent>

@@ -19,24 +19,26 @@ interface FAQResponse {
   meta: any;
 }
 
-const API_URL = 'https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc';
+export function useFAQs(countryCode?: string) {
+  const queryParam = countryCode
+    ? `&filters[country][code][$eq]=${countryCode}`
+    : "";
 
-export function useFAQs() {
+  const API_URL = `https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc${queryParam}&populate=country`;
+
   const { data, isLoading, error } = useQuery<FAQResponse>({
-    queryKey: ['faqs'],
+    queryKey: ['faqs', countryCode],
     queryFn: async () => {
       const res = await fetch(API_URL);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      const json = await res.json();
-      return json;
+      return res.json();
     },
   });
 
-  // Data transform kar rahe hain
   const faqs: FAQ[] = data?.data
-    .filter(faq => faq.question) 
+    .filter(faq => faq.question)
     .map(faq => ({
       id: faq.id,
       question: faq.question,
@@ -45,14 +47,12 @@ export function useFAQs() {
       order: faq.order ?? 0,
     })) ?? [];
 
-  // FAQs ko category wise group karna
   const faqsByCategory = faqs.reduce((acc, faq) => {
     if (!acc[faq.category]) acc[faq.category] = [];
     acc[faq.category].push(faq);
     return acc;
   }, {} as Record<string, FAQ[]>);
 
-  // Categories ko alphabetically sort kar rahe hain
   const categories = Object.keys(faqsByCategory).sort();
 
   return { faqs, faqsByCategory, categories, isLoading, error };

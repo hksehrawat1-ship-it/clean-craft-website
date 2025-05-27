@@ -28,8 +28,8 @@ import {
 const PAGE_SIZE = 10;
 
 const FaqPage: React.FC = () => {
-  const { countryCode } = useParams(); // currently unused
-  const { faqsByCategory, categories, isLoading, error } = useFAQs();
+  const { countryCode } = useParams();
+  const { faqsByCategory, categories, isLoading, error } = useFAQs(countryCode);
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);

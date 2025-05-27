@@ -204,17 +204,21 @@ const GuaranteeSection = () => {
           className="mt-16 rounded-2xl overflow-hidden shadow-lg"
         >
           <div className="bg-google-blue text-white p-8 text-center">
-            <h3 className="text-3xl font-bold mb-4">
+            <h3 className="text-3xl font-bold mb-4" style={{ color: "white" }}>
               Ready to become our next success story?
             </h3>
-            <p className="text-white/90 mb-6 max-w-2xl mx-auto">
+            <p
+              className="text-white mb-6 max-w-2xl mx-auto"
+              style={{ color: "white" }}
+            >
               Join the family of entrepreneurs who are building wealth with our
               industry-leading guarantees.
             </p>
             <div className="flex flex-col items-center">
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300 cursor-pointer select-none group"
+                className="inline-flex items-center justify-center bg-white text-blue-600 font-semibold rounded-full shadow-md transition-all duration-300 cursor-pointer select-none group"
+                style={{ padding: "16px", backgroundColor: "white" }}
               >
                 Claim Your Territory Today
                 <svg
@@ -227,14 +231,17 @@ const GuaranteeSection = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                  className="ml-2 transition-transform duration-300"
                 >
                   <path d="M5 12h14"></path>
                   <path d="m12 5 7 7-7 7"></path>
                 </svg>
               </a>
 
-              <p className="text-white/80 mt-4 italic text-sm">
+              <p
+                className="text-white/80 mt-4 italic text-sm"
+                style={{ color: "white" }}
+              >
                 Stop Watching Others Win – It's Your Turn to Take the Leap.
               </p>
             </div>
