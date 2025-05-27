@@ -157,7 +157,7 @@ const ServicesPage: React.FC = () => {
   const countryCode = currentCountry?.code.toLowerCase() || "in";
 
   return (
-    <div className="min-h-screen flex flex-col bg-whit">
+    <div className="min-h-screen flex flex-col bg-white">
       <EnhancedNavbar />
 
       <main className="flex-grow w-full py-16 px-2 md:px-4">
@@ -168,7 +168,7 @@ const ServicesPage: React.FC = () => {
               <h2 className="text-3xl font-bold text-white mb-4">
                 Explore our services
               </h2>
-              <p className="text-lg text-white">
+              <p className="text-lg text-white/90">
                 Your clothes are treated with the utmost care, receiving the
                 attention they deserve.
               </p>
@@ -233,6 +233,8 @@ const ServicesPage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

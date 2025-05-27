@@ -8,7 +8,7 @@ import {
   Phone,
   Mail,
   Copyright,
-  Youtube, // ✅ Add this line
+  Youtube,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useCountry } from "@/contexts/CountryContext";
@@ -17,7 +17,6 @@ import CountrySelector from "@/components/CountrySelector";
 const Footer: React.FC = () => {
   const { currentCountry } = useCountry();
 
-  // Helper function to create country-specific links
   const createLink = (path: string): string => {
     if (!currentCountry) return "/";
     return `/${currentCountry.code.toLowerCase()}${path}`;
@@ -59,7 +58,6 @@ const Footer: React.FC = () => {
             >
               <Instagram size={20} />
             </a>
-
             <a
               href="https://www.facebook.com/share/1CJKTFbd2S/"
               target="_blank"
@@ -69,7 +67,6 @@ const Footer: React.FC = () => {
             >
               <Facebook size={20} />
             </a>
-
             <a
               href="https://in.linkedin.com/in/himanshu-sehrawat-3b1227319?trk=people-guest_people_search-card"
               target="_blank"
@@ -86,9 +83,10 @@ const Footer: React.FC = () => {
         <div className="mt-6 md:mt-0">
           <h3 className="font-semibold text-xl mb-6 text-gray-800">Company</h3>
           <ul className="space-y-4">
-            <li>
+            <li style={{ textDecoration: "none" }}>
               <Link
                 to={createLink("")}
+                style={{ textDecoration: "none" }}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Discover Clean Craft
@@ -110,14 +108,6 @@ const Footer: React.FC = () => {
                 Open My Store
               </Link>
             </li>
-            <li>
-              <Link
-                to={createLink("/franchise")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                {/* Discover Cleancraft */}
-              </Link>
-            </li>
           </ul>
         </div>
 
@@ -127,6 +117,7 @@ const Footer: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <Link
+                style={{ textDecoration: "none" }}
                 to={createLink("/")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
@@ -135,26 +126,20 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                to={createLink("/policies/terms-conditions")}
+                to={createLink("/faq")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
-              ></Link>
+              >
+                FAQ
+              </Link>
             </li>
             <li>
               <Link
-                to={createLink("/policies/privacy")}
+                to={createLink("/policies")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 All Policies
               </Link>
             </li>
-            {/* <li>
-              <Link
-                to={createLink("/policies/cancellation")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                Cancellation Policy
-              </Link>
-            </li> */}
           </ul>
         </div>
 

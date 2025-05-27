@@ -19,8 +19,8 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
     variant === "home"
       ? "Real Stories. Real Results"
       : variant === "courses"
-      ? "successful Students"
-      : "happy Readers";
+      ? "Successful Students"
+      : "Happy Readers";
 
   return (
     <section className="w-full py-16 px-4 md:px-8 bg-[#F8FAFC]">
@@ -29,13 +29,13 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
           <span className="text-[#1869D3]">{title}</span>
         </h2>
 
-        {/* Mobile: Horizontal scroll */}
-        <div className="md:hidden w-full overflow-x-auto pb-6">
-          <div className="flex gap-6" style={{ minWidth: "min-content" }}>
+        {/* Mobile: Horizontal scroll like carousel */}
+        <div className="md:hidden overflow-x-auto -mx-4 px-4 pb-4">
+          <div className="flex gap-4 w-max">
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="bg-white rounded-xl p-6 shadow-sm flex-none w-[300px]"
+                className="bg-white rounded-xl p-6 shadow-sm w-[300px] flex-none"
               >
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
@@ -67,17 +67,9 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
           </div>
         </div>
 
-        {/* Desktop: Grid layout */}
-        <div
-          className={`hidden md:grid gap-6 ${
-            testimonials.length === 1
-              ? "grid-cols-1 justify-center"
-              : testimonials.length === 2
-              ? "grid-cols-2 justify-center"
-              : "grid-cols-3"
-          }`}
-        >
-          {testimonials.map((testimonial) => (
+        {/* Desktop: Show only 3 testimonials in grid */}
+        <div className="hidden md:grid grid-cols-3 gap-6">
+          {testimonials.slice(0, 3).map((testimonial) => (
             <div
               key={testimonial.id}
               className="bg-white rounded-xl p-6 shadow-sm"

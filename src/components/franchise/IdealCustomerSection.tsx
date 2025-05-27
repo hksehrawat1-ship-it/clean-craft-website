@@ -8,15 +8,20 @@ const IdealCustomerSection = () => {
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            This Franchise Is <span className="gradient-text">Perfect</span> <span className="text-google-green">IF YOU ARE:</span>
+            This Franchise Is <span className="gradient-text">Perfect</span>{" "}
+            <span className="text-google-green">IF YOU ARE:</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600">
-            Join hundreds of successful franchise owners who found their perfect business match
+            Join hundreds of successful franchise owners who found their perfect
+            business match
           </p>
         </div>
-        
+
         <div className="franchise-grid-4 mb-16">
-          <Card className="franchise-card franchise-fade-in" style={{ animationDelay: "0.1s" }}>
+          <Card
+            className="franchise-card franchise-fade-in"
+            style={{ animationDelay: "0.1s" }}
+          >
             <CardContent className="p-6 text-center">
               <div className="franchise-icon-container franchise-icon-blue mx-auto">
                 <Briefcase className="h-7 w-7" />
@@ -30,7 +35,10 @@ const IdealCustomerSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="franchise-card franchise-fade-in" style={{ animationDelay: "0.2s" }}>
+          <Card
+            className="franchise-card franchise-fade-in"
+            style={{ animationDelay: "0.2s" }}
+          >
             <CardContent className="p-6 text-center">
               <div className="franchise-icon-container franchise-icon-red mx-auto">
                 <User className="h-7 w-7" />
@@ -44,7 +52,10 @@ const IdealCustomerSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="franchise-card franchise-fade-in" style={{ animationDelay: "0.3s" }}>
+          <Card
+            className="franchise-card franchise-fade-in"
+            style={{ animationDelay: "0.3s" }}
+          >
             <CardContent className="p-6 text-center">
               <div className="franchise-icon-container franchise-icon-green mx-auto">
                 <Handshake className="h-7 w-7" />
@@ -58,7 +69,10 @@ const IdealCustomerSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="franchise-card franchise-fade-in" style={{ animationDelay: "0.4s" }}>
+          <Card
+            className="franchise-card franchise-fade-in"
+            style={{ animationDelay: "0.4s" }}
+          >
             <CardContent className="p-6 text-center">
               <div className="franchise-icon-container franchise-icon-yellow mx-auto">
                 <DollarSign className="h-7 w-7" />
@@ -72,9 +86,9 @@ const IdealCustomerSection = () => {
             </CardContent>
           </Card>
         </div>
-        
-        <div className="text-center">
-          <Button className="franchise-button-primary franchise-pulse-soft text-lg px-8 py-4 h-auto">
+
+        <div className="flex justify-center items-center px-4 sm:px-6 lg:px-8 py-10 rounded-2xl">
+          <Button className="text-sm sm:text-lg px-6 sm:px-10 py-6 sm:py-7 bg-green-600 text-white hover:bg-green-700 font-semibold rounded-xl shadow-md transition duration-300 w-full sm:w-auto text-center break-words max-w-full sm:max-w-xl">
             Get Case Studies from People Like You
           </Button>
         </div>

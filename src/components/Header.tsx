@@ -99,15 +99,13 @@ const Header = () => {
         </nav>
         {/* Actions */}
         <div className="flex items-center gap-3 min-w-[160px] justify-end">
-          <a
-            href="#login"
-            className="header-login-button px-5 py-1.5"
-          >
+          <a href="#login" className="header-login-button px-5 py-1.5">
             Login
           </a>
           <a
             href="#book"
-            className="header-book-button px-5 py-1.5"
+            className="header-book-button px-5 py-1.5 hhgyff"
+            style={{ borderRadius: "12px !important" }}
           >
             Book Now
           </a>
