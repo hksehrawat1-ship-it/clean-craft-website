@@ -12,47 +12,65 @@ interface FAQResponse {
   data: {
     id: number;
     question: string;
-    answer: string | null;
+    answer: any; // changed to any because answer can be object
     category: string | null;
     order: number | null;
   }[];
   meta: any;
 }
 
-const API_URL = 'https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc';
+// Helper function to extract plain text from rich text answer
+function extractText(answer: any): string {
+  if (!answer) return "Answer coming soon";
+  if (typeof answer === "string") return answer;
 
-export function useFAQs() {
+  // If it's an array of blocks with children (common Strapi rich text format)
+  if (Array.isArray(answer)) {
+    return answer
+      .map(block =>
+        block.children?.map((child: any) => child.text).join("") ?? ""
+      )
+      .join("\n\n");
+  }
+
+  // fallback: convert object to string
+  return JSON.stringify(answer);
+}
+
+export function useFAQs(countryCode?: string) {
+  const queryParam = countryCode
+    ? `&filters[country][code][$eq]=${countryCode}`
+    : "";
+
+  const API_URL = `https://inviting-gem-d91a69b7bc.strapiapp.com/api/faqs?sort=order:asc${queryParam}&populate=country`;
+
   const { data, isLoading, error } = useQuery<FAQResponse>({
-    queryKey: ['faqs'],
+    queryKey: ['faqs', countryCode],
     queryFn: async () => {
       const res = await fetch(API_URL);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      const json = await res.json();
-      return json;
+      return res.json();
     },
   });
 
-  // Data transform kar rahe hain
   const faqs: FAQ[] = data?.data
-    .filter(faq => faq.question) 
+    .filter(faq => faq.question)
     .map(faq => ({
       id: faq.id,
       question: faq.question,
-      answer: faq.answer ?? "Answer coming soon",
+      answer: extractText(faq.answer),
       category: faq.category ?? "Uncategorized",
       order: faq.order ?? 0,
     })) ?? [];
 
-  // FAQs ko category wise group karna
   const faqsByCategory = faqs.reduce((acc, faq) => {
     if (!acc[faq.category]) acc[faq.category] = [];
     acc[faq.category].push(faq);
     return acc;
   }, {} as Record<string, FAQ[]>);
 
-  // Categories ko alphabetically sort kar rahe hain
   const categories = Object.keys(faqsByCategory).sort();
 
   return { faqs, faqsByCategory, categories, isLoading, error };

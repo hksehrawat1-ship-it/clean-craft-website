@@ -8,8 +8,8 @@ const IdealCustomerSection = () => {
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            This Franchise Is <span className="gradient-text">Perfect</span>{" "}
-            <span className="text-google-green">IF YOU ARE:</span>
+            This Franchise is <span className="gradient-text">PERFECT</span>{" "}
+            <span className="text-google-green">If You Are:</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600">
             Join hundreds of successful franchise owners who found their perfect

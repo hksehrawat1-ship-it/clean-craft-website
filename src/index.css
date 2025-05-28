@@ -189,3 +189,7 @@
 .hhgyff {
   border-radius: 12px !important;
 }
+
+ul>li::before {
+  content: none;
+}

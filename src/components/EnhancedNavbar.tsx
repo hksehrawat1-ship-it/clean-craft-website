@@ -139,10 +139,12 @@ const EnhancedNavbar = () => {
         <div className="hidden md:flex items-center gap-3">
           <Button
             variant="outline"
-            className="border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200"
+            className="text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
+            style={{ border: "2px solid #1A73E8" }}
           >
             Login
           </Button>
+
           <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px]">
             Book Now
           </Button>
@@ -222,10 +224,11 @@ const EnhancedNavbar = () => {
             <div className="flex flex-col gap-3 mt-6">
               <Button
                 variant="outline"
-                className="border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
+                className=" border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
               >
                 Login
               </Button>
+
               <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 w-full rounded-[13px]">
                 Book Now
               </Button>

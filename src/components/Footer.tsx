@@ -102,7 +102,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                to={createLink("/connect")}
+                to={createLink("/franchise")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Open My Store
