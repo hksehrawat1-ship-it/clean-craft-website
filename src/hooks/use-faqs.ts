@@ -12,11 +12,29 @@ interface FAQResponse {
   data: {
     id: number;
     question: string;
-    answer: string | null;
+    answer: any; // changed to any because answer can be object
     category: string | null;
     order: number | null;
   }[];
   meta: any;
+}
+
+// Helper function to extract plain text from rich text answer
+function extractText(answer: any): string {
+  if (!answer) return "Answer coming soon";
+  if (typeof answer === "string") return answer;
+
+  // If it's an array of blocks with children (common Strapi rich text format)
+  if (Array.isArray(answer)) {
+    return answer
+      .map(block =>
+        block.children?.map((child: any) => child.text).join("") ?? ""
+      )
+      .join("\n\n");
+  }
+
+  // fallback: convert object to string
+  return JSON.stringify(answer);
 }
 
 export function useFAQs(countryCode?: string) {
@@ -42,7 +60,7 @@ export function useFAQs(countryCode?: string) {
     .map(faq => ({
       id: faq.id,
       question: faq.question,
-      answer: faq.answer ?? "Answer coming soon",
+      answer: extractText(faq.answer),
       category: faq.category ?? "Uncategorized",
       order: faq.order ?? 0,
     })) ?? [];
