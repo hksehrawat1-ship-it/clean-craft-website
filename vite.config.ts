@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // ─── ADD THIS ───────────────────────────────────────────
+    allowedHosts: [
+      "*.awsapprunner.com"
+    ],
+    // ─────────────────────────────────────────────────────────
   },
   plugins: [
     react(),
