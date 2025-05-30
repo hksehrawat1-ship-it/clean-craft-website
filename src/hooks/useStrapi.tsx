@@ -18,7 +18,7 @@ interface StrapiResponse<T> {
 
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase();
+  const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['page', slug, countryCode],
@@ -33,7 +33,7 @@ export function useStrapiPage(slug: string) {
 
 export function useStrapiPageSEO(slug: string) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase();
+  const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['pageSEO', slug, countryCode],
@@ -48,7 +48,7 @@ export function useStrapiPageSEO(slug: string) {
 
 export function useStrapiServices() {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase();
+  const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['services', countryCode],
@@ -67,7 +67,7 @@ export function useStrapiTestimonials(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase();
+  const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<StrapiTestimonial>>({
     queryKey: ['testimonials', countryCode, options],
@@ -85,7 +85,7 @@ export function useStrapiFAQs(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase();
+  const countryCode = currentCountry?.code.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<StrapiFAQ>>({
     queryKey: ['faqs', countryCode, options],
@@ -99,7 +99,7 @@ export function useStrapiFAQs(options?: {
 
 export function useStrapiPolicies() {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase();
+  const countryCode = currentCountry?.code.toLowerCase() || 'in' ;
 
   return useQuery({
     queryKey: ['policies', countryCode],
