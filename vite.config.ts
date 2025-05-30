@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     // ─── ADD THIS ───────────────────────────────────────────
     allowedHosts: [
-      "*.awsapprunner.com"
+      "s3jdsg2tcp.us-east-1.awsapprunner.com"
     ],
     // ─────────────────────────────────────────────────────────
   },
