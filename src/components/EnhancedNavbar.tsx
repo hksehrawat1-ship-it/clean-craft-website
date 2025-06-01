@@ -45,7 +45,7 @@ const EnhancedNavbar = () => {
   }, [isMenuOpen, isMobile]);
 
   const createLink = (path: string) => {
-    return currentCountry ? `/${currentCountry.code}${path}` : "/";
+    return currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
   };
 
   const handleDropdownEnter = (path: string) => {

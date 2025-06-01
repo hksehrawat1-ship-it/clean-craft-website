@@ -24,7 +24,7 @@ export function usePagesConfig() {
       return globalPages;
     }
 
-    const countryCode = currentCountry.code.toLowerCase();
+    const countryCode = currentCountry.toLowerCase();
     const countryConfig = pagesConfig[countryCode] as CountryPages;
 
     if (!countryConfig) {
@@ -62,30 +62,12 @@ export function usePagesConfig() {
   };
 
   const getNavbarItems = () => {
-    const pages = getConfig();
-    const navbarItems = pages
-      .filter(page => page.navbar)
-      .map(page => ({
-        path: page.path,
-        title: page.title,
-        order: page.order || 999,
-        children: page.children
-          ?.filter(child => child.navbar)
-          .map(child => ({
-            path: child.path,
-            title: child.title,
-            order: child.order || 999
-          }))
-          .sort((a, b) => (a.order || 999) - (b.order || 999))
-      }))
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
-
-    return navbarItems;
+    return getConfig().filter(page => page.navbar);
   };
 
   return {
+    getConfig,
     isPageEnabled,
     getNavbarItems,
-    config: getConfig()
   };
 } 

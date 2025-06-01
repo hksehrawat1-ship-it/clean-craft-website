@@ -36,7 +36,7 @@ export class PageService {
       // Also check children pages
       for (const parentPage of allPages) {
         if (parentPage.children) {
-          const childPage = parentPage.children.find(c => {
+          const childPage = parentPage.children.find((c: any) => {
             const childSlug = c.path.replace(/^\//, '');
             return childSlug === slug;
           });
@@ -77,7 +77,7 @@ export class PageService {
     return {
       title: page.title,
       seo_title: page.title,
-      seo_description: `${page.title} - CleanCraft Professional Laundry Services`
+      seo_description: `${page.title} - CleanCraft Professional Dry Cleaning and Laundry Services`
     };
   }
 } 

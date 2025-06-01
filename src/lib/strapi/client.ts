@@ -35,7 +35,8 @@ interface StrapiSingleResponse<T> {
 }
 
 export const strapiClient = strapi({
-  baseURL: STRAPI_URL
+  baseURL: STRAPI_URL,
+  auth: STRAPI_TOKEN,
 });
 
 // Helper functions for common operations

@@ -18,7 +18,7 @@ interface StrapiResponse<T> {
 
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['page', slug, countryCode],
@@ -33,7 +33,7 @@ export function useStrapiPage(slug: string) {
 
 export function useStrapiPageSEO(slug: string) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['pageSEO', slug, countryCode],
@@ -48,7 +48,7 @@ export function useStrapiPageSEO(slug: string) {
 
 export function useStrapiServices() {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['services', countryCode],
@@ -67,9 +67,9 @@ export function useStrapiTestimonials(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || 'in';
 
-  return useQuery<StrapiResponse<StrapiTestimonial>>({
+  return useQuery<StrapiResponse<any>>({
     queryKey: ['testimonials', countryCode, options],
     queryFn: async () => {
       return contentService.getTestimonials(countryCode, options);
@@ -85,9 +85,9 @@ export function useStrapiFAQs(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || 'in';
 
-  return useQuery<StrapiResponse<StrapiFAQ>>({
+  return useQuery<StrapiResponse<any>>({
     queryKey: ['faqs', countryCode, options],
     queryFn: async () => {
       return contentService.getFAQs(countryCode, options);
@@ -99,7 +99,7 @@ export function useStrapiFAQs(options?: {
 
 export function useStrapiPolicies() {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code.toLowerCase() || 'in' ;
+  const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
     queryKey: ['policies', countryCode],
@@ -110,7 +110,6 @@ export function useStrapiPolicies() {
       const response = await contentService.getPolicies(countryCode);
       // Transform the Strapi response to flatten the data structure
       return response.data.map(policy => ({
-        id: policy.id,
         ...policy,
         country: policy.country
       }));

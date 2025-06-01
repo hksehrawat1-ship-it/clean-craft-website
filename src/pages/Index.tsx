@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useCountry } from "@/contexts/CountryContext";
+import { useCountryConfig } from "@/hooks/use-country-config";
 import Layout from "../components/home/Layout";
 import HeroSection from "../components/home/HeroSection";
 import ServicesSection from "../components/home/ServicesSection";
@@ -19,7 +20,6 @@ import {
   useStrapiTestimonials,
 } from "@/hooks/useStrapi";
 import TestimonialSection from "@/components/home/TestimonialSection";
-import { StrapiFAQ, StrapiTestimonial } from "@/types/strapi";
 
 interface StrapiResponse<T> {
   data: T[];
@@ -55,8 +55,13 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
 
 export default function Index() {
   const { countryCode } = useParams<{ countryCode: string }>();
-  const { currentCountry, setCurrentCountry } = useCountry();
+  const { currentCountry } = useCountry();
+  const { countries, getCountryByCode } = useCountryConfig();
   const { data: pageData } = useStrapiPage("/");
+
+  // Get country name from config
+  const countryData = currentCountry ? getCountryByCode(currentCountry) : null;
+  const countryName = countryData?.name || "";
 
   // Fetch FAQs and testimonials for home page
   const { data: faqs, isLoading: faqsLoading } = useStrapiFAQs({
@@ -73,18 +78,18 @@ export default function Index() {
     });
 
   // Check if we have testimonials to display
-  const hasTestimonials = testimonials?.data?.length > 0;
+  const hasTestimonials = testimonials?.data?.length && testimonials?.data?.length > 0;
 
   return (
     <>
       <SEO
         slug="home"
-        defaultTitle={`CleanCraft - Professional Laundry Services${
-          currentCountry ? ` in ${currentCountry.name}` : ""
+        defaultTitle={`CleanCraft - Professional Dry Cleaning and Laundry Services${
+          countryName ? ` in ${countryName}` : ""
         }`}
-        defaultDescription={`Experience premium laundry services with CleanCraft${
-          currentCountry ? ` in ${currentCountry.name}` : ""
-        }. Professional cleaning, expert care, and convenient solutions for all your laundry needs.`}
+        defaultDescription={`Experience premium dry cleaning and laundry services with CleanCraft${
+          countryName ? ` in ${countryName}` : ""
+        }. Professional cleaning, expert care, and convenient solutions for all your laundry and dry cleaning needs.`}
       />
 
       <Layout>
@@ -133,7 +138,7 @@ export default function Index() {
 
           {/* FAQ section */}
           <SectionWrapper className="bg-white">
-            {!faqsLoading && faqs?.data?.length > 0 && (
+            {!faqsLoading && faqs?.data?.length && faqs?.data?.length > 0 && (
               <FaqSection faqs={faqs} />
             )}
           </SectionWrapper>

@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
 
   const createLink = (path: string): string => {
     if (!currentCountry) return "/";
-    return `/${currentCountry.code.toLowerCase()}${path}`;
+    return `/${currentCountry.toLowerCase()}${path}`;
   };
 
   return (

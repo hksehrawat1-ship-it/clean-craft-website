@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { useCountry } from '@/contexts/CountryContext';
+import { useCountryConfig } from '@/hooks/use-country-config';
 import { Check, Globe } from 'lucide-react';
 import { 
   Select,
@@ -11,27 +11,31 @@ import {
 } from '@/components/ui/select';
 
 const CountrySelector: React.FC = () => {
-  const { currentCountry, countries, setCurrentCountry, getCountryRegion } = useCountry();
+  const { currentCountry, setCurrentCountry } = useCountry();
+  const { countries, getCountryByCode, getCountryRegion } = useCountryConfig();
 
   if (!currentCountry || countries.length <= 1) return null;
+
+  // Get current country data
+  const currentCountryData = currentCountry ? getCountryByCode(currentCountry) : null;
 
   return (
     <div className="relative">
       <Select
-        value={currentCountry.code}
+        value={currentCountry}
         onValueChange={setCurrentCountry}
       >
         <SelectTrigger className="w-[180px] bg-white/90 backdrop-blur-sm">
           <SelectValue>
             <span className="flex items-center gap-2">
               <Globe className="h-4 w-4 text-gray-500" />
-              {currentCountry.name}
+              {currentCountryData?.name || currentCountry.toUpperCase()}
             </span>
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {/* Group countries by region */}
-          {['ASIA/PACIFIC', 'EUROPE', 'NORTH AMERICA', 'GLOBAL'].map(region => {
+          {['ASIA/PACIFIC', 'EUROPE', 'AMERICAS', 'MIDDLE EAST', 'OTHER REGIONS'].map(region => {
             // Get countries for this region
             const regionCountries = countries.filter(c => 
               getCountryRegion(c.code) === region
@@ -55,7 +59,7 @@ const CountrySelector: React.FC = () => {
                         <Globe className="h-4 w-4 text-gray-500" />
                         {country.name}
                       </span>
-                      {currentCountry.code === country.code && (
+                      {currentCountry === country.code && (
                         <Check className="w-4 h-4 ml-2 text-primary" />
                       )}
                     </div>

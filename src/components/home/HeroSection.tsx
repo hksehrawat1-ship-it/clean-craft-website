@@ -5,14 +5,14 @@ import { useCountry } from "@/contexts/CountryContext";
 
 const services = ["DRY CLEANING", "WASH AND FOLD", "IRONING", "SHOE CLEANING"];
 
-function useTypewriter(words, typingSpeed = 80, pause = 2000) {
+function useTypewriter(words: string[], typingSpeed = 80, pause = 2000) {
   const [wordIndex, setWordIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(true);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    let timeout;
+    let timeout: NodeJS.Timeout;
 
     if (typing && !deleting) {
       if (displayed.length < words[wordIndex].length) {
@@ -39,15 +39,15 @@ function useTypewriter(words, typingSpeed = 80, pause = 2000) {
       }
     }
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeout as NodeJS.Timeout);
   }, [displayed, typing, deleting, wordIndex, words, typingSpeed, pause]);
 
   return displayed;
 }
 
 const HeroSection = () => {
-  const { currentCountry, getImageUrl } = useCountry();
-
+  const { currentCountry } = useCountry();
+  
   return (
     <section className="flex flex-col items-center pb-24 px-6 md:px-12 lg:px-28 xl:px-32 xl:pt-0 w-full">
       <div className="max-w-7xl w-full">
@@ -144,7 +144,7 @@ const HeroSection = () => {
             className="w-full lg:w-1/2 flex justify-center items-center z-10"
           >
             <img
-              src={getImageUrl("hero-phone-mockup.png")}
+              src="/lovable-uploads/hero-phone-mockup.png"
               alt="Dry Cleaning App"
               className="w-full max-w-[280px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[450px] 2xl:max-w-[500px] h-auto drop-shadow-lg"
               onError={(e) => {

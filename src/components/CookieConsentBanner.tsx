@@ -76,7 +76,7 @@ export default function CookieConsentBanner() {
             </Button>
             <Button 
               onClick={handleAcceptAll}
-              className={window.location.pathname === '/' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+              className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px]"
             >
               Accept All
             </Button>
@@ -133,7 +133,10 @@ export default function CookieConsentBanner() {
             <Button variant="outline" onClick={() => setShowDetails(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSavePreferences}>
+            <Button 
+              onClick={handleSavePreferences}
+              className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px]"
+            >
               Save Preferences
             </Button>
           </div>
