@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { PageService } from '@/lib/strapi/services/page.service';
 import { contentService, ContentCategory } from '@/lib/strapi/services/content.service';
@@ -17,20 +16,6 @@ interface StrapiResponse<T> {
   };
 }
 
-const defaultQueryConfig = {
-  staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-  gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
-  retry: (failureCount: number, error: any) => {
-    // Don't retry if it's a configuration error
-    if (error?.message?.includes('not defined')) {
-      return false;
-    }
-    // Retry up to 2 times for network errors
-    return failureCount < 2;
-  },
-  retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 30000),
-};
-
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || 'in';
@@ -41,8 +26,8 @@ export function useStrapiPage(slug: string) {
       const pageService = PageService.getInstance();
       return pageService.getPage(slug, countryCode);
     },
-    enabled: !!currentCountry && !!slug,
-    ...defaultQueryConfig,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -56,8 +41,8 @@ export function useStrapiPageSEO(slug: string) {
       const pageService = PageService.getInstance();
       return pageService.getPageSEO(slug, countryCode);
     },
-    enabled: !!currentCountry && !!slug,
-    ...defaultQueryConfig,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -68,11 +53,10 @@ export function useStrapiServices() {
   return useQuery({
     queryKey: ['services', countryCode],
     queryFn: async () => {
-      console.log(`🚀 useStrapi: Fetching services for ${countryCode}`);
       return contentService.getServices(countryCode);
     },
-    enabled: !!currentCountry,
-    ...defaultQueryConfig,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -85,14 +69,13 @@ export function useStrapiTestimonials(options?: {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
-  return useQuery<StrapiResponse<StrapiTestimonial>>({
+  return useQuery<StrapiResponse<any>>({
     queryKey: ['testimonials', countryCode, options],
     queryFn: async () => {
-      console.log(`🚀 useStrapi: Fetching testimonials for ${countryCode}`, options);
       return contentService.getTestimonials(countryCode, options);
     },
-    enabled: !!currentCountry,
-    ...defaultQueryConfig,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -104,14 +87,13 @@ export function useStrapiFAQs(options?: {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
-  return useQuery<StrapiResponse<StrapiFAQ>>({
+  return useQuery<StrapiResponse<any>>({
     queryKey: ['faqs', countryCode, options],
     queryFn: async () => {
-      console.log(`🚀 useStrapi: Fetching FAQs for ${countryCode}`, options);
       return contentService.getFAQs(countryCode, options);
     },
-    enabled: !!currentCountry,
-    ...defaultQueryConfig,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!currentCountry // Only run query if we have a country
   });
 }
 
@@ -125,7 +107,6 @@ export function useStrapiPolicies() {
       if (!countryCode) {
         return [];
       }
-      console.log(`🚀 useStrapi: Fetching policies for ${countryCode}`);
       const response = await contentService.getPolicies(countryCode);
       // Transform the Strapi response to flatten the data structure
       return response.data.map(policy => ({
@@ -133,7 +114,7 @@ export function useStrapiPolicies() {
         country: policy.country
       }));
     },
-    enabled: !!currentCountry,
-    ...defaultQueryConfig,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!currentCountry // Only run query if we have a country
   });
-}
+} 
