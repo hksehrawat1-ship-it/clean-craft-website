@@ -1,7 +1,7 @@
+
 import React, { useState } from "react";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import { useCountry } from "@/contexts/CountryContext";
-import { toast } from "sonner";
 import { useStrapiServices } from "@/hooks/useStrapi";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import {
@@ -12,8 +12,6 @@ import {
   FaBroom,
 } from "react-icons/fa";
 import { IconType } from "react-icons";
-import EnhancedNavbar from "@/components/EnhancedNavbar";
-import Footer from "@/components/Footer";
 
 interface ServiceCardProps {
   name: string;
@@ -83,9 +81,9 @@ const currencySymbols: Record<string, string> = {
   it: "€",
 };
 
-const ServicesPage: React.FC = () => {
+const ServicesSection: React.FC = () => {
   const { currentCountry } = useCountry();
-  const { data: strapiServices, isLoading, error } = useStrapiServices();
+  const { data: strapiServices, isLoading } = useStrapiServices();
   const [showAll, setShowAll] = useState(false);
 
   if (isLoading) {
@@ -94,11 +92,6 @@ const ServicesPage: React.FC = () => {
         <LoadingSpinner />
       </div>
     );
-  }
-
-  if (error) {
-    console.error("Error loading services:", error);
-    toast.error("Failed to load services");
   }
 
   const fallbackServices = [
@@ -145,9 +138,10 @@ const ServicesPage: React.FC = () => {
     },
   ];
 
+  // Use Strapi data if available, otherwise fallback to static data
   const displayServices =
-    strapiServices?.data?.length && strapiServices?.data?.length > 0
-      ? strapiServices.data
+    strapiServices?.data?.length && strapiServices.data.length > 0 
+      ? strapiServices.data 
       : fallbackServices;
 
   const visibleServicesDesktop = showAll
@@ -159,13 +153,11 @@ const ServicesPage: React.FC = () => {
   const countryCode = currentCountry?.toLowerCase() || "in";
 
   return (
-    <div className="min-h-screen flex flex-col bg-whit">
-      <EnhancedNavbar />
-
-      <main className="flex-grow w-full py-16 px-2 md:px-4">
+    <section className="w-full py-16 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Mobile View */}
         <div className="lg:hidden">
-          <div className="max-w-7xl mx-auto bg-[#1E3A8A] p-6 rounded-3xl">
+          <div className="bg-[#1E3A8A] p-6 rounded-3xl">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-white mb-4">
                 Explore our services
@@ -191,7 +183,7 @@ const ServicesPage: React.FC = () => {
 
         {/* Desktop View */}
         <div
-          className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
+          className="hidden lg:flex rounded-3xl overflow-hidden"
           style={{ height: "calc(100vh - 64px)" }}
         >
           {/* Static Left */}
@@ -234,9 +226,9 @@ const ServicesPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </section>
   );
 };
 
-export default ServicesPage;
+export default ServicesSection;

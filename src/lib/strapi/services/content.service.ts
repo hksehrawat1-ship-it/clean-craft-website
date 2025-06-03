@@ -1,6 +1,6 @@
+
 import { getCollection } from '../client';
 import { StrapiService, StrapiTestimonial, StrapiFAQ, StrapiPolicy } from '@/types/strapi';
-import { API } from '@strapi/client';
 
 // Define valid categories
 export type ContentCategory = 'home' | 'courses' | 'book' | 'franchise' | 'policies';
@@ -30,25 +30,42 @@ export class ContentService {
     }
 
     async getServices(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiService>> {
-        const params: API.BaseQueryParams = {
-            populate: '*',
-            filters: {
-                country: {
-                    code: {
-                        $eq: countryCode
+        try {
+            const params: any = {
+                populate: '*',
+                filters: {
+                    country: {
+                        code: {
+                            $eq: countryCode
+                        }
                     }
-                }
-            },
-            sort: ['name:asc']
-        };
+                },
+                sort: ['name:asc']
+            };
 
-        if (locale) {
-            params.locale = locale;
+            if (locale) {
+                params.locale = locale;
+            }
+
+            console.log(`🔍 Fetching services for country: ${countryCode}`);
+            const response = await getCollection<StrapiService>('services', params);
+            console.log(`📋 Services response:`, response);
+            return response;
+        } catch (error) {
+            console.error('❌ ContentService.getServices error:', error);
+            // Return empty response instead of throwing
+            return {
+                data: [],
+                meta: {
+                    pagination: {
+                        page: 1,
+                        pageSize: 0,
+                        pageCount: 0,
+                        total: 0,
+                    },
+                },
+            };
         }
-
-        const response = await getCollection<StrapiService>('services', params);
-        console.log('Services API response:', response);
-        return response;
     }
 
     async getTestimonials(
@@ -61,32 +78,54 @@ export class ContentService {
             sortOrder?: 'asc' | 'desc';
         }
     ): Promise<StrapiResponse<StrapiTestimonial>> {
-        const { category, platform, locale, sortBy = 'rating', sortOrder = 'desc' } = options || {};
-        
-        const filters: any = {
-            country: {
-                code: {
-                    $eq: countryCode
+        try {
+            const { category, platform, locale, sortBy = 'rating', sortOrder = 'desc' } = options || {};
+            
+            const filters: any = {
+                country: {
+                    code: {
+                        $eq: countryCode
+                    }
                 }
+            };
+
+            if (category) {
+                filters.category = { $eq: category };
             }
-        };
 
-        if (category) {
-            filters.category = { $eq: category };
+            if (platform) {
+                filters.platform = { $eq: platform };
+            }
+
+            const params: any = {
+                populate: '*',
+                filters,
+                sort: [`${sortBy}:${sortOrder}`],
+            };
+
+            if (locale) {
+                params.locale = locale;
+            }
+
+            console.log(`🔍 Fetching testimonials for country: ${countryCode}, category: ${category}`);
+            const response = await getCollection<StrapiTestimonial>('testimonials', params);
+            console.log(`💬 Testimonials response:`, response);
+            return response;
+        } catch (error) {
+            console.error('❌ ContentService.getTestimonials error:', error);
+            // Return empty response instead of throwing
+            return {
+                data: [],
+                meta: {
+                    pagination: {
+                        page: 1,
+                        pageSize: 0,
+                        pageCount: 0,
+                        total: 0,
+                    },
+                },
+            };
         }
-
-        if (platform) {
-            filters.platform = { $eq: platform };
-        }
-
-        const params: API.BaseQueryParams = {
-            populate: '*',
-            filters,
-            sort: [`${sortBy}:${sortOrder}`],
-            locale
-        };
-
-        return getCollection<StrapiTestimonial>('testimonials', params);
     }
 
     async getFAQs(
@@ -98,46 +137,90 @@ export class ContentService {
             sortOrder?: 'asc' | 'desc';
         }
     ): Promise<StrapiResponse<StrapiFAQ>> {
-        const { category, locale, sortBy = 'order', sortOrder = 'asc' } = options || {};
+        try {
+            const { category, locale, sortBy = 'order', sortOrder = 'asc' } = options || {};
 
-        const filters: any = {
-            country: {
-                code: {
-                    $eq: countryCode
-                }
-            }
-        };
-
-        if (category) {
-            filters.category = { $eq: category };
-        }
-
-        const params: API.BaseQueryParams = {
-            populate: '*',
-            filters,
-            sort: [`${sortBy}:${sortOrder}`],
-            locale
-        };
-
-        return getCollection<StrapiFAQ>('faqs', params);
-    }
-
-    async getPolicies(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiPolicy>> {
-        const params: API.BaseQueryParams = {
-            populate: '*',
-            filters: {
+            const filters: any = {
                 country: {
                     code: {
                         $eq: countryCode
                     }
                 }
-            },
-            locale
-        };
+            };
 
-        return getCollection<StrapiPolicy>('policies', params);
+            if (category) {
+                filters.category = { $eq: category };
+            }
+
+            const params: any = {
+                populate: '*',
+                filters,
+                sort: [`${sortBy}:${sortOrder}`],
+            };
+
+            if (locale) {
+                params.locale = locale;
+            }
+
+            console.log(`🔍 Fetching FAQs for country: ${countryCode}, category: ${category}`);
+            const response = await getCollection<StrapiFAQ>('faqs', params);
+            console.log(`❓ FAQs response:`, response);
+            return response;
+        } catch (error) {
+            console.error('❌ ContentService.getFAQs error:', error);
+            // Return empty response instead of throwing
+            return {
+                data: [],
+                meta: {
+                    pagination: {
+                        page: 1,
+                        pageSize: 0,
+                        pageCount: 0,
+                        total: 0,
+                    },
+                },
+            };
+        }
+    }
+
+    async getPolicies(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiPolicy>> {
+        try {
+            const params: any = {
+                populate: '*',
+                filters: {
+                    country: {
+                        code: {
+                            $eq: countryCode
+                        }
+                    }
+                },
+            };
+
+            if (locale) {
+                params.locale = locale;
+            }
+
+            console.log(`🔍 Fetching policies for country: ${countryCode}`);
+            const response = await getCollection<StrapiPolicy>('policies', params);
+            console.log(`📄 Policies response:`, response);
+            return response;
+        } catch (error) {
+            console.error('❌ ContentService.getPolicies error:', error);
+            // Return empty response instead of throwing
+            return {
+                data: [],
+                meta: {
+                    pagination: {
+                        page: 1,
+                        pageSize: 0,
+                        pageCount: 0,
+                        total: 0,
+                    },
+                },
+            };
+        }
     }
 }
 
 // Export singleton instance
-export const contentService = ContentService.getInstance(); 
+export const contentService = ContentService.getInstance();

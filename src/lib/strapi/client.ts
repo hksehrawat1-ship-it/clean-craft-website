@@ -1,6 +1,5 @@
-import { strapi } from '@strapi/client';
+
 import qs from 'qs';
-import axios from 'axios';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -28,10 +27,45 @@ interface StrapiSingleResponse<T> {
   meta: Record<string, unknown>;
 }
 
-export const strapiClient = strapi({
-  baseURL: STRAPI_URL,
-  auth: STRAPI_TOKEN,
-});
+// Create a custom fetch wrapper with proper timeout and error handling
+const strapiRequest = async (
+  endpoint: string,
+  options: RequestInit = {},
+  timeout = 10000
+): Promise<Response> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(`${STRAPI_URL}/${endpoint}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${STRAPI_TOKEN}`,
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Strapi API error: ${response.status} ${response.statusText}`);
+    }
+
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        throw new Error('Request timeout - Strapi server may be unreachable');
+      }
+      throw error;
+    }
+    throw new Error('Unknown error occurred while fetching from Strapi');
+  }
+};
 
 const stringifyParams = (params: Record<string, any>) =>
   qs.stringify(params, { encodeValuesOnly: true });
@@ -42,101 +76,129 @@ export const getCollection = async <T>(
 ): Promise<StrapiResponse<T>> => {
   try {
     if (isDev && !STRAPI_TOKEN) {
-      throw new Error('Development mode: No Strapi token available');
+      console.warn('Development mode: No Strapi token available, using fallback data');
+      // Return empty response structure for development
+      return {
+        data: [],
+        meta: {
+          pagination: {
+            page: 1,
+            pageSize: 0,
+            pageCount: 0,
+            total: 0,
+          },
+        },
+      };
     }
 
     const queryString = stringifyParams(params);
-    const collection = strapiClient.collection(endpoint);
-    const response = await collection.find(params) as unknown as StrapiResponse<T>;
+    const url = `${endpoint}${queryString ? `?${queryString}` : ''}`;
+    
+    console.log(`🔗 Fetching Strapi collection: ${STRAPI_URL}/${url}`);
+    
+    const response = await strapiRequest(url);
+    const data = await response.json() as StrapiResponse<T>;
 
-    console.log(`✅ [${endpoint}] fetched with params:`, params);
-    console.log(`🔗 Final URL: ${STRAPI_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`);
-    return response;
+    console.log(`✅ Successfully fetched ${endpoint}:`, data);
+    return data;
   } catch (error) {
     console.error(`❌ Error fetching ${endpoint}:`, error);
-    throw error;
+    
+    // Return empty response structure on error instead of throwing
+    return {
+      data: [],
+      meta: {
+        pagination: {
+          page: 1,
+          pageSize: 0,
+          pageCount: 0,
+          total: 0,
+        },
+      },
+    };
   }
 };
 
 export const getSingle = async <T>(
   singleName: string,
   params?: Record<string, any>
-): Promise<T> => {
-  const queryString = params ? `?${stringifyParams(params)}` : '';
-  const response = await fetch(`${STRAPI_URL}/${singleName}${queryString}`, {
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${singleName}: ${response.statusText}`);
+): Promise<T | null> => {
+  try {
+    const queryString = params ? `?${stringifyParams(params)}` : '';
+    const url = `${singleName}${queryString}`;
+    
+    console.log(`🔗 Fetching Strapi single: ${STRAPI_URL}/${url}`);
+    
+    const response = await strapiRequest(url);
+    const json = await response.json() as StrapiSingleResponse<T>;
+    
+    console.log(`✅ Successfully fetched ${singleName}:`, json.data);
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error fetching ${singleName}:`, error);
+    return null;
   }
-
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
 };
 
 export const createEntry = async <T>(
   collectionName: string,
   data: Record<string, any>
-): Promise<T> => {
-  const response = await fetch(`${STRAPI_URL}/${collectionName}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ data }),
-  });
+): Promise<T | null> => {
+  try {
+    const response = await strapiRequest(collectionName, {
+      method: 'POST',
+      body: JSON.stringify({ data }),
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to create ${collectionName}: ${response.statusText}`);
+    const json = await response.json() as StrapiSingleResponse<T>;
+    console.log(`✅ Successfully created ${collectionName}:`, json.data);
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error creating ${collectionName}:`, error);
+    return null;
   }
-
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
 };
 
 export const updateEntry = async <T>(
   collectionName: string,
   id: string | number,
   data: Record<string, any>
-): Promise<T> => {
-  const response = await fetch(`${STRAPI_URL}/${collectionName}/${id}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ data }),
-  });
+): Promise<T | null> => {
+  try {
+    const response = await strapiRequest(`${collectionName}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ data }),
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to update ${collectionName}: ${response.statusText}`);
+    const json = await response.json() as StrapiSingleResponse<T>;
+    console.log(`✅ Successfully updated ${collectionName}:`, json.data);
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error updating ${collectionName}:`, error);
+    return null;
   }
-
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
 };
 
 export const deleteEntry = async <T>(
   collectionName: string,
   id: string | number
-): Promise<T> => {
-  const response = await fetch(`${STRAPI_URL}/${collectionName}/${id}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-  });
+): Promise<T | null> => {
+  try {
+    const response = await strapiRequest(`${collectionName}/${id}`, {
+      method: 'DELETE',
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to delete ${collectionName}: ${response.statusText}`);
+    const json = await response.json() as StrapiSingleResponse<T>;
+    console.log(`✅ Successfully deleted ${collectionName}:`, json.data);
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error deleting ${collectionName}:`, error);
+    return null;
   }
-
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
 };
+
+// Remove the old strapiClient export that was causing issues
+// export const strapiClient = strapi({
+//   baseURL: STRAPI_URL,
+//   auth: STRAPI_TOKEN,
+// });
