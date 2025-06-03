@@ -780,7 +780,8 @@ export type Database = {
           created_at: string
           email: string
           id: string
-          investment_range: string
+          investment_range: string | null
+          lead_type: string
           name: string
           phone: string
           source_cta: string | null
@@ -792,7 +793,8 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
-          investment_range: string
+          investment_range?: string | null
+          lead_type?: string
           name: string
           phone: string
           source_cta?: string | null
@@ -804,7 +806,8 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
-          investment_range?: string
+          investment_range?: string | null
+          lead_type?: string
           name?: string
           phone?: string
           source_cta?: string | null

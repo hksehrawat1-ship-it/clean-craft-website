@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,17 +89,19 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
           country: "India",
           investment_range: data.investmentRange,
           source_cta: sourceCta,
+          lead_type: "franchise",
         });
 
       if (error) throw error;
 
-      // Call edge function to send emails
-      const { error: emailError } = await supabase.functions.invoke('submit-franchise-lead', {
+      // Call new edge function with leadType
+      const { error: emailError } = await supabase.functions.invoke('submit-lead', {
         body: {
           ...data,
           country: "India",
           investmentRange: data.investmentRange,
           sourceCta,
+          leadType: "franchise",
         }
       });
 
