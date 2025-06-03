@@ -146,7 +146,9 @@ const ServicesPage: React.FC = () => {
   ];
 
   const displayServices =
-    strapiServices?.data?.length && strapiServices?.data?.length > 0 ? strapiServices.data : fallbackServices;
+    strapiServices?.data?.length && strapiServices?.data?.length > 0
+      ? strapiServices.data
+      : fallbackServices;
 
   const visibleServicesDesktop = showAll
     ? displayServices

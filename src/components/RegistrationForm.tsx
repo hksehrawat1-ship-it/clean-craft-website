@@ -1,230 +1,308 @@
-import { useState } from "react";
+
+import React, { useState, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { State, City } from 'country-state-city';
+import { CheckCircle, ExternalLink } from "lucide-react";
+import { DisplayHeading, BodyText, Caption, SectionHeading } from "@/components/ui/typography";
 
-const RegistrationForm = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    knownHindi: "yes",
+const formSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  email: z.string().email("Please enter a valid email address"),
+  city: z.string().min(1, "Please select a city"),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+const RegistrationForm: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [redirectCountdown, setRedirectCountdown] = useState(5);
+
+  // Get Indian cities using country-state-city package
+  const indianCities = useMemo(() => {
+    const indianStates = State.getStatesOfCountry('IN');
+    const allCities: string[] = [];
+    
+    indianStates.forEach((state: any) => {
+      const stateCities = City.getCitiesOfState('IN', state.isoCode);
+      stateCities.forEach((city: any) => {
+        allCities.push(city.name);
+      });
+    });
+    
+    // Remove duplicates and sort
+    return [...new Set(allCities)].sort();
+  }, []);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      city: "",
+    },
   });
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handlePaymentRedirect = () => {
+    window.open("https://cleancraft.mojo.page/best-laundry-training-institute-in-india", "_blank");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    // Simple validation
-    if (!formData.name || !formData.email || !formData.phone) {
-      toast({
-        title: "Error",
-        description: "Please fill all required fields.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
+  React.useEffect(() => {
+    if (isSubmitted && redirectCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRedirectCountdown(redirectCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (isSubmitted && redirectCountdown === 0) {
+      handlePaymentRedirect();
     }
+  }, [isSubmitted, redirectCountdown]);
 
-    if (formData.knownHindi !== "yes") {
-      toast({
-        title: "Important Notice",
-        description:
-          "Understanding Hindi is required for this training program.",
-        variant: "destructive",
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    try {
+      // Submit to Supabase
+      const { error } = await supabase
+        .from("franchise_leads")
+        .insert({
+          name: data.name,
+          phone: data.phone,
+          email: data.email,
+          city: data.city,
+          country: "India",
+          source_cta: "Course Registration",
+          lead_type: "course",
+        });
+
+      if (error) throw error;
+
+      // Call edge function for course lead
+      const { error: emailError } = await supabase.functions.invoke('submit-lead', {
+        body: {
+          ...data,
+          country: "India",
+          sourceCta: "Course Registration",
+          leadType: "course",
+        }
       });
-      setLoading(false);
-      return;
+
+      if (emailError) {
+        console.warn("Email sending failed:", emailError);
+        // Don't throw error - form submission was successful even if email fails
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting registration:", error);
+      alert("There was an error submitting your registration. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Simulate form submission
-    setTimeout(() => {
-      toast({
-        title: "Registration Successful!",
-        description:
-          "We've sent you an email with payment instructions for your ₹500 registration fee.",
-      });
-      setLoading(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        knownHindi: "yes",
-      });
-    }, 1500);
   };
 
-  return (
-    <section
-      id="register"
-      className="py-16 bg-gradient-to-b from-white to-blue-50"
-    >
-      <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Register Now</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Register with{" "}
-            <span className="font-bold text-[#1A73E8]">₹500 only</span> and
-            confirm your seat. Limited seats available!
-          </p>
-        </div>
-
-        <div className="max-w-3xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle>Training Registration Form</CardTitle>
-              <CardDescription>
-                Fill in your details to enroll in our professional laundry
-                training program
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Full Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phone"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Phone Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="address"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Enter your address"
-                    />
-                  </div>
+  if (isSubmitted) {
+    return (
+      <section className="section-padding bg-white">
+        <div className="container-enhanced">
+          <div className="max-w-2xl mx-auto">
+            <Card className="shadow-elevation-2 border-0">
+              <CardContent className="p-8 text-center">
+                <div className="mb-8">
+                  <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-6" />
+                  <SectionHeading className="text-brand-blue mb-4">
+                    Registration Successful!
+                  </SectionHeading>
+                  <BodyText className="text-gray-600">
+                    Thank you for registering for our professional laundry training course.
+                  </BodyText>
+                </div>
+                
+                <div className="bg-brand-blue-light p-6 rounded-lg mb-8">
+                  <h4 className="text-title-md font-semibold text-brand-blue mb-3">
+                    Complete Your Enrollment
+                  </h4>
+                  <BodyText className="text-brand-blue mb-6">
+                    Redirecting to payment page in {redirectCountdown} seconds...
+                  </BodyText>
+                  
+                  <Button 
+                    onClick={handlePaymentRedirect}
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Complete Payment Now
+                  </Button>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    Do you understand Hindi?{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="knownHindi"
-                        value="yes"
-                        checked={formData.knownHindi === "yes"}
-                        onChange={handleChange}
-                        className="mr-2"
-                      />
-                      Yes
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="knownHindi"
-                        value="no"
-                        checked={formData.knownHindi === "no"}
-                        onChange={handleChange}
-                        className="mr-2"
-                      />
-                      No
-                    </label>
+                  <Caption className="flex items-center justify-center text-green-600">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Registration confirmed
+                  </Caption>
+                  <Caption className="flex items-center justify-center text-green-600">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Confirmation email sent
+                  </Caption>
+                  <Caption className="flex items-center justify-center text-green-600">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Complete payment to secure your spot
+                  </Caption>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="section-padding bg-brand-blue-light">
+      <div className="container-enhanced">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <SectionHeading className="text-gray-900 mb-4">
+              Start Your Laundry Business Journey
+            </SectionHeading>
+            <BodyText className="text-gray-600">
+              Join India's premier laundry & dry cleaning training program
+            </BodyText>
+          </div>
+
+          <Card className="shadow-elevation-2 border-0">
+            <CardContent className="p-8">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          Full Name *
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter your full name" 
+                            className="input-enhanced h-12"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          Phone Number *
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter your phone number" 
+                            className="input-enhanced h-12"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          Email Address *
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="email" 
+                            placeholder="Enter your email" 
+                            className="input-enhanced h-12"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          City *
+                        </FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="input-enhanced h-12">
+                              <SelectValue placeholder="Select your city" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="dropdown-enhanced">
+                            {indianCities.map((city) => (
+                              <SelectItem key={city} value={city} className="dropdown-item">
+                                {city}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="pt-4">
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      size="lg"
+                      className="w-full h-12"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Registering..." : "Register for Training"}
+                    </Button>
                   </div>
-                  {formData.knownHindi === "no" && (
-                    <p className="text-red-500 text-sm">
-                      Understanding Hindi is required for this training program.
-                    </p>
-                  )}
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <p className="text-gray-700 text-sm">
-                    <strong>Note:</strong> After submitting this form, you will
-                    receive payment instructions to complete your ₹500
-                    registration fee. The remaining amount will be collected on
-                    the first day of training.
-                  </p>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-[#1A73E8] hover:bg-primary-hover text-white"
-                  disabled={loading}
-                >
-                  {loading ? "Processing..." : "Submit Registration"}
-                </Button>
-              </form>
+                  
+                  <Caption className="text-gray-500 text-center block">
+                    By registering, you'll receive course details and payment instructions via email.
+                  </Caption>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </div>

@@ -1,141 +1,161 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Define custom text sizes */
-  .text-heading {
-    font-size: 64px;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-  
-  .text-heading-mobile {
-    font-size: 40px;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-  
-  .text-subheading {
-    font-size: 20px;
-    line-height: 1.5;
-    letter-spacing: -0.01em;
-  }
-  
-  .text-subheading-mobile {
-    font-size: 18px;
-    line-height: 1.5;
-    letter-spacing: -0.01em;
-  }
-  
-  .text-p {
-    font-size: 18px;
-    line-height: 1.6;
-  }
-  
-  .text-p-mobile {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-  
-  .text-button {
-    font-size: 17px;
-    line-height: 1.5;
-  }
-  
-  .text-button-mobile {
-    font-size: 16px;
-    line-height: 1.5;
+  /* CSS Custom Properties for consistent design tokens */
+  :root {
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+    --spacing-4xl: 6rem;
+    
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
   }
 
   /* Base styles */
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
-    @apply bg-background text-foreground font-sans text-base md:text-lg;
+    @apply bg-white text-gray-900 font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  
+  /* Improved focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-blue ring-offset-2;
+  }
+  
+  /* Remove default margins from headings and paragraphs */
+  h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+  }
+  
+  /* Ensure consistent line height for better readability */
+  p {
+    @apply leading-relaxed;
   }
 }
 
 @layer components {
+  /* Card component improvements */
+  .card-enhanced {
+    @apply bg-white rounded-lg shadow-card border border-gray-100 transition-all duration-200;
+  }
+  
+  .card-enhanced:hover {
+    @apply shadow-card-hover border-gray-200;
+  }
+
+  .card-highlight {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 transition-all duration-300;
+  }
+
+  .card-highlight:hover {
+    @apply shadow-lg border-gray-200 transform -translate-y-1;
+  }
+  
+  /* Form input improvements */
+  .input-enhanced {
+    @apply w-full px-4 py-3 rounded-md border border-gray-200 bg-white;
+    @apply focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue;
+    @apply transition-colors duration-200 text-body-md;
+    @apply placeholder:text-gray-400;
+  }
+  
+  /* Button improvements */
+  .btn-primary {
+    @apply bg-brand-blue text-white hover:bg-brand-blue-dark;
+    @apply shadow-sm hover:shadow-md transition-all duration-200;
+    @apply font-medium rounded-md px-6 py-3;
+  }
+  
+  .btn-secondary {
+    @apply bg-cleancraft-gold text-white hover:bg-cleancraft-darkgold;
+    @apply shadow-sm hover:shadow-md transition-all duration-200;
+    @apply font-medium rounded-md px-6 py-3;
+  }
+  
+  /* Enhanced dropdown styling */
+  .dropdown-enhanced {
+    @apply bg-white border border-gray-200 rounded-md shadow-elevation-2;
+    @apply max-h-60 overflow-auto z-50;
+  }
+  
+  .dropdown-item {
+    @apply px-4 py-2 text-body-sm text-gray-700;
+    @apply hover:bg-gray-50 hover:text-brand-blue cursor-pointer;
+    @apply transition-colors duration-150;
+  }
+  
+  /* Section spacing utilities */
+  .section-padding {
+    @apply py-section-y-mobile px-section-x-mobile;
+    @apply md:py-section-y-desktop md:px-section-x-desktop;
+  }
+
+  .section {
+    @apply py-16 px-6 md:px-12 lg:px-28 xl:px-32;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Container utilities */
+  .container-enhanced {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
   /* Base styles for franchise page */
   .franchise-page {
-    font-family: 'Product Sans', system-ui, sans-serif;
     @apply text-gray-600;
   }
 
   .franchise-page section {
-    @apply py-10 md:py-20 px-5 md:px-8;
+    @apply section-padding;
   }
 
   .franchise-page section:nth-child(even) {
     @apply bg-gray-50/50;
   }
 
-  /* Typography */
-  .franchise-page h1,
-  .franchise-page h2,
-  .franchise-page h3,
-  .franchise-page h4,
-  .franchise-page h5,
-  .franchise-page h6 {
-    font-family: 'Product Sans', system-ui, sans-serif;
-    @apply text-gray-900;
-  }
-
+  /* Typography improvements for franchise page */
   .franchise-page h1 {
-    @apply text-4xl md:text-6xl font-bold leading-tight;
+    @apply text-display-lg font-bold text-gray-900;
   }
 
   .franchise-page h2 {
-    @apply text-4xl md:text-6xl font-bold mb-4;
+    @apply text-heading-lg font-semibold text-gray-900 mb-4;
   }
 
-  .franchise-page h3 {
-    @apply text-lg md:text-xl font-semibold mb-3;
-  }
-
+  .franchise-page h3,
   .franchise-page h4 {
-    @apply text-lg md:text-xl font-semibold mb-3;
-  }
-
-  .franchise-page h5 {
-    @apply text-lg md:text-xl font-semibold mb-2;
-  }
-
-  .franchise-page h6 {
-    @apply text-lg md:text-xl font-semibold mb-2;
+    @apply text-title-lg font-semibold text-gray-900 mb-3;
   }
 
   .franchise-page p {
-    @apply text-base md:text-lg text-gray-600 leading-relaxed;
+    @apply text-body-md text-gray-600 leading-relaxed;
   }
 
-  /* Container width */
-  .franchise-page .container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Custom utility classes */
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-google-blue to-google-green;
-  }
-
-  .rating-badge {
-    @apply inline-flex items-center bg-google-yellow text-white px-3 py-1 rounded-full text-sm font-medium;
-  }
-
-  /* Card styles */
-  .franchise-card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 transition-all duration-300;
-  }
-
-  .franchise-card:hover {
-    @apply shadow-lg border-gray-200 transform -translate-y-1;
-  }
-
-  /* Icon containers */
+  /* Icon containers with consistent sizing and proper backgrounds */
   .franchise-icon-container {
-    @apply h-12 w-12 rounded-full flex items-center justify-center mb-4;
+    @apply h-16 w-16 rounded-full flex items-center justify-center mb-4;
   }
 
   .franchise-icon-blue {
@@ -154,91 +174,84 @@
     @apply bg-google-yellow/10 text-google-yellow;
   }
 
-  /* Button styles */
-  .franchise-button {
-    @apply text-base md:text-lg px-6 py-3 rounded-lg font-medium transition-all duration-300;
-  }
-
-  .franchise-button-primary {
-    @apply franchise-button bg-google-blue text-white hover:bg-google-blue/90 shadow-lg shadow-google-blue/20;
-  }
-
-  .franchise-button-secondary {
-    @apply franchise-button bg-cleancraft-gold text-white hover:bg-cleancraft-darkgold shadow-lg shadow-cleancraft-gold/20;
-  }
-
-  /* Grid layouts */
+  /* Grid layouts with proper spacing */
   .franchise-grid-2 {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12;
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8;
   }
 
   .franchise-grid-3 {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8;
   }
 
   .franchise-grid-4 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6;
   }
 
-  /* Animations */
-  .franchise-fade-in {
-    @apply animate-fade-in;
+  /* Enhanced card styling */
+  .franchise-card {
+    @apply card-enhanced p-6 md:p-8;
   }
 
-  .franchise-pulse-soft {
-    @apply animate-pulse;
-  }
-
-  /* Form elements */
+  /* Form styling improvements */
   .franchise-input {
-    @apply w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-google-blue/20 focus:border-google-blue transition-colors duration-200;
+    @apply input-enhanced;
   }
 
   .franchise-label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
+    @apply block text-body-sm font-medium text-gray-700 mb-1;
   }
 
-  /* Comparison table */
-  .franchise-table {
-    @apply w-full border-collapse;
-  }
-
-  .franchise-table th {
-    @apply px-4 py-3 text-left bg-gray-50 font-semibold text-gray-700;
-  }
-
-  .franchise-table td {
-    @apply px-4 py-3 border-t border-gray-100;
-  }
-
-  /* Testimonial cards */
-  .franchise-testimonial {
-    @apply p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all duration-300;
-  }
-
-  .franchise-testimonial:hover {
-    @apply shadow-lg border-gray-200;
-  }
-
-  /* Stats grid */
-  .franchise-stat {
-    @apply p-4 bg-white rounded-lg shadow-sm;
-  }
-
-  .franchise-stat-number {
-    @apply text-3xl font-bold mb-1;
-  }
-
-  .franchise-stat-label {
-    @apply text-sm text-gray-600;
-  }
-
-  /* Header button styles */
+  /* Header button styles with proper typography */
   .header-login-button {
-    @apply text-[#1A73E8] font-medium text-sm hover:text-[#1765c1] transition-colors no-underline !important;
+    @apply text-brand-blue font-medium text-body-sm hover:text-brand-blue-dark transition-colors;
   }
 
   .header-book-button {
-    @apply bg-[#1A73E8] text-white rounded-full font-medium text-sm shadow hover:bg-[#1765c1] transition-colors no-underline !important;
+    @apply bg-brand-blue text-white rounded-full font-medium text-body-sm;
+    @apply shadow hover:bg-brand-blue-dark transition-colors;
   }
-} 
+
+  /* Gradient text utility */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-blue;
+  }
+
+  /* Rating badge */
+  .rating-badge {
+    @apply inline-flex items-center bg-cleancraft-gold text-white px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  /* Alignment utility for icon-text combinations */
+  .icon-text-aligned {
+    @apply flex items-center gap-3;
+  }
+
+  .icon-text-aligned .franchise-icon-container {
+    @apply mb-0;
+  }
+  
+  /* Animation utilities */
+  .fade-in-section {
+    @apply opacity-0 transform translate-y-4 transition-all duration-700 ease-out;
+  }
+  
+  .fade-in-section.is-visible {
+    @apply opacity-100 transform translate-y-0;
+  }
+
+  .franchise-fade-in {
+    @apply animate-fade-in;
+  }
+}
+
+/* Remove any conflicting legacy styles */
+.text-heading,
+.text-heading-mobile,
+.text-subheading,
+.text-subheading-mobile,
+.text-p,
+.text-p-mobile,
+.text-button,
+.text-button-mobile {
+  /* These classes are now handled by the new typography system */
+}

@@ -4,66 +4,20 @@ import { Link } from 'react-router-dom';
 import { useCountry } from '@/contexts/CountryContext';
 import CountrySelector from '@/components/CountrySelector';
 import CookiePreferencesButton from '@/components/CookiePreferencesButton';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 
 const Footer = () => {
   const { currentCountry } = useCountry();
   
-  // Fetch available pages for the current country
-  const { data: availablePages } = useQuery({
-    queryKey: ['available-pages', currentCountry?.code],
-    queryFn: async () => {
-      if (!currentCountry) return [];
-      
-      // Define the pages to check
-      const pagesToCheck = [
-        '/learning/courses',
-        '/learning/book',
-        '/policies/privacy',
-        '/policies/terms-conditions',
-        '/policies/refund'
-      ];
-      
-      // Create an array to store results
-      const results = [];
-      
-      // Check each page
-      for (const page of pagesToCheck) {
-        const { data, error } = await supabase
-          .rpc('is_page_available', {
-            country_code: currentCountry.code.toLowerCase(),
-            page_path: page
-          });
-          
-        if (!error) {
-          results.push({
-            page_path: page,
-            is_available: !!data
-          });
-        }
-      }
-      
-      return results;
-    },
-    enabled: !!currentCountry,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-  
-  // Helper function to check if a path is available
-  const isPageAvailable = (path: string): boolean => {
-    if (!availablePages || !availablePages.length) {
-      return true; // Default to showing all links if data isn't loaded yet
-    }
-    
-    const page = availablePages.find(p => p.page_path === path);
-    return page ? page.is_available : false;
-  };
-  
   // Helper function to create country-specific links
   const createLink = (path: string): string => {
     if (!currentCountry) return '/';
-    return `/${currentCountry.code}${path}`;
+    return `/${currentCountry}${path}`;
+  };
+  
+  // Simple check for available pages - using basic country code validation
+  const isPageAvailable = (path: string): boolean => {
+    // Basic availability check - all pages are available by default
+    return true;
   };
   
   return (

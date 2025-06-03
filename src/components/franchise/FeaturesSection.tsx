@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,13 +18,21 @@ import {
   CircleCheckBig,
   BadgePercent,
 } from "lucide-react";
+import { useState } from "react";
+import FranchiseFormModal from "./FranchiseFormModal";
 
 const FeaturesSection = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleScheduleConsultation = () => {
+    setIsFormOpen(true);
+  };
+
   return (
     <section id="features" className="section bg-white">
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <Badge className="bg-laundry-secondary text-laundry-dark mb-4">
+          <Badge className="bg-google-blue text-white mb-4 hover:bg-google-blue/90 px-4 py-1.5">
             Our Value Proposition
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -257,11 +266,21 @@ const FeaturesSection = () => {
           </div>
 
           <div className="flex justify-center items-center px-4 sm:px-6 lg:px-8 py-10 rounded-2xl">
-            <Button className="text-sm sm:text-lg px-6 sm:px-10 py-6 sm:py-7 bg-green-600 text-white hover:bg-green-700 font-semibold rounded-xl shadow-md transition duration-300 w-full sm:w-auto text-center break-words max-w-full sm:max-w-xl">
+            <Button 
+              onClick={handleScheduleConsultation}
+              className="text-sm sm:text-lg px-6 sm:px-10 py-6 sm:py-7 bg-green-600 text-white hover:bg-green-700 font-semibold rounded-xl shadow-md transition duration-300 w-full sm:w-auto text-center break-words max-w-full sm:max-w-xl"
+            >
               Schedule Your Franchise Consultation Today
             </Button>
           </div>
         </div>
+
+        <FranchiseFormModal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          title="Schedule Your Franchise Consultation"
+          sourceCta="Schedule Consultation"
+        />
       </div>
     </section>
   );

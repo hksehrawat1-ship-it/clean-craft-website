@@ -1,86 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Clock, Sun, Sunrise, Sunset, Moon } from "lucide-react";
+import { ShieldCheck, Clock } from "lucide-react";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-// Form schema
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  phone: z.string().min(7, {
-    message: "Please enter a valid phone number.",
-  }),
-  bestTimeToSpeak: z.string({
-    required_error: "Please select a preferred time.",
-  }),
-});
+import FranchiseFormModal from "./FranchiseFormModal";
 
 const CareSection = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // Form
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      bestTimeToSpeak: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
-    // This would typically send data to a server or API
-    console.log(values);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-    }, 1500);
-  }
-
-  // Helper function to render the time option icon
-  const getTimeIcon = (time: string) => {
-    switch (time) {
-      case "morning":
-        return <Sunrise className="mr-2 h-4 w-4 text-google-blue" />;
-      case "afternoon":
-        return <Sun className="mr-2 h-4 w-4 text-google-yellow" />;
-      case "evening":
-        return <Sunset className="mr-2 h-4 w-4 text-google-red" />;
-      case "night":
-        return <Moon className="mr-2 h-4 w-4 text-cleancraft-darkgold" />;
-      default:
-        return <Clock className="mr-2 h-4 w-4" />;
-    }
+  const handleFormOpen = () => {
+    setIsFormOpen(true);
   };
 
   return (
@@ -124,18 +53,18 @@ const CareSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Button
-                className="bg-google-blue hover:bg-google-blue/90 text-white font-medium text-base cursor-default"
-                disabled
+                onClick={handleFormOpen}
+                className="bg-google-blue hover:bg-google-blue/90 text-white font-medium text-base"
               >
-                YES
+                YES - Get Started
               </Button>
 
               <Button
                 variant="outline"
-                className="border-2 font-medium text-base border-gray-300 cursor-default"
-                disabled
+                className="border-2 font-medium text-base border-gray-300"
+                onClick={handleFormOpen}
               >
-                NO
+                Maybe Later
               </Button>
             </div>
 
@@ -159,155 +88,41 @@ const CareSection = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-cleancraft-light/40 to-cleancraft-light/20 rounded-2xl"></div>
             <div className="relative h-full flex items-center justify-center p-6">
               <Card className="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md google-shadow">
-                <CardContent className="p-6">
-                  {submitted ? (
-                    <div className="text-center space-y-4 py-10">
-                      <ShieldCheck className="h-16 w-16 mx-auto text-google-green" />
-                      <h3 className="text-2xl font-bold text-google-blue">
-                        Thank You!
-                      </h3>
-                      <p className="text-gray-600">
-                        We've received your information and will be in touch
-                        soon.
-                      </p>
+                <CardContent className="p-6 text-center space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-bold text-cleancraft-darkgold">
+                      Ready to Get Started?
+                    </h3>
+                    <p className="text-gray-600">
+                      Join India's most trusted laundry franchise with our Zero Risk Promise.
+                    </p>
+                    
+                    <div className="bg-gradient-to-r from-cleancraft-light to-cleancraft-light/50 p-4 rounded-lg">
+                      <h4 className="font-bold text-google-blue mb-2">62% ROI Potential</h4>
+                      <p className="text-sm text-gray-600">₹100,000+ monthly profit</p>
                     </div>
-                  ) : (
-                    <div className="space-y-6">
-                      <div className="text-center">
-                        <h3 className="text-2xl font-bold text-cleancraft-darkgold">
-                          Request Franchise Information
-                        </h3>
-                        <p className="text-gray-600 mt-2">
-                          Fill out the form below and we'll contact you shortly.
-                        </p>
-                      </div>
-
-                      <Form {...form}>
-                        <form
-                          onSubmit={form.handleSubmit(onSubmit)}
-                          className="space-y-4"
-                        >
-                          <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Full Name</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="John Doe" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Email Address</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="your@email.com"
-                                    type="email"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="phone"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Phone Number</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="(123) 456-7890"
-                                    type="tel"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="bestTimeToSpeak"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Best Time to Speak</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger className="w-full">
-                                      <SelectValue placeholder="Select your preferred time" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                      <SelectItem
-                                        value="morning"
-                                        className="flex items-center"
-                                      >
-                                        <div className="flex items-center">
-                                          <Sunrise className="mr-2 h-4 w-4 text-google-blue" />
-                                          <span>Morning (8AM - 12PM)</span>
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="afternoon">
-                                        <div className="flex items-center">
-                                          <Sun className="mr-2 h-4 w-4 text-google-yellow" />
-                                          <span>Afternoon (12PM - 4PM)</span>
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="evening">
-                                        <div className="flex items-center">
-                                          <Sunset className="mr-2 h-4 w-4 text-google-red" />
-                                          <span>Evening (4PM - 8PM)</span>
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="night">
-                                        <div className="flex items-center">
-                                          <Moon className="mr-2 h-4 w-4 text-cleancraft-darkgold" />
-                                          <span>Night (8PM - 11PM)</span>
-                                        </div>
-                                      </SelectItem>
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <Button
-                            type="submit"
-                            className="w-full bg-google-blue hover:bg-google-blue/90"
-                            disabled={isSubmitting}
-                          >
-                            {isSubmitting
-                              ? "Submitting..."
-                              : "Request Information"}
-                          </Button>
-                        </form>
-                      </Form>
-                    </div>
-                  )}
+                    
+                    <Button 
+                      onClick={handleFormOpen}
+                      className="text-white mb-6 max-w-xl mx-auto"
+                      style={{ color: "white" }}
+                    >
+                      Schedule Your Franchise Consultation Today
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
           </div>
         </div>
       </div>
+
+      <FranchiseFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Schedule Your Franchise Consultation"
+        sourceCta="Schedule Consultation"
+      />
 
       {/* Background elements */}
       <div className="absolute top-40 right-0 w-48 h-48 bg-cleancraft-light rounded-full opacity-40 blur-3xl -z-10"></div>

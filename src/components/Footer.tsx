@@ -29,15 +29,14 @@ const Footer: React.FC = () => {
         <div className="space-y-6">
           <div className="flex items-center">
             <img
-              src="/lovable-uploads/b9620b89-debb-4cc2-bd6b-edec70fb1bed.png"
-              alt="Clean Craft Logo"
+              src="/lovable-uploads/cleancraft-full-logo.png"
+              alt="CleanCraft Laundry and Dry Cleaning Logo"
               className="h-14 w-auto"
             />
           </div>
           <p className="text-neutral-600 text-sm">
-            We collect, clean, and deliver your laundry to your doorstep. When
-            and where you need us, we will be there. 99.9% of all standard
-            laundry and dry cleaning is delivered the next day.
+            We collect, clean, and deliver your laundry and dry cleaning to your doorstep. When
+            and where you need us, we will be there.
           </p>
           <div className="flex items-center space-x-4">
             <a
@@ -94,7 +93,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                to={createLink("/locations")}
+                to={createLink("/learning/book")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Buy Laundry Book
