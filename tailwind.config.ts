@@ -90,6 +90,14 @@ const config: Config = {
 					gold: '#F5B014',
 					darkgold: '#E09F0F',
 					light: '#FFF9E6',
+				},
+				// Google colors for franchise components
+				google: {
+					blue: '#1A73E8',
+					red: '#EA4335',
+					green: '#34A853',
+					yellow: '#FBBC04',
+					gray: '#5F6368',
 				}
 			},
 			fontFamily: {
@@ -97,20 +105,20 @@ const config: Config = {
 				display: ['Inter', 'system-ui', 'sans-serif']
 			},
 			fontSize: {
-				// Display headings (H1)
-				'display-lg': ['3.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 56px
-				'display-md': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 48px
-				'display-sm': ['2.5rem', { lineHeight: '1.25', letterSpacing: '-0.02em', fontWeight: '700' }], // 40px
+				// Display headings (H1) - Hero sections
+				'display-lg': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 48px
+				'display-md': ['2.625rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 42px
+				'display-sm': ['2.25rem', { lineHeight: '1.25', letterSpacing: '-0.02em', fontWeight: '700' }], // 36px
 				
-				// Section headings (H2)
-				'heading-lg': ['2rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 32px
-				'heading-md': ['1.75rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 28px
-				'heading-sm': ['1.5rem', { lineHeight: '1.35', letterSpacing: '-0.01em', fontWeight: '600' }], // 24px
+				// Section headings (H2) - Main sections
+				'heading-lg': ['2.625rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 42px
+				'heading-md': ['2.25rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 36px
+				'heading-sm': ['2rem', { lineHeight: '1.35', letterSpacing: '-0.01em', fontWeight: '600' }], // 32px
 				
 				// Subsection headings (H3, H4)
-				'title-lg': ['1.25rem', { lineHeight: '1.4', fontWeight: '600' }], // 20px
-				'title-md': ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }], // 18px
-				'title-sm': ['1rem', { lineHeight: '1.5', fontWeight: '600' }], // 16px
+				'title-lg': ['1.5rem', { lineHeight: '1.4', fontWeight: '600' }], // 24px
+				'title-md': ['1.25rem', { lineHeight: '1.4', fontWeight: '600' }], // 20px
+				'title-sm': ['1.125rem', { lineHeight: '1.5', fontWeight: '600' }], // 18px
 				
 				// Body text
 				'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }], // 18px

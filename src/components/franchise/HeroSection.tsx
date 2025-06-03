@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Star, Award } from "lucide-react";
@@ -27,19 +28,19 @@ const HeroSection = () => {
               Premium Laundry Franchise Opportunity
             </Badge>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+            <h1 className="text-display-lg font-bold leading-tight">
               Own a Thriving{" "}
               <span className="gradient-text">Laundry &amp; Dry Cleaning</span>{" "}
               Franchise
             </h1>
 
             <div className="franchise-card hover:shadow-md">
-              <div className="flex items-start space-x-4">
+              <div className="icon-text-aligned">
                 <div className="franchise-icon-container franchise-icon-green">
-                  <ShieldCheck className="h-6 w-6" />
+                  <ShieldCheck className="h-8 w-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-google-blue mb-2">
+                  <h3 className="text-title-lg font-bold text-google-blue mb-2">
                     Zero Risk Promise:
                   </h3>
                   <p className="text-gray-700">
@@ -51,12 +52,12 @@ const HeroSection = () => {
             </div>
 
             <div className="franchise-card hover:shadow-md">
-              <div className="flex items-start space-x-4">
+              <div className="icon-text-aligned">
                 <div className="franchise-icon-container franchise-icon-blue">
-                  <Award className="h-6 w-6" />
+                  <Award className="h-8 w-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-google-blue mb-2">
+                  <h3 className="text-title-lg font-bold text-google-blue mb-2">
                     India's Best Laundry Franchise:
                   </h3>
                   <p className="text-gray-700">
@@ -67,7 +68,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+            <p className="text-body-lg text-gray-700 leading-relaxed">
               Partner with India's Most Trusted Laundry Industry Leader –
               Recognized and Respected Internationally.
             </p>
@@ -86,7 +87,7 @@ const HeroSection = () => {
                 <Star className="h-5 w-5 mr-1.5 fill-white" />
                 <span className="font-semibold">9.5/10</span>
               </div>
-              <p className="text-base md:text-lg text-gray-600">
+              <p className="text-body-md text-gray-600">
                 <span className="font-semibold">99% of happy store owners</span>{" "}
                 recommend us
               </p>
