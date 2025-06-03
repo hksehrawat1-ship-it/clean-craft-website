@@ -2,8 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Star, Award } from "lucide-react";
 import LaundryRoiCalculator from "./LaundryRoiCalculator";
+import { useState } from "react";
+import FranchiseFormModal from "./FranchiseFormModal";
 
 const HeroSection = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleRequestInfo = () => {
+    setIsFormOpen(true);
+  };
+
   return (
     <section
       className="relative overflow-hidden bg-gradient-to-b from-cleancraft-light via-white to-white pt-32 pb-20"
@@ -65,7 +73,10 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Button className="bg-google-blue hover:bg-google-blue/90 text-white font-medium text-base">
+              <Button 
+                onClick={handleRequestInfo}
+                className="bg-google-blue hover:bg-google-blue/90 text-white font-medium text-base"
+              >
                 Request Information
               </Button>
             </div>
@@ -101,6 +112,13 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      <FranchiseFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Get Your Franchise Information Package"
+        sourceCta="Request Information"
+      />
 
       {/* Background elements */}
       <div className="absolute top-40 left-0 w-64 h-64 bg-cleancraft-light rounded-full opacity-40 blur-3xl -z-10"></div>

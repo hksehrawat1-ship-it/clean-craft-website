@@ -773,6 +773,45 @@ export type Database = {
           },
         ]
       }
+      franchise_leads: {
+        Row: {
+          city: string
+          country: string
+          created_at: string
+          email: string
+          id: string
+          investment_range: string
+          name: string
+          phone: string
+          source_cta: string | null
+          updated_at: string
+        }
+        Insert: {
+          city: string
+          country?: string
+          created_at?: string
+          email: string
+          id?: string
+          investment_range: string
+          name: string
+          phone: string
+          source_cta?: string | null
+          updated_at?: string
+        }
+        Update: {
+          city?: string
+          country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          investment_range?: string
+          name?: string
+          phone?: string
+          source_cta?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       i18n_locale: {
         Row: {
           code: string | null
