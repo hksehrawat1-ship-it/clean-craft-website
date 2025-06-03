@@ -31,7 +31,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   icon: Icon,
 }) => {
   const { currentCountry } = useCountry();
-  const countryCode = currentCountry?.code?.toLowerCase() || "in";
+  const countryCode = currentCountry?.toLowerCase() || "in";
   const currencySymbol = currentCountry
     ? currencySymbols[countryCode] || "$"
     : "$";
@@ -147,7 +147,7 @@ const ServicesPage: React.FC = () => {
   ];
 
   const displayServices =
-    strapiServices?.data?.length > 0 ? strapiServices.data : fallbackServices;
+    strapiServices?.data?.length && strapiServices.data.length > 0 ? strapiServices.data : fallbackServices;
 
   const visibleServicesDesktop = showAll
     ? displayServices
@@ -155,7 +155,7 @@ const ServicesPage: React.FC = () => {
 
   const visibleServicesMobile = displayServices;
 
-  const countryCode = currentCountry?.code?.toLowerCase() || "in";
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
