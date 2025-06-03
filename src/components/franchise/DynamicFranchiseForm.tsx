@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -123,7 +124,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
     return (
       <Card className="w-full max-w-lg mx-auto">
         <CardContent className="p-8 text-center">
-          <h3 className="text-2xl font-bold text-green-600 mb-6">Success!</h3>
+          <h3 className="text-2xl font-bold text-brand-blue mb-6">Success!</h3>
           <p className="text-gray-600 mb-8">
             Thank you for your interest! Here's what happens next:
           </p>
@@ -243,7 +244,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
             <div className="pt-4 space-y-3">
               <Button
                 type="submit"
-                className="w-full bg-google-blue hover:bg-google-blue/90"
+                className="w-full"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit Information"}

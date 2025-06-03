@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -42,8 +43,8 @@ const config: Config = {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#1A73E8',
+					foreground: '#FFFFFF'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -79,18 +80,25 @@ const config: Config = {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				google: {
-					blue: '#4285F4',
-					red: '#EA4335',
-					yellow: '#FBBC05',
-					green: '#34A853',
-					gray: '#5F6368',
-					lightgray: '#F1F1F1',
+				// Brand colors - core identity
+				brand: {
+					blue: '#1A73E8',
+					'blue-dark': '#1557B0',
+					'blue-light': '#E8F0FE',
 				},
 				cleancraft: {
 					gold: '#F5B014',
 					darkgold: '#E09F0F',
 					light: '#FFF9E6',
+				},
+				// Legacy Google colors (deprecated - use brand.blue instead)
+				google: {
+					blue: '#1A73E8', // Updated to match brand
+					red: '#EA4335',
+					yellow: '#FBBC05',
+					green: '#1A73E8', // Updated to brand blue instead of green
+					gray: '#5F6368',
+					lightgray: '#F1F1F1',
 				}
 			},
 			fontFamily: {

@@ -127,22 +127,23 @@ const RegistrationForm: React.FC = () => {
       <Card className="w-full max-w-lg mx-auto">
         <CardContent className="p-8 text-center">
           <div className="mb-6">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-green-600 mb-2">Registration Successful!</h3>
+            <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-brand-blue mb-2">Registration Successful!</h3>
             <p className="text-gray-600">
               Thank you for registering for our professional laundry training course.
             </p>
           </div>
           
-          <div className="bg-blue-50 p-6 rounded-lg mb-6">
-            <h4 className="font-semibold text-blue-800 mb-2">Complete Your Enrollment</h4>
-            <p className="text-blue-700 text-sm mb-4">
+          <div className="bg-brand-blue-light p-6 rounded-lg mb-6">
+            <h4 className="font-semibold text-brand-blue mb-2">Complete Your Enrollment</h4>
+            <p className="text-brand-blue text-sm mb-4">
               Redirecting to payment page in {redirectCountdown} seconds...
             </p>
             
             <Button 
               onClick={handlePaymentRedirect}
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              variant="secondary"
+              className="w-full"
             >
               <ExternalLink className="h-4 w-4 mr-2" />
               Complete Payment Now
@@ -242,7 +243,8 @@ const RegistrationForm: React.FC = () => {
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full bg-cleancraft-gold hover:bg-cleancraft-darkgold text-white"
+                variant="secondary"
+                className="w-full"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Registering..." : "Register for Training"}
