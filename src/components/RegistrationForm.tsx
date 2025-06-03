@@ -24,7 +24,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { State, City } from 'country-state-city';
 import { CheckCircle, ExternalLink } from "lucide-react";
-import { DisplayHeading, BodyText, Caption } from "@/components/ui/typography";
+import { DisplayHeading, BodyText, Caption, SectionHeading } from "@/components/ui/typography";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -125,180 +125,189 @@ const RegistrationForm: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <div className="w-full max-w-lg mx-auto">
-        <Card className="shadow-elevation-2 border-0">
-          <CardContent className="p-8 text-center">
-            <div className="mb-8">
-              <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-6" />
-              <DisplayHeading as="h3" className="text-brand-blue mb-4">
-                Registration Successful!
-              </DisplayHeading>
-              <BodyText className="text-gray-600">
-                Thank you for registering for our professional laundry training course.
-              </BodyText>
-            </div>
-            
-            <div className="bg-brand-blue-light p-6 rounded-lg mb-8">
-              <h4 className="text-title-md font-semibold text-brand-blue mb-3">
-                Complete Your Enrollment
-              </h4>
-              <BodyText className="text-brand-blue mb-6">
-                Redirecting to payment page in {redirectCountdown} seconds...
-              </BodyText>
-              
-              <Button 
-                onClick={handlePaymentRedirect}
-                variant="secondary"
-                size="lg"
-                className="w-full"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Complete Payment Now
-              </Button>
-            </div>
+      <section className="section-padding bg-white">
+        <div className="container-enhanced">
+          <div className="max-w-2xl mx-auto">
+            <Card className="shadow-elevation-2 border-0">
+              <CardContent className="p-8 text-center">
+                <div className="mb-8">
+                  <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-6" />
+                  <SectionHeading className="text-brand-blue mb-4">
+                    Registration Successful!
+                  </SectionHeading>
+                  <BodyText className="text-gray-600">
+                    Thank you for registering for our professional laundry training course.
+                  </BodyText>
+                </div>
+                
+                <div className="bg-brand-blue-light p-6 rounded-lg mb-8">
+                  <h4 className="text-title-md font-semibold text-brand-blue mb-3">
+                    Complete Your Enrollment
+                  </h4>
+                  <BodyText className="text-brand-blue mb-6">
+                    Redirecting to payment page in {redirectCountdown} seconds...
+                  </BodyText>
+                  
+                  <Button 
+                    onClick={handlePaymentRedirect}
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Complete Payment Now
+                  </Button>
+                </div>
 
-            <div className="space-y-2">
-              <Caption className="flex items-center justify-center text-green-600">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Registration confirmed
-              </Caption>
-              <Caption className="flex items-center justify-center text-green-600">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Confirmation email sent
-              </Caption>
-              <Caption className="flex items-center justify-center text-green-600">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Complete payment to secure your spot
-              </Caption>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                <div className="space-y-2">
+                  <Caption className="flex items-center justify-center text-green-600">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Registration confirmed
+                  </Caption>
+                  <Caption className="flex items-center justify-center text-green-600">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Confirmation email sent
+                  </Caption>
+                  <Caption className="flex items-center justify-center text-green-600">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Complete payment to secure your spot
+                  </Caption>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
     );
   }
 
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <Card className="shadow-elevation-2 border-0">
-        <CardHeader className="text-center pb-6">
-          <h2 className="text-title-lg md:text-heading-sm font-semibold text-cleancraft-darkgold mb-2">
-            Register for Professional Training
-          </h2>
-          <BodyText className="text-gray-600">
-            Join India's premier laundry & dry cleaning training program
-          </BodyText>
-        </CardHeader>
-        <CardContent className="px-8 pb-8">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-body-sm font-medium text-gray-700">
-                      Full Name *
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Enter your full name" 
-                        className="h-12 text-body-md"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    <section className="section-padding bg-brand-blue-light">
+      <div className="container-enhanced">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <SectionHeading className="text-gray-900 mb-4">
+              Start Your Laundry Business Journey
+            </SectionHeading>
+            <BodyText className="text-gray-600">
+              Join India's premier laundry & dry cleaning training program
+            </BodyText>
+          </div>
 
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-body-sm font-medium text-gray-700">
-                      Phone Number *
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Enter your phone number" 
-                        className="h-12 text-body-md"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <Card className="shadow-elevation-2 border-0">
+            <CardContent className="p-8">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          Full Name *
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter your full name" 
+                            className="input-enhanced h-12"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-body-sm font-medium text-gray-700">
-                      Email Address *
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email" 
-                        placeholder="Enter your email" 
-                        className="h-12 text-body-md"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          Phone Number *
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter your phone number" 
+                            className="input-enhanced h-12"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-body-sm font-medium text-gray-700">
-                      City *
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="h-12 text-body-md">
-                          <SelectValue placeholder="Select your city" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="max-h-60 bg-white border border-gray-200 shadow-elevation-2 z-50">
-                        {indianCities.map((city) => (
-                          <SelectItem key={city} value={city} className="text-body-md">
-                            {city}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          Email Address *
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="email" 
+                            placeholder="Enter your email" 
+                            className="input-enhanced h-12"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className="pt-4">
-                <Button
-                  type="submit"
-                  variant="secondary"
-                  size="lg"
-                  className="w-full h-12 text-button-lg"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Registering..." : "Register for Training"}
-                </Button>
-              </div>
-              
-              <Caption className="text-gray-500 text-center block">
-                By registering, you'll receive course details and payment instructions via email.
-              </Caption>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-body-sm font-medium text-gray-700">
+                          City *
+                        </FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="input-enhanced h-12">
+                              <SelectValue placeholder="Select your city" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="dropdown-enhanced">
+                            {indianCities.map((city) => (
+                              <SelectItem key={city} value={city} className="dropdown-item">
+                                {city}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="pt-4">
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      size="lg"
+                      className="w-full h-12"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Registering..." : "Register for Training"}
+                    </Button>
+                  </div>
+                  
+                  <Caption className="text-gray-500 text-center block">
+                    By registering, you'll receive course details and payment instructions via email.
+                  </Caption>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </section>
   );
 };
 

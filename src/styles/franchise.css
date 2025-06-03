@@ -1,9 +1,10 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 @layer components {
   /* Base styles for franchise page */
   .franchise-page {
-    font-family: 'Product Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     @apply text-gray-600;
   }
 
@@ -22,36 +23,36 @@
   .franchise-page h4,
   .franchise-page h5,
   .franchise-page h6 {
-    font-family: 'Product Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     @apply text-gray-900;
   }
 
   .franchise-page h1 {
-    @apply text-heading-mobile md:text-heading font-bold leading-tight;
+    @apply text-display-sm md:text-display-md font-bold leading-tight;
   }
 
   .franchise-page h2 {
-    @apply text-heading-mobile md:text-heading font-bold mb-4;
+    @apply text-heading-sm md:text-heading-md font-bold mb-4;
   }
 
   .franchise-page h3 {
-    @apply text-subheading-mobile md:text-subheading font-semibold mb-3;
+    @apply text-title-sm md:text-title-md font-semibold mb-3;
   }
 
   .franchise-page h4 {
-    @apply text-subheading-mobile md:text-subheading font-semibold mb-3;
+    @apply text-title-sm md:text-title-md font-semibold mb-3;
   }
 
   .franchise-page h5 {
-    @apply text-subheading-mobile md:text-subheading font-semibold mb-2;
+    @apply text-title-sm md:text-title-md font-semibold mb-2;
   }
 
   .franchise-page h6 {
-    @apply text-subheading-mobile md:text-subheading font-semibold mb-2;
+    @apply text-title-sm md:text-title-md font-semibold mb-2;
   }
 
   .franchise-page p {
-    @apply text-p-mobile md:text-p text-gray-600 leading-relaxed;
+    @apply text-body-sm md:text-body-md text-gray-600 leading-relaxed;
   }
 
   /* Container width */
@@ -61,11 +62,11 @@
 
   /* Custom utility classes */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-google-blue to-google-green;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-blue;
   }
 
   .rating-badge {
-    @apply inline-flex items-center bg-google-yellow text-white px-3 py-1 rounded-full text-sm font-medium;
+    @apply inline-flex items-center bg-cleancraft-gold text-white px-3 py-1 rounded-full text-sm font-medium;
   }
 
   /* Card styles */
@@ -83,28 +84,28 @@
   }
 
   .franchise-icon-blue {
-    @apply bg-google-blue/10 text-google-blue;
+    @apply bg-brand-blue/10 text-brand-blue;
   }
 
   .franchise-icon-red {
-    @apply bg-google-red/10 text-google-red;
+    @apply bg-red-500/10 text-red-500;
   }
 
   .franchise-icon-green {
-    @apply bg-google-green/10 text-google-green;
+    @apply bg-green-500/10 text-green-500;
   }
 
   .franchise-icon-yellow {
-    @apply bg-google-yellow/10 text-google-yellow;
+    @apply bg-cleancraft-gold/10 text-cleancraft-gold;
   }
 
   /* Button styles */
   .franchise-button {
-    @apply text-button-mobile md:text-button px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    @apply text-button-sm md:text-button-md px-6 py-3 rounded-lg font-medium transition-all duration-300;
   }
 
   .franchise-button-primary {
-    @apply franchise-button bg-google-blue text-white hover:bg-google-blue/90 shadow-lg shadow-google-blue/20;
+    @apply franchise-button bg-brand-blue text-white hover:bg-brand-blue-dark shadow-lg shadow-brand-blue/20;
   }
 
   .franchise-button-secondary {
@@ -135,7 +136,7 @@
 
   /* Form elements */
   .franchise-input {
-    @apply w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-google-blue/20 focus:border-google-blue transition-colors duration-200;
+    @apply w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue transition-colors duration-200;
   }
 
   .franchise-label {
@@ -176,4 +177,4 @@
   .franchise-stat-label {
     @apply text-sm text-gray-600;
   }
-} 
+}
