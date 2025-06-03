@@ -30,7 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to lead
     const leadEmailResponse = await resend.emails.send({
-      from: "CleanCraft Franchise <franchise@cleancraftapp.com>",
+      from: "CleanCraft Franchise <hello@cleancraftapp.com>",
       to: [leadData.email],
       subject: "Welcome to CleanCraft Franchise Family!",
       html: `
@@ -64,7 +64,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="padding: 15px; border-left: 4px solid #8b5cf6; background: #faf5ff;">
               <h4 style="color: #7c3aed; margin: 0 0 5px 0;">🚀 Step 3: Franchise Up & Running</h4>
               <p style="color: #6b21a8; margin: 0; font-size: 14px;">
-                <strong>62% ROI = ₹12,000+ monthly profit potential</strong>
+                <strong>62% ROI ~= ₹100,000+ monthly profit potential</strong>
               </p>
             </div>
           </div>
@@ -80,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="color: #6b7280; font-size: 14px;">
               Best regards,<br>
               <strong>The CleanCraft Franchise Team</strong><br>
-              📞 +91-XXXX-XXXX-XX | 📧 franchise@cleancraftapp.com
+              📞 +91-88-00-77-1349 | 📧 hello@cleancraftapp.com
             </p>
           </div>
         </div>
@@ -89,7 +89,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "CleanCraft Franchise <franchise@cleancraftapp.com>",
+      from: "CleanCraft Franchise <hello@cleancraftapp.com>",
       to: ["hello@cleancraftapp.com"],
       subject: `New Franchise Lead: ${leadData.name} from ${leadData.city}`,
       html: `

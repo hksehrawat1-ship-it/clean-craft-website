@@ -45,11 +45,12 @@ const LaundryRoiCalculator = () => {
   };
 
   const totalReturn = calculateReturn();
+  const monthlyReturn = totalReturn / 12;
 
   // Dynamic title based on results
   const getFormTitle = () => {
     if (showResults && monthlyRoi) {
-      return "Start Earning Calculated ROI in Just a Month";
+      return `Start Earning <span class="text-google-blue">₹${formatIndianNumber(monthlyReturn)}</span> in Just a Month`;
     }
     return "Your Earnings Are a Call Away";
   };

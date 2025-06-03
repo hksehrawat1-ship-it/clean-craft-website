@@ -54,9 +54,9 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
     const indianStates = State.getStatesOfCountry('IN');
     const allCities: string[] = [];
     
-    indianStates.forEach(state => {
+    indianStates.forEach((state: any) => {
       const stateCities = City.getCitiesOfState('IN', state.isoCode);
-      stateCities.forEach(city => {
+      stateCities.forEach((city: any) => {
         allCities.push(city.name);
       });
     });
