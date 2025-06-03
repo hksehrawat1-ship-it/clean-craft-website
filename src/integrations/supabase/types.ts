@@ -9,97 +9,578 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      cookie_consents: {
+      admin_permissions: {
         Row: {
-          analytics: boolean
-          country_code: string | null
-          created_at: string
-          essential: boolean
-          id: string
-          ip_address: string | null
-          marketing: boolean
-          preferences: boolean
-          session_id: string
-          updated_at: string
-          user_agent: string | null
-        }
-        Insert: {
-          analytics?: boolean
-          country_code?: string | null
-          created_at?: string
-          essential?: boolean
-          id?: string
-          ip_address?: string | null
-          marketing?: boolean
-          preferences?: boolean
-          session_id: string
-          updated_at?: string
-          user_agent?: string | null
-        }
-        Update: {
-          analytics?: boolean
-          country_code?: string | null
-          created_at?: string
-          essential?: boolean
-          id?: string
-          ip_address?: string | null
-          marketing?: boolean
-          preferences?: boolean
-          session_id?: string
-          updated_at?: string
-          user_agent?: string | null
-        }
-        Relationships: []
-      }
-      countries: {
-        Row: {
-          code: string
+          action: string | null
+          action_parameters: Json | null
+          conditions: Json | null
           created_at: string | null
-          default_locale: string
-          id: string
-          is_active: boolean
-          name: string
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          properties: Json | null
+          published_at: string | null
+          subject: string | null
+          updated_at: string | null
+          updated_by_id: number | null
         }
         Insert: {
-          code: string
+          action?: string | null
+          action_parameters?: Json | null
+          conditions?: Json | null
           created_at?: string | null
-          default_locale: string
-          id?: string
-          is_active?: boolean
-          name: string
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          properties?: Json | null
+          published_at?: string | null
+          subject?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
         }
         Update: {
-          code?: string
+          action?: string | null
+          action_parameters?: Json | null
+          conditions?: Json | null
           created_at?: string | null
-          default_locale?: string
-          id?: string
-          is_active?: boolean
-          name?: string
-        }
-        Relationships: []
-      }
-      locales: {
-        Row: {
-          code: string
-          country_id: string
-          id: string
-          is_default: boolean
-        }
-        Insert: {
-          code: string
-          country_id: string
-          id?: string
-          is_default?: boolean
-        }
-        Update: {
-          code?: string
-          country_id?: string
-          id?: string
-          is_default?: boolean
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          properties?: Json | null
+          published_at?: string | null
+          subject?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "locales_country_id_fkey"
+            foreignKeyName: "admin_permissions_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_permissions_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_permissions_role_lnk: {
+        Row: {
+          id: number
+          permission_id: number | null
+          permission_ord: number | null
+          role_id: number | null
+        }
+        Insert: {
+          id?: number
+          permission_id?: number | null
+          permission_ord?: number | null
+          role_id?: number | null
+        }
+        Update: {
+          id?: number
+          permission_id?: number | null
+          permission_ord?: number | null
+          role_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_permissions_role_links_fk"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "admin_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_permissions_role_links_inv_fk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "admin_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_permissions_role_lnk_fk"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "admin_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_permissions_role_lnk_ifk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "admin_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_roles: {
+        Row: {
+          code: string | null
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_roles_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_roles_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_users: {
+        Row: {
+          blocked: boolean | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          email: string | null
+          firstname: string | null
+          id: number
+          is_active: boolean | null
+          lastname: string | null
+          locale: string | null
+          password: string | null
+          prefered_language: string | null
+          published_at: string | null
+          registration_token: string | null
+          reset_password_token: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+          username: string | null
+        }
+        Insert: {
+          blocked?: boolean | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          firstname?: string | null
+          id?: number
+          is_active?: boolean | null
+          lastname?: string | null
+          locale?: string | null
+          password?: string | null
+          prefered_language?: string | null
+          published_at?: string | null
+          registration_token?: string | null
+          reset_password_token?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          username?: string | null
+        }
+        Update: {
+          blocked?: boolean | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          firstname?: string | null
+          id?: number
+          is_active?: boolean | null
+          lastname?: string | null
+          locale?: string | null
+          password?: string | null
+          prefered_language?: string | null
+          published_at?: string | null
+          registration_token?: string | null
+          reset_password_token?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_users_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_users_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_users_roles_lnk: {
+        Row: {
+          id: number
+          role_id: number | null
+          role_ord: number | null
+          user_id: number | null
+          user_ord: number | null
+        }
+        Insert: {
+          id?: number
+          role_id?: number | null
+          role_ord?: number | null
+          user_id?: number | null
+          user_ord?: number | null
+        }
+        Update: {
+          id?: number
+          role_id?: number | null
+          role_ord?: number | null
+          user_id?: number | null
+          user_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_users_roles_links_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_users_roles_links_inv_fk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "admin_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_users_roles_lnk_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_users_roles_lnk_ifk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "admin_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cookie_consents: {
+        Row: {
+          analytics: boolean | null
+          country_code: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          essential: boolean | null
+          id: number
+          ip_address: string | null
+          locale: string | null
+          marketing: boolean | null
+          preferences: boolean | null
+          published_at: string | null
+          session_id: string | null
+          text: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+          user_agent: string | null
+          uuid: string | null
+        }
+        Insert: {
+          analytics?: boolean | null
+          country_code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          essential?: boolean | null
+          id?: number
+          ip_address?: string | null
+          locale?: string | null
+          marketing?: boolean | null
+          preferences?: boolean | null
+          published_at?: string | null
+          session_id?: string | null
+          text?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          user_agent?: string | null
+          uuid?: string | null
+        }
+        Update: {
+          analytics?: boolean | null
+          country_code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          essential?: boolean | null
+          id?: number
+          ip_address?: string | null
+          locale?: string | null
+          marketing?: boolean | null
+          preferences?: boolean | null
+          published_at?: string | null
+          session_id?: string | null
+          text?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          user_agent?: string | null
+          uuid?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cookie_consents_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cookie_consents_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      countries: {
+        Row: {
+          code: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          is_active: boolean | null
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          is_active?: boolean | null
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          is_active?: boolean | null
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "countries_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "countries_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      countries_default_locale_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          locale_id: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          locale_id?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          locale_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "countries_default_locale_links_fk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "countries_default_locale_links_inv_fk"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "locales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "countries_default_locale_lnk_fk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "countries_default_locale_lnk_ifk"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "locales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      faqs: {
+        Row: {
+          answer: Json | null
+          category: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          order: number | null
+          published_at: string | null
+          question: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          answer?: Json | null
+          category?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          order?: number | null
+          published_at?: string | null
+          question?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          answer?: Json | null
+          category?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          order?: number | null
+          published_at?: string | null
+          question?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faqs_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "faqs_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      faqs_country_lnk: {
+        Row: {
+          country_id: number | null
+          faq_id: number | null
+          faq_ord: number | null
+          id: number
+        }
+        Insert: {
+          country_id?: number | null
+          faq_id?: number | null
+          faq_ord?: number | null
+          id?: number
+        }
+        Update: {
+          country_id?: number | null
+          faq_id?: number | null
+          faq_ord?: number | null
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faqs_country_lnk_fk"
+            columns: ["faq_id"]
+            isOneToOne: false
+            referencedRelation: "faqs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "faqs_country_lnk_ifk"
             columns: ["country_id"]
             isOneToOne: false
             referencedRelation: "countries"
@@ -107,146 +588,345 @@ export type Database = {
           },
         ]
       }
-      media: {
+      files: {
         Row: {
-          alt: string
-          created_at: string
-          filename: string | null
-          filesize: number | null
-          focal_x: number | null
-          focal_y: number | null
+          alternative_text: string | null
+          caption: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          ext: string | null
+          folder_path: string | null
+          formats: Json | null
+          hash: string | null
           height: number | null
           id: number
-          mime_type: string | null
-          thumbnail_u_r_l: string | null
-          updated_at: string
+          locale: string | null
+          mime: string | null
+          name: string | null
+          preview_url: string | null
+          provider: string | null
+          provider_metadata: Json | null
+          published_at: string | null
+          size: number | null
+          updated_at: string | null
+          updated_by_id: number | null
           url: string | null
           width: number | null
         }
         Insert: {
-          alt: string
-          created_at?: string
-          filename?: string | null
-          filesize?: number | null
-          focal_x?: number | null
-          focal_y?: number | null
+          alternative_text?: string | null
+          caption?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          ext?: string | null
+          folder_path?: string | null
+          formats?: Json | null
+          hash?: string | null
           height?: number | null
           id?: number
-          mime_type?: string | null
-          thumbnail_u_r_l?: string | null
-          updated_at?: string
+          locale?: string | null
+          mime?: string | null
+          name?: string | null
+          preview_url?: string | null
+          provider?: string | null
+          provider_metadata?: Json | null
+          published_at?: string | null
+          size?: number | null
+          updated_at?: string | null
+          updated_by_id?: number | null
           url?: string | null
           width?: number | null
         }
         Update: {
-          alt?: string
-          created_at?: string
-          filename?: string | null
-          filesize?: number | null
-          focal_x?: number | null
-          focal_y?: number | null
+          alternative_text?: string | null
+          caption?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          ext?: string | null
+          folder_path?: string | null
+          formats?: Json | null
+          hash?: string | null
           height?: number | null
           id?: number
-          mime_type?: string | null
-          thumbnail_u_r_l?: string | null
-          updated_at?: string
+          locale?: string | null
+          mime?: string | null
+          name?: string | null
+          preview_url?: string | null
+          provider?: string | null
+          provider_metadata?: Json | null
+          published_at?: string | null
+          size?: number | null
+          updated_at?: string | null
+          updated_by_id?: number | null
           url?: string | null
           width?: number | null
-        }
-        Relationships: []
-      }
-      page_content: {
-        Row: {
-          content: Json
-          country_id: string
-          id: string
-          page_id: string
-          publish_at: string | null
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          content: Json
-          country_id: string
-          id?: string
-          page_id: string
-          publish_at?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          content?: Json
-          country_id?: string
-          id?: string
-          page_id?: string
-          publish_at?: string | null
-          status?: string | null
-          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "page_content_country_id_fkey"
-            columns: ["country_id"]
+            foreignKeyName: "files_created_by_id_fk"
+            columns: ["created_by_id"]
             isOneToOne: false
-            referencedRelation: "countries"
+            referencedRelation: "admin_users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "page_content_page_id_fkey"
-            columns: ["page_id"]
+            foreignKeyName: "files_updated_by_id_fk"
+            columns: ["updated_by_id"]
             isOneToOne: false
-            referencedRelation: "pages"
+            referencedRelation: "admin_users"
             referencedColumns: ["id"]
           },
         ]
       }
-      page_sections: {
+      files_folder_lnk: {
         Row: {
-          content: Json
-          country_id: string
-          id: string
-          order: number
-          page_id: string
-          publish_at: string | null
-          section_key: string
-          status: string | null
-          updated_at: string | null
+          file_id: number | null
+          file_ord: number | null
+          folder_id: number | null
+          id: number
         }
         Insert: {
-          content: Json
-          country_id: string
-          id?: string
-          order?: number
-          page_id: string
-          publish_at?: string | null
-          section_key: string
-          status?: string | null
-          updated_at?: string | null
+          file_id?: number | null
+          file_ord?: number | null
+          folder_id?: number | null
+          id?: number
         }
         Update: {
-          content?: Json
-          country_id?: string
-          id?: string
-          order?: number
-          page_id?: string
-          publish_at?: string | null
-          section_key?: string
-          status?: string | null
-          updated_at?: string | null
+          file_id?: number | null
+          file_ord?: number | null
+          folder_id?: number | null
+          id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "page_sections_country_id_fkey"
+            foreignKeyName: "files_folder_links_fk"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_folder_links_inv_fk"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "upload_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_folder_lnk_fk"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_folder_lnk_ifk"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "upload_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      files_related_mph: {
+        Row: {
+          field: string | null
+          file_id: number | null
+          id: number
+          order: number | null
+          related_id: number | null
+          related_type: string | null
+        }
+        Insert: {
+          field?: string | null
+          file_id?: number | null
+          id?: number
+          order?: number | null
+          related_id?: number | null
+          related_type?: string | null
+        }
+        Update: {
+          field?: string | null
+          file_id?: number | null
+          id?: number
+          order?: number | null
+          related_id?: number | null
+          related_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_related_morphs_fk"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_related_mph_fk"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      i18n_locale: {
+        Row: {
+          code: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "i18n_locale_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i18n_locale_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locales: {
+        Row: {
+          code: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          is_default: boolean | null
+          locale: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          is_default?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          is_default?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locales_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locales_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locales_country_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          locale_id: number | null
+          locale_ord: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          locale_id?: number | null
+          locale_ord?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          locale_id?: number | null
+          locale_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locales_country_links_fk"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "locales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locales_country_links_inv_fk"
             columns: ["country_id"]
             isOneToOne: false
             referencedRelation: "countries"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "page_sections_page_id_fkey"
-            columns: ["page_id"]
+            foreignKeyName: "locales_country_lnk_fk"
+            columns: ["locale_id"]
             isOneToOne: false
-            referencedRelation: "pages"
+            referencedRelation: "locales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locales_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
             referencedColumns: ["id"]
           },
         ]
@@ -254,442 +934,1702 @@ export type Database = {
       pages: {
         Row: {
           created_at: string | null
-          id: string
-          is_index: boolean
-          route_pattern: string
-          slug: string
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          published_at: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string | null
+          title: string | null
+          updated_at: string | null
+          updated_by_id: number | null
         }
         Insert: {
           created_at?: string | null
-          id?: string
-          is_index?: boolean
-          route_pattern?: string
-          slug: string
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
         }
         Update: {
           created_at?: string | null
-          id?: string
-          is_index?: boolean
-          route_pattern?: string
-          slug?: string
-        }
-        Relationships: []
-      }
-      payload_locked_documents: {
-        Row: {
-          created_at: string
-          global_slug: string | null
-          id: number
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          global_slug?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
           id?: number
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          global_slug?: string | null
-          id?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      payload_locked_documents_rels: {
-        Row: {
-          id: number
-          media_id: number | null
-          order: number | null
-          parent_id: number
-          path: string
-          users_id: number | null
-        }
-        Insert: {
-          id?: number
-          media_id?: number | null
-          order?: number | null
-          parent_id: number
-          path: string
-          users_id?: number | null
-        }
-        Update: {
-          id?: number
-          media_id?: number | null
-          order?: number | null
-          parent_id?: number
-          path?: string
-          users_id?: number | null
+          locale?: string | null
+          published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "payload_locked_documents_rels_media_fk"
-            columns: ["media_id"]
+            foreignKeyName: "pages_created_by_id_fk"
+            columns: ["created_by_id"]
             isOneToOne: false
-            referencedRelation: "media"
+            referencedRelation: "admin_users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "payload_locked_documents_rels_parent_fk"
-            columns: ["parent_id"]
+            foreignKeyName: "pages_updated_by_id_fk"
+            columns: ["updated_by_id"]
             isOneToOne: false
-            referencedRelation: "payload_locked_documents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payload_locked_documents_rels_users_fk"
-            columns: ["users_id"]
-            isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "admin_users"
             referencedColumns: ["id"]
           },
         ]
       }
-      payload_migrations: {
+      pages_cmps: {
         Row: {
-          batch: number | null
-          created_at: string
-          id: number
-          name: string | null
-          updated_at: string
-        }
-        Insert: {
-          batch?: number | null
-          created_at?: string
-          id?: number
-          name?: string | null
-          updated_at?: string
-        }
-        Update: {
-          batch?: number | null
-          created_at?: string
-          id?: number
-          name?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      payload_preferences: {
-        Row: {
-          created_at: string
-          id: number
-          key: string | null
-          updated_at: string
-          value: Json | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          key?: string | null
-          updated_at?: string
-          value?: Json | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          key?: string | null
-          updated_at?: string
-          value?: Json | null
-        }
-        Relationships: []
-      }
-      payload_preferences_rels: {
-        Row: {
+          cmp_id: number | null
+          component_type: string | null
+          entity_id: number | null
+          field: string | null
           id: number
           order: number | null
-          parent_id: number
-          path: string
-          users_id: number | null
         }
         Insert: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
           id?: number
           order?: number | null
-          parent_id: number
-          path: string
-          users_id?: number | null
         }
         Update: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
           id?: number
           order?: number | null
-          parent_id?: number
-          path?: string
-          users_id?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "payload_preferences_rels_parent_fk"
-            columns: ["parent_id"]
+            foreignKeyName: "pages_entity_fk"
+            columns: ["entity_id"]
             isOneToOne: false
-            referencedRelation: "payload_preferences"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payload_preferences_rels_users_fk"
-            columns: ["users_id"]
-            isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "pages"
             referencedColumns: ["id"]
           },
         ]
       }
-      policies: {
+      pages_country_lnk: {
         Row: {
-          content: Json
-          country_id: string
-          created_at: string | null
-          id: string
-          is_active: boolean
-          type_id: number
-        }
-        Insert: {
-          content: Json
-          country_id: string
-          created_at?: string | null
-          id?: string
-          is_active?: boolean
-          type_id: number
-        }
-        Update: {
-          content?: Json
-          country_id?: string
-          created_at?: string | null
-          id?: string
-          is_active?: boolean
-          type_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "policies_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "policies_type_id_fkey"
-            columns: ["type_id"]
-            isOneToOne: false
-            referencedRelation: "policy_types"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      policy_types: {
-        Row: {
-          code: string
+          country_id: number | null
           id: number
-          label: string
+          page_id: number | null
+          page_ord: number | null
         }
         Insert: {
-          code: string
+          country_id?: number | null
           id?: number
-          label: string
+          page_id?: number | null
+          page_ord?: number | null
         }
         Update: {
-          code?: string
+          country_id?: number | null
           id?: number
-          label?: string
-        }
-        Relationships: []
-      }
-      services: {
-        Row: {
-          country_code: string
-          country_id: string
-          created_at: string | null
-          description: string | null
-          icon_url: string | null
-          id: string
-          is_active: boolean
-          locale_id: string | null
-          minimum_price: number | null
-          name: string
-          order: number
-        }
-        Insert: {
-          country_code?: string
-          country_id: string
-          created_at?: string | null
-          description?: string | null
-          icon_url?: string | null
-          id?: string
-          is_active?: boolean
-          locale_id?: string | null
-          minimum_price?: number | null
-          name: string
-          order?: number
-        }
-        Update: {
-          country_code?: string
-          country_id?: string
-          created_at?: string | null
-          description?: string | null
-          icon_url?: string | null
-          id?: string
-          is_active?: boolean
-          locale_id?: string | null
-          minimum_price?: number | null
-          name?: string
-          order?: number
+          page_id?: number | null
+          page_ord?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "services_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "services_locale_id_fkey"
-            columns: ["locale_id"]
-            isOneToOne: false
-            referencedRelation: "locales"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      testimonial_pages: {
-        Row: {
-          page_id: string
-          testimonial_id: string
-        }
-        Insert: {
-          page_id: string
-          testimonial_id: string
-        }
-        Update: {
-          page_id?: string
-          testimonial_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "testimonial_pages_page_id_fkey"
+            foreignKeyName: "pages_country_links_fk"
             columns: ["page_id"]
             isOneToOne: false
             referencedRelation: "pages"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "testimonial_pages_testimonial_id_fkey"
-            columns: ["testimonial_id"]
-            isOneToOne: false
-            referencedRelation: "testimonials"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      testimonials: {
-        Row: {
-          author_image_url: string | null
-          author_name: string
-          content: string
-          country_id: string
-          created_at: string | null
-          id: string
-          is_active: boolean
-          locale_id: string | null
-          rating: number | null
-        }
-        Insert: {
-          author_image_url?: string | null
-          author_name: string
-          content: string
-          country_id: string
-          created_at?: string | null
-          id?: string
-          is_active?: boolean
-          locale_id?: string | null
-          rating?: number | null
-        }
-        Update: {
-          author_image_url?: string | null
-          author_name?: string
-          content?: string
-          country_id?: string
-          created_at?: string | null
-          id?: string
-          is_active?: boolean
-          locale_id?: string | null
-          rating?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "testimonials_country_id_fkey"
+            foreignKeyName: "pages_country_links_inv_fk"
             columns: ["country_id"]
             isOneToOne: false
             referencedRelation: "countries"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "testimonials_locale_id_fkey"
-            columns: ["locale_id"]
+            foreignKeyName: "pages_country_lnk_fk"
+            columns: ["page_id"]
             isOneToOne: false
-            referencedRelation: "locales"
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pages_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
             referencedColumns: ["id"]
           },
         ]
       }
-      users: {
+      policies: {
         Row: {
-          created_at: string
-          email: string
-          hash: string | null
+          content: Json | null
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
           id: number
-          lock_until: string | null
-          login_attempts: number | null
-          reset_password_expiration: string | null
-          reset_password_token: string | null
-          salt: string | null
-          updated_at: string
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          slug: string | null
+          updated_at: string | null
+          updated_by_id: number | null
         }
         Insert: {
-          created_at?: string
-          email: string
-          hash?: string | null
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
           id?: number
-          lock_until?: string | null
-          login_attempts?: number | null
-          reset_password_expiration?: string | null
-          reset_password_token?: string | null
-          salt?: string | null
-          updated_at?: string
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          slug?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
         }
         Update: {
-          created_at?: string
-          email?: string
-          hash?: string | null
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
           id?: number
-          lock_until?: string | null
-          login_attempts?: number | null
-          reset_password_expiration?: string | null
-          reset_password_token?: string | null
-          salt?: string | null
-          updated_at?: string
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          slug?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policies_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "policies_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      policies_country_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          policy_id: number | null
+          policy_ord: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          policy_id?: number | null
+          policy_ord?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          policy_id?: number | null
+          policy_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policies_country_lnk_fk"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "policies_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          price_from: number | null
+          published_at: string | null
+          slug: string | null
+          type: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          price_from?: number | null
+          published_at?: string | null
+          slug?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          price_from?: number | null
+          published_at?: string | null
+          slug?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services_country_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          service_id: number | null
+          service_ord: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          service_id?: number | null
+          service_ord?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          service_id?: number | null
+          service_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_country_lnk_fk"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_api_token_permissions: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_api_token_permissions_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_api_token_permissions_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_api_token_permissions_token_lnk: {
+        Row: {
+          api_token_id: number | null
+          api_token_permission_id: number | null
+          api_token_permission_ord: number | null
+          id: number
+        }
+        Insert: {
+          api_token_id?: number | null
+          api_token_permission_id?: number | null
+          api_token_permission_ord?: number | null
+          id?: number
+        }
+        Update: {
+          api_token_id?: number | null
+          api_token_permission_id?: number | null
+          api_token_permission_ord?: number | null
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_api_token_permissions_token_links_fk"
+            columns: ["api_token_permission_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_api_token_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_api_token_permissions_token_links_inv_fk"
+            columns: ["api_token_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_api_tokens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_api_token_permissions_token_lnk_fk"
+            columns: ["api_token_permission_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_api_token_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_api_token_permissions_token_lnk_ifk"
+            columns: ["api_token_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_api_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_api_tokens: {
+        Row: {
+          access_key: string | null
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          encrypted_key: string | null
+          expires_at: string | null
+          id: number
+          last_used_at: string | null
+          lifespan: number | null
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          type: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          access_key?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          encrypted_key?: string | null
+          expires_at?: string | null
+          id?: number
+          last_used_at?: string | null
+          lifespan?: number | null
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          access_key?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          encrypted_key?: string | null
+          expires_at?: string | null
+          id?: number
+          last_used_at?: string | null
+          lifespan?: number | null
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_api_tokens_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_api_tokens_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_core_store_settings: {
+        Row: {
+          environment: string | null
+          id: number
+          key: string | null
+          tag: string | null
+          type: string | null
+          value: string | null
+        }
+        Insert: {
+          environment?: string | null
+          id?: number
+          key?: string | null
+          tag?: string | null
+          type?: string | null
+          value?: string | null
+        }
+        Update: {
+          environment?: string | null
+          id?: number
+          key?: string | null
+          tag?: string | null
+          type?: string | null
+          value?: string | null
         }
         Relationships: []
+      }
+      strapi_database_schema: {
+        Row: {
+          hash: string | null
+          id: number
+          schema: Json | null
+          time: string | null
+        }
+        Insert: {
+          hash?: string | null
+          id?: number
+          schema?: Json | null
+          time?: string | null
+        }
+        Update: {
+          hash?: string | null
+          id?: number
+          schema?: Json | null
+          time?: string | null
+        }
+        Relationships: []
+      }
+      strapi_history_versions: {
+        Row: {
+          content_type: string
+          created_at: string | null
+          created_by_id: number | null
+          data: Json | null
+          id: number
+          locale: string | null
+          related_document_id: string | null
+          schema: Json | null
+          status: string | null
+        }
+        Insert: {
+          content_type: string
+          created_at?: string | null
+          created_by_id?: number | null
+          data?: Json | null
+          id?: number
+          locale?: string | null
+          related_document_id?: string | null
+          schema?: Json | null
+          status?: string | null
+        }
+        Update: {
+          content_type?: string
+          created_at?: string | null
+          created_by_id?: number | null
+          data?: Json | null
+          id?: number
+          locale?: string | null
+          related_document_id?: string | null
+          schema?: Json | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_history_versions_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_migrations: {
+        Row: {
+          id: number
+          name: string | null
+          time: string | null
+        }
+        Insert: {
+          id?: number
+          name?: string | null
+          time?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string | null
+          time?: string | null
+        }
+        Relationships: []
+      }
+      strapi_migrations_internal: {
+        Row: {
+          id: number
+          name: string | null
+          time: string | null
+        }
+        Insert: {
+          id?: number
+          name?: string | null
+          time?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string | null
+          time?: string | null
+        }
+        Relationships: []
+      }
+      strapi_release_actions: {
+        Row: {
+          content_type: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          entry_document_id: string | null
+          id: number
+          is_entry_valid: boolean | null
+          locale: string | null
+          published_at: string | null
+          type: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          content_type?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          entry_document_id?: string | null
+          id?: number
+          is_entry_valid?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          content_type?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          entry_document_id?: string | null
+          id?: number
+          is_entry_valid?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_release_actions_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_release_actions_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_release_actions_release_lnk: {
+        Row: {
+          id: number
+          release_action_id: number | null
+          release_action_ord: number | null
+          release_id: number | null
+        }
+        Insert: {
+          id?: number
+          release_action_id?: number | null
+          release_action_ord?: number | null
+          release_id?: number | null
+        }
+        Update: {
+          id?: number
+          release_action_id?: number | null
+          release_action_ord?: number | null
+          release_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_release_actions_release_lnk_fk"
+            columns: ["release_action_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_release_actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_release_actions_release_lnk_ifk"
+            columns: ["release_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_releases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_releases: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          released_at: string | null
+          scheduled_at: string | null
+          status: string | null
+          timezone: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          released_at?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          released_at?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_releases_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_releases_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_transfer_token_permissions: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_transfer_token_permissions_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_transfer_token_permissions_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_transfer_token_permissions_token_lnk: {
+        Row: {
+          id: number
+          transfer_token_id: number | null
+          transfer_token_permission_id: number | null
+          transfer_token_permission_ord: number | null
+        }
+        Insert: {
+          id?: number
+          transfer_token_id?: number | null
+          transfer_token_permission_id?: number | null
+          transfer_token_permission_ord?: number | null
+        }
+        Update: {
+          id?: number
+          transfer_token_id?: number | null
+          transfer_token_permission_id?: number | null
+          transfer_token_permission_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_transfer_token_permissions_token_links_fk"
+            columns: ["transfer_token_permission_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_transfer_token_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_transfer_token_permissions_token_links_inv_fk"
+            columns: ["transfer_token_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_transfer_tokens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_transfer_token_permissions_token_lnk_fk"
+            columns: ["transfer_token_permission_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_transfer_token_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_transfer_token_permissions_token_lnk_ifk"
+            columns: ["transfer_token_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_transfer_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_transfer_tokens: {
+        Row: {
+          access_key: string | null
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          expires_at: string | null
+          id: number
+          last_used_at: string | null
+          lifespan: number | null
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          access_key?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          expires_at?: string | null
+          id?: number
+          last_used_at?: string | null
+          lifespan?: number | null
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          access_key?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          expires_at?: string | null
+          id?: number
+          last_used_at?: string | null
+          lifespan?: number | null
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_transfer_tokens_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_transfer_tokens_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_webhooks: {
+        Row: {
+          enabled: boolean | null
+          events: Json | null
+          headers: Json | null
+          id: number
+          name: string | null
+          url: string | null
+        }
+        Insert: {
+          enabled?: boolean | null
+          events?: Json | null
+          headers?: Json | null
+          id?: number
+          name?: string | null
+          url?: string | null
+        }
+        Update: {
+          enabled?: boolean | null
+          events?: Json | null
+          headers?: Json | null
+          id?: number
+          name?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
+      strapi_workflows: {
+        Row: {
+          content_types: Json | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          content_types?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          content_types?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_workflows_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_workflows_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_workflows_stage_required_to_publish_lnk: {
+        Row: {
+          id: number
+          workflow_id: number | null
+          workflow_stage_id: number | null
+        }
+        Insert: {
+          id?: number
+          workflow_id?: number | null
+          workflow_stage_id?: number | null
+        }
+        Update: {
+          id?: number
+          workflow_id?: number | null
+          workflow_stage_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_workflows_stage_required_to_publish_lnk_fk"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_workflows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_workflows_stage_required_to_publish_lnk_ifk"
+            columns: ["workflow_stage_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_workflows_stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_workflows_stages: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_workflows_stages_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_workflows_stages_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_workflows_stages_permissions_lnk: {
+        Row: {
+          id: number
+          permission_id: number | null
+          permission_ord: number | null
+          workflow_stage_id: number | null
+        }
+        Insert: {
+          id?: number
+          permission_id?: number | null
+          permission_ord?: number | null
+          workflow_stage_id?: number | null
+        }
+        Update: {
+          id?: number
+          permission_id?: number | null
+          permission_ord?: number | null
+          workflow_stage_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_workflows_stages_permissions_lnk_fk"
+            columns: ["workflow_stage_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_workflows_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_workflows_stages_permissions_lnk_ifk"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "admin_permissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strapi_workflows_stages_workflow_lnk: {
+        Row: {
+          id: number
+          workflow_id: number | null
+          workflow_stage_id: number | null
+          workflow_stage_ord: number | null
+        }
+        Insert: {
+          id?: number
+          workflow_id?: number | null
+          workflow_stage_id?: number | null
+          workflow_stage_ord?: number | null
+        }
+        Update: {
+          id?: number
+          workflow_id?: number | null
+          workflow_stage_id?: number | null
+          workflow_stage_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strapi_workflows_stages_workflow_lnk_fk"
+            columns: ["workflow_stage_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_workflows_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strapi_workflows_stages_workflow_lnk_ifk"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "strapi_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      testimonials: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          platform: string | null
+          published_at: string | null
+          rating: number | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          platform?: string | null
+          published_at?: string | null
+          rating?: number | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          platform?: string | null
+          published_at?: string | null
+          rating?: number | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testimonials_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testimonials_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      testimonials_country_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          testimonial_id: number | null
+          testimonial_ord: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          testimonial_id?: number | null
+          testimonial_ord?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          testimonial_id?: number | null
+          testimonial_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testimonials_country_lnk_fk"
+            columns: ["testimonial_id"]
+            isOneToOne: false
+            referencedRelation: "testimonials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testimonials_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      up_permissions: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "up_permissions_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_permissions_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      up_permissions_role_lnk: {
+        Row: {
+          id: number
+          permission_id: number | null
+          permission_ord: number | null
+          role_id: number | null
+        }
+        Insert: {
+          id?: number
+          permission_id?: number | null
+          permission_ord?: number | null
+          role_id?: number | null
+        }
+        Update: {
+          id?: number
+          permission_id?: number | null
+          permission_ord?: number | null
+          role_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "up_permissions_role_links_fk"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "up_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_permissions_role_links_inv_fk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "up_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_permissions_role_lnk_fk"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "up_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_permissions_role_lnk_ifk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "up_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      up_roles: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          type: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          type?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "up_roles_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_roles_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      up_users: {
+        Row: {
+          blocked: boolean | null
+          confirmation_token: string | null
+          confirmed: boolean | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          email: string | null
+          id: number
+          locale: string | null
+          password: string | null
+          provider: string | null
+          published_at: string | null
+          reset_password_token: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+          username: string | null
+        }
+        Insert: {
+          blocked?: boolean | null
+          confirmation_token?: string | null
+          confirmed?: boolean | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          id?: number
+          locale?: string | null
+          password?: string | null
+          provider?: string | null
+          published_at?: string | null
+          reset_password_token?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          username?: string | null
+        }
+        Update: {
+          blocked?: boolean | null
+          confirmation_token?: string | null
+          confirmed?: boolean | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          id?: number
+          locale?: string | null
+          password?: string | null
+          provider?: string | null
+          published_at?: string | null
+          reset_password_token?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "up_users_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_users_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      up_users_role_lnk: {
+        Row: {
+          id: number
+          role_id: number | null
+          user_id: number | null
+          user_ord: number | null
+        }
+        Insert: {
+          id?: number
+          role_id?: number | null
+          user_id?: number | null
+          user_ord?: number | null
+        }
+        Update: {
+          id?: number
+          role_id?: number | null
+          user_id?: number | null
+          user_ord?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "up_users_role_links_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "up_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_users_role_links_inv_fk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "up_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_users_role_lnk_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "up_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "up_users_role_lnk_ifk"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "up_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      upload_folders: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          path: string | null
+          path_id: number | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          path?: string | null
+          path_id?: number | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          path?: string | null
+          path_id?: number | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "upload_folders_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "upload_folders_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      upload_folders_parent_lnk: {
+        Row: {
+          folder_id: number | null
+          folder_ord: number | null
+          id: number
+          inv_folder_id: number | null
+        }
+        Insert: {
+          folder_id?: number | null
+          folder_ord?: number | null
+          id?: number
+          inv_folder_id?: number | null
+        }
+        Update: {
+          folder_id?: number | null
+          folder_ord?: number | null
+          id?: number
+          inv_folder_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "upload_folders_parent_links_fk"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "upload_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "upload_folders_parent_links_inv_fk"
+            columns: ["inv_folder_id"]
+            isOneToOne: false
+            referencedRelation: "upload_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "upload_folders_parent_lnk_fk"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "upload_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "upload_folders_parent_lnk_ifk"
+            columns: ["inv_folder_id"]
+            isOneToOne: false
+            referencedRelation: "upload_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      fallback_country_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_page_content: {
-        Args: { p_country_code: string; p_slug: string }
-        Returns: Json
-      }
-      has_scope: {
-        Args: { required: string }
-        Returns: boolean
-      }
-      is_page_available: {
-        Args: { country_code: string; page_path: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
