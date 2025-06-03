@@ -151,7 +151,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                 <p className="text-sm text-gray-600">
                   <span className="flex items-center">
                     <TrendingUp className="h-4 w-4 mr-1" />
-                    62% ROI = ₹12,000+ monthly profit potential
+                    ~₹1 lakh Rs monthly earning potential
                   </span>
                 </p>
               </div>
@@ -232,7 +232,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                         <SelectValue placeholder="Select your city" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="max-h-60">
+                    <SelectContent className="max-h-60 bg-white border border-gray-200 shadow-lg z-50">
                       {indianCities.map((city) => (
                         <SelectItem key={city} value={city}>
                           {city}
@@ -257,7 +257,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                         <SelectValue placeholder="Select investment range" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
                       <SelectItem value="₹15L-20L">₹15L - ₹20L</SelectItem>
                       <SelectItem value="₹20L-25L">₹20L - ₹25L</SelectItem>
                       <SelectItem value="₹25L+">₹25L+</SelectItem>

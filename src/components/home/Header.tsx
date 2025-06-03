@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,7 +11,7 @@ const Header = () => {
   // Helper function to create country-specific links
   const createLink = (path: string): string => {
     if (!currentCountry) return "/";
-    return `/${currentCountry.code}${path}`;
+    return `/${currentCountry}${path}`;
   };
 
   return (

@@ -1,8 +1,17 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, DollarSign, User, Handshake } from "lucide-react";
+import { useState } from "react";
+import FranchiseFormModal from "./FranchiseFormModal";
 
 const IdealCustomerSection = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleGetCaseStudies = () => {
+    setIsFormOpen(true);
+  };
+
   return (
     <section className="section bg-white">
       <div className="container">
@@ -88,10 +97,20 @@ const IdealCustomerSection = () => {
         </div>
 
         <div className="flex justify-center items-center px-4 sm:px-6 lg:px-8 py-10 rounded-2xl">
-          <Button className="text-sm sm:text-lg px-6 sm:px-10 py-6 sm:py-7 bg-green-600 text-white hover:bg-green-700 font-semibold rounded-xl shadow-md transition duration-300 w-full sm:w-auto text-center break-words max-w-full sm:max-w-xl">
+          <Button 
+            onClick={handleGetCaseStudies}
+            className="text-sm sm:text-lg px-6 sm:px-10 py-6 sm:py-7 bg-green-600 text-white hover:bg-green-700 font-semibold rounded-xl shadow-md transition duration-300 w-full sm:w-auto text-center break-words max-w-full sm:max-w-xl"
+          >
             Get Case Studies from People Like You
           </Button>
         </div>
+
+        <FranchiseFormModal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          title="Download Success Case Studies"
+          sourceCta="Get Case Studies"
+        />
       </div>
     </section>
   );

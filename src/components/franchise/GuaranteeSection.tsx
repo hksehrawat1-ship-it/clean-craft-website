@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
@@ -13,10 +14,17 @@ import {
   DollarSign,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile"; // custom hook for responsive checks
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
+import FranchiseFormModal from "./FranchiseFormModal";
 
 const GuaranteeSection = () => {
   const isMobile = useIsMobile();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleClaimTerritory = () => {
+    setIsFormOpen(true);
+  };
 
   const guarantees = [
     {
@@ -215,8 +223,8 @@ const GuaranteeSection = () => {
               industry-leading guarantees.
             </p>
             <div className="flex flex-col items-center">
-              <a
-                href="#contact"
+              <button
+                onClick={handleClaimTerritory}
                 className="inline-flex items-center justify-center bg-white text-blue-600 font-semibold rounded-full shadow-md transition-all duration-300 cursor-pointer select-none group"
                 style={{ padding: "16px", backgroundColor: "white" }}
               >
@@ -236,7 +244,7 @@ const GuaranteeSection = () => {
                   <path d="M5 12h14"></path>
                   <path d="m12 5 7 7-7 7"></path>
                 </svg>
-              </a>
+              </button>
 
               <p
                 className="text-white/80 mt-4 italic text-sm"
@@ -247,6 +255,13 @@ const GuaranteeSection = () => {
             </div>
           </div>
         </motion.div>
+
+        <FranchiseFormModal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          title="Claim Your Premium Territory"
+          sourceCta="Claim Territory"
+        />
       </div>
     </section>
   );
