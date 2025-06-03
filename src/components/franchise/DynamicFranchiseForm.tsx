@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,8 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Phone, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { State, City } from 'country-state-city';
+import ProgressiveStepper from "./ProgressiveStepper";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -40,16 +41,6 @@ interface DynamicFranchiseFormProps {
   onClose?: () => void;
 }
 
-const indianCities = [
-  "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad",
-  "Jaipur", "Surat", "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal",
-  "Visakhapatnam", "Pimpri-Chinchwad", "Patna", "Vadodara", "Ghaziabad", "Ludhiana",
-  "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot", "Kalyan-Dombivli", "Vasai-Virar",
-  "Varanasi", "Srinagar", "Aurangabad", "Dhanbad", "Amritsar", "Navi Mumbai", "Allahabad",
-  "Ranchi", "Howrah", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Jodhpur",
-  "Madurai", "Raipur", "Kota", "Guwahati", "Chandigarh", "Solapur"
-];
-
 const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({ 
   title, 
   sourceCta, 
@@ -57,6 +48,22 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Get Indian cities using country-state-city package
+  const indianCities = useMemo(() => {
+    const indianStates = State.getStatesOfCountry('IN');
+    const allCities: string[] = [];
+    
+    indianStates.forEach(state => {
+      const stateCities = City.getCitiesOfState('IN', state.isoCode);
+      stateCities.forEach(city => {
+        allCities.push(city.name);
+      });
+    });
+    
+    // Remove duplicates and sort
+    return [...new Set(allCities)].sort();
+  }, []);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -114,52 +121,16 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
   if (isSubmitted) {
     return (
       <Card className="w-full max-w-lg mx-auto">
-        <CardContent className="p-8 text-center space-y-6">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
-          <h3 className="text-2xl font-bold text-green-600">Success!</h3>
-          <p className="text-gray-600">
+        <CardContent className="p-8 text-center">
+          <h3 className="text-2xl font-bold text-green-600 mb-6">Success!</h3>
+          <p className="text-gray-600 mb-8">
             Thank you for your interest! Here's what happens next:
           </p>
           
-          <div className="space-y-4 text-left">
-            <div className="flex items-start space-x-3">
-              <div className="bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm font-bold">
-                1
-              </div>
-              <div>
-                <h4 className="font-semibold text-green-600">✅ Information Submitted</h4>
-                <p className="text-sm text-gray-600">Your details are now in our system</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3">
-              <div className="bg-blue-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm font-bold">
-                2
-              </div>
-              <div>
-                <h4 className="font-semibold text-blue-600">📞 Discovery Call Scheduled</h4>
-                <p className="text-sm text-gray-600">Within 24 hours - Our franchise consultant will contact you</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3">
-              <div className="bg-purple-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm font-bold">
-                3
-              </div>
-              <div>
-                <h4 className="font-semibold text-purple-600">🚀 Franchise Up & Running</h4>
-                <p className="text-sm text-gray-600">
-                  <span className="flex items-center">
-                    <TrendingUp className="h-4 w-4 mr-1" />
-                    ~₹1 lakh Rs monthly earning potential
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
+          <ProgressiveStepper />
           
           {onClose && (
-            <Button onClick={onClose} className="w-full">
+            <Button onClick={onClose} className="w-full mt-6">
               Close
             </Button>
           )}
