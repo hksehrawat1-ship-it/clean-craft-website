@@ -241,7 +241,8 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               )}
             />
 
-            <div className="pt-4 space-y-3">
+            <div className="text-white mb-6 max-w-2xl mx-auto"
+              style={{ color: "white" }}>
               <Button
                 type="submit"
                 className="w-full"

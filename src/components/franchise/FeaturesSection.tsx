@@ -32,7 +32,7 @@ const FeaturesSection = () => {
     <section id="features" className="section bg-white">
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <Badge className="bg-laundry-secondary text-laundry-dark mb-4">
+          <Badge className="bg-google-blue text-white mb-4 hover:bg-google-blue/90 px-4 py-1.5">
             Our Value Proposition
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">

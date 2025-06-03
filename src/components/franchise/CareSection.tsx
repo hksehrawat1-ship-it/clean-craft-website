@@ -99,12 +99,13 @@ const CareSection = () => {
                     
                     <div className="bg-gradient-to-r from-cleancraft-light to-cleancraft-light/50 p-4 rounded-lg">
                       <h4 className="font-bold text-google-blue mb-2">62% ROI Potential</h4>
-                      <p className="text-sm text-gray-600">₹12,000+ monthly profit</p>
+                      <p className="text-sm text-gray-600">₹100,000+ monthly profit</p>
                     </div>
                     
                     <Button 
                       onClick={handleFormOpen}
-                      className="w-full bg-google-blue hover:bg-google-blue/90"
+                      className="text-white mb-6 max-w-xl mx-auto"
+                      style={{ color: "white" }}
                     >
                       Schedule Your Franchise Consultation Today
                     </Button>

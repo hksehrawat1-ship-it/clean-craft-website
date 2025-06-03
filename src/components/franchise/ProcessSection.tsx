@@ -96,10 +96,11 @@ const ProcessSection = () => {
 
         {/* Claim Your Territory CTA Section */}
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-dark rounded-2xl p-8 md:p-12 text-center text-white">
-          <h3 className="text-heading-md font-bold mb-4">
+          <h3 className="text-3xl font-bold mb-4" style={{ color: "white" }}>
             Ready to Claim Your Territory?
           </h3>
-          <p className="text-body-lg mb-8 max-w-2xl mx-auto opacity-90">
+          <p className="text-white mb-6 max-w-2xl mx-auto"
+              style={{ color: "white" }}>
             Premium territories are filling up fast. Secure your spot in India's most profitable laundry franchise today.
           </p>
           
@@ -115,8 +116,9 @@ const ProcessSection = () => {
             </Button>
           </div>
 
-          <p className="text-sm opacity-75 mt-4">
-            Limited premium territories available • First come, first served
+          <p className="text-white mb-6 max-w-2xl mx-auto"
+              style={{ color: "white" }}>
+            <br />Limited premium territories available <br />• First come, first served
           </p>
         </div>
 

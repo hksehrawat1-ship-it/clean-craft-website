@@ -50,7 +50,7 @@ const LaundryRoiCalculator = () => {
   // Dynamic title based on results
   const getFormTitle = () => {
     if (showResults && monthlyRoi) {
-      return `Start Earning <span class="text-google-blue">₹${formatIndianNumber(monthlyReturn)}</span> in Just a Month`;
+      return `Start Earning ₹${formatIndianNumber(monthlyReturn)} in Just a Month`;
     }
     return "Your Earnings Are a Call Away";
   };
