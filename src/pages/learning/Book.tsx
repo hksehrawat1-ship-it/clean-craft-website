@@ -1,11 +1,11 @@
-
 import React from 'react';
 import EnhancedNavbar from '@/components/EnhancedNavbar';
 import Hero from '@/components/book/Hero';
 import BestSeller from '@/components/book/BestSeller';
 import Benefits from '@/components/book/Benefits';
 import Author from '@/components/book/Author';
-import Testimonials from '@/components/Testimonials';
+import Testimonials from '@/components/shared/Testimonials';
+import FAQs from '@/components/shared/FAQs';
 import Guarantee from '@/components/book/Guarantee';
 import Faq from '@/components/book/Faq';
 import Offer from '@/components/book/Offer';
@@ -35,13 +35,13 @@ const Book = () => {
               <Author />
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <Testimonials />
+              <Testimonials category="book" />
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <Guarantee />
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <Faq />
+              <FAQs category="book" />
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <Offer />

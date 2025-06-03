@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -6,7 +5,7 @@ import { Filter } from "lucide-react";
 
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
-import { useStrapiFAQs } from "@/hooks/useStrapi";
+import { useFAQs } from "@/hooks/use-faqs";
 import { FAQAccordion } from "@/components/FAQAccordion";
 
 import {
@@ -30,36 +29,10 @@ const PAGE_SIZE = 10;
 
 const FaqPage: React.FC = () => {
   const { countryCode } = useParams();
-  const { data: faqsResponse, isLoading, error } = useStrapiFAQs();
+  const { faqsByCategory, categories, isLoading, error } = useFAQs(countryCode);
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  // Process FAQs data
-  const { faqsByCategory, categories } = useMemo(() => {
-    if (!faqsResponse?.data) {
-      return { faqsByCategory: {}, categories: [] };
-    }
-
-    const faqs = faqsResponse.data;
-    const categoriesSet = new Set<string>();
-    const faqsByCategory: Record<string, any[]> = {};
-
-    faqs.forEach((faq: any) => {
-      const category = faq.category || 'general';
-      categoriesSet.add(category);
-      
-      if (!faqsByCategory[category]) {
-        faqsByCategory[category] = [];
-      }
-      faqsByCategory[category].push(faq);
-    });
-
-    return {
-      faqsByCategory,
-      categories: Array.from(categoriesSet)
-    };
-  }, [faqsResponse]);
 
   // Filter FAQs based on selected category
   const filteredFAQs = useMemo(() => {
@@ -154,8 +127,8 @@ const FaqPage: React.FC = () => {
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
                       {categories
-                        .filter((category: string) => category.toLowerCase() !== "all")
-                        .map((category: string) => (
+                        .filter((category) => category.toLowerCase() !== "all")
+                        .map((category) => (
                           <SelectItem
                             key={category}
                             value={category}
