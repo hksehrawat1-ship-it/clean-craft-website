@@ -15,10 +15,11 @@ const BestSeller = () => {
               </div>
             </div>
             {/* Heading */}
-            <h2 className="text-[32px] md:text-[36px] font-black text-center mb-2">
+            <h2 className="text-[32px] md:text-[36px] font-black text-center mb-2 leading-[40px]">
               #1 in the{" "}
               <span className="text-[#1A73E8]">Laundry Business </span> Category
             </h2>
+
             {/* Stars */}
             <div className="flex justify-center mb-4">
               <div className="flex gap-1">

@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                to={createLink("/locations")}
+                to={createLink("/learning/book")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Buy Laundry Book

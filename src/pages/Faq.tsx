@@ -34,6 +34,7 @@ const FaqPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  // Filter FAQs based on selected category
   const filteredFAQs = useMemo(() => {
     if (selectedCategory === "all") {
       return Object.values(faqsByCategory).flat();
@@ -44,30 +45,46 @@ const FaqPage: React.FC = () => {
   const totalFAQs = filteredFAQs.length;
   const totalPages = Math.ceil(totalFAQs / PAGE_SIZE);
 
+  // Slice current page FAQs
   const currentFAQs = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
     return filteredFAQs.slice(start, start + PAGE_SIZE);
   }, [filteredFAQs, currentPage]);
 
-  const currentFAQsByCategory = useMemo(() => {
-    if (selectedCategory !== "all") {
-      return { [selectedCategory]: currentFAQs };
-    }
-    return currentFAQs.reduce((acc, faq) => {
-      acc[faq.category] = acc[faq.category] || [];
-      acc[faq.category].push(faq);
-      return acc;
-    }, {} as Record<string, typeof currentFAQs>);
-  }, [currentFAQs, selectedCategory]);
-
+  // On category change reset to page 1
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
     setCurrentPage(1);
   };
 
+  // Handle page change with scroll
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Smart pagination numbers logic
+  const getPageNumbers = () => {
+    const delta = 2;
+    const pages: (number | string)[] = [];
+
+    const range = (start: number, end: number) =>
+      Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
+    if (totalPages <= 7) {
+      return range(1, totalPages);
+    }
+
+    const left = Math.max(2, currentPage - delta);
+    const right = Math.min(totalPages - 1, currentPage + delta);
+
+    pages.push(1);
+    if (left > 2) pages.push("...");
+    pages.push(...range(left, right));
+    if (right < totalPages - 1) pages.push("...");
+    pages.push(totalPages);
+
+    return pages;
   };
 
   return (
@@ -154,8 +171,8 @@ const FaqPage: React.FC = () => {
               {/* Accordion */}
               {!isLoading && !error && (
                 <div className="mb-12">
-                  {Object.keys(currentFAQsByCategory).length > 0 ? (
-                    <FAQAccordion faqsByCategory={currentFAQsByCategory} />
+                  {currentFAQs.length > 0 ? (
+                    <FAQAccordion faqs={currentFAQs} />
                   ) : (
                     <div className="text-center py-12 bg-gray-50 rounded-lg">
                       <p className="text-gray-500">
@@ -184,9 +201,9 @@ const FaqPage: React.FC = () => {
                       />
                     </PaginationItem>
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <PaginationItem key={page}>
+                    {getPageNumbers().map((page, index) => (
+                      <PaginationItem key={index}>
+                        {typeof page === "number" ? (
                           <PaginationLink
                             href="#"
                             onClick={(e) => {
@@ -197,9 +214,13 @@ const FaqPage: React.FC = () => {
                           >
                             {page}
                           </PaginationLink>
-                        </PaginationItem>
-                      )
-                    )}
+                        ) : (
+                          <span className="px-2 text-gray-400 select-none">
+                            …
+                          </span>
+                        )}
+                      </PaginationItem>
+                    ))}
 
                     <PaginationItem>
                       <PaginationNext

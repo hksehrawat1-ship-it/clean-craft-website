@@ -5,16 +5,10 @@ import axios from 'axios';
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
-// Don't throw errors for missing env vars in development
 const isDev = import.meta.env.DEV;
 if (!isDev) {
-  if (!STRAPI_URL) {
-    throw new Error('VITE_STRAPI_URL is not defined');
-  }
-
-  if (!STRAPI_TOKEN) {
-    throw new Error('VITE_STRAPI_API_TOKEN is not defined');
-  }
+  if (!STRAPI_URL) throw new Error('VITE_STRAPI_URL is not defined');
+  if (!STRAPI_TOKEN) throw new Error('VITE_STRAPI_API_TOKEN is not defined');
 }
 
 interface StrapiResponse<T> {
@@ -31,7 +25,7 @@ interface StrapiResponse<T> {
 
 interface StrapiSingleResponse<T> {
   data: T;
-  meta: {};
+  meta: Record<string, unknown>;
 }
 
 export const strapiClient = strapi({
@@ -39,7 +33,9 @@ export const strapiClient = strapi({
   auth: STRAPI_TOKEN,
 });
 
-// Helper functions for common operations
+const stringifyParams = (params: Record<string, any>) =>
+  qs.stringify(params, { encodeValuesOnly: true });
+
 export const getCollection = async <T>(
   endpoint: string,
   params: Record<string, any> = {}
@@ -49,26 +45,27 @@ export const getCollection = async <T>(
       throw new Error('Development mode: No Strapi token available');
     }
 
-    console.log(`Fetching ${endpoint} with params:`, params);
-    console.log('Final URL:', `${STRAPI_URL}/${endpoint}${params ? `?${qs.stringify(params)}` : ''}`)
+    const queryString = stringifyParams(params);
     const collection = strapiClient.collection(endpoint);
     const response = await collection.find(params) as unknown as StrapiResponse<T>;
-    console.log(`${endpoint} response:`, response);
+
+    console.log(`✅ [${endpoint}] fetched with params:`, params);
+    console.log(`🔗 Final URL: ${STRAPI_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`);
     return response;
   } catch (error) {
-    console.error(`Error fetching ${endpoint}:`, error);
+    console.error(`❌ Error fetching ${endpoint}:`, error);
     throw error;
   }
 };
 
 export const getSingle = async <T>(
-  singleName: string, 
+  singleName: string,
   params?: Record<string, any>
 ): Promise<T> => {
-  const queryString = params ? `?${qs.stringify(params)}` : '';
+  const queryString = params ? `?${stringifyParams(params)}` : '';
   const response = await fetch(`${STRAPI_URL}/${singleName}${queryString}`, {
     headers: {
-      'Authorization': `Bearer ${STRAPI_TOKEN}`,
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
       'Content-Type': 'application/json',
     },
   });
@@ -82,13 +79,13 @@ export const getSingle = async <T>(
 };
 
 export const createEntry = async <T>(
-  collectionName: string, 
+  collectionName: string,
   data: Record<string, any>
 ): Promise<T> => {
   const response = await fetch(`${STRAPI_URL}/${collectionName}`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${STRAPI_TOKEN}`,
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ data }),
@@ -110,7 +107,7 @@ export const updateEntry = async <T>(
   const response = await fetch(`${STRAPI_URL}/${collectionName}/${id}`, {
     method: 'PUT',
     headers: {
-      'Authorization': `Bearer ${STRAPI_TOKEN}`,
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ data }),
@@ -131,7 +128,7 @@ export const deleteEntry = async <T>(
   const response = await fetch(`${STRAPI_URL}/${collectionName}/${id}`, {
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${STRAPI_TOKEN}`,
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
       'Content-Type': 'application/json',
     },
   });
@@ -142,4 +139,4 @@ export const deleteEntry = async <T>(
 
   const json = await response.json() as StrapiSingleResponse<T>;
   return json.data;
-}; 
+};
