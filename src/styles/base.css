@@ -147,7 +147,7 @@
   }
 
   .franchise-icon-green {
-    @apply bg-brand-blue/10 text-brand-blue;
+    @apply bg-green-500/10 text-green-500;
   }
 
   .franchise-icon-yellow {
