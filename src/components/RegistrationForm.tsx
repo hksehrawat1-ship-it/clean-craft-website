@@ -20,10 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { State, City } from 'country-state-city';
 import { CheckCircle, ExternalLink } from "lucide-react";
+import { DisplayHeading, BodyText, Caption } from "@/components/ui/typography";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -124,140 +125,180 @@ const RegistrationForm: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <Card className="w-full max-w-lg mx-auto">
-        <CardContent className="p-8 text-center">
-          <div className="mb-6">
-            <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-brand-blue mb-2">Registration Successful!</h3>
-            <p className="text-gray-600">
-              Thank you for registering for our professional laundry training course.
-            </p>
-          </div>
-          
-          <div className="bg-brand-blue-light p-6 rounded-lg mb-6">
-            <h4 className="font-semibold text-brand-blue mb-2">Complete Your Enrollment</h4>
-            <p className="text-brand-blue text-sm mb-4">
-              Redirecting to payment page in {redirectCountdown} seconds...
-            </p>
+      <div className="w-full max-w-lg mx-auto">
+        <Card className="shadow-elevation-2 border-0">
+          <CardContent className="p-8 text-center">
+            <div className="mb-8">
+              <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-6" />
+              <DisplayHeading as="h3" className="text-brand-blue mb-4">
+                Registration Successful!
+              </DisplayHeading>
+              <BodyText className="text-gray-600">
+                Thank you for registering for our professional laundry training course.
+              </BodyText>
+            </div>
             
-            <Button 
-              onClick={handlePaymentRedirect}
-              variant="secondary"
-              className="w-full"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Complete Payment Now
-            </Button>
-          </div>
+            <div className="bg-brand-blue-light p-6 rounded-lg mb-8">
+              <h4 className="text-title-md font-semibold text-brand-blue mb-3">
+                Complete Your Enrollment
+              </h4>
+              <BodyText className="text-brand-blue mb-6">
+                Redirecting to payment page in {redirectCountdown} seconds...
+              </BodyText>
+              
+              <Button 
+                onClick={handlePaymentRedirect}
+                variant="secondary"
+                size="lg"
+                className="w-full"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Complete Payment Now
+              </Button>
+            </div>
 
-          <div className="text-sm text-gray-500">
-            <p>✅ Registration confirmed</p>
-            <p>📧 Confirmation email sent</p>
-            <p>💳 Complete payment to secure your spot</p>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="space-y-2">
+              <Caption className="flex items-center justify-center text-green-600">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Registration confirmed
+              </Caption>
+              <Caption className="flex items-center justify-center text-green-600">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Confirmation email sent
+              </Caption>
+              <Caption className="flex items-center justify-center text-green-600">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Complete payment to secure your spot
+              </Caption>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle className="text-center text-xl font-bold text-cleancraft-darkgold">
-          Register for Professional Training
-        </CardTitle>
-        <p className="text-center text-gray-600 text-sm">
-          Join India's premier laundry & dry cleaning training program
-        </p>
-      </CardHeader>
-      <CardContent className="p-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your full name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your phone number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address *</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Enter your email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>City *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <div className="w-full max-w-lg mx-auto">
+      <Card className="shadow-elevation-2 border-0">
+        <CardHeader className="text-center pb-6">
+          <h2 className="text-title-lg md:text-heading-sm font-semibold text-cleancraft-darkgold mb-2">
+            Register for Professional Training
+          </h2>
+          <BodyText className="text-gray-600">
+            Join India's premier laundry & dry cleaning training program
+          </BodyText>
+        </CardHeader>
+        <CardContent className="px-8 pb-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-body-sm font-medium text-gray-700">
+                      Full Name *
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your city" />
-                      </SelectTrigger>
+                      <Input 
+                        placeholder="Enter your full name" 
+                        className="h-12 text-body-md"
+                        {...field} 
+                      />
                     </FormControl>
-                    <SelectContent className="max-h-60 bg-white border border-gray-200 shadow-lg z-50">
-                      {indianCities.map((city) => (
-                        <SelectItem key={city} value={city}>
-                          {city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="pt-4">
-              <Button
-                type="submit"
-                variant="secondary"
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Registering..." : "Register for Training"}
-              </Button>
-            </div>
-            
-            <p className="text-xs text-gray-500 text-center">
-              By registering, you'll receive course details and payment instructions via email.
-            </p>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-body-sm font-medium text-gray-700">
+                      Phone Number *
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Enter your phone number" 
+                        className="h-12 text-body-md"
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-body-sm font-medium text-gray-700">
+                      Email Address *
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        className="h-12 text-body-md"
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-body-sm font-medium text-gray-700">
+                      City *
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="h-12 text-body-md">
+                          <SelectValue placeholder="Select your city" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="max-h-60 bg-white border border-gray-200 shadow-elevation-2 z-50">
+                        {indianCities.map((city) => (
+                          <SelectItem key={city} value={city} className="text-body-md">
+                            {city}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  size="lg"
+                  className="w-full h-12 text-button-lg"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Registering..." : "Register for Training"}
+                </Button>
+              </div>
+              
+              <Caption className="text-gray-500 text-center block">
+                By registering, you'll receive course details and payment instructions via email.
+              </Caption>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
