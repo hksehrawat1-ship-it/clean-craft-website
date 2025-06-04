@@ -13,13 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { State, City } from 'country-state-city';
@@ -39,20 +32,18 @@ const RegistrationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [redirectCountdown, setRedirectCountdown] = useState(5);
+  const [cityInputFocused, setCityInputFocused] = useState(false);
 
   // Get Indian cities using country-state-city package
   const indianCities = useMemo(() => {
-    const indianStates = State.getStatesOfCountry('IN');
+    const states = State.getStatesOfCountry("IN");
     const allCities: string[] = [];
-    
-    indianStates.forEach((state: any) => {
-      const stateCities = City.getCitiesOfState('IN', state.isoCode);
-      stateCities.forEach((city: any) => {
-        allCities.push(city.name);
-      });
+
+    states.forEach((state) => {
+      const stateCities = City.getCitiesOfState("IN", state.isoCode);
+      stateCities.forEach((city) => allCities.push(city.name));
     });
-    
-    // Remove duplicates and sort
+
     return [...new Set(allCities)].sort();
   }, []);
 
@@ -65,6 +56,14 @@ const RegistrationForm: React.FC = () => {
       city: "",
     },
   });
+
+  const cityValue = form.watch("city");
+
+  const filteredCities = cityValue
+    ? indianCities.filter((city) =>
+        city.toLowerCase().includes(cityValue.toLowerCase())
+      )
+    : [];
 
   const handlePaymentRedirect = () => {
     window.open("https://cleancraft.mojo.page/best-laundry-training-institute-in-india", "_blank");
@@ -182,7 +181,7 @@ const RegistrationForm: React.FC = () => {
   }
 
   return (
-    <section className="section-padding bg-brand-blue-light">
+    <section className="section-padding bg-brand-blue-light" id="registration-form">
       <div className="container-enhanced">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
@@ -259,29 +258,41 @@ const RegistrationForm: React.FC = () => {
                     )}
                   />
 
+                  {/* City input with search */}
                   <FormField
                     control={form.control}
                     name="city"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="relative">
                         <FormLabel className="text-body-sm font-medium text-gray-700">
                           City *
                         </FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="input-enhanced h-12">
-                              <SelectValue placeholder="Select your city" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="dropdown-enhanced">
-                            {indianCities.map((city) => (
-                              <SelectItem key={city} value={city} className="dropdown-item">
-                                {city}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <Input
+                            placeholder="Start typing your city"
+                            className="input-enhanced h-12"
+                            {...field}
+                            autoComplete="off"
+                            onFocus={() => setCityInputFocused(true)}
+                            onBlur={() => {
+                              setTimeout(() => setCityInputFocused(false), 150);
+                            }}
+                          />
+                        </FormControl>
                         <FormMessage />
+                        {cityInputFocused && filteredCities.length > 0 && (
+                          <ul className="absolute z-50 max-h-48 w-full overflow-auto rounded border border-gray-300 bg-white shadow-lg">
+                            {filteredCities.map((city) => (
+                              <li
+                                key={city}
+                                className="cursor-pointer px-4 py-2 hover:bg-blue-100"
+                                onMouseDown={() => field.onChange(city)}
+                              >
+                                {city}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </FormItem>
                     )}
                   />

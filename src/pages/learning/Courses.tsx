@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import EnhancedNavbar from '@/components/EnhancedNavbar';
 import Footer from '@/components/Footer';
@@ -51,6 +52,20 @@ const Courses = () => {
     return () => {};
   }, []);
 
+  // Handle scroll to registration form
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const scrollTo = urlParams.get('scrollTo');
+    if (scrollTo === 'registration' || window.location.hash === '#registration') {
+      setTimeout(() => {
+        const registrationForm = document.getElementById('registration-form');
+        if (registrationForm) {
+          registrationForm.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    }
+  }, []);
+
   return (
     <>
       <SEO 
@@ -98,4 +113,4 @@ const Courses = () => {
   );
 };
 
-export default Courses; 
+export default Courses;
