@@ -1,6 +1,8 @@
+
 import React, { useState } from "react";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronRight, ArrowRight, Wifi, WifiOff } from "lucide-react";
 import { useCountry } from "@/contexts/CountryContext";
+import { useStrapiConnection } from "@/contexts/StrapiConnectionContext";
 import { toast } from "sonner";
 import { useStrapiServices } from "@/hooks/useStrapi";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -61,6 +63,41 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   );
 };
 
+const ConnectionStatus: React.FC = () => {
+  const { isConnected, isInitializing, error, retryConnection } = useStrapiConnection();
+
+  if (isInitializing) {
+    return (
+      <div className="flex items-center gap-2 text-white/75 text-sm">
+        <LoadingSpinner size="sm" />
+        <span>Connecting to services...</span>
+      </div>
+    );
+  }
+
+  if (!isConnected && error) {
+    return (
+      <div className="flex items-center gap-2 text-white/75 text-sm">
+        <WifiOff className="w-4 h-4" />
+        <span>Connection issue - showing cached content</span>
+        <button 
+          onClick={retryConnection}
+          className="text-white underline hover:no-underline"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 text-white/75 text-sm">
+      <Wifi className="w-4 h-4" />
+      <span>Live content</span>
+    </div>
+  );
+};
+
 const serviceIcons: Record<string, IconType> = {
   Wash: FaSoap,
   "Wash & Iron": FaTshirt,
@@ -85,10 +122,12 @@ const currencySymbols: Record<string, string> = {
 
 const ServicesPage: React.FC = () => {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
   const [showAll, setShowAll] = useState(false);
 
-  if (isLoading) {
+  // Show loading spinner if Strapi is initializing or data is loading
+  if (isInitializing || (isLoading && isConnected)) {
     return (
       <div className="flex items-center justify-center py-16">
         <LoadingSpinner />
@@ -96,7 +135,7 @@ const ServicesPage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error && isConnected) {
     console.error("Error loading services:", error);
     toast.error("Failed to load services");
   }
@@ -159,7 +198,7 @@ const ServicesPage: React.FC = () => {
   const countryCode = currentCountry?.toLowerCase() || "in";
 
   return (
-    <div className="min-h-screen flex flex-col bg-whit">
+    <div className="min-h-screen flex flex-col bg-white">
       <EnhancedNavbar />
 
       <main className="flex-grow w-full py-16 px-2 md:px-4">
@@ -167,9 +206,12 @@ const ServicesPage: React.FC = () => {
         <div className="lg:hidden">
           <div className="max-w-7xl mx-auto bg-[#1E3A8A] p-6 rounded-3xl">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Explore our services
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-3xl font-bold text-white">
+                  Explore our services
+                </h2>
+                <ConnectionStatus />
+              </div>
               <p className="text-lg text-white">
                 Your clothes are treated with the utmost care, receiving the
                 attention they deserve.
@@ -197,7 +239,10 @@ const ServicesPage: React.FC = () => {
           {/* Static Left */}
           <div className="w-1/2 bg-[#1E3A8A] text-white p-16 flex flex-col">
             <div>
-              <h2 className="text-4xl font-bold mb-6">Explore our services</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-4xl font-bold">Explore our services</h2>
+                <ConnectionStatus />
+              </div>
               <p className="text-lg mb-8 text-white">
                 Your clothes are treated with the utmost care, receiving the
                 attention they deserve.

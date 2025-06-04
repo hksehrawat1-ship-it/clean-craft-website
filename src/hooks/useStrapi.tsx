@@ -1,7 +1,9 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { PageService } from '@/lib/strapi/services/page.service';
 import { contentService, ContentCategory } from '@/lib/strapi/services/content.service';
 import { useCountry } from '@/contexts/CountryContext';
+import { useStrapiConnection } from '@/contexts/StrapiConnectionContext';
 import { StrapiFAQ, StrapiService, StrapiTestimonial, StrapiPolicy } from '@/types/strapi';
 
 interface StrapiResponse<T> {
@@ -18,6 +20,7 @@ interface StrapiResponse<T> {
 
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
@@ -27,12 +30,13 @@ export function useStrapiPage(slug: string) {
       return pageService.getPage(slug, countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry // Only run query if we have a country
+    enabled: !!currentCountry && isConnected && !isInitializing
   });
 }
 
 export function useStrapiPageSEO(slug: string) {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
@@ -42,12 +46,13 @@ export function useStrapiPageSEO(slug: string) {
       return pageService.getPageSEO(slug, countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry // Only run query if we have a country
+    enabled: !!currentCountry && isConnected && !isInitializing
   });
 }
 
 export function useStrapiServices() {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
@@ -56,7 +61,7 @@ export function useStrapiServices() {
       return contentService.getServices(countryCode);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry // Only run query if we have a country
+    enabled: !!currentCountry && isConnected && !isInitializing
   });
 }
 
@@ -67,6 +72,7 @@ export function useStrapiTestimonials(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<any>>({
@@ -75,7 +81,7 @@ export function useStrapiTestimonials(options?: {
       return contentService.getTestimonials(countryCode, options);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry // Only run query if we have a country
+    enabled: !!currentCountry && isConnected && !isInitializing
   });
 }
 
@@ -85,6 +91,7 @@ export function useStrapiFAQs(options?: {
   sortOrder?: 'asc' | 'desc';
 }) {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<any>>({
@@ -93,12 +100,13 @@ export function useStrapiFAQs(options?: {
       return contentService.getFAQs(countryCode, options);
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry // Only run query if we have a country
+    enabled: !!currentCountry && isConnected && !isInitializing
   });
 }
 
 export function useStrapiPolicies() {
   const { currentCountry } = useCountry();
+  const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
@@ -115,6 +123,6 @@ export function useStrapiPolicies() {
       }));
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry // Only run query if we have a country
+    enabled: !!currentCountry && isConnected && !isInitializing
   });
-} 
+}
