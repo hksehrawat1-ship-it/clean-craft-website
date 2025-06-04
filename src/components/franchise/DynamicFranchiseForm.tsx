@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,16 +12,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { State, City } from 'country-state-city';
+import { State, City } from "country-state-city";
 import ProgressiveStepper from "./ProgressiveStepper";
 
 const formSchema = z.object({
@@ -41,27 +33,24 @@ interface DynamicFranchiseFormProps {
   onClose?: () => void;
 }
 
-const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({ 
-  title, 
-  sourceCta, 
-  onClose 
+const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
+  title,
+  sourceCta,
+  onClose,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [cityInputFocused, setCityInputFocused] = useState(false);
 
-  // Get Indian cities using country-state-city package
   const indianCities = useMemo(() => {
-    const indianStates = State.getStatesOfCountry('IN');
+    const states = State.getStatesOfCountry("IN");
     const allCities: string[] = [];
-    
-    indianStates.forEach((state: any) => {
-      const stateCities = City.getCitiesOfState('IN', state.isoCode);
-      stateCities.forEach((city: any) => {
-        allCities.push(city.name);
-      });
+
+    states.forEach((state) => {
+      const stateCities = City.getCitiesOfState("IN", state.isoCode);
+      stateCities.forEach((city) => allCities.push(city.name));
     });
-    
-    // Remove duplicates and sort
+
     return [...new Set(allCities)].sort();
   }, []);
 
@@ -76,45 +65,44 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
     },
   });
 
+  const cityValue = form.watch("city");
+
+  const filteredCities = cityValue
+    ? indianCities.filter((city) =>
+        city.toLowerCase().includes(cityValue.toLowerCase())
+      )
+    : [];
+
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      // Submit to Supabase
-      const { error } = await supabase
-        .from("franchise_leads")
-        .insert({
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          city: data.city,
-          country: "India",
-          investment_range: data.investmentRange,
-          source_cta: sourceCta,
-          lead_type: "franchise",
-        });
+      const { error } = await supabase.from("franchise_leads").insert({
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        city: data.city,
+        country: "India",
+        investment_range: data.investmentRange,
+        source_cta: sourceCta,
+        lead_type: "franchise",
+      });
 
       if (error) throw error;
 
-      // Call new edge function with leadType
-      const { error: emailError } = await supabase.functions.invoke('submit-lead', {
+      await supabase.functions.invoke("submit-lead", {
         body: {
           ...data,
           country: "India",
           investmentRange: data.investmentRange,
           sourceCta,
           leadType: "franchise",
-        }
+        },
       });
-
-      if (emailError) {
-        console.warn("Email sending failed:", emailError);
-        // Don't throw error - form submission was successful even if email fails
-      }
 
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("There was an error submitting your information. Please try again.");
+      alert("Submission failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -128,9 +116,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
           <p className="text-gray-600 mb-8">
             Thank you for your interest! Here's what happens next:
           </p>
-          
           <ProgressiveStepper />
-          
           {onClose && (
             <Button onClick={onClose} className="w-full mt-6">
               Close
@@ -151,26 +137,28 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
       <CardContent className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Name */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
+                  <FormLabel>Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your full name" {...field} />
+                    <Input placeholder="Enter your name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* Phone */}
             <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number *</FormLabel>
+                  <FormLabel>Phone *</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your phone number" {...field} />
                   </FormControl>
@@ -179,88 +167,84 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               )}
             />
 
+            {/* Email */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address *</FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter your email" {...field} />
+                    <Input placeholder="Enter your email address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* City input with search */}
             <FormField
               control={form.control}
               name="city"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="relative">
                   <FormLabel>City *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your city" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-60 bg-white border border-gray-200 shadow-lg z-50">
-                      {indianCities.map((city) => (
-                        <SelectItem key={city} value={city}>
-                          {city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input
+                      placeholder="Start typing your city"
+                      {...field}
+                      autoComplete="off"
+                      onFocus={() => setCityInputFocused(true)}
+                      onBlur={() => {
+                        setTimeout(() => setCityInputFocused(false), 150);
+                      }}
+                    />
+                  </FormControl>
                   <FormMessage />
+                  {cityInputFocused && filteredCities.length > 0 && (
+                    <ul className="absolute z-50 max-h-48 w-full overflow-auto rounded border border-gray-300 bg-white shadow-lg">
+                      {filteredCities.map((city) => (
+                        <li
+                          key={city}
+                          className="cursor-pointer px-4 py-2 hover:bg-blue-100"
+                          onMouseDown={() => field.onChange(city)}
+                        >
+                          {city}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </FormItem>
               )}
             />
 
+            {/* Investment Range */}
             <FormField
               control={form.control}
               name="investmentRange"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Investment Range *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select investment range" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
-                      <SelectItem value="₹15L-20L">₹15L - ₹20L</SelectItem>
-                      <SelectItem value="₹20L-25L">₹20L - ₹25L</SelectItem>
-                      <SelectItem value="₹25L+">₹25L+</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <select
+                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    <option value="">Select investment range</option>
+                    <option value="₹15L-20L">₹15L - ₹20L</option>
+                    <option value="₹20L-25L">₹20L - ₹25L</option>
+                    <option value="₹25L+">₹25L+</option>
+                  </select>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="text-white mb-6 max-w-2xl mx-auto"
-              style={{ color: "white" }}>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+            {/* Submit + Cancel */}
+            <div className="mb-6 max-w-2xl mx-auto">
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Submit Information"}
               </Button>
-              
-              {onClose && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
-              )}
             </div>
           </form>
         </Form>
