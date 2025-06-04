@@ -1,6 +1,5 @@
-import { strapi } from '@strapi/client';
+
 import qs from 'qs';
-import axios from 'axios';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -28,13 +27,68 @@ interface StrapiSingleResponse<T> {
   meta: Record<string, unknown>;
 }
 
-export const strapiClient = strapi({
-  baseURL: STRAPI_URL,
-  auth: STRAPI_TOKEN,
-});
-
 const stringifyParams = (params: Record<string, any>) =>
   qs.stringify(params, { encodeValuesOnly: true });
+
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeout: number = 15000
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Authorization': `Bearer ${STRAPI_TOKEN}`,
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
+async function retryFetch(
+  url: string,
+  options: RequestInit = {},
+  maxRetries: number = 3
+): Promise<Response> {
+  let lastError: Error;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`🔄 Attempt ${attempt}/${maxRetries} for ${url}`);
+      const response = await fetchWithTimeout(url, options);
+      
+      if (response.ok) {
+        console.log(`✅ Success on attempt ${attempt} for ${url}`);
+        return response;
+      }
+
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error('Unknown error');
+      console.warn(`❌ Attempt ${attempt} failed for ${url}:`, lastError.message);
+
+      if (attempt < maxRetries) {
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff, max 5s
+        console.log(`⏳ Waiting ${delay}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError!;
+}
 
 export const getCollection = async <T>(
   endpoint: string,
@@ -46,12 +100,16 @@ export const getCollection = async <T>(
     }
 
     const queryString = stringifyParams(params);
-    const collection = strapiClient.collection(endpoint);
-    const response = await collection.find(params) as unknown as StrapiResponse<T>;
+    const url = `${STRAPI_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`;
 
-    console.log(`✅ [${endpoint}] fetched with params:`, params);
-    console.log(`🔗 Final URL: ${STRAPI_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`);
-    return response;
+    console.log(`🔗 Fetching: ${url}`);
+    console.log(`📋 Params:`, params);
+
+    const response = await retryFetch(url);
+    const json = await response.json() as StrapiResponse<T>;
+
+    console.log(`✅ [${endpoint}] fetched successfully`);
+    return json;
   } catch (error) {
     console.error(`❌ Error fetching ${endpoint}:`, error);
     throw error;
@@ -63,17 +121,9 @@ export const getSingle = async <T>(
   params?: Record<string, any>
 ): Promise<T> => {
   const queryString = params ? `?${stringifyParams(params)}` : '';
-  const response = await fetch(`${STRAPI_URL}/${singleName}${queryString}`, {
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  const url = `${STRAPI_URL}/${singleName}${queryString}`;
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${singleName}: ${response.statusText}`);
-  }
-
+  const response = await retryFetch(url);
   const json = await response.json() as StrapiSingleResponse<T>;
   return json.data;
 };
@@ -82,18 +132,12 @@ export const createEntry = async <T>(
   collectionName: string,
   data: Record<string, any>
 ): Promise<T> => {
-  const response = await fetch(`${STRAPI_URL}/${collectionName}`, {
+  const url = `${STRAPI_URL}/${collectionName}`;
+
+  const response = await retryFetch(url, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({ data }),
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to create ${collectionName}: ${response.statusText}`);
-  }
 
   const json = await response.json() as StrapiSingleResponse<T>;
   return json.data;
@@ -104,18 +148,12 @@ export const updateEntry = async <T>(
   id: string | number,
   data: Record<string, any>
 ): Promise<T> => {
-  const response = await fetch(`${STRAPI_URL}/${collectionName}/${id}`, {
+  const url = `${STRAPI_URL}/${collectionName}/${id}`;
+
+  const response = await retryFetch(url, {
     method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({ data }),
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to update ${collectionName}: ${response.statusText}`);
-  }
 
   const json = await response.json() as StrapiSingleResponse<T>;
   return json.data;
@@ -125,18 +163,18 @@ export const deleteEntry = async <T>(
   collectionName: string,
   id: string | number
 ): Promise<T> => {
-  const response = await fetch(`${STRAPI_URL}/${collectionName}/${id}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  const url = `${STRAPI_URL}/${collectionName}/${id}`;
 
-  if (!response.ok) {
-    throw new Error(`Failed to delete ${collectionName}: ${response.statusText}`);
-  }
+  const response = await retryFetch(url, {
+    method: 'DELETE',
+  });
 
   const json = await response.json() as StrapiSingleResponse<T>;
   return json.data;
 };
+
+// Remove the old strapi client export since we're not using it anymore
+// export const strapiClient = strapi({
+//   baseURL: STRAPI_URL,
+//   auth: STRAPI_TOKEN,
+// });

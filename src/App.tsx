@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
@@ -8,6 +9,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 
 import { CookieConsentProvider } from "./contexts/CookieConsentContext";
 import { CountryProvider } from "./contexts/CountryContext";
+import { StrapiConnectionProvider } from "./contexts/StrapiConnectionContext";
 
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import CountryRedirect from "./components/CountryRedirect";
@@ -32,7 +34,18 @@ function App() {
     () =>
       new QueryClient({
         defaultOptions: {
-          queries: { retry: 1, refetchOnWindowFocus: false },
+          queries: { 
+            retry: (failureCount, error) => {
+              // Retry up to 2 times for network errors, but not for 4xx errors
+              if (failureCount < 2) {
+                const errorMessage = error?.message?.toLowerCase() || '';
+                return !errorMessage.includes('400') && !errorMessage.includes('401') && !errorMessage.includes('403') && !errorMessage.includes('404');
+              }
+              return false;
+            },
+            refetchOnWindowFocus: false,
+            staleTime: 1000 * 60 * 5, // 5 minutes
+          },
         },
       })
   );
@@ -40,114 +53,116 @@ function App() {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <Toaster />
-        <Sonner />
+        <StrapiConnectionProvider>
+          <Toaster />
+          <Sonner />
 
-        <BrowserRouter>
-          <CookieConsentProvider>
-            <CountryProvider>
-              <CookieConsentBanner />
+          <BrowserRouter>
+            <CookieConsentProvider>
+              <CountryProvider>
+                <CookieConsentBanner />
 
-              <Routes>
-                {/* root → geo-IP redirect or manual picker */}
-                <Route path="/" element={<CountryRedirect />} />
+                <Routes>
+                  {/* root → geo-IP redirect or manual picker */}
+                  <Route path="/" element={<CountryRedirect />} />
 
-                {/* country-specific section */}
-                <Route path=":countryCode/*" element={<CountryLayout />}>
-                  <Route
-                    index
-                    element={
-                      <CountryRouteGuard pagePath="/" element={<Index />} />
-                    }
-                  />
-
-                  <Route path="learning">
-                    <Route
-                      path="courses"
-                      element={
-                        <CountryRouteGuard
-                          pagePath="/learning/courses"
-                          element={<Courses />}
-                        />
-                      }
-                    />
-                    <Route
-                      path="book"
-                      element={
-                        <CountryRouteGuard
-                          pagePath="/learning/book"
-                          element={<Book />}
-                        />
-                      }
-                    />
-                  </Route>
-
-                  <Route path="policies">
+                  {/* country-specific section */}
+                  <Route path=":countryCode/*" element={<CountryLayout />}>
                     <Route
                       index
                       element={
+                        <CountryRouteGuard pagePath="/" element={<Index />} />
+                      }
+                    />
+
+                    <Route path="learning">
+                      <Route
+                        path="courses"
+                        element={
+                          <CountryRouteGuard
+                            pagePath="/learning/courses"
+                            element={<Courses />}
+                          />
+                        }
+                      />
+                      <Route
+                        path="book"
+                        element={
+                          <CountryRouteGuard
+                            pagePath="/learning/book"
+                            element={<Book />}
+                          />
+                        }
+                      />
+                    </Route>
+
+                    <Route path="policies">
+                      <Route
+                        index
+                        element={
+                          <CountryRouteGuard
+                            pagePath="/policies"
+                            element={<Policies />}
+                            allowEmptyContent
+                          />
+                        }
+                      />
+                      <Route
+                        path=":slug"
+                        element={
+                          <CountryRouteGuard
+                            pagePath="/policies"
+                            element={<PolicyDetails />}
+                          />
+                        }
+                      />
+                    </Route>
+
+                    {/* FAQ page route */}
+                    <Route
+                      path="faq"
+                      element={
                         <CountryRouteGuard
-                          pagePath="/policies"
-                          element={<Policies />}
+                          pagePath="/faq"
+                          element={<FaqPage />}
                           allowEmptyContent
                         />
                       }
                     />
+                    {/* serviceNavbar
+                     */}
                     <Route
-                      path=":slug"
+                      path="services"
                       element={
                         <CountryRouteGuard
-                          pagePath="/policies"
-                          element={<PolicyDetails />}
+                          pagePath="/services"
+                          element={<ServicesNavbar />}
+                          allowEmptyContent
                         />
                       }
                     />
+
+                    {/* Franchise page route */}
+                    <Route
+                      path="franchise"
+                      element={
+                        <CountryRouteGuard
+                          pagePath="/franchise"
+                          element={<Franchise />}
+                          allowEmptyContent
+                        />
+                      }
+                    />
+                    <Route path="*" element={<NotFound />} />
                   </Route>
 
-                  {/* FAQ page route */}
-                  <Route
-                    path="faq"
-                    element={
-                      <CountryRouteGuard
-                        pagePath="/faq"
-                        element={<FaqPage />}
-                        allowEmptyContent
-                      />
-                    }
-                  />
-                  {/* serviceNavbar
-                   */}
-                  <Route
-                    path="services"
-                    element={
-                      <CountryRouteGuard
-                        pagePath="/services"
-                        element={<ServicesNavbar />}
-                        allowEmptyContent
-                      />
-                    }
-                  />
-
-                  {/* Franchise page route */}
-                  <Route
-                    path="franchise"
-                    element={
-                      <CountryRouteGuard
-                        pagePath="/franchise"
-                        element={<Franchise />}
-                        allowEmptyContent
-                      />
-                    }
-                  />
+                  {/* 404 fallback */}
                   <Route path="*" element={<NotFound />} />
-                </Route>
-
-                {/* 404 fallback */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </CountryProvider>
-          </CookieConsentProvider>
-        </BrowserRouter>
+                </Routes>
+              </CountryProvider>
+            </CookieConsentProvider>
+          </BrowserRouter>
+        </StrapiConnectionProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );
