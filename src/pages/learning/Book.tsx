@@ -11,10 +11,11 @@ import BookCta from "@/components/book/Cta";
 import BookOffer from "@/components/book/Offer";
 import BookBestSeller from "@/components/book/BestSeller";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
+import Layout from "@/components/home/Layout";
 
 const Book = () => {
   return (
-    <>
+    <Layout>
       <EnhancedSEO
         slug="learning/book"
         pageType="Book"
@@ -34,7 +35,7 @@ const Book = () => {
         <BookFaq />
         <BookCta />
       </div>
-    </>
+    </Layout>
   );
 };
 

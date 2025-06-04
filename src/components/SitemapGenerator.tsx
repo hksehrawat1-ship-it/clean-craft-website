@@ -4,26 +4,24 @@ import { generateSitemapXML, generateRobotsTxt } from '@/utils/sitemap';
 
 export function SitemapGenerator() {
   useEffect(() => {
-    // Generate and serve sitemap.xml
-    const generateSitemap = () => {
+    // Generate and log sitemap for development debugging
+    const generateDevSitemap = () => {
       const sitemapXML = generateSitemapXML();
-      const blob = new Blob([sitemapXML], { type: 'application/xml' });
-      const url = URL.createObjectURL(blob);
-      
-      // In a real implementation, this would be served by the server
-      console.log('Generated sitemap.xml:', sitemapXML);
+      console.log('Generated sitemap.xml for development:', sitemapXML);
     };
 
-    // Generate and serve robots.txt
-    const generateRobots = () => {
+    // Generate and log robots.txt for development debugging
+    const generateDevRobots = () => {
       const isDevelopment = import.meta.env.DEV;
       const robotsTxt = generateRobotsTxt(isDevelopment);
-      
-      console.log('Generated robots.txt:', robotsTxt);
+      console.log('Generated robots.txt for development:', robotsTxt);
     };
 
-    generateSitemap();
-    generateRobots();
+    // Only run in development for debugging
+    if (import.meta.env.DEV) {
+      generateDevSitemap();
+      generateDevRobots();
+    }
   }, []);
 
   return null; // This component doesn't render anything
