@@ -1,6 +1,6 @@
+
 import { getCollection } from '../client';
 import { StrapiService, StrapiTestimonial, StrapiFAQ, StrapiPolicy } from '@/types/strapi';
-import { API } from '@strapi/client';
 
 // Define valid categories
 export type ContentCategory = 'home' | 'courses' | 'book' | 'franchise' | 'policies';
@@ -17,6 +17,13 @@ interface StrapiResponse<T> {
   };
 }
 
+interface BaseQueryParams {
+  populate?: string;
+  filters?: any;
+  sort?: string[];
+  locale?: string;
+}
+
 export class ContentService {
     private static instance: ContentService;
 
@@ -30,7 +37,7 @@ export class ContentService {
     }
 
     async getServices(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiService>> {
-        const params: API.BaseQueryParams = {
+        const params: BaseQueryParams = {
             populate: '*',
             filters: {
                 country: {
@@ -79,7 +86,7 @@ export class ContentService {
             filters.platform = { $eq: platform };
         }
 
-        const params: API.BaseQueryParams = {
+        const params: BaseQueryParams = {
             populate: '*',
             filters,
             sort: [`${sortBy}:${sortOrder}`],
@@ -112,7 +119,7 @@ export class ContentService {
             filters.category = { $eq: category };
         }
 
-        const params: API.BaseQueryParams = {
+        const params: BaseQueryParams = {
             populate: '*',
             filters,
             sort: [`${sortBy}:${sortOrder}`],
@@ -123,7 +130,7 @@ export class ContentService {
     }
 
     async getPolicies(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiPolicy>> {
-        const params: API.BaseQueryParams = {
+        const params: BaseQueryParams = {
             populate: '*',
             filters: {
                 country: {
@@ -140,4 +147,4 @@ export class ContentService {
 }
 
 // Export singleton instance
-export const contentService = ContentService.getInstance(); 
+export const contentService = ContentService.getInstance();

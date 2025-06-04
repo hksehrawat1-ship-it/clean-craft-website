@@ -9,15 +9,17 @@ import ProcessSection from "@/components/franchise/ProcessSection";
 import TestimonialsSection from "@/components/franchise/TestimonialsSection";
 import FaqSection from "@/components/franchise/FaqSection";
 import CareSection from "@/components/franchise/CareSection";
-import { SEO } from "@/components/SEO";
+import { EnhancedSEO } from "@/components/EnhancedSEO";
 
 const Franchise = () => {
   return (
     <Layout showOfferCarousel={false}>
-      <SEO 
+      <EnhancedSEO 
         slug="franchise"
+        pageType="Organization"
         defaultTitle="Laundry Franchise Opportunity | Clean Craft"
         defaultDescription="Join India's most trusted laundry franchise. Get assured break-even in 7 months or 100% royalty free for life. Premium territories available."
+        customKeywords={['dry cleaning franchise', 'wet cleaning business opportunity', 'profitable laundry franchise']}
       />
       <main className="franchise-page">
         <HeroSection />

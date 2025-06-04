@@ -10,7 +10,7 @@ import Curriculum from '@/components/Curriculum';
 import Guarantees from '@/components/Guarantees';
 import RegistrationForm from '@/components/RegistrationForm';
 import FAQs from '@/components/shared/FAQs';
-import { SEO } from '@/components/SEO';
+import { EnhancedSEO } from '@/components/EnhancedSEO';
 
 const Courses = () => {
   useEffect(() => {
@@ -68,10 +68,12 @@ const Courses = () => {
 
   return (
     <>
-      <SEO 
+      <EnhancedSEO 
         slug="learning/courses"
+        pageType="Course"
         defaultTitle="Professional Laundry Training in Delhi | CleanCraft"
         defaultDescription="Join our comprehensive laundry training program in Delhi. Learn from industry experts and start your successful laundry business."
+        customKeywords={['professional laundry training', 'dry cleaning course delhi', 'wet cleaning certification']}
       />
       <div className="min-h-screen flex flex-col bg-white">
         <EnhancedNavbar />

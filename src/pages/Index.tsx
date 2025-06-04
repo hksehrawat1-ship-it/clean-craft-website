@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useCountry } from "@/contexts/CountryContext";
@@ -12,7 +13,7 @@ import LaundryServiceFeatures from "../components/home/LaundryServiceFeatures";
 import CustomerTestimonials from "../components/home/CustomerTestimonials";
 import GuaranteeSection from "../components/home/GuaranteeSection";
 import FaqSection from "../components/home/FAQSection";
-import { SEO } from "@/components/SEO";
+import { EnhancedSEO } from "@/components/EnhancedSEO";
 import { cn } from "@/lib/utils";
 import {
   useStrapiPage,
@@ -82,14 +83,16 @@ export default function Index() {
 
   return (
     <>
-      <SEO
-        slug="home"
+      <EnhancedSEO
+        slug="/"
+        pageType="LocalBusiness"
         defaultTitle={`CleanCraft - Professional Dry Cleaning and Laundry Services${
           countryName ? ` in ${countryName}` : ""
         }`}
         defaultDescription={`Experience premium dry cleaning and laundry services with CleanCraft${
           countryName ? ` in ${countryName}` : ""
         }. Professional cleaning, expert care, and convenient solutions for all your laundry and dry cleaning needs.`}
+        customKeywords={['professional laundry services', 'dry cleaning near me', 'wet cleaning solutions']}
       />
 
       <Layout>
