@@ -19,31 +19,35 @@ interface ServiceCardProps {
   name: string;
   description: string;
   price_from: number;
-  price_type?: string;
+  price_type: string;
   icon?: IconType;
 }
+
+const CleanCraftIcon = "/lovable-uploads/cleancraft-icon.png"; // Apni image ka path yahan set karo
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   name,
   description,
   price_from,
-  price_type = "kg",
-  icon: Icon,
+  price_type,
 }) => {
   const { currentCountry } = useCountry();
+  const countryCode = currentCountry?.toLowerCase() || "in";
   const currencySymbol = currentCountry
-    ? currencySymbols[currentCountry.toLowerCase()] || "$"
+    ? currencySymbols[countryCode] || "$"
     : "$";
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-4">
-          {Icon &&
-            React.createElement(Icon as any, {
-              className: "w-10 h-10 text-[#5294FF]",
-            })}
-          <h3 className="text-lg font-semibold">{name}</h3>
+        <div className="flex items-center gap-3">
+          <img
+            src={CleanCraftIcon}
+            alt="CleanCraft"
+            className="w-7 h-7 object-contain rounded-full"
+          />
+
+          <h3 className="text-lg font-semibold ml-2">{name}</h3>
         </div>
         <ChevronRight className="w-5 h-5 text-gray-400" />
       </div>
@@ -83,6 +87,50 @@ const currencySymbols: Record<string, string> = {
   it: "€",
 };
 
+const fallbackServices = [
+  {
+    id: "wash-dry-fold",
+    name: "Wash, Dry & Fold",
+    description:
+      "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
+    price_from: 6.5,
+    price_type: "kg",
+    slug: "wash-dry-fold",
+  },
+  {
+    id: "wash-iron",
+    name: "Wash & Iron",
+    description: "For everyday laundry that requires ironing.",
+    price_from: 7.5,
+    price_type: "kg",
+    slug: "wash-iron",
+  },
+  {
+    id: "dry-cleaning",
+    name: "Dry Cleaning",
+    description: "For delicate items and fabrics.",
+    price_from: 12.95,
+    price_type: "item",
+    slug: "dry-cleaning",
+  },
+  {
+    id: "ironing",
+    name: "Ironing only",
+    description: "For items that are already clean.",
+    price_from: 3.95,
+    price_type: "item",
+    slug: "ironing",
+  },
+  {
+    id: "duvets",
+    name: "Duvets & Bulky Items",
+    description: "For larger items that require extra care.",
+    price_from: 24.95,
+    price_type: "item",
+    slug: "duvets",
+  },
+];
+
 const ServicesPage: React.FC = () => {
   const { currentCountry } = useCountry();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
@@ -101,54 +149,32 @@ const ServicesPage: React.FC = () => {
     toast.error("Failed to load services");
   }
 
-  const fallbackServices = [
-    {
-      id: "wash-dry-fold",
-      name: "Wash, Dry & Fold",
-      description:
-        "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
-      price_from: 6.5,
-      price_type: "kg",
-      slug: "wash-dry-fold",
-    },
-    {
-      id: "wash-iron",
-      name: "Wash & Iron",
-      description: "For everyday laundry that requires ironing.",
-      price_from: 7.5,
-      price_type: "kg",
-      slug: "wash-iron",
-    },
-    {
-      id: "dry-cleaning",
-      name: "Dry Cleaning",
-      description: "For delicate items and fabrics.",
-      price_from: 12.95,
-      price_type: "item",
-      slug: "dry-cleaning",
-    },
-    {
-      id: "ironing",
-      name: "Ironing only",
-      description: "For items that are already clean.",
-      price_from: 3.95,
-      price_type: "item",
-      slug: "ironing",
-    },
-    {
-      id: "duvets",
-      name: "Duvets & Bulky Items",
-      description: "For larger items that require extra care.",
-      price_from: 24.95,
-      price_type: "item",
-      slug: "duvets",
-    },
-  ];
-
-  const displayServices =
-    strapiServices?.data?.length && strapiServices?.data?.length > 0
+  const displayServicesRaw =
+    strapiServices?.data && strapiServices.data.length > 0
       ? strapiServices.data
       : fallbackServices;
+
+  // Fix price_type fallback based on slug
+  const displayServices = displayServicesRaw.map((service) => {
+    let priceType = service.price_type?.trim();
+
+    if (!priceType) {
+      if (
+        service.slug === "Wash_and_Fold" ||
+        service.slug === "Premium_Laundry" ||
+        service.slug === "Wash_and_Iron"
+      ) {
+        priceType = "kg";
+      } else {
+        priceType = "item";
+      }
+    }
+
+    return {
+      ...service,
+      price_type: priceType,
+    };
+  });
 
   const visibleServicesDesktop = showAll
     ? displayServices
@@ -159,7 +185,7 @@ const ServicesPage: React.FC = () => {
   const countryCode = currentCountry?.toLowerCase() || "in";
 
   return (
-    <div className="min-h-screen flex flex-col bg-whit">
+    <div className="min-h-screen flex flex-col">
       <EnhancedNavbar />
 
       <main className="flex-grow w-full py-16 px-2 md:px-4">
@@ -170,7 +196,7 @@ const ServicesPage: React.FC = () => {
               <h2 className="text-3xl font-bold text-white mb-4">
                 Explore our services
               </h2>
-              <p className="text-lg text-white">
+              <p className="text-lg text-white/90">
                 Your clothes are treated with the utmost care, receiving the
                 attention they deserve.
               </p>
@@ -207,8 +233,13 @@ const ServicesPage: React.FC = () => {
               </button>
             </div>
             <p className="text-sm text-white mt-16">
-              Our minimum order value is {currencySymbols[countryCode]}350. All
-              orders include free delivery.
+              Our minimum order value is{" "}
+              {countryCode === "in"
+                ? `${currencySymbols[countryCode]}350`
+                : countryCode === "au"
+                ? `${currencySymbols[countryCode]}6.3`
+                : `${currencySymbols[countryCode]}350`}
+              . All orders include free delivery.
             </p>
           </div>
 

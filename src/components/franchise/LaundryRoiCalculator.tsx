@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ const LaundryRoiCalculator = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  // Format number with commas for Indian numbering system
   const formatIndianNumber = (num: number) => {
     return num.toLocaleString("en-IN");
   };
@@ -25,7 +23,6 @@ const LaundryRoiCalculator = () => {
     setShowResults(false);
   };
 
-  // Calculate 62% return on investment
   const calculateReturn = () => {
     const investNum = parseInt(investment);
     if (isNaN(investNum)) return 0;
@@ -37,20 +34,17 @@ const LaundryRoiCalculator = () => {
     const monthly = Math.floor(annualProfit / 12);
     setMonthlyRoi(formatIndianNumber(monthly));
     setShowResults(true);
-    
-    // Open form after showing results
-    setTimeout(() => {
-      setIsFormOpen(true);
-    }, 1000);
+    setIsFormOpen(true); // 🚀 Modal opens instantly now
   };
 
   const totalReturn = calculateReturn();
   const monthlyReturn = totalReturn / 12;
 
-  // Dynamic title based on results
   const getFormTitle = () => {
     if (showResults && monthlyRoi) {
-      return `Start Earning ₹${formatIndianNumber(monthlyReturn)} in Just a Month`;
+      return `Start Earning ₹${formatIndianNumber(
+        monthlyReturn
+      )} in Just a Month`;
     }
     return "Your Earnings Are a Call Away";
   };
@@ -74,7 +68,6 @@ const LaundryRoiCalculator = () => {
           </h3>
 
           <div className={`space-y-${isMobile ? "3" : "4"}`}>
-            {/* Section 1: Initial Investment */}
             <div className="bg-cleancraft-light/10 p-3 rounded-lg">
               <div className="flex items-center mb-1">
                 <BadgeIndianRupee className="h-4 w-4 mr-2 text-google-blue" />
@@ -100,7 +93,6 @@ const LaundryRoiCalculator = () => {
               </p>
             </div>
 
-            {/* Section 2: Automatically calculate 62% return */}
             <div className="bg-cleancraft-light/10 p-3 rounded-lg">
               <div className="flex items-center mb-1">
                 <Calculator className="h-4 w-4 mr-2 text-google-red" />
@@ -115,7 +107,6 @@ const LaundryRoiCalculator = () => {
               </div>
             </div>
 
-            {/* Section 3: Monthly ROI Result */}
             <div className="bg-cleancraft-light/10 p-3 rounded-lg">
               <div className="flex items-center mb-1">
                 <Calculator className="h-4 w-4 mr-2 text-google-red" />
@@ -160,7 +151,9 @@ const LaundryRoiCalculator = () => {
         <div className="bg-cleancraft-light/30 p-4 border-t border-cleancraft-light">
           <div className="flex flex-col items-center justify-center space-y-1">
             <div className="flex items-center">
-              <Badge className="bg-google-green text-white mr-2">Zero Risk</Badge>
+              <Badge className="bg-google-green text-white mr-2">
+                Zero Risk
+              </Badge>
               <p className="text-sm font-medium text-google-gray">
                 100% Royalty Free Guarantee
               </p>

@@ -19,16 +19,17 @@ interface ServiceCardProps {
   name: string;
   description: string;
   price_from: number;
-  price_type?: string;
+  price_type: string;
   icon?: IconType;
 }
+
+const CleanCraftIcon = "/lovable-uploads/cleancraft-icon.png";
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   name,
   description,
   price_from,
-  price_type = "kg",
-  icon: Icon,
+  price_type,
 }) => {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || "in";
@@ -39,12 +40,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-4">
-          {Icon &&
-            React.createElement(Icon as any, {
-              className: "w-10 h-10 text-[#5294FF]",
-            })}
-          <h3 className="text-lg font-semibold">{name}</h3>
+        <div className="flex items-center gap-3">
+          <img
+            src={CleanCraftIcon}
+            alt="CleanCraft"
+            className="w-7 h-7 object-contain rounded-full"
+          />
+          <h3 className="text-lg font-semibold ml-2">{name}</h3>
         </div>
         <ChevronRight className="w-5 h-5 text-gray-400" />
       </div>
@@ -84,6 +86,50 @@ const currencySymbols: Record<string, string> = {
   it: "€",
 };
 
+const fallbackServices = [
+  {
+    id: "wash-dry-fold",
+    name: "Wash, Dry & Fold",
+    description:
+      "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
+    price_from: 6.5,
+    price_type: "",
+    slug: "wash-dry-fold",
+  },
+  {
+    id: "wash-iron",
+    name: "Wash & Iron",
+    description: "For everyday laundry that requires ironing.",
+    price_from: 7.5,
+    price_type: "",
+    slug: "wash-iron",
+  },
+  {
+    id: "dry-cleaning",
+    name: "Dry Cleaning",
+    description: "For delicate items and fabrics.",
+    price_from: 12.95,
+    price_type: "",
+    slug: "dry-cleaning",
+  },
+  {
+    id: "ironing",
+    name: "Ironing only",
+    description: "For items that are already clean.",
+    price_from: 3.95,
+    price_type: "",
+    slug: "ironing",
+  },
+  {
+    id: "duvets",
+    name: "Duvets & Bulky Items",
+    description: "For larger items that require extra care.",
+    price_from: 24.95,
+    price_type: "",
+    slug: "duvets",
+  },
+];
+
 const ServicesPage: React.FC = () => {
   const { currentCountry } = useCountry();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
@@ -102,52 +148,33 @@ const ServicesPage: React.FC = () => {
     toast.error("Failed to load services");
   }
 
-  const fallbackServices = [
-    {
-      id: "wash-dry-fold",
-      name: "Wash, Dry & Fold",
-      description:
-        "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
-      price_from: 6.5,
-      price_type: "kg",
-      slug: "wash-dry-fold",
-    },
-    {
-      id: "wash-iron",
-      name: "Wash & Iron",
-      description: "For everyday laundry that requires ironing.",
-      price_from: 7.5,
-      price_type: "kg",
-      slug: "wash-iron",
-    },
-    {
-      id: "dry-cleaning",
-      name: "Dry Cleaning",
-      description: "For delicate items and fabrics.",
-      price_from: 12.95,
-      price_type: "item",
-      slug: "dry-cleaning",
-    },
-    {
-      id: "ironing",
-      name: "Ironing only",
-      description: "For items that are already clean.",
-      price_from: 3.95,
-      price_type: "item",
-      slug: "ironing",
-    },
-    {
-      id: "duvets",
-      name: "Duvets & Bulky Items",
-      description: "For larger items that require extra care.",
-      price_from: 24.95,
-      price_type: "item",
-      slug: "duvets",
-    },
-  ];
+  const displayServicesRaw =
+    strapiServices?.data && strapiServices.data.length > 0
+      ? strapiServices.data
+      : fallbackServices;
 
-  const displayServices =
-    strapiServices?.data?.length && strapiServices.data.length > 0 ? strapiServices.data : fallbackServices;
+  // ✅ Fixed price_type logic
+  const displayServices = displayServicesRaw.map((service) => {
+    let priceType = service.price_type?.trim();
+
+    if (!priceType) {
+      const slugLower = service.slug?.toLowerCase() || "";
+      if (
+        slugLower.includes("wash-dry-fold") ||
+        slugLower.includes("wash-iron") ||
+        slugLower.includes("premium-laundry")
+      ) {
+        priceType = "kg";
+      } else {
+        priceType = "item";
+      }
+    }
+
+    return {
+      ...service,
+      price_type: priceType,
+    };
+  });
 
   const visibleServicesDesktop = showAll
     ? displayServices
@@ -193,7 +220,7 @@ const ServicesPage: React.FC = () => {
           className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
           style={{ height: "calc(100vh - 64px)" }}
         >
-          {/* Static Left */}
+          {/* Left Panel */}
           <div className="w-1/2 bg-[#1E3A8A] text-white p-16 flex flex-col">
             <div>
               <h2 className="text-4xl font-bold mb-6">Explore our services</h2>
@@ -206,12 +233,17 @@ const ServicesPage: React.FC = () => {
               </button>
             </div>
             <p className="text-sm text-white mt-16">
-              Our minimum order value is {currencySymbols[countryCode]}350. All
-              orders include free delivery.
+              Our minimum order value is{" "}
+              {countryCode === "in"
+                ? `${currencySymbols[countryCode]}350`
+                : countryCode === "au"
+                ? `${currencySymbols[countryCode]}6.3`
+                : `${currencySymbols[countryCode]}350`}
+              . All orders include free delivery.
             </p>
           </div>
 
-          {/* Dynamic Right */}
+          {/* Right Panel */}
           <div className="w-1/2 bg-gray-50 p-16 overflow-y-auto hide-scrollbar">
             <div className="space-y-4 max-w-xl">
               {visibleServicesDesktop.map((service) => (
