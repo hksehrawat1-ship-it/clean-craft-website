@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ChevronRight, ArrowRight, Wifi, WifiOff } from "lucide-react";
 import { useCountry } from "@/contexts/CountryContext";
@@ -23,13 +22,14 @@ interface ServiceCardProps {
   icon?: IconType;
 }
 
-const CleanCraftIcon = "/lovable-uploads/cleancraft-icon.png"; // Apni image ka path yahan set karo
+const CleanCraftIcon = "/lovable-uploads/cleancraft-icon.png";
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   name,
   description,
   price_from,
   price_type,
+  icon,
 }) => {
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || "in";
@@ -42,8 +42,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       {/* Icon with circular background */}
       <div className="flex items-center justify-between mb-6">
         <div className="w-12 h-12 bg-[#5294FF]/10 rounded-full flex items-center justify-center">
-          {Icon &&
-            React.createElement(Icon as any, {
+          {icon &&
+            React.createElement(icon, {
               className: "w-6 h-6 text-[#5294FF]",
             })}
         </div>
@@ -151,6 +151,50 @@ const currencySymbols: Record<string, string> = {
   es: "€",
   it: "€",
 };
+
+const fallbackServices = [
+  {
+    id: "wash-dry-fold",
+    name: "Wash, Dry & Fold",
+    description:
+      "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
+    price_from: 6.5,
+    price_type: "",
+    slug: "wash-dry-fold",
+  },
+  {
+    id: "wash-iron",
+    name: "Wash & Iron",
+    description: "For everyday laundry that requires ironing.",
+    price_from: 7.5,
+    price_type: "",
+    slug: "wash-iron",
+  },
+  {
+    id: "dry-cleaning",
+    name: "Dry Cleaning",
+    description: "For delicate items and fabrics.",
+    price_from: 12.95,
+    price_type: "",
+    slug: "dry-cleaning",
+  },
+  {
+    id: "ironing",
+    name: "Ironing only",
+    description: "For items that are already clean.",
+    price_from: 3.95,
+    price_type: "",
+    slug: "ironing",
+  },
+  {
+    id: "duvets",
+    name: "Duvets & Bulky Items",
+    description: "For larger items that require extra care.",
+    price_from: 24.95,
+    price_type: "",
+    slug: "duvets",
+  },
+];
 
 const ServicesSection: React.FC = () => {
   const { currentCountry } = useCountry();
