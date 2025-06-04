@@ -28,43 +28,45 @@ function renderWithErrorHandling() {
       ? "We're having trouble connecting to our content services. The app may have limited functionality."
       : "We're having trouble loading the application."
     
-    // Show a user-friendly error message
-    rootElement.innerHTML = `
-      <div style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        text-align: center;
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 2rem;
-      ">
-        <h1 style="color: #1869D3; margin-bottom: 1rem; font-size: 2rem;">CleanCraft</h1>
-        <p style="color: #666; max-width: 500px; margin-bottom: 2rem; line-height: 1.5;">
-          ${errorMessage}
-        </p>
-        <button 
-          onclick="window.location.reload()" 
-          style="
-            background: #1869D3;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-          "
-        >
-          Try Again
-        </button>
-        ${isStrapiError ? `
-          <p style="color: #888; font-size: 0.875rem; margin-top: 1rem;">
-            If this problem persists, some content may be temporarily unavailable.
+    // Show a user-friendly error message - rootElement is guaranteed to exist here
+    if (rootElement) {
+      rootElement.innerHTML = `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          text-align: center;
+          font-family: system-ui, -apple-system, sans-serif;
+          padding: 2rem;
+        ">
+          <h1 style="color: #1869D3; margin-bottom: 1rem; font-size: 2rem;">CleanCraft</h1>
+          <p style="color: #666; max-width: 500px; margin-bottom: 2rem; line-height: 1.5;">
+            ${errorMessage}
           </p>
-        ` : ''}
-      </div>
-    `
+          <button 
+            onclick="window.location.reload()" 
+            style="
+              background: #1869D3;
+              color: white;
+              border: none;
+              padding: 0.75rem 1.5rem;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              font-size: 1rem;
+            "
+          >
+            Try Again
+          </button>
+          ${isStrapiError ? `
+            <p style="color: #888; font-size: 0.875rem; margin-top: 1rem;">
+              If this problem persists, some content may be temporarily unavailable.
+            </p>
+          ` : ''}
+        </div>
+      `
+    }
   }
 }
 
