@@ -1,3 +1,4 @@
+
 import { useState, Suspense, useEffect, lazy } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
@@ -14,6 +15,7 @@ import CookieConsentBanner from "./components/CookieConsentBanner";
 import CountryRedirect from "./components/CountryRedirect";
 import CountryRouteGuard from "./components/CountryRouteGuard";
 import { SitemapGenerator } from "./components/SitemapGenerator";
+import CountryLayout from "./components/CountryLayout";
 
 // Performance optimizations
 import { 
@@ -61,7 +63,7 @@ function App() {
             refetchOnWindowFocus: false,
             staleTime: 1000 * 60 * 5, // 5 minutes
             // Performance optimization: reduce network requests
-            cacheTime: 1000 * 60 * 10, // 10 minutes
+            gcTime: 1000 * 60 * 10, // 10 minutes (updated from cacheTime)
           },
         },
       })
