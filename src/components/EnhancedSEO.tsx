@@ -10,6 +10,9 @@ interface EnhancedSEOProps {
   defaultDescription?: string;
   pageType?: 'LocalBusiness' | 'Course' | 'Book' | 'Organization';
   customKeywords?: string[];
+  noIndex?: boolean;
+  maxSnippet?: number;
+  maxImagePreview?: 'none' | 'standard' | 'large';
 }
 
 export function EnhancedSEO({ 
@@ -17,7 +20,10 @@ export function EnhancedSEO({
   defaultTitle, 
   defaultDescription, 
   pageType = 'LocalBusiness',
-  customKeywords = []
+  customKeywords = [],
+  noIndex = false,
+  maxSnippet,
+  maxImagePreview = 'large'
 }: EnhancedSEOProps) {
   const { currentCountry } = useCountry();
   const { data: seoData, isLoading } = useStrapiPageSEO(slug);
@@ -29,6 +35,47 @@ export function EnhancedSEO({
   const title = seoData?.seo_title || pageSEO?.title || defaultTitle || 'CleanCraft';
   const description = seoData?.seo_description || pageSEO?.description || defaultDescription || 'Professional dry cleaning and wet cleaning services';
   const keywords = [...(pageSEO?.keywords || []), ...customKeywords].join(', ');
+  
+  // Generate page-type specific robots meta tags
+  const generateRobotsContent = () => {
+    const directives = [];
+    
+    // Index/noindex
+    directives.push(noIndex ? 'noindex' : 'index');
+    directives.push('follow');
+    
+    // Page-type specific directives
+    switch (pageType) {
+      case 'Course':
+        directives.push('max-snippet:200');
+        directives.push('max-video-preview:30');
+        break;
+      case 'Book':
+        directives.push('max-snippet:160');
+        directives.push('max-video-preview:20');
+        break;
+      case 'Organization':
+        directives.push('max-snippet:300');
+        directives.push('max-video-preview:60');
+        break;
+      default: // LocalBusiness
+        directives.push('max-snippet:250');
+        directives.push('max-video-preview:45');
+    }
+    
+    // Custom max-snippet if provided
+    if (maxSnippet) {
+      const snippetIndex = directives.findIndex(d => d.startsWith('max-snippet'));
+      if (snippetIndex !== -1) {
+        directives[snippetIndex] = `max-snippet:${maxSnippet}`;
+      }
+    }
+    
+    // Image preview setting
+    directives.push(`max-image-preview:${maxImagePreview}`);
+    
+    return directives.join(', ');
+  };
   
   // Generate structured data
   const structuredData = generateStructuredData(pageType, countryCode, seoData);
@@ -59,6 +106,11 @@ export function EnhancedSEO({
       <meta name="keywords" content={keywords} />
       <link rel="canonical" href={canonicalUrl} />
       
+      {/* Enhanced Robots Meta Tags */}
+      <meta name="robots" content={generateRobotsContent()} />
+      <meta name="googlebot" content={generateRobotsContent()} />
+      <meta name="bingbot" content="index, follow" />
+      
       {/* Hreflang tags for international SEO */}
       {hreflangUrls.map(({ hreflang, href }) => (
         <link key={hreflang} rel="alternate" hrefLang={hreflang} href={href} />
@@ -71,22 +123,31 @@ export function EnhancedSEO({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:site_name" content="CleanCraft" />
       <meta property="og:locale" content={countryCode === 'in' ? 'en_IN' : 'en_AU'} />
+      <meta property="og:image" content="https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content="https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png" />
       
       {/* Geographic targeting */}
       <meta name="geo.region" content={countryCode.toUpperCase()} />
       <meta name="geo.placename" content={countryCode === 'in' ? 'India' : 'Australia'} />
       
-      {/* Additional SEO tags */}
-      <meta name="robots" content="index, follow, max-image-preview:large" />
-      <meta name="googlebot" content="index, follow" />
+      {/* Performance and SEO optimization */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="format-detection" content="telephone=no" />
+      
+      {/* DNS prefetch for performance */}
+      <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+      <link rel="dns-prefetch" href="//cleancraft.com" />
+      
+      {/* Preconnect to external domains */}
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       
       {/* Structured Data */}
       <script type="application/ld+json">
