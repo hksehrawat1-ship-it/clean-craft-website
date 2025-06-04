@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -186,7 +185,7 @@ const RegistrationForm: React.FC = () => {
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <SectionHeading className="text-gray-900 mb-4">
-              Start Your Laundry Business Journey
+              Start Your Laundry <span className="text-brand-blue">Business Journey</span>
             </SectionHeading>
             <BodyText className="text-gray-600">
               Join India's premier laundry & dry cleaning training program

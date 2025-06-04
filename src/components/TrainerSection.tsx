@@ -1,7 +1,15 @@
+
 import { Award, BookOpen, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TrainerSection = () => {
+  const scrollToRegistration = () => {
+    const registrationForm = document.getElementById('registration-form');
+    if (registrationForm) {
+      registrationForm.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="trainer" className="py-16 bg-blue-50">
       <div className="container mx-auto">
@@ -69,16 +77,16 @@ const TrainerSection = () => {
 
             <div className="pt-4">
               <Button
-                asChild
+                onClick={scrollToRegistration}
                 size="lg"
-                className="bg-[#1A73E8]  text-white"
+                className="bg-[#1A73E8] text-white"
                 style={{
                   backgroundColor: "#1A73E8",
                   padding: "0 27px",
                   borderRadius: "11px",
                 }}
               >
-                <a href="#register">Learn From The Expert</a>
+                Learn From The Expert
               </Button>
             </div>
           </div>
