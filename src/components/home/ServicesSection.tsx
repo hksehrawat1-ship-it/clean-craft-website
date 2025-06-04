@@ -38,24 +38,40 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     : "$";
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-4">
+    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-gray-200">
+      {/* Icon with circular background */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="w-12 h-12 bg-[#5294FF]/10 rounded-full flex items-center justify-center">
           {Icon &&
             React.createElement(Icon as any, {
-              className: "w-10 h-10 text-[#5294FF]",
+              className: "w-6 h-6 text-[#5294FF]",
             })}
-          <h3 className="text-lg font-semibold">{name}</h3>
         </div>
-        <ChevronRight className="w-5 h-5 text-gray-400" />
+        <ChevronRight className="w-5 h-5 text-gray-300" />
       </div>
-      <p className="text-gray-600 mb-4 min-h-[48px]">{description}</p>
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="text-sm text-gray-500">From</span>
-          <div className="text-lg font-semibold">
-            {currencySymbol}
-            {price_from}/{price_type}
+      
+      {/* Title */}
+      <h3 className="text-xl font-semibold text-gray-900 mb-3">{name}</h3>
+      
+      {/* Description */}
+      <p className="text-gray-600 text-sm leading-relaxed mb-6 min-h-[60px]">
+        {description}
+      </p>
+      
+      {/* Pricing */}
+      <div className="border-t border-gray-100 pt-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-500 mb-1">Starting from</p>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-bold text-gray-900">
+                {currencySymbol}{price_from}
+              </span>
+              <span className="text-sm text-gray-500">/{price_type}</span>
+            </div>
+          </div>
+          <div className="w-8 h-8 bg-[#5294FF] rounded-full flex items-center justify-center">
+            <ChevronRight className="w-4 h-4 text-white" />
           </div>
         </div>
       </div>
@@ -219,7 +235,7 @@ const ServicesPage: React.FC = () => {
             </div>
             <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory">
               {visibleServicesMobile.map((service) => (
-                <div key={service.id} className="snap-start min-w-[300px]">
+                <div key={service.id} className="snap-start min-w-[320px]">
                   <ServiceCard {...service} icon={serviceIcons[service.name]} />
                 </div>
               ))}
@@ -259,7 +275,7 @@ const ServicesPage: React.FC = () => {
 
           {/* Dynamic Right */}
           <div className="w-1/2 bg-gray-50 p-16 overflow-y-auto hide-scrollbar">
-            <div className="space-y-4 max-w-xl">
+            <div className="space-y-6 max-w-xl">
               {visibleServicesDesktop.map((service) => (
                 <ServiceCard
                   key={service.id}
