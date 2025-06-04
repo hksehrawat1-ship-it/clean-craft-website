@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Dialog,
@@ -6,7 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import DynamicFranchiseForm from "./DynamicFranchiseForm";
+
+import DynamicFranchiseForm from "./DynamicFranchiseForm"; // direct import without lazy
 
 interface FranchiseFormModalProps {
   isOpen: boolean;
@@ -25,8 +25,11 @@ const FranchiseFormModal: React.FC<FranchiseFormModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="sr-only">{title}</DialogTitle>
+          {/* Header title optional */}
+          {/* <DialogTitle>Franchise Inquiry</DialogTitle> */}
         </DialogHeader>
+
+        {/* Directly render form without Suspense */}
         <DynamicFranchiseForm
           title={title}
           sourceCta={sourceCta}

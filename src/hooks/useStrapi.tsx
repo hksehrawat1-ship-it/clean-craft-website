@@ -24,10 +24,18 @@ export function useStrapiPage(slug: string) {
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
-    queryKey: ['page', slug, countryCode],
+    queryKey: ["page", slug, countryCode],
     queryFn: async () => {
-      const pageService = PageService.getInstance();
-      return pageService.getPage(slug, countryCode);
+      console.log("🔄 Fetching page:", slug, "Country:", countryCode);
+      try {
+        const pageService = PageService.getInstance();
+        const data = await pageService.getPage(slug, countryCode);
+        console.log("✅ Page data:", data);
+        return data;
+      } catch (err) {
+        console.error("❌ Error fetching page:", err);
+        throw err;
+      }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing
@@ -40,10 +48,18 @@ export function useStrapiPageSEO(slug: string) {
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
-    queryKey: ['pageSEO', slug, countryCode],
+    queryKey: ["pageSEO", slug, countryCode],
     queryFn: async () => {
-      const pageService = PageService.getInstance();
-      return pageService.getPageSEO(slug, countryCode);
+      console.log("🔄 Fetching SEO for:", slug, "Country:", countryCode);
+      try {
+        const pageService = PageService.getInstance();
+        const data = await pageService.getPageSEO(slug, countryCode);
+        console.log("✅ SEO data:", data);
+        return data;
+      } catch (err) {
+        console.error("❌ Error fetching SEO:", err);
+        throw err;
+      }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing
@@ -56,9 +72,17 @@ export function useStrapiServices() {
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
-    queryKey: ['services', countryCode],
+    queryKey: ["services", countryCode],
     queryFn: async () => {
-      return contentService.getServices(countryCode);
+      console.log("🔄 Fetching services for:", countryCode);
+      try {
+        const data = await contentService.getServices(countryCode);
+        console.log("✅ Services:", data);
+        return data;
+      } catch (err) {
+        console.error("❌ Error fetching services:", err);
+        throw err;
+      }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing
@@ -68,17 +92,30 @@ export function useStrapiServices() {
 export function useStrapiTestimonials(options?: {
   category?: ContentCategory;
   platform?: string;
-  sortBy?: 'rating' | 'order';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "rating" | "order";
+  sortOrder?: "asc" | "desc";
 }) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<any>>({
-    queryKey: ['testimonials', countryCode, options],
+    queryKey: ["testimonials", countryCode, options],
     queryFn: async () => {
-      return contentService.getTestimonials(countryCode, options);
+      console.log(
+        "🔄 Fetching testimonials for:",
+        countryCode,
+        "Options:",
+        options
+      );
+      try {
+        const data = await contentService.getTestimonials(countryCode, options);
+        console.log("✅ Testimonials:", data);
+        return data;
+      } catch (err) {
+        console.error("❌ Error fetching testimonials:", err);
+        throw err;
+      }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing
@@ -87,17 +124,25 @@ export function useStrapiTestimonials(options?: {
 
 export function useStrapiFAQs(options?: {
   category?: ContentCategory;
-  sortBy?: 'order';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "order";
+  sortOrder?: "asc" | "desc";
 }) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<any>>({
-    queryKey: ['faqs', countryCode, options],
+    queryKey: ["faqs", countryCode, options],
     queryFn: async () => {
-      return contentService.getFAQs(countryCode, options);
+      console.log("🔄 Fetching FAQs for:", countryCode, "Options:", options);
+      try {
+        const data = await contentService.getFAQs(countryCode, options);
+        console.log("✅ FAQs:", data);
+        return data;
+      } catch (err) {
+        console.error("❌ Error fetching FAQs:", err);
+        throw err;
+      }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing
@@ -110,17 +155,23 @@ export function useStrapiPolicies() {
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery({
-    queryKey: ['policies', countryCode],
+    queryKey: ["policies", countryCode],
     queryFn: async () => {
-      if (!countryCode) {
-        return [];
+      console.log("🔄 Fetching policies for:", countryCode);
+      try {
+        if (!countryCode) {
+          return [];
+        }
+        const response = await contentService.getPolicies(countryCode);
+        console.log("✅ Policies:", response.data);
+        return response.data.map((policy) => ({
+          ...policy,
+          country: policy.country,
+        }));
+      } catch (err) {
+        console.error("❌ Error fetching policies:", err);
+        throw err;
       }
-      const response = await contentService.getPolicies(countryCode);
-      // Transform the Strapi response to flatten the data structure
-      return response.data.map(policy => ({
-        ...policy,
-        country: policy.country
-      }));
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing

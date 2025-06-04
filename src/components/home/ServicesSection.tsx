@@ -19,20 +19,22 @@ interface ServiceCardProps {
   name: string;
   description: string;
   price_from: number;
-  price_type?: string;
+  price_type: string;
   icon?: IconType;
 }
+
+const CleanCraftIcon = "/lovable-uploads/cleancraft-icon.png"; // Apni image ka path yahan set karo
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   name,
   description,
   price_from,
-  price_type = "kg",
-  icon: Icon,
+  price_type,
 }) => {
   const { currentCountry } = useCountry();
+  const countryCode = currentCountry?.toLowerCase() || "in";
   const currencySymbol = currentCountry
-    ? currencySymbols[currentCountry.toLowerCase()] || "$"
+    ? currencySymbols[countryCode] || "$"
     : "$";
 
   return (
@@ -170,54 +172,32 @@ const ServicesSection: React.FC = () => {
     toast.error("Failed to load services");
   }
 
-  const fallbackServices = [
-    {
-      id: "wash-dry-fold",
-      name: "Wash, Dry & Fold",
-      description:
-        "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
-      price_from: 6.5,
-      price_type: "kg",
-      slug: "wash-dry-fold",
-    },
-    {
-      id: "wash-iron",
-      name: "Wash & Iron",
-      description: "For everyday laundry that requires ironing.",
-      price_from: 7.5,
-      price_type: "kg",
-      slug: "wash-iron",
-    },
-    {
-      id: "dry-cleaning",
-      name: "Dry Cleaning",
-      description: "For delicate items and fabrics.",
-      price_from: 12.95,
-      price_type: "item",
-      slug: "dry-cleaning",
-    },
-    {
-      id: "ironing",
-      name: "Ironing only",
-      description: "For items that are already clean.",
-      price_from: 3.95,
-      price_type: "item",
-      slug: "ironing",
-    },
-    {
-      id: "duvets",
-      name: "Duvets & Bulky Items",
-      description: "For larger items that require extra care.",
-      price_from: 24.95,
-      price_type: "item",
-      slug: "duvets",
-    },
-  ];
-
-  const displayServices =
-    strapiServices?.data?.length && strapiServices?.data?.length > 0
+  const displayServicesRaw =
+    strapiServices?.data && strapiServices.data.length > 0
       ? strapiServices.data
       : fallbackServices;
+
+  // Fix price_type fallback based on slug
+  const displayServices = displayServicesRaw.map((service) => {
+    let priceType = service.price_type?.trim();
+
+    if (!priceType) {
+      if (
+        service.slug === "Wash_and_Fold" ||
+        service.slug === "Premium_Laundry" ||
+        service.slug === "Wash_and_Iron"
+      ) {
+        priceType = "kg";
+      } else {
+        priceType = "item";
+      }
+    }
+
+    return {
+      ...service,
+      price_type: priceType,
+    };
+  });
 
   const visibleServicesDesktop = showAll
     ? displayServices
