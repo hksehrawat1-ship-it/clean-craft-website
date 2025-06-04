@@ -80,6 +80,22 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 const ConnectionStatus: React.FC = () => {
   const { isConnected, isInitializing, error, retryConnection } = useStrapiConnection();
 
+  // Log connection status for debugging
+  React.useEffect(() => {
+    if (isInitializing) {
+      console.log('🔄 Strapi: Connecting to services...');
+    } else if (!isConnected && error) {
+      console.warn('❌ Strapi: Connection issue -', error);
+    } else if (isConnected) {
+      console.log('✅ Strapi: Live content loaded');
+    }
+  }, [isInitializing, isConnected, error]);
+
+  // Only show UI in development mode
+  if (!import.meta.env.DEV) {
+    return null;
+  }
+
   if (isInitializing) {
     return (
       <div className="flex items-center gap-2 text-white/75 text-sm">
