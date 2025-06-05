@@ -1,3 +1,4 @@
+
 # ─────────── Build Stage ───────────
 FROM node:18-alpine AS builder
 
@@ -10,6 +11,11 @@ RUN npm install
 
 # 3. Copy source & build
 COPY . .
+
+# 4. Generate sitemap and robots.txt for production
+RUN npm run generate-sitemap
+
+# 5. Build the application
 RUN npm run build
 
 # ────────── Runtime Stage ──────────

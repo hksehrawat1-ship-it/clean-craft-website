@@ -32,8 +32,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Performance optimizations
-    target: 'esnext',
+    // iPhone compatibility - changed from 'esnext' to 'es2015'
+    target: 'es2015',
     minify: 'esbuild',
     cssMinify: true,
     rollupOptions: {

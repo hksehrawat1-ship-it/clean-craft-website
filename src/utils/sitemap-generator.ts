@@ -1,9 +1,15 @@
+
 import fs from 'fs';
 import path from 'path';
 import { sitemapConfig, generateSitemapUrls } from './sitemap';
 
 export function generateSitemapFiles() {
   const urls = generateSitemapUrls();
+  
+  // Determine if we're in production based on environment
+  const isProduction = process.env.NODE_ENV === 'production' || 
+                      process.env.VITE_ENVIRONMENT === 'production' ||
+                      process.argv.includes('--production');
   
   // Generate main sitemap.xml
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -20,32 +26,42 @@ export function generateSitemapFiles() {
   
   xml += '</urlset>';
   
-  // Ensure public directory exists
-  const publicDir = path.join(process.cwd(), 'public');
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir, { recursive: true });
+  // Determine the correct output directory
+  const outputDir = isProduction ? 
+    path.join(process.cwd(), 'dist') : 
+    path.join(process.cwd(), 'public');
+  
+  // Ensure output directory exists
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
   }
   
   // Write sitemap.xml
-  fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), xml);
+  fs.writeFileSync(path.join(outputDir, 'sitemap.xml'), xml);
   
-  // Generate robots.txt for production
-  const robotsTxt = generateRobotsTxtContent(false);
-  fs.writeFileSync(path.join(publicDir, 'robots.txt'), robotsTxt);
+  // Generate robots.txt for the environment
+  const robotsTxt = generateRobotsTxtContent(isProduction);
+  fs.writeFileSync(path.join(outputDir, 'robots.txt'), robotsTxt);
   
-  console.log('✅ Generated sitemap.xml and robots.txt');
+  console.log(`✅ Generated sitemap.xml and robots.txt in ${outputDir}`);
   console.log(`📄 Sitemap contains ${urls.length} URLs`);
+  console.log(`🌍 Environment: ${isProduction ? 'Production' : 'Development'}`);
 }
 
-function generateRobotsTxtContent(isDevelopment: boolean = false): string {
-  const baseUrl = isDevelopment ? 'http://localhost:8080' : 'https://cleancraft.com';
+function generateRobotsTxtContent(isProduction: boolean = true): string {
+  const baseUrl = isProduction ? 'https://cleancraft.com' : 'http://localhost:8080';
   
   let robotsTxt = '';
   
-  if (isDevelopment) {
+  if (!isProduction) {
+    // Development - restrict all bots
     robotsTxt += 'User-agent: *\n';
     robotsTxt += 'Disallow: /\n\n';
+    robotsTxt += '# Development environment - crawling disabled\n\n';
   } else {
+    // Production - optimized for search engines
+    robotsTxt += '# Robots.txt for CleanCraft - Production optimized\n\n';
+    
     // Main search engines with optimized crawl delays
     robotsTxt += 'User-agent: Googlebot\n';
     robotsTxt += 'Allow: /\n';
