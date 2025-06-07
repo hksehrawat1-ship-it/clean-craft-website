@@ -162,32 +162,32 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Stats Section - Modified for better mobile alignment */}
-        <div className="w-full overflow-hidden">
-          <div className="flex justify-between items-center gap-4 py-8 mt-8 px-4 md:px-0 md:gap-20 lg:gap-32 min-w-[320px] max-w-[1200px] mx-auto">
-            <div className="flex-1 min-w-[100px] text-center">
-              <h3 className="text-2xl sm:text-3xl md:text-5xl font-product-sans-black bg-gradient-to-r from-[#5294FF] to-[#003E8F] bg-clip-text text-transparent whitespace-nowrap">
+        {/* Stats Section - Improved Mobile Layout */}
+        <div className="w-full overflow-hidden mt-8">
+          <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 lg:gap-16 py-8 px-2 max-w-5xl mx-auto">
+            <div className="flex-1 min-w-0 text-center">
+              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-product-sans-black bg-gradient-to-r from-[#5294FF] to-[#003E8F] bg-clip-text text-transparent">
                 10k+
               </h3>
-              <p className="text-xs sm:text-sm md:text-base font-medium text-[#0E0E0E] mt-2 whitespace-nowrap">
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg font-medium text-[#0E0E0E] mt-1 sm:mt-2 leading-tight">
                 Items Dry Cleaned
               </p>
             </div>
 
-            <div className="flex-1 min-w-[100px] text-center">
-              <h3 className="text-2xl sm:text-3xl md:text-5xl font-product-sans-black bg-gradient-to-r from-[#5395FF] to-[#003E8F] bg-clip-text text-transparent whitespace-nowrap">
+            <div className="flex-1 min-w-0 text-center">
+              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-product-sans-black bg-gradient-to-r from-[#5395FF] to-[#003E8F] bg-clip-text text-transparent">
                 100+
               </h3>
-              <p className="text-xs sm:text-sm md:text-base font-medium text-[#0E0E0E] mt-2 whitespace-nowrap">
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg font-medium text-[#0E0E0E] mt-1 sm:mt-2 leading-tight">
                 Kgs Laundry
               </p>
             </div>
 
-            <div className="flex-1 min-w-[100px] text-center">
-              <h3 className="text-2xl sm:text-3xl md:text-5xl font-product-sans-black bg-gradient-to-r from-[#5294FF] to-[#003E8F] bg-clip-text text-transparent whitespace-nowrap">
+            <div className="flex-1 min-w-0 text-center">
+              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-product-sans-black bg-gradient-to-r from-[#5294FF] to-[#003E8F] bg-clip-text text-transparent">
                 10k+
               </h3>
-              <p className="text-xs sm:text-sm md:text-base font-medium text-[#0E0E0E] mt-2 whitespace-nowrap">
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg font-medium text-[#0E0E0E] mt-1 sm:mt-2 leading-tight">
                 Shirts Laundered
               </p>
             </div>
