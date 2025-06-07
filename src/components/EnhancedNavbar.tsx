@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -139,13 +140,13 @@ const EnhancedNavbar = () => {
         <div className="hidden md:flex items-center gap-3">
           <Button
             variant="outline"
-            className="text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
+            className="text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200"
             style={{ border: "2px solid #1A73E8" }}
           >
             Login
           </Button>
 
-          <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px]">
+          <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px] px-6 py-2 text-sm font-medium whitespace-nowrap min-w-[90px]">
             Book Now
           </Button>
         </div>
@@ -224,12 +225,12 @@ const EnhancedNavbar = () => {
             <div className="flex flex-col gap-3 mt-6">
               <Button
                 variant="outline"
-                className=" border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
+                className="border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
               >
                 Login
               </Button>
 
-              <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 w-full rounded-[13px]">
+              <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 w-full rounded-[12px] px-4 py-3 text-sm font-medium">
                 Book Now
               </Button>
             </div>

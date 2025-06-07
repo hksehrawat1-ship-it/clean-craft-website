@@ -4,7 +4,13 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#1869D3" />
+  
   <title>CleanCraft - Professional Laundry Services</title>
   <meta name="description" content="Professional laundry and dry cleaning services across multiple countries" />
   <meta name="author" content="CleanCraft" />
@@ -37,6 +43,10 @@
   </script>
   <!-- End Google Tag Manager -->
 
+  <!-- Preload critical resources for faster mobile loading -->
+  <link rel="preload" href="/lovable-uploads/cleancraft-full-logo.png" as="image" />
+  <link rel="preload" href="/lovable-uploads/hero.png" as="image" />
+
   <!-- Lovable Script (Safe load) -->
   <script type="module">
     try {
@@ -60,10 +70,14 @@
   <!-- Main App Script -->
   <script type="module" src="/src/main.tsx"></script>
 
-  <!-- ✅ Fallback for old browsers (iPhone Safari < iOS 13) -->
+  <!-- ✅ Improved fallback for old mobile browsers -->
   <script nomodule>
     document.getElementById('root').innerHTML =
-      '<h1 style="color:white;text-align:center;margin-top:20%">Please update your browser to view this site.</h1>';
+      '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;font-family:system-ui;padding:2rem;background:#1869D3;color:white;">' +
+      '<h1 style="margin-bottom:1rem;font-size:2rem;">CleanCraft</h1>' +
+      '<p style="margin-bottom:2rem;font-size:1.1rem;">Please update your browser to view this site.</p>' +
+      '<p style="font-size:0.9rem;opacity:0.8;">We recommend using Chrome, Safari, or another modern browser.</p>' +
+      '</div>';
   </script>
 </body>
 

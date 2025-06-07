@@ -1,0 +1,59 @@
+
+/* Mobile-specific fixes for better compatibility */
+
+/* Prevent horizontal scrolling on mobile */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Fix viewport issues on mobile */
+* {
+  box-sizing: border-box;
+}
+
+/* Improve touch targets for mobile */
+button, a, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Fix iOS safari 100vh issue */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Fix mobile scrolling */
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+/* Improve text rendering on mobile */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fix mobile zoom issues */
+input, select, textarea {
+  font-size: 16px;
+}
+
+/* Prevent zoom on input focus for iOS */
+@media screen and (max-width: 768px) {
+  input:focus,
+  select:focus,
+  textarea:focus {
+    font-size: 16px;
+  }
+}
+
+/* Fix mobile keyboard issues */
+.mobile-keyboard-fix {
+  height: 100vh;
+  height: -webkit-fill-available;
+}

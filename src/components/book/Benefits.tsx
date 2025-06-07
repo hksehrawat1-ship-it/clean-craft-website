@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const benefits = [
@@ -34,10 +35,10 @@ const Benefits = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index} 
-              className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow border-t-4 border-laundry-googleBlue"
+              className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-[#1869D3]"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <h3 className="text-xl font-semibold mb-3 text-laundry-googleBlue">{benefit.title}</h3>
+              <h3 className="text-xl font-semibold mb-3 text-[#1869D3]">{benefit.title}</h3>
               <p className="text-gray-600">{benefit.description}</p>
             </div>
           ))}
