@@ -34,10 +34,11 @@ const RevolvingIcons = () => {
     },
   ];
 
-  const orbitRadius = 120; // Radius for the circular orbit
+  // Responsive orbit radius - smaller on mobile
+  const orbitRadius = typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 120;
 
   return (
-    <div className="absolute inset-0 pointer-events-none hidden lg:block overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none block overflow-hidden">
       {/* Center point relative to the hero image */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {/* Main orbital path - dotted circle */}
@@ -61,10 +62,10 @@ const RevolvingIcons = () => {
         <motion.div
           className="absolute rounded-full border border-dotted border-blue-200/40"
           style={{
-            width: (orbitRadius + 20) * 2,
-            height: (orbitRadius + 20) * 2,
-            left: -(orbitRadius + 20),
-            top: -(orbitRadius + 20),
+            width: (orbitRadius + 15) * 2,
+            height: (orbitRadius + 15) * 2,
+            left: -(orbitRadius + 15),
+            top: -(orbitRadius + 15),
           }}
           animate={{ rotate: -360 }}
           transition={{
@@ -77,10 +78,10 @@ const RevolvingIcons = () => {
         <motion.div
           className="absolute rounded-full border border-dotted border-blue-100/30"
           style={{
-            width: (orbitRadius - 20) * 2,
-            height: (orbitRadius - 20) * 2,
-            left: -(orbitRadius - 20),
-            top: -(orbitRadius - 20),
+            width: (orbitRadius - 15) * 2,
+            height: (orbitRadius - 15) * 2,
+            left: -(orbitRadius - 15),
+            top: -(orbitRadius - 15),
           }}
           animate={{ rotate: 360 }}
           transition={{
@@ -94,87 +95,84 @@ const RevolvingIcons = () => {
         {icons.map((icon, index) => {
           // Calculate initial position on circle
           const initialAngle = (icon.angle * Math.PI) / 180;
-          const initialX = Math.cos(initialAngle) * orbitRadius;
-          const initialY = Math.sin(initialAngle) * orbitRadius;
 
           return (
             <motion.div
               key={index}
-              className="absolute w-12 h-12"
+              className="absolute w-8 h-8 md:w-12 md:h-12"
               style={{
-                left: initialX - 24, // Center the 48px icon
-                top: initialY - 24,
+                left: -16, // Center the icon (half of w-8 = 16px)
+                top: -16,
               }}
               animate={{
-                x: [
-                  Math.cos(initialAngle) * orbitRadius - 24,
-                  Math.cos(initialAngle + Math.PI / 2) * orbitRadius - 24,
-                  Math.cos(initialAngle + Math.PI) * orbitRadius - 24,
-                  Math.cos(initialAngle + (3 * Math.PI) / 2) * orbitRadius - 24,
-                  Math.cos(initialAngle + 2 * Math.PI) * orbitRadius - 24,
-                ],
-                y: [
-                  Math.sin(initialAngle) * orbitRadius - 24,
-                  Math.sin(initialAngle + Math.PI / 2) * orbitRadius - 24,
-                  Math.sin(initialAngle + Math.PI) * orbitRadius - 24,
-                  Math.sin(initialAngle + (3 * Math.PI) / 2) * orbitRadius - 24,
-                  Math.sin(initialAngle + 2 * Math.PI) * orbitRadius - 24,
-                ],
+                rotate: [0, 360],
+              }}
+              style={{
+                originX: 0.5,
+                originY: 0.5,
               }}
               transition={{
                 duration: icon.speed,
                 repeat: Infinity,
                 ease: "linear",
-                delay: index * (icon.speed / 4), // Staggered start
+                delay: index * (icon.speed / 4),
               }}
             >
-              <motion.img
-                src={icon.src}
-                alt={icon.alt}
-                className="w-12 h-12 object-contain drop-shadow-lg"
-                style={{
-                  filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))",
-                  willChange: "transform, filter",
-                }}
-                animate={{
-                  scale: [icon.scale, icon.scale * 1.15, icon.scale],
-                  opacity: [0.7, 0.9, 1, 0.9, 0.7],
-                }}
-                transition={{
-                  scale: {
-                    duration: 4 + index * 0.3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: index * 0.6,
-                  },
-                  opacity: {
-                    duration: 4 + index * 0.4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: index * 0.7,
-                  },
-                }}
-                whileHover={{
-                  scale: 1.3,
-                  filter: "brightness(1.2) drop-shadow(0 6px 16px rgba(24, 105, 211, 0.4))",
-                  transition: { duration: 0.2 }
-                }}
-              />
-              
-              {/* Glowing effect around icons */}
               <motion.div
-                className="absolute inset-0 rounded-full bg-blue-400/20 blur-sm -z-10"
-                animate={{
-                  scale: [0.8, 1.4, 0.8],
-                  opacity: [0.2, 0.5, 0.2],
+                className="absolute"
+                style={{
+                  left: Math.cos(initialAngle) * orbitRadius,
+                  top: Math.sin(initialAngle) * orbitRadius,
                 }}
-                transition={{
-                  duration: 3.5 + index * 0.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: index * 1.2,
-                }}
-              />
+              >
+                <motion.img
+                  src={icon.src}
+                  alt={icon.alt}
+                  className="w-8 h-8 md:w-12 md:h-12 object-contain drop-shadow-lg"
+                  style={{
+                    filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))",
+                    willChange: "transform, filter",
+                  }}
+                  animate={{
+                    scale: [icon.scale, icon.scale * 1.15, icon.scale],
+                    opacity: [0.7, 0.9, 1, 0.9, 0.7],
+                  }}
+                  transition={{
+                    scale: {
+                      duration: 4 + index * 0.3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.6,
+                    },
+                    opacity: {
+                      duration: 4 + index * 0.4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.7,
+                    },
+                  }}
+                  whileHover={{
+                    scale: 1.3,
+                    filter: "brightness(1.2) drop-shadow(0 6px 16px rgba(24, 105, 211, 0.4))",
+                    transition: { duration: 0.2 }
+                  }}
+                />
+                
+                {/* Glowing effect around icons */}
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-blue-400/20 blur-sm -z-10"
+                  animate={{
+                    scale: [0.8, 1.4, 0.8],
+                    opacity: [0.2, 0.5, 0.2],
+                  }}
+                  transition={{
+                    duration: 3.5 + index * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: index * 1.2,
+                  }}
+                />
+              </motion.div>
             </motion.div>
           );
         })}
