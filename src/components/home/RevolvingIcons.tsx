@@ -30,21 +30,35 @@ const RevolvingIcons = () => {
     },
   ];
 
-  // Responsive orbit radius - smaller on mobile
-  const orbitRadius = typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 120;
+  // Responsive orbit calculations that follow the hero phone image
+  const getOrbitDimensions = () => {
+    if (typeof window === 'undefined') return { radiusX: 100, radiusY: 120 };
+    
+    const width = window.innerWidth;
+    if (width < 640) { // mobile
+      return { radiusX: 90, radiusY: 110 };
+    } else if (width < 1024) { // tablet
+      return { radiusX: 110, radiusY: 130 };
+    } else { // desktop
+      return { radiusX: 140, radiusY: 160 };
+    }
+  };
+
+  const { radiusX, radiusY } = getOrbitDimensions();
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {/* Center point relative to the hero image */}
+      {/* Center point positioned relative to the hero phone image */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        {/* Main orbital path - dotted circle - appears first */}
+        {/* Main orbital path - elliptical to match phone shape */}
         <motion.div
-          className="absolute rounded-full border-2 border-dotted border-blue-300/60"
+          className="absolute border-2 border-dotted border-blue-300/60 rounded-full"
           style={{
-            width: orbitRadius * 2,
-            height: orbitRadius * 2,
-            left: -orbitRadius,
-            top: -orbitRadius,
+            width: radiusX * 2,
+            height: radiusY * 2,
+            left: -radiusX,
+            top: -radiusY,
+            borderRadius: '50%',
           }}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ 
@@ -64,14 +78,14 @@ const RevolvingIcons = () => {
           }}
         />
         
-        {/* Secondary flowing dotted lines - staggered appearance */}
+        {/* Secondary flowing dotted lines - adjusted for phone shape */}
         <motion.div
-          className="absolute rounded-full border border-dotted border-blue-200/40"
+          className="absolute border border-dotted border-blue-200/40 rounded-full"
           style={{
-            width: (orbitRadius + 15) * 2,
-            height: (orbitRadius + 15) * 2,
-            left: -(orbitRadius + 15),
-            top: -(orbitRadius + 15),
+            width: (radiusX + 20) * 2,
+            height: (radiusY + 20) * 2,
+            left: -(radiusX + 20),
+            top: -(radiusY + 20),
           }}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ 
@@ -92,12 +106,12 @@ const RevolvingIcons = () => {
         />
         
         <motion.div
-          className="absolute rounded-full border border-dotted border-blue-100/30"
+          className="absolute border border-dotted border-blue-100/30 rounded-full"
           style={{
-            width: (orbitRadius - 15) * 2,
-            height: (orbitRadius - 15) * 2,
-            left: -(orbitRadius - 15),
-            top: -(orbitRadius - 15),
+            width: (radiusX - 20) * 2,
+            height: (radiusY - 20) * 2,
+            left: -(radiusX - 20),
+            top: -(radiusY - 20),
           }}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ 
@@ -117,44 +131,43 @@ const RevolvingIcons = () => {
           }}
         />
 
-        {/* Revolving Icons with true orbital motion */}
+        {/* Revolving Icons with elliptical orbital motion around phone shape */}
         {icons.map((icon, index) => {
-          const emergDelay = 1.5 + index * 0.3; // Icons emerge after circles are established
+          const emergDelay = 1.5 + index * 0.3;
           
           return (
             <motion.div
               key={index}
               className="absolute w-8 h-8 md:w-12 md:h-12"
               style={{
-                left: -16, // Center the icon at origin
+                left: -16,
                 top: -16,
               }}
               initial={{ 
                 scale: 0, 
                 opacity: 0,
-                x: Math.cos((icon.angle * Math.PI) / 180) * orbitRadius,
-                y: Math.sin((icon.angle * Math.PI) / 180) * orbitRadius,
+                x: Math.cos((icon.angle * Math.PI) / 180) * radiusX,
+                y: Math.sin((icon.angle * Math.PI) / 180) * radiusY,
               }}
               animate={{
                 scale: 1,
                 opacity: 1,
                 x: [
-                  Math.cos((icon.angle * Math.PI) / 180) * orbitRadius,
-                  Math.cos(((icon.angle + 90) * Math.PI) / 180) * orbitRadius,
-                  Math.cos(((icon.angle + 180) * Math.PI) / 180) * orbitRadius,
-                  Math.cos(((icon.angle + 270) * Math.PI) / 180) * orbitRadius,
-                  Math.cos((icon.angle * Math.PI) / 180) * orbitRadius,
+                  Math.cos((icon.angle * Math.PI) / 180) * radiusX,
+                  Math.cos(((icon.angle + 90) * Math.PI) / 180) * radiusX,
+                  Math.cos(((icon.angle + 180) * Math.PI) / 180) * radiusX,
+                  Math.cos(((icon.angle + 270) * Math.PI) / 180) * radiusX,
+                  Math.cos((icon.angle * Math.PI) / 180) * radiusX,
                 ],
                 y: [
-                  Math.sin((icon.angle * Math.PI) / 180) * orbitRadius,
-                  Math.sin(((icon.angle + 90) * Math.PI) / 180) * orbitRadius,
-                  Math.sin(((icon.angle + 180) * Math.PI) / 180) * orbitRadius,
-                  Math.sin(((icon.angle + 270) * Math.PI) / 180) * orbitRadius,
-                  Math.sin((icon.angle * Math.PI) / 180) * orbitRadius,
+                  Math.sin((icon.angle * Math.PI) / 180) * radiusY,
+                  Math.sin(((icon.angle + 90) * Math.PI) / 180) * radiusY,
+                  Math.sin(((icon.angle + 180) * Math.PI) / 180) * radiusY,
+                  Math.sin(((icon.angle + 270) * Math.PI) / 180) * radiusY,
+                  Math.sin((icon.angle * Math.PI) / 180) * radiusY,
                 ],
               }}
               transition={{
-                // Emergence animation
                 scale: { 
                   duration: 0.6, 
                   ease: "backOut", 
@@ -165,7 +178,6 @@ const RevolvingIcons = () => {
                   ease: "easeOut", 
                   delay: emergDelay 
                 },
-                // Orbital motion - starts after emergence
                 x: {
                   duration: 25,
                   repeat: Infinity,
@@ -190,7 +202,6 @@ const RevolvingIcons = () => {
                 }}
                 animate={{
                   scale: [icon.scale, icon.scale * 1.15, icon.scale],
-                  opacity: [0.7, 0.9, 1, 0.9, 0.7],
                 }}
                 transition={{
                   scale: {
@@ -198,12 +209,6 @@ const RevolvingIcons = () => {
                     repeat: Infinity,
                     ease: "easeInOut",
                     delay: emergDelay + 1 + index * 0.6,
-                  },
-                  opacity: {
-                    duration: 4 + index * 0.4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: emergDelay + 1 + index * 0.7,
                   },
                 }}
                 whileHover={{
@@ -240,7 +245,7 @@ const RevolvingIcons = () => {
           );
         })}
         
-        {/* Central glowing dot - appears early in sequence */}
+        {/* Central glowing dot */}
         <motion.div
           className="absolute top-0 left-0 w-2 h-2 -ml-1 -mt-1 rounded-full bg-blue-400/60"
           initial={{ scale: 0, opacity: 0 }}
