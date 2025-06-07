@@ -214,23 +214,18 @@ const RevolvingIcons = () => {
                   opacity: [0.2, 0.5, 0.2],
                 }}
                 transition={{
-                  scale: { duration: 0.6, ease: "easeOut", delay: emergDelay },
-                  opacity: { duration: 0.6, ease: "easeOut", delay: emergDelay },
-                  // Continuous glow animation after emergence
-                  ...(emergDelay && {
-                    scale: {
-                      duration: 3.5 + index * 0.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: emergDelay + 0.6,
-                    },
-                    opacity: {
-                      duration: 3.5 + index * 0.5,
-                      repeat: Infinity,
-                      ease: "easeInOut", 
-                      delay: emergDelay + 0.6,
-                    }
-                  })
+                  scale: {
+                    duration: 3.5 + index * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: emergDelay + 0.6,
+                  },
+                  opacity: {
+                    duration: 3.5 + index * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut", 
+                    delay: emergDelay + 0.6,
+                  }
                 }}
               />
             </motion.div>
@@ -246,23 +241,18 @@ const RevolvingIcons = () => {
             opacity: [0.6, 1, 0.6],
           }}
           transition={{
-            scale: { duration: 0.4, ease: "easeOut", delay: 0.9 },
-            opacity: { duration: 0.4, ease: "easeOut", delay: 0.9 },
-            // Continuous pulse after initial appearance
-            ...(true && {
-              scale: {
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1.3,
-              },
-              opacity: {
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1.3,
-              }
-            })
+            scale: {
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1.3,
+            },
+            opacity: {
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1.3,
+            }
           }}
         />
       </div>
