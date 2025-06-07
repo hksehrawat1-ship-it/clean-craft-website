@@ -144,12 +144,12 @@ const HeroSection = () => {
             className="w-full lg:w-1/2 flex justify-center items-center z-10"
           >
             <img
-              src="/lovable-uploads/hero-phone-mockup.png"
-              alt="Dry Cleaning App"
-              className="w-full max-w-[280px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[450px] 2xl:max-w-[500px] h-auto drop-shadow-lg"
+              src="/lovable-uploads/hero.png"
+              alt="Laundry and Dry Cleaning On-Demand App"
+              className="w-auto h-auto max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[350px] xl:max-w-[400px] 2xl:max-w-[450px] drop-shadow-lg mx-auto"
+              style={{ maxHeight: '80vh' }}
               onError={(e) => {
-                e.currentTarget.src =
-                  "/lovable-uploads/7d652b3e-f996-4aa4-978d-e311436d329f.png";
+                e.currentTarget.src = "/lovable-uploads/hero.png";
               }}
             />
           </motion.div>

@@ -14,6 +14,7 @@ import {
 import { IconType } from "react-icons";
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
+import { EnhancedSEO } from "@/components/EnhancedSEO";
 
 interface ServiceCardProps {
   name: string;
@@ -185,90 +186,99 @@ const ServicesPage: React.FC = () => {
   const countryCode = currentCountry?.toLowerCase() || "in";
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <EnhancedNavbar />
+    <>
+      <EnhancedSEO
+        slug="services"
+        pageType="LocalBusiness"
+        defaultTitle="Professional Dry Cleaning & Wet Cleaning Services | CleanCraft"
+        defaultDescription="Comprehensive dry cleaning, wet cleaning, and garment care services. Expert fabric treatment with modern cleaning technology and eco-friendly solutions."
+        customKeywords={['dry cleaning services', 'wet cleaning solutions', 'professional garment care', 'fabric cleaning specialists']}
+      />
+      <div className="min-h-screen flex flex-col bg-white">
+        <EnhancedNavbar />
 
-      <main className="flex-grow w-full py-16 px-2 md:px-4">
-        {/* Mobile View */}
-        <div className="lg:hidden">
-          <div className="max-w-7xl mx-auto bg-[#1E3A8A] p-6 rounded-3xl">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Explore our services
-              </h2>
-              <p className="text-lg text-white/90">
-                Your clothes are treated with the utmost care, receiving the
-                attention they deserve.
+        <main className="flex-grow w-full py-16 px-2 md:px-4">
+          {/* Mobile View */}
+          <div className="lg:hidden">
+            <div className="max-w-7xl mx-auto bg-[#1E3A8A] p-6 rounded-3xl">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Explore our services
+                </h2>
+                <p className="text-lg text-white/90">
+                  Your clothes are treated with the utmost care, receiving the
+                  attention they deserve.
+                </p>
+              </div>
+              <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory">
+                {visibleServicesMobile.map((service) => (
+                  <div key={service.id} className="snap-start min-w-[300px]">
+                    <ServiceCard {...service} icon={serviceIcons[service.name]} />
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-white/75 mt-4">
+                Our minimum order value is {currencySymbols[countryCode]}350. All
+                orders include free delivery.
               </p>
             </div>
-            <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory">
-              {visibleServicesMobile.map((service) => (
-                <div key={service.id} className="snap-start min-w-[300px]">
-                  <ServiceCard {...service} icon={serviceIcons[service.name]} />
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-white/75 mt-4">
-              Our minimum order value is {currencySymbols[countryCode]}350. All
-              orders include free delivery.
-            </p>
-          </div>
-        </div>
-
-        {/* Desktop View */}
-        <div
-          className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
-          style={{ height: "calc(100vh - 64px)" }}
-        >
-          {/* Left Panel */}
-          <div className="w-1/2 bg-[#1E3A8A] text-white p-16 flex flex-col">
-            <div>
-              <h2 className="text-4xl font-bold mb-6">Explore our services</h2>
-              <p className="text-lg mb-8 text-white">
-                Your clothes are treated with the utmost care, receiving the
-                attention they deserve.
-              </p>
-              <button className="flex items-center text-lg hover:underline">
-                Explore pricing <ArrowRight className="ml-2 w-5 h-5" />
-              </button>
-            </div>
-            <p className="text-sm text-white mt-16">
-              Our minimum order value is{" "}
-              {countryCode === "in"
-                ? `${currencySymbols[countryCode]}350`
-                : countryCode === "au"
-                ? `${currencySymbols[countryCode]}6.3`
-                : `${currencySymbols[countryCode]}350`}
-              . All orders include free delivery.
-            </p>
           </div>
 
-          {/* Right Panel */}
-          <div className="w-1/2 bg-gray-50 p-16 overflow-y-auto hide-scrollbar">
-            <div className="space-y-4 max-w-xl">
-              {visibleServicesDesktop.map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  icon={serviceIcons[service.name]}
-                />
-              ))}
-
-              <div className="hidden lg:block">
-                <button
-                  onClick={() => setShowAll(!showAll)}
-                  className="text-blue-600 underline text-sm mt-4"
-                >
-                  {showAll ? "Show less" : "Show more"}
+          {/* Desktop View */}
+          <div
+            className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
+            style={{ height: "calc(100vh - 64px)" }}
+          >
+            {/* Left Panel */}
+            <div className="w-1/2 bg-[#1E3A8A] text-white p-16 flex flex-col">
+              <div>
+                <h2 className="text-4xl font-bold mb-6">Explore our services</h2>
+                <p className="text-lg mb-8 text-white">
+                  Your clothes are treated with the utmost care, receiving the
+                  attention they deserve.
+                </p>
+                <button className="flex items-center text-lg hover:underline">
+                  Explore pricing <ArrowRight className="ml-2 w-5 h-5" />
                 </button>
+              </div>
+              <p className="text-sm text-white mt-16">
+                Our minimum order value is{" "}
+                {countryCode === "in"
+                  ? `${currencySymbols[countryCode]}350`
+                  : countryCode === "au"
+                  ? `${currencySymbols[countryCode]}6.3`
+                  : `${currencySymbols[countryCode]}350`}
+                . All orders include free delivery.
+              </p>
+            </div>
+
+            {/* Right Panel */}
+            <div className="w-1/2 bg-gray-50 p-16 overflow-y-auto hide-scrollbar">
+              <div className="space-y-4 max-w-xl">
+                {visibleServicesDesktop.map((service) => (
+                  <ServiceCard
+                    key={service.id}
+                    {...service}
+                    icon={serviceIcons[service.name]}
+                  />
+                ))}
+
+                <div className="hidden lg:block">
+                  <button
+                    onClick={() => setShowAll(!showAll)}
+                    className="text-blue-600 underline text-sm mt-4"
+                  >
+                    {showAll ? "Show less" : "Show more"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 

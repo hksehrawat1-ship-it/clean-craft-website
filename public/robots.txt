@@ -1,14 +1,58 @@
+
+# Robots.txt for CleanCraft - Production optimized
+
+# Main search engine bots - full access with crawl delay
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
+# Social media crawlers - immediate access
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Other search engines - controlled access
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 3
+
+# Default rule for all other bots
 User-agent: *
 Allow: /
+Crawl-delay: 2
+
+# Disallow admin and development paths
+Disallow: /admin/
+Disallow: /_dev/
+Disallow: /api/
+Disallow: /.well-known/
+Disallow: /temp/
+Disallow: /cache/
+
+# Allow important static assets
+Allow: /lovable-uploads/
+Allow: /assets/
+Allow: /fonts/
+Allow: /css/
+Allow: /js/
+
+# Sitemap references
+Sitemap: https://cleancraft.com/sitemap.xml
+Sitemap: https://cleancraft.com/sitemap-services.xml
+Sitemap: https://cleancraft.com/sitemap-courses.xml

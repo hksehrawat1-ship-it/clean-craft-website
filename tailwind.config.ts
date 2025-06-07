@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -132,7 +131,7 @@ const config: Config = {
 				
 				// Small text
 				'caption': ['0.75rem', { lineHeight: '1.5', fontWeight: '400' }], // 12px
-				'overline': ['0.625rem', { lineHeight: '1.5', fontWeight: '500', letterSpacing: '0.1em', textTransform: 'uppercase' }], // 10px
+				'overline': ['0.625rem', { lineHeight: '1.5', fontWeight: '500', letterSpacing: '0.1em' }], // 10px
 			},
 			spacing: {
 				'xs': '0.25rem', // 4px

@@ -35,8 +35,8 @@ const Footer: React.FC = () => {
             />
           </div>
           <p className="text-neutral-600 text-sm">
-            We collect, clean, and deliver your laundry and dry cleaning to your doorstep. When
-            and where you need us, we will be there.
+            We collect, clean, and deliver your laundry and dry cleaning to your
+            doorstep. When and where you need us, we will be there.
           </p>
           <div className="flex items-center space-x-4">
             <a
@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
               <Facebook size={20} />
             </a>
             <a
-              href="https://in.linkedin.com/in/himanshu-sehrawat-3b1227319?trk=people-guest_people_search-card"
+              href="https://www.linkedin.com/in/himanshu-sehrawat-3b1227319/"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-blue-700 hover:bg-blue-100 transition-all duration-200"
@@ -157,7 +157,7 @@ const Footer: React.FC = () => {
             </li>
             <li className="flex gap-3">
               <Phone className="text-blue-500 mt-1 flex-shrink-0" size={18} />
-              <span className="text-gray-600">(91) 88-00-77-1349</span>
+              <span className="text-gray-600">(+91) 88-00-77-1349</span>
             </li>
             <li className="flex gap-3">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />

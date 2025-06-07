@@ -12,6 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { State, City } from "country-state-city";
@@ -218,23 +225,25 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               )}
             />
 
-            {/* Investment Range */}
+            {/* Investment Range with Shadcn Select */}
             <FormField
               control={form.control}
               name="investmentRange"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Investment Range *</FormLabel>
-                  <select
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    value={field.value}
-                    onChange={field.onChange}
-                  >
-                    <option value="">Select investment range</option>
-                    <option value="₹15L-20L">₹15L - ₹20L</option>
-                    <option value="₹20L-25L">₹20L - ₹25L</option>
-                    <option value="₹25L+">₹25L+</option>
-                  </select>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select investment range" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="₹15L-20L">₹15L - ₹20L</SelectItem>
+                      <SelectItem value="₹20L-25L">₹20L - ₹25L</SelectItem>
+                      <SelectItem value="₹25L+">₹25L+</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -242,7 +251,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
 
             {/* Submit + Cancel */}
             <div className="mb-6 max-w-2xl mx-auto">
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="w-full text-white" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Submit Information"}
               </Button>
             </div>
