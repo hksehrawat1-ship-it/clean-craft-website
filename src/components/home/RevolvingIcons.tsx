@@ -8,28 +8,24 @@ const RevolvingIcons = () => {
       src: "/icons/Dry Cleaning-01.png",
       alt: "Dry Cleaning",
       angle: 0, // Top
-      speed: 25,
       scale: 1,
     },
     {
       src: "/icons/Premium laundry.png", 
       alt: "Premium Laundry",
       angle: 90, // Right
-      speed: 25,
       scale: 1.1,
     },
     {
       src: "/icons/Iron copy.png",
       alt: "Ironing",
       angle: 180, // Bottom
-      speed: 25,
       scale: 0.9,
     },
     {
       src: "/icons/shoes-sets_755745-1286-01.png",
       alt: "Shoe Cleaning",
       angle: 270, // Left
-      speed: 25,
       scale: 1.05,
     },
   ];
@@ -41,7 +37,7 @@ const RevolvingIcons = () => {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Center point relative to the hero image */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        {/* Main orbital path - dotted circle */}
+        {/* Main orbital path - dotted circle - appears first */}
         <motion.div
           className="absolute rounded-full border-2 border-dotted border-blue-300/60"
           style={{
@@ -50,15 +46,25 @@ const RevolvingIcons = () => {
             left: -orbitRadius,
             top: -orbitRadius,
           }}
-          animate={{ rotate: 360 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: 1, 
+            opacity: 1,
+            rotate: 360 
+          }}
           transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear",
+            scale: { duration: 0.8, ease: "easeOut" },
+            opacity: { duration: 0.8, ease: "easeOut" },
+            rotate: { 
+              duration: 30, 
+              repeat: Infinity, 
+              ease: "linear",
+              delay: 0.8
+            }
           }}
         />
         
-        {/* Secondary flowing dotted lines */}
+        {/* Secondary flowing dotted lines - staggered appearance */}
         <motion.div
           className="absolute rounded-full border border-dotted border-blue-200/40"
           style={{
@@ -67,11 +73,21 @@ const RevolvingIcons = () => {
             left: -(orbitRadius + 15),
             top: -(orbitRadius + 15),
           }}
-          animate={{ rotate: -360 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: 1, 
+            opacity: 1,
+            rotate: -360 
+          }}
           transition={{
-            duration: 40,
-            repeat: Infinity,
-            ease: "linear",
+            scale: { duration: 0.8, ease: "easeOut", delay: 0.3 },
+            opacity: { duration: 0.8, ease: "easeOut", delay: 0.3 },
+            rotate: { 
+              duration: 40, 
+              repeat: Infinity, 
+              ease: "linear",
+              delay: 1.1
+            }
           }}
         />
         
@@ -83,37 +99,77 @@ const RevolvingIcons = () => {
             left: -(orbitRadius - 15),
             top: -(orbitRadius - 15),
           }}
-          animate={{ rotate: 360 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: 1, 
+            opacity: 1,
+            rotate: 360 
+          }}
           transition={{
-            duration: 35,
-            repeat: Infinity,
-            ease: "linear",
+            scale: { duration: 0.8, ease: "easeOut", delay: 0.6 },
+            opacity: { duration: 0.8, ease: "easeOut", delay: 0.6 },
+            rotate: { 
+              duration: 35, 
+              repeat: Infinity, 
+              ease: "linear",
+              delay: 1.4
+            }
           }}
         />
 
-        {/* Revolving Icons */}
+        {/* Revolving Icons with true orbital motion */}
         {icons.map((icon, index) => {
-          // Calculate initial position on circle
-          const initialAngle = (icon.angle * Math.PI) / 180;
-          const iconX = Math.cos(initialAngle) * orbitRadius;
-          const iconY = Math.sin(initialAngle) * orbitRadius;
-
+          const emergDelay = 1.5 + index * 0.3; // Icons emerge after circles are established
+          
           return (
             <motion.div
               key={index}
               className="absolute w-8 h-8 md:w-12 md:h-12"
               style={{
-                left: iconX - 16, // Center the icon
-                top: iconY - 16,
+                left: -16, // Center the icon at origin
+                top: -16,
               }}
+              initial={{ scale: 0, opacity: 0 }}
               animate={{
+                scale: 1,
+                opacity: 1,
+                // True circular orbital motion using transform
+                x: `${Math.cos((icon.angle * Math.PI) / 180) * orbitRadius}px`,
+                y: `${Math.sin((icon.angle * Math.PI) / 180) * orbitRadius}px`,
                 rotate: [0, 360],
               }}
               transition={{
-                duration: icon.speed,
-                repeat: Infinity,
-                ease: "linear",
-                delay: index * (icon.speed / 4),
+                // Emergence animation
+                scale: { 
+                  duration: 0.6, 
+                  ease: "backOut", 
+                  delay: emergDelay 
+                },
+                opacity: { 
+                  duration: 0.4, 
+                  ease: "easeOut", 
+                  delay: emergDelay 
+                },
+                // Orbital motion - starts after emergence
+                x: {
+                  duration: 25,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: emergDelay + 0.6,
+                },
+                y: {
+                  duration: 25,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: emergDelay + 0.6,
+                },
+                // Icon rotation
+                rotate: {
+                  duration: 25,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: emergDelay + 0.6,
+                },
               }}
             >
               <motion.img
@@ -133,13 +189,13 @@ const RevolvingIcons = () => {
                     duration: 4 + index * 0.3,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: index * 0.6,
+                    delay: emergDelay + 1 + index * 0.6,
                   },
                   opacity: {
                     duration: 4 + index * 0.4,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: index * 0.7,
+                    delay: emergDelay + 1 + index * 0.7,
                   },
                 }}
                 whileHover={{
@@ -152,32 +208,61 @@ const RevolvingIcons = () => {
               {/* Glowing effect around icons */}
               <motion.div
                 className="absolute inset-0 rounded-full bg-blue-400/20 blur-sm -z-10"
+                initial={{ scale: 0, opacity: 0 }}
                 animate={{
                   scale: [0.8, 1.4, 0.8],
                   opacity: [0.2, 0.5, 0.2],
                 }}
                 transition={{
-                  duration: 3.5 + index * 0.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: index * 1.2,
+                  scale: { duration: 0.6, ease: "easeOut", delay: emergDelay },
+                  opacity: { duration: 0.6, ease: "easeOut", delay: emergDelay },
+                  // Continuous glow animation after emergence
+                  ...(emergDelay && {
+                    scale: {
+                      duration: 3.5 + index * 0.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: emergDelay + 0.6,
+                    },
+                    opacity: {
+                      duration: 3.5 + index * 0.5,
+                      repeat: Infinity,
+                      ease: "easeInOut", 
+                      delay: emergDelay + 0.6,
+                    }
+                  })
                 }}
               />
             </motion.div>
           );
         })}
         
-        {/* Central glowing dot */}
+        {/* Central glowing dot - appears early in sequence */}
         <motion.div
           className="absolute top-0 left-0 w-2 h-2 -ml-1 -mt-1 rounded-full bg-blue-400/60"
+          initial={{ scale: 0, opacity: 0 }}
           animate={{
             scale: [1, 1.5, 1],
             opacity: [0.6, 1, 0.6],
           }}
           transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
+            scale: { duration: 0.4, ease: "easeOut", delay: 0.9 },
+            opacity: { duration: 0.4, ease: "easeOut", delay: 0.9 },
+            // Continuous pulse after initial appearance
+            ...(true && {
+              scale: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.3,
+              },
+              opacity: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.3,
+              }
+            })
           }}
         />
       </div>
