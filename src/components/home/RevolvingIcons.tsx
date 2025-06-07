@@ -121,19 +121,17 @@ const RevolvingIcons = () => {
               style={{
                 left: -16, // Half icon width
                 top: -16,  // Half icon height
+                transformOrigin: `${radiusX + 16}px ${radiusY + 16}px`,
               }}
               initial={{ 
                 scale: 0, 
                 opacity: 0,
-                x: Math.cos((icon.startAngle * Math.PI) / 180) * radiusX,
-                y: Math.sin((icon.startAngle * Math.PI) / 180) * radiusY,
+                rotate: icon.startAngle,
               }}
               animate={{
                 scale: 1,
                 opacity: 1,
-                x: Math.cos((icon.startAngle * Math.PI) / 180) * radiusX,
-                y: Math.sin((icon.startAngle * Math.PI) / 180) * radiusY,
-                rotate: 360,
+                rotate: icon.startAngle + 360,
               }}
               transition={{
                 scale: { 
@@ -146,27 +144,12 @@ const RevolvingIcons = () => {
                   ease: "easeOut", 
                   delay: emergDelay 
                 },
-                x: {
-                  duration: orbitDuration,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: emergDelay + 0.6,
-                },
-                y: {
-                  duration: orbitDuration,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: emergDelay + 0.6,
-                },
                 rotate: {
                   duration: orbitDuration,
                   repeat: Infinity,
                   ease: "linear",
                   delay: emergDelay + 0.6,
                 }
-              }}
-              style={{
-                transformOrigin: `${-Math.cos((icon.startAngle * Math.PI) / 180) * radiusX + 16}px ${-Math.sin((icon.startAngle * Math.PI) / 180) * radiusY + 16}px`,
               }}
             >
               {/* Create orbital motion using transform-origin */}
