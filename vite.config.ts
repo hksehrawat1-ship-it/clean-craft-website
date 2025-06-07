@@ -1,4 +1,3 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -32,8 +31,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // iPhone compatibility - changed from 'esnext' to 'es2015'
-    target: 'es2015',
+    // Better mobile compatibility - changed to es2015 with more conservative settings
+    target: ['es2015', 'chrome61', 'firefox60', 'safari11'],
     minify: 'esbuild',
     cssMinify: true,
     rollupOptions: {
@@ -72,7 +71,9 @@ export default defineConfig(({ mode }) => ({
   },
   // Performance monitoring
   esbuild: {
-    // Remove console logs in production
-    drop: mode === 'production' ? ['console', 'debugger'] : [],
+    // Remove console logs in production but keep them in development for mobile debugging
+    drop: mode === 'production' ? ['debugger'] : [],
+    // Keep console logs for mobile debugging
+    keepNames: true,
   },
 }));
