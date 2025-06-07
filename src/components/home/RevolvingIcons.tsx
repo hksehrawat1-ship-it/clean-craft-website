@@ -129,14 +129,29 @@ const RevolvingIcons = () => {
                 left: -16, // Center the icon at origin
                 top: -16,
               }}
-              initial={{ scale: 0, opacity: 0 }}
+              initial={{ 
+                scale: 0, 
+                opacity: 0,
+                x: Math.cos((icon.angle * Math.PI) / 180) * orbitRadius,
+                y: Math.sin((icon.angle * Math.PI) / 180) * orbitRadius,
+              }}
               animate={{
                 scale: 1,
                 opacity: 1,
-                // True circular orbital motion using transform
-                x: `${Math.cos((icon.angle * Math.PI) / 180) * orbitRadius}px`,
-                y: `${Math.sin((icon.angle * Math.PI) / 180) * orbitRadius}px`,
-                rotate: [0, 360],
+                x: [
+                  Math.cos((icon.angle * Math.PI) / 180) * orbitRadius,
+                  Math.cos(((icon.angle + 90) * Math.PI) / 180) * orbitRadius,
+                  Math.cos(((icon.angle + 180) * Math.PI) / 180) * orbitRadius,
+                  Math.cos(((icon.angle + 270) * Math.PI) / 180) * orbitRadius,
+                  Math.cos((icon.angle * Math.PI) / 180) * orbitRadius,
+                ],
+                y: [
+                  Math.sin((icon.angle * Math.PI) / 180) * orbitRadius,
+                  Math.sin(((icon.angle + 90) * Math.PI) / 180) * orbitRadius,
+                  Math.sin(((icon.angle + 180) * Math.PI) / 180) * orbitRadius,
+                  Math.sin(((icon.angle + 270) * Math.PI) / 180) * orbitRadius,
+                  Math.sin((icon.angle * Math.PI) / 180) * orbitRadius,
+                ],
               }}
               transition={{
                 // Emergence animation
@@ -158,13 +173,6 @@ const RevolvingIcons = () => {
                   delay: emergDelay + 0.6,
                 },
                 y: {
-                  duration: 25,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: emergDelay + 0.6,
-                },
-                // Icon rotation
-                rotate: {
                   duration: 25,
                   repeat: Infinity,
                   ease: "linear",
