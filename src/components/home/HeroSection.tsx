@@ -140,7 +140,7 @@ const HeroSection = () => {
             </div>
           </motion.div>
           
-          {/* Phone Mockup with Revolving Icons */}
+          {/* Phone Mockup with Revolving Icons - Reduced Size */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -153,8 +153,8 @@ const HeroSection = () => {
             <img
               src="/lovable-uploads/hero.png"
               alt="Laundry and Dry Cleaning On-Demand App"
-              className="w-auto h-auto max-w-[200px] sm:max-w-[250px] md:max-w-[280px] lg:max-w-[300px] xl:max-w-[320px] 2xl:max-w-[350px] drop-shadow-lg mx-auto relative z-10"
-              style={{ maxHeight: '70vh' }}
+              className="w-auto h-auto max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[280px] 2xl:max-w-[300px] drop-shadow-lg mx-auto relative z-10"
+              style={{ maxHeight: '60vh' }}
               onError={(e) => {
                 e.currentTarget.src = "/lovable-uploads/hero.png";
               }}
