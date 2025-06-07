@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
@@ -119,14 +120,14 @@ const ProcessStepsSection = () => {
 
         {isMobile ? (
           <div className="flex flex-col gap-6">
-            {/* Mobile Images */}
-            <div className="relative h-[200px] flex items-center justify-center">
+            {/* Mobile Images - Enlarged */}
+            <div className="relative h-[280px] flex items-center justify-center">
               {steps.map((step, index) => (
                 <img
                   key={step.id}
                   src={step.imageSrc}
                   alt={step.title}
-                  className={`absolute w-auto h-full max-h-[200px] object-contain transition-all duration-300 ${
+                  className={`absolute w-auto h-full max-h-[280px] object-contain transition-all duration-300 ${
                     activeStep === index
                       ? "opacity-100 scale-100"
                       : "opacity-0 scale-95"
@@ -151,8 +152,8 @@ const ProcessStepsSection = () => {
               <img
                 src={steps[activeStep].imageSrc}
                 alt={steps[activeStep].title}
-                className="w-full max-w-[550px] aspect-square object-contain transition-opacity duration-300 drop-shadow-2xl"
-                style={{ background: "transparent", minHeight: 350 }}
+                className="w-full max-w-[650px] aspect-square object-contain transition-opacity duration-300 drop-shadow-2xl"
+                style={{ background: "transparent", minHeight: 450 }}
               />
             </div>
 

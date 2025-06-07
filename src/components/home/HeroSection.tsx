@@ -1,7 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { Star, StarHalf, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCountry } from "@/contexts/CountryContext";
+import RevolvingIcons from "./RevolvingIcons";
 
 const services = ["DRY CLEANING", "WASH AND FOLD", "IRONING", "SHOE CLEANING"];
 
@@ -68,6 +70,7 @@ const HeroSection = () => {
               borderRadius: "2rem",
             }}
           ></div>
+          
           {/* Hero Content */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -136,18 +139,22 @@ const HeroSection = () => {
               </span>
             </div>
           </motion.div>
-          {/* Phone Mockup */}
+          
+          {/* Phone Mockup with Revolving Icons */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="w-full lg:w-1/2 flex justify-center items-center z-10"
+            className="w-full lg:w-1/2 flex justify-center items-center z-10 relative"
           >
+            {/* Revolving Icons */}
+            <RevolvingIcons />
+            
             <img
               src="/lovable-uploads/hero.png"
               alt="Laundry and Dry Cleaning On-Demand App"
-              className="w-auto h-auto max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[350px] xl:max-w-[400px] 2xl:max-w-[450px] drop-shadow-lg mx-auto"
-              style={{ maxHeight: '80vh' }}
+              className="w-auto h-auto max-w-[200px] sm:max-w-[250px] md:max-w-[280px] lg:max-w-[300px] xl:max-w-[320px] 2xl:max-w-[350px] drop-shadow-lg mx-auto relative z-10"
+              style={{ maxHeight: '70vh' }}
               onError={(e) => {
                 e.currentTarget.src = "/lovable-uploads/hero.png";
               }}

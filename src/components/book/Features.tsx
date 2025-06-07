@@ -43,7 +43,7 @@ const Features = () => {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 hover:shadow-md transition-all"
+              className="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-[#1869D3] hover:shadow-md transition-all"
             >
               <div className="inline-flex items-center justify-center p-2 bg-laundry-gold rounded-full mb-4">
                 <span className="text-white font-bold">{index + 1}</span>
