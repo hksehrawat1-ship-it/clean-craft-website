@@ -111,7 +111,7 @@ const EnhancedNavbar = () => {
                   />
                 </button>
                 {openDropdown === item.path && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
+                  <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-xl py-2 z-[100]">
                     {item.children.map((child) => (
                       <Link
                         key={child.path}
@@ -140,8 +140,7 @@ const EnhancedNavbar = () => {
         <div className="hidden md:flex items-center gap-3">
           <Button
             variant="outline"
-            className="text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200"
-            style={{ border: "2px solid #1A73E8" }}
+            className="text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 border-2 border-[#1A73E8]"
           >
             Login
           </Button>
@@ -166,7 +165,7 @@ const EnhancedNavbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-10 animate-fade-in mobile-menu-container">
+        <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] animate-fade-in mobile-menu-container">
           <div className="container mx-auto px-4 pt-20 flex flex-col space-y-4">
             {navItems.map((item) =>
               item.children ? (

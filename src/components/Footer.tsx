@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -169,8 +170,8 @@ const Footer: React.FC = () => {
 
       <Separator className="my-8 bg-gray-200" />
 
-      <div className="flex flex-col md:flex-row justify-between items-center">
-        <div className="flex items-center text-gray-500 text-sm mb-4 md:mb-0">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex items-center text-gray-500 text-sm">
           <Copyright size={14} className="mr-1" />
           <span>
             {new Date().getFullYear()}-{new Date().getFullYear() + 1} Clean
@@ -181,7 +182,7 @@ const Footer: React.FC = () => {
         <div className="flex items-center space-x-6">
           <Link
             to={createLink("/policies")}
-            className="text-sm text-gray-500 hover:text-blue-500"
+            className="text-sm text-gray-500 hover:text-blue-500 transition-colors"
           >
             All Policies
           </Link>
