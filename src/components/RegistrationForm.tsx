@@ -82,18 +82,25 @@ const RegistrationForm: React.FC = () => {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
+      // Prepare the data for insertion
+      const insertData: any = {
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        country: "India",
+        source_cta: "Course Registration",
+        lead_type: "course",
+      };
+
+      // Only include city if it's provided
+      if (data.city) {
+        insertData.city = data.city;
+      }
+
       // Submit to Supabase
       const { error } = await supabase
         .from("franchise_leads")
-        .insert({
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          city: data.city,
-          country: "India",
-          source_cta: "Course Registration",
-          lead_type: "course",
-        });
+        .insert(insertData);
 
       if (error) throw error;
 
@@ -258,7 +265,7 @@ const RegistrationForm: React.FC = () => {
                   />
 
                   {/* City input with search */}
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="city"
                     render={({ field }) => (
@@ -294,7 +301,7 @@ const RegistrationForm: React.FC = () => {
                         )}
                       </FormItem>
                     )}
-                  />
+                  /> */}
 
                   <div className="pt-4">
                     <Button

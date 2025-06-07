@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import CookieConsentBanner from "./CookieConsentBanner";
 import CountryRedirect from "./CountryRedirect";
 import CountryRouteGuard from "./CountryRouteGuard";
-import { SitemapGenerator } from "./SitemapGenerator";
+// import { SitemapGenerator } from "./SitemapGenerator";
 import CountryLayout from "./CountryLayout";
 import { PageLoader } from "./PageLoader";
 
@@ -28,8 +28,7 @@ export function AppRoutes() {
   return (
     <>
       <CookieConsentBanner />
-      <SitemapGenerator />
-      
+      {/* <SitemapGenerator /> */}
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* root → geo-IP redirect or manual picker */}

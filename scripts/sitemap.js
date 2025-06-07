@@ -1,23 +1,15 @@
+// This file will be moved to the scripts directory.
 
-interface SitemapUrl {
-  url: string;
-  lastmod?: string;
-  changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-  priority?: number;
-}
+import yaml from 'js-yaml';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-interface SitemapConfig {
-  baseUrl: string;
-  countries: string[];
-  pages: {
-    path: string;
-    changefreq: SitemapUrl['changefreq'];
-    priority: number;
-    includeCountries?: boolean;
-  }[];
-}
+// Get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export const sitemapConfig: SitemapConfig = {
+export const sitemapConfig = {
   baseUrl: 'https://cleancraft.com',
   countries: ['in', 'au'],
   pages: [
@@ -31,39 +23,73 @@ export const sitemapConfig: SitemapConfig = {
   ]
 };
 
-export function generateSitemapUrls(): SitemapUrl[] {
-  const urls: SitemapUrl[] = [];
+// Load pages.yaml using fs
+function loadPagesYaml() {
+  try {
+    const pagesYamlPath = path.join(__dirname, '../config/pages.yaml'); // Adjust the path as needed
+    const yamlText = fs.readFileSync(pagesYamlPath, 'utf8');
+    const pagesYaml = yaml.load(yamlText);
+    console.log('Loaded pagesYaml:', pagesYaml); // Log the loaded YAML
+    return pagesYaml;
+  } catch (error) {
+    console.error('Error loading pages.yaml:', error);
+    return null; // Return null or an empty object to handle errors gracefully
+  }
+}
+
+function processPages(pages, baseUrl, now, urls, country = '') {
+  pages.forEach(page => {
+    const urlPath = country ? `/${country}${page.path}` : page.path;
+    urls.push({
+      url: `${baseUrl}${urlPath}`,
+      lastmod: now,
+      changefreq: 'weekly', // Default changefreq
+      priority: 0.7 // Default priority
+    });
+
+    // Recursively process children if they exist
+    if (page.children) {
+      processPages(page.children, baseUrl, now, urls, country);
+    }
+  });
+}
+
+export function generateSitemapUrls() {
+  const pagesYaml = loadPagesYaml();
+  if (!pagesYaml) {
+    console.error('Failed to load pages.yaml');
+    return [];
+  }
+
+  const urls = [];
   const now = new Date().toISOString().split('T')[0];
 
-  sitemapConfig.pages.forEach(page => {
-    if (page.includeCountries) {
-      sitemapConfig.countries.forEach(country => {
-        urls.push({
-          url: `${sitemapConfig.baseUrl}/${country}${page.path === '/' ? '' : page.path}`,
-          lastmod: now,
-          changefreq: page.changefreq,
-          priority: page.priority
-        });
-      });
-    } else {
-      urls.push({
-        url: `${sitemapConfig.baseUrl}${page.path}`,
-        lastmod: now,
-        changefreq: page.changefreq,
-        priority: page.priority
-      });
+  // Process global pages
+  if (pagesYaml.global && pagesYaml.global.pages) {
+    processPages(pagesYaml.global.pages, sitemapConfig.baseUrl, now, urls);
+  }
+
+  // Process country-specific pages
+  Object.keys(pagesYaml).forEach(country => {
+    if (country !== 'global' && pagesYaml[country] && pagesYaml[country].pages) {
+      processPages(pagesYaml[country].pages, sitemapConfig.baseUrl, now, urls, country);
     }
   });
 
+  console.log('Generated URLs:', urls); // Log the generated URLs
   return urls;
 }
 
-export function generateSitemapXML(): string {
-  const urls = generateSitemapUrls();
-  
+export async function generateSitemapXML() {
+  const urls = await generateSitemapUrls();
+  if (!Array.isArray(urls)) {
+    console.error('generateSitemapUrls did not return an array');
+    return '';
+  }
+
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-  
+
   urls.forEach(url => {
     xml += '  <url>\n';
     xml += `    <loc>${url.url}</loc>\n`;
@@ -72,12 +98,12 @@ export function generateSitemapXML(): string {
     if (url.priority) xml += `    <priority>${url.priority}</priority>\n`;
     xml += '  </url>\n';
   });
-  
+
   xml += '</urlset>';
   return xml;
 }
 
-export function generateRobotsTxt(isDevelopment: boolean = false): string {
+export function generateRobotsTxt(isDevelopment = false) {
   const baseUrl = isDevelopment ? 'http://localhost:8080' : 'https://cleancraft.com';
   
   let robotsTxt = '';

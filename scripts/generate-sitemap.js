@@ -1,5 +1,4 @@
-
-import { generateSitemapFiles } from '../src/utils/sitemap-generator.js';
+import { generateSitemapFiles } from './sitemap-generator.js';
 
 // Set production environment for proper URL generation
 process.env.NODE_ENV = 'production';

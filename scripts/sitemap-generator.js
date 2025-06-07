@@ -1,7 +1,8 @@
+// This file will be moved to the scripts directory.
 
 import fs from 'fs';
 import path from 'path';
-import { sitemapConfig, generateSitemapUrls } from './sitemap';
+import { sitemapConfig, generateSitemapUrls } from './sitemap.js';
 
 export function generateSitemapFiles() {
   const urls = generateSitemapUrls();
@@ -48,7 +49,7 @@ export function generateSitemapFiles() {
   console.log(`🌍 Environment: ${isProduction ? 'Production' : 'Development'}`);
 }
 
-function generateRobotsTxtContent(isProduction: boolean = true): string {
+function generateRobotsTxtContent(isProduction = true) {
   const baseUrl = isProduction ? 'https://cleancraft.com' : 'http://localhost:8080';
   
   let robotsTxt = '';

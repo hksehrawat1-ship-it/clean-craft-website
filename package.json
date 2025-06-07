@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate-sitemap": "node scripts/generate-sitemap.js",
-    "generate-sitemap:dev": "NODE_ENV=development node dist/scripts/generate-sitemap.js"
+    "generate-sitemap:dev": "NODE_ENV=development node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
