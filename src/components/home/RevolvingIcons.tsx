@@ -38,7 +38,7 @@ const RevolvingIcons = () => {
   const orbitRadius = typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 120;
 
   return (
-    <div className="absolute inset-0 pointer-events-none block overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Center point relative to the hero image */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {/* Main orbital path - dotted circle */}
@@ -95,21 +95,19 @@ const RevolvingIcons = () => {
         {icons.map((icon, index) => {
           // Calculate initial position on circle
           const initialAngle = (icon.angle * Math.PI) / 180;
+          const iconX = Math.cos(initialAngle) * orbitRadius;
+          const iconY = Math.sin(initialAngle) * orbitRadius;
 
           return (
             <motion.div
               key={index}
               className="absolute w-8 h-8 md:w-12 md:h-12"
               style={{
-                left: -16, // Center the icon (half of w-8 = 16px)
-                top: -16,
+                left: iconX - 16, // Center the icon
+                top: iconY - 16,
               }}
               animate={{
                 rotate: [0, 360],
-              }}
-              style={{
-                originX: 0.5,
-                originY: 0.5,
               }}
               transition={{
                 duration: icon.speed,
@@ -118,61 +116,53 @@ const RevolvingIcons = () => {
                 delay: index * (icon.speed / 4),
               }}
             >
-              <motion.div
-                className="absolute"
+              <motion.img
+                src={icon.src}
+                alt={icon.alt}
+                className="w-8 h-8 md:w-12 md:h-12 object-contain drop-shadow-lg"
                 style={{
-                  left: Math.cos(initialAngle) * orbitRadius,
-                  top: Math.sin(initialAngle) * orbitRadius,
+                  filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))",
+                  willChange: "transform, filter",
                 }}
-              >
-                <motion.img
-                  src={icon.src}
-                  alt={icon.alt}
-                  className="w-8 h-8 md:w-12 md:h-12 object-contain drop-shadow-lg"
-                  style={{
-                    filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))",
-                    willChange: "transform, filter",
-                  }}
-                  animate={{
-                    scale: [icon.scale, icon.scale * 1.15, icon.scale],
-                    opacity: [0.7, 0.9, 1, 0.9, 0.7],
-                  }}
-                  transition={{
-                    scale: {
-                      duration: 4 + index * 0.3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.6,
-                    },
-                    opacity: {
-                      duration: 4 + index * 0.4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.7,
-                    },
-                  }}
-                  whileHover={{
-                    scale: 1.3,
-                    filter: "brightness(1.2) drop-shadow(0 6px 16px rgba(24, 105, 211, 0.4))",
-                    transition: { duration: 0.2 }
-                  }}
-                />
-                
-                {/* Glowing effect around icons */}
-                <motion.div
-                  className="absolute inset-0 rounded-full bg-blue-400/20 blur-sm -z-10"
-                  animate={{
-                    scale: [0.8, 1.4, 0.8],
-                    opacity: [0.2, 0.5, 0.2],
-                  }}
-                  transition={{
-                    duration: 3.5 + index * 0.5,
+                animate={{
+                  scale: [icon.scale, icon.scale * 1.15, icon.scale],
+                  opacity: [0.7, 0.9, 1, 0.9, 0.7],
+                }}
+                transition={{
+                  scale: {
+                    duration: 4 + index * 0.3,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: index * 1.2,
-                  }}
-                />
-              </motion.div>
+                    delay: index * 0.6,
+                  },
+                  opacity: {
+                    duration: 4 + index * 0.4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: index * 0.7,
+                  },
+                }}
+                whileHover={{
+                  scale: 1.3,
+                  filter: "brightness(1.2) drop-shadow(0 6px 16px rgba(24, 105, 211, 0.4))",
+                  transition: { duration: 0.2 }
+                }}
+              />
+              
+              {/* Glowing effect around icons */}
+              <motion.div
+                className="absolute inset-0 rounded-full bg-blue-400/20 blur-sm -z-10"
+                animate={{
+                  scale: [0.8, 1.4, 0.8],
+                  opacity: [0.2, 0.5, 0.2],
+                }}
+                transition={{
+                  duration: 3.5 + index * 0.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 1.2,
+                }}
+              />
             </motion.div>
           );
         })}
