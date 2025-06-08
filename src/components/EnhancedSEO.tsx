@@ -26,7 +26,7 @@ export function EnhancedSEO({
   maxImagePreview = 'large'
 }: EnhancedSEOProps) {
   const { currentCountry } = useCountry();
-  const { data: seoData } = usePageConfigSEO(slug);
+  const { data: seoData, isLoading } = usePageConfigSEO(slug);
   
   const countryCode = currentCountry?.toLowerCase() || 'in';
   
