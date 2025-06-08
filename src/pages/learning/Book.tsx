@@ -7,7 +7,7 @@ import BookAuthor from "@/components/book/Author";
 import BookTestimonials from "@/components/book/Testimonials";
 import BookGuarantee from "@/components/book/Guarantee";
 import BookFaq from "@/components/book/Faq";
-import BookCta from "@/components/book/Cta";
+// import BookCta from "@/components/book/Cta";
 import BookOffer from "@/components/book/Offer";
 import BookBestSeller from "@/components/book/BestSeller";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
@@ -33,7 +33,6 @@ const Book = () => {
         <BookOffer />
         <BookGuarantee />
         <BookFaq />
-        <BookCta />
       </div>
     </Layout>
   );

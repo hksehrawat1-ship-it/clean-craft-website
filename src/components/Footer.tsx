@@ -182,7 +182,8 @@ const Footer: React.FC = () => {
         <div className="flex items-center space-x-6">
           <Link
             to={createLink("/policies")}
-            className="text-sm text-gray-500 hover:text-blue-500 transition-colors"
+            className="inline-flex h-8 items-center text-sm text-gray-500
+             hover:text-blue-500 transition-colors"
           >
             All Policies
           </Link>
