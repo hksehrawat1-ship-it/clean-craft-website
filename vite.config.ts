@@ -31,13 +31,13 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Better mobile compatibility - changed to es2015 with more conservative settings
-    target: ['es2015', 'chrome61', 'firefox60', 'safari11'],
+    // iOS compatibility - specifically targeting modern iOS
+    target: ['es2015', 'chrome61', 'firefox60', 'safari11', 'ios11'],
     minify: 'esbuild',
     cssMinify: true,
     rollupOptions: {
       output: {
-        // Code splitting for better caching
+        // Optimize chunks for mobile
         manualChunks: {
           'vendor': ['react', 'react-dom'],
           'router': ['react-router-dom'],
@@ -52,9 +52,9 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
-    // Optimize chunk size
-    chunkSizeWarningLimit: 1000,
-    // Enable source maps for production debugging
+    // Reduce chunk size for mobile
+    chunkSizeWarningLimit: 800,
+    // Disable sourcemaps in production for better performance
     sourcemap: false,
   },
   optimizeDeps: {

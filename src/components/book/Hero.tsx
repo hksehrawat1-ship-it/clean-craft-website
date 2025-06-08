@@ -55,11 +55,12 @@ const Hero = () => {
                     href="https://www.amazon.in/Spotless-Profit-Laundry-Guide-Cleaning/dp/B0DDXCYRJ8"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 448 512"
-                      className="h-5 w-auto"
+                      className="h-7 w-auto"
                     >
                       <path
                         fill="#FF9900"
@@ -79,7 +80,7 @@ const Hero = () => {
                     <img
                       src="https://1000logos.net/wp-content/uploads/2021/02/Flipkart-logo.png"
                       alt="Flipkart"
-                      className="h-6 w-auto"
+                      // className="h-6 w-auto mx-auto"
                     />
                   </a>
                 </div>
@@ -89,7 +90,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Button
                 size="lg"
-                className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-base py-4 px-8 font-bold rounded-lg"
+                className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-base py-4 px-8 font-bold rounded-lg flex items-center justify-center"
                 onClick={() =>
                   document
                     .getElementById("download-section")
@@ -101,6 +102,7 @@ const Hero = () => {
                   href="https://cleancraft.mojo.page/online-laundry-training-in-india"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center"
                 >
                   DOWNLOAD NOW
                 </a>

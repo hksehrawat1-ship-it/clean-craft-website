@@ -1,8 +1,8 @@
 
 import { Helmet } from 'react-helmet-async';
 import { useCountry } from '@/contexts/CountryContext';
-import { useStrapiPageSEO } from '@/hooks/useStrapi';
-import { getPageSEO, generateStructuredData } from '@/config/seo-config';
+import { usePageConfigSEO } from '@/hooks/usePageConfigSEO';
+import { generateStructuredData } from '@/config/seo-config';
 
 interface EnhancedSEOProps {
   slug: string;
@@ -26,15 +26,16 @@ export function EnhancedSEO({
   maxImagePreview = 'large'
 }: EnhancedSEOProps) {
   const { currentCountry } = useCountry();
-  const { data: seoData, isLoading } = useStrapiPageSEO(slug);
+  const { data: seoData, isLoading } = usePageConfigSEO(slug);
   
   const countryCode = currentCountry?.toLowerCase() || 'in';
-  const pageSEO = getPageSEO(slug, countryCode);
   
-  // Prioritize: Strapi data > Page-specific config > Defaults
-  const title = seoData?.seo_title || pageSEO?.title || defaultTitle || 'CleanCraft';
-  const description = seoData?.seo_description || pageSEO?.description || defaultDescription || 'Professional dry cleaning and wet cleaning services';
-  const keywords = [...(pageSEO?.keywords || []), ...customKeywords].join(', ');
+  // Prioritize: YAML config > Default props
+  const title = seoData?.seo_title || defaultTitle || 'CleanCraft';
+  const description = seoData?.seo_description || defaultDescription || 'Professional dry cleaning and wet cleaning services';
+  const yamlKeywords = seoData?.seo_keywords ? seoData.seo_keywords.split(', ') : [];
+  const keywords = [...yamlKeywords, ...customKeywords].join(', ');
+  const image = seoData?.seo_image || 'https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png';
   
   // Generate page-type specific robots meta tags
   const generateRobotsContent = () => {
@@ -94,10 +95,6 @@ export function EnhancedSEO({
   const hreflangUrls = generateHreflangUrls();
   const canonicalUrl = `https://cleancraft.com/${countryCode}${slug === '/' ? '' : slug}`;
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <Helmet>
       {/* Basic SEO */}
@@ -123,7 +120,7 @@ export function EnhancedSEO({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:site_name" content="CleanCraft" />
       <meta property="og:locale" content={countryCode === 'in' ? 'en_IN' : 'en_AU'} />
-      <meta property="og:image" content="https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png" />
+      <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       
@@ -131,7 +128,7 @@ export function EnhancedSEO({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content="https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png" />
+      <meta name="twitter:image" content={image} />
       
       {/* Geographic targeting */}
       <meta name="geo.region" content={countryCode.toUpperCase()} />

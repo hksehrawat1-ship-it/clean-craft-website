@@ -1,37 +1,39 @@
-
+/* EnhancedNavbar.tsx */
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "./ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useIsMobile } from "../hooks/use-mobile";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useCountry } from "@/contexts/CountryContext";
 import { usePagesConfig } from "@/hooks/use-pages-config";
 
-const EnhancedNavbar = () => {
+const EnhancedNavbar: React.FC = () => {
+  /* ────────────────────────── state ────────────────────────── */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dropdownTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
   const { getNavbarItems } = usePagesConfig();
-
   const navItems = getNavbarItems();
 
+  /* ─────────────────── helpers ─────────────────── */
+  const createLink = (path: string) =>
+    currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
+
+  /* ────────────────── effects ────────────────── */
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    if (!isMobile) {
-      setIsMenuOpen(false);
-    }
+    if (!isMobile) setIsMenuOpen(false);
 
-    const handleBodyClick = (e: MouseEvent) => {
+    const closeOnBodyClick = (e: MouseEvent) => {
       if (
         isMenuOpen &&
         !(e.target as HTMLElement).closest(".mobile-menu-container") &&
@@ -40,69 +42,66 @@ const EnhancedNavbar = () => {
         setIsMenuOpen(false);
       }
     };
-
-    document.body.addEventListener("click", handleBodyClick);
-    return () => document.body.removeEventListener("click", handleBodyClick);
+    document.body.addEventListener("click", closeOnBodyClick);
+    return () => document.body.removeEventListener("click", closeOnBodyClick);
   }, [isMenuOpen, isMobile]);
 
-  const createLink = (path: string) => {
-    return currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
-  };
-
-  const handleDropdownEnter = (path: string) => {
-    if (dropdownTimeoutRef.current) {
-      clearTimeout(dropdownTimeoutRef.current);
-    }
+  /* ────────── dropdown hover helpers (desktop) ────────── */
+  const openDD = (path: string) => {
+    if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
     setOpenDropdown(path);
   };
-
-  const handleDropdownLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setOpenDropdown(null);
-    }, 150);
+  const closeDD = () => {
+    dropdownTimeout.current = setTimeout(() => setOpenDropdown(null), 150);
   };
 
+  /* Common typography for desktop nav labels */
+  const commonLink =
+    "inline-flex items-center font-medium text-gray-700 " +
+    "hover:text-primary transition-colors duration-200";
+
+  /* ────────────────────────── JSX ────────────────────────── */
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-white shadow-md py-2" : "bg-transparent py-3"
       }`}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link to={createLink("")} className="flex items-center z-20">
+      <div className="container mx-auto flex items-center justify-between px-4">
+        {/* ─── Logo ─── */}
+        <Link to={createLink("")} className="z-20 flex items-center">
           <img
-            alt="Clean Craft Logo"
-            className="h-8 w-8 md:hidden"
             src="/lovable-uploads/cleancraft-icon.png"
+            alt="CleanCraft Icon"
+            className="h-8 w-8 md:hidden"
           />
           <img
-            alt="Clean Craft Logo"
-            className="hidden md:block h-12 w-auto"
             src="/lovable-uploads/cleancraft-full-logo.png"
+            alt="CleanCraft Logo"
+            className="hidden h-12 w-auto md:block"
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+        {/* ─── Desktop Nav ─── */}
+        <nav className="hidden items-center space-x-6 lg:space-x-8 md:flex">
           {navItems.map((item) =>
             item.children ? (
               <div
                 key={item.path}
                 className="relative"
-                onMouseEnter={() => handleDropdownEnter(item.path)}
-                onMouseLeave={handleDropdownLeave}
+                onMouseEnter={() => openDD(item.path)}
+                onMouseLeave={closeDD}
               >
                 <button
-                  className="flex items-center text-gray-700 hover:text-primary transition-colors duration-200 font-medium focus:outline-none"
+                  type="button"
+                  className={commonLink}
                   onClick={() =>
                     setOpenDropdown(
                       openDropdown === item.path ? null : item.path
                     )
                   }
-                  type="button"
                 >
-                  {item.title}{" "}
+                  {item.title}
                   <ChevronDown
                     size={16}
                     className={`ml-1 transition-transform duration-200 ${
@@ -110,13 +109,14 @@ const EnhancedNavbar = () => {
                     }`}
                   />
                 </button>
+
                 {openDropdown === item.path && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
+                  <div className="absolute left-0 mt-2 w-48 rounded-lg border bg-white py-2 shadow-xl z-50">
                     {item.children.map((child) => (
                       <Link
                         key={child.path}
                         to={createLink(child.path)}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary"
                       >
                         {child.title}
                       </Link>
@@ -128,7 +128,7 @@ const EnhancedNavbar = () => {
               <Link
                 key={item.path}
                 to={createLink(item.path)}
-                className="text-gray-700 hover:text-primary transition-colors duration-200 font-medium"
+                className={commonLink}
               >
                 {item.title}
               </Link>
@@ -136,49 +136,47 @@ const EnhancedNavbar = () => {
           )}
         </nav>
 
-        {/* Action Buttons - Desktop */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* ─── Desktop actions ─── */}
+        <div className="hidden items-center gap-3 md:flex">
           <Button
             variant="outline"
-            className="text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200"
-            style={{ border: "2px solid #1A73E8" }}
+            className="border-2 border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10"
           >
             Login
           </Button>
-
-          <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 rounded-[12px] px-6 py-2 text-sm font-medium whitespace-nowrap min-w-[90px]">
+          <Button className="rounded-[12px] bg-[#1A73E8] px-6 py-2 text-sm font-medium text-white hover:bg-[#1557B0]">
             Book Now
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* ─── Mobile burger ─── */}
         <button
+          aria-label="Toggle menu"
+          className="menu-toggle-btn z-20 text-gray-700 md:hidden"
           onClick={(e) => {
             e.stopPropagation();
             setIsMenuOpen(!isMenuOpen);
           }}
-          className="md:hidden text-gray-700 z-20 menu-toggle-btn"
-          aria-label="Toggle menu"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ─── Mobile menu ─── */}
       {isMenuOpen && (
-        <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-10 animate-fade-in mobile-menu-container">
-          <div className="container mx-auto px-4 pt-20 flex flex-col space-y-4">
+        <div className="mobile-menu-container fixed inset-0 z-40 bg-white md:hidden animate-fade-in">
+          <div className="container mx-auto flex flex-col space-y-4 px-4 pt-20">
             {navItems.map((item) =>
               item.children ? (
-                <div key={item.path} className="relative">
+                <div key={item.path}>
                   <button
-                    className="flex items-center justify-between text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100 w-full focus:outline-none transition-colors duration-200"
+                    type="button"
+                    className="flex w-full items-center justify-between border-b border-gray-100 py-3 text-lg font-medium text-gray-700 hover:text-primary"
                     onClick={() =>
                       setOpenDropdown(
                         openDropdown === item.path ? null : item.path
                       )
                     }
-                    type="button"
                   >
                     {item.title}
                     <ChevronDown
@@ -195,12 +193,12 @@ const EnhancedNavbar = () => {
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    <div className="py-2 pl-4">
+                    <div className="pl-4">
                       {item.children.map((child) => (
                         <Link
                           key={child.path}
                           to={createLink(child.path)}
-                          className="block py-2 text-gray-700 hover:text-primary transition-colors duration-200"
+                          className="block py-2 text-gray-700 hover:text-primary"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {child.title}
@@ -213,7 +211,7 @@ const EnhancedNavbar = () => {
                 <Link
                   key={item.path}
                   to={createLink(item.path)}
-                  className="text-lg text-gray-700 hover:text-primary font-medium py-3 border-b border-gray-100"
+                  className="border-b border-gray-100 py-3 text-lg font-medium text-gray-700 hover:text-primary"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.title}
@@ -221,16 +219,15 @@ const EnhancedNavbar = () => {
               )
             )}
 
-            {/* Action buttons - Mobile */}
-            <div className="flex flex-col gap-3 mt-6">
+            {/* ── Mobile actions ── */}
+            <div className="mt-6 flex flex-col gap-3">
               <Button
                 variant="outline"
-                className="border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10 transition-colors duration-200 w-full"
+                className="w-full border-[#1A73E8] text-[#1A73E8] hover:bg-[#1A73E8]/10"
               >
                 Login
               </Button>
-
-              <Button className="bg-[#1A73E8] text-white hover:bg-[#1557B0] transition-colors duration-200 w-full rounded-[12px] px-4 py-3 text-sm font-medium">
+              <Button className="w-full rounded-[12px] bg-[#1A73E8] px-4 py-3 text-sm font-medium text-white hover:bg-[#1557B0]">
                 Book Now
               </Button>
             </div>

@@ -71,9 +71,7 @@ const Courses = () => {
       <EnhancedSEO 
         slug="learning/courses"
         pageType="Course"
-        defaultTitle="Professional Laundry Training in Delhi | CleanCraft"
-        defaultDescription="Join our comprehensive laundry training program in Delhi. Learn from industry experts and start your successful laundry business."
-        customKeywords={['professional laundry training', 'dry cleaning course delhi', 'wet cleaning certification']}
+        customKeywords={['laundry training certification', 'professional cleaning education']}
       />
       <div className="min-h-screen flex flex-col bg-white">
         <EnhancedNavbar />

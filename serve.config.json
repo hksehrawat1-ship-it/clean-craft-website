@@ -4,15 +4,100 @@
         "source": "**/*",
         "headers": [
           {
-            "key": "X-Frame-Options",
-            "value": "SAMEORIGIN"
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
           },
           {
-            "key": "Content-Security-Policy",
-            "value": "frame-ancestors 'self';"
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Permissions-Policy",
+            "value": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+          },
+          {
+            "key": "Vary",
+            "value": "Accept-Encoding, User-Agent"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      },
+      {
+        "source": "**/*.js",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/javascript; charset=utf-8"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.css",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/css; charset=utf-8"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.+(jpg|jpeg|gif|png|ico|svg|webp)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.+(woff|woff2|ttf|otf|eot)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, must-revalidate"
           }
         ]
       }
-    ]
+    ],
+    "public": "dist",
+    "directoryListing": false,
+    "trailingSlash": false,
+    "cleanUrls": true,
+    "symlinks": true,
+    "etag": true,
+    "compress": true,
+    "cors": true
   }
   

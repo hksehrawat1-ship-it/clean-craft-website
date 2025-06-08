@@ -4,14 +4,13 @@ import BookHero from "@/components/book/Hero";
 import BookFeatures from "@/components/book/Features";
 import BookBenefits from "@/components/book/Benefits";
 import BookAuthor from "@/components/book/Author";
-import BookTestimonials from "@/components/book/Testimonials";
 import BookGuarantee from "@/components/book/Guarantee";
-import BookFaq from "@/components/book/Faq";
-import BookCta from "@/components/book/Cta";
 import BookOffer from "@/components/book/Offer";
 import BookBestSeller from "@/components/book/BestSeller";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
 import Layout from "@/components/home/Layout";
+import Testimonials from "@/components/shared/Testimonials";
+import FAQs from "@/components/shared/FAQs";
 
 const Book = () => {
   return (
@@ -19,9 +18,7 @@ const Book = () => {
       <EnhancedSEO
         slug="learning/book"
         pageType="Book"
-        defaultTitle="Spotless Profit in Laundry - Business Guide Book | CleanCraft"
-        defaultDescription="Complete business guide for starting dry cleaning, wet cleaning, and laundry services. Learn garment care techniques, business strategies, and profit optimization."
-        customKeywords={['dry cleaning business guide', 'wet cleaning startup manual', 'garment care industry book', 'cleaning business strategies']}
+        customKeywords={['spotless profit laundry', 'laundry business ebook', 'cleaning industry guide']}
       />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <BookHero />
@@ -29,11 +26,16 @@ const Book = () => {
         <BookFeatures />
         <BookBenefits />
         <BookAuthor />
-        <BookTestimonials />
+        <div className="bg-blue-50/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Testimonials category="book" />
+          </div>
+        </div>
         <BookOffer />
         <BookGuarantee />
-        <BookFaq />
-        <BookCta />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FAQs category="book" />
+        </div>
       </div>
     </Layout>
   );
