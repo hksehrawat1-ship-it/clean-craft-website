@@ -1,3 +1,4 @@
+
 # Country metadata
 countries:
   in:
@@ -8,6 +9,81 @@ countries:
     name: "Australia"
     flag_emoji: "🇦🇺"
     region: "ASIA/PACIFIC"
+
+# SEO Configuration
+seo:
+  global:
+    defaults:
+      title_suffix: " | CleanCraft"
+      keywords_base: ["professional cleaning", "garment care", "fabric treatment"]
+      image: "https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png"
+      
+  pages:
+    "/":
+      in:
+        title: "Professional Dry Cleaning & Wet Cleaning Services in India"
+        description: "Premium dry cleaning, wet cleaning, and laundry services across India. Expert garment care, stain removal, and fabric preservation with eco-friendly cleaning solutions."
+        keywords: ["dry cleaning services india", "wet cleaning laundry", "professional garment care", "fabric cleaning india", "delicate clothing care", "stain removal services", "garment preservation", "eco-friendly dry cleaning", "premium fabric care india", "laundry services near me"]
+      au:
+        title: "Premium Dry Cleaning & Wet Cleaning Services Australia"
+        description: "Professional dry cleaning, wet cleaning, and garment care services across Australia. Expert fabric treatment in Melbourne, Sydney, Brisbane with sustainable cleaning methods."
+        keywords: ["dry cleaning australia", "wet cleaning services melbourne sydney", "professional garment care australia", "eco-friendly dry cleaning", "green wet cleaning", "sustainable fabric care", "premium dry cleaning melbourne", "organic wet cleaning sydney", "luxury garment care australia", "commercial laundry services"]
+        
+    "/learning/courses":
+      in:
+        title: "Professional Dry Cleaning & Wet Cleaning Training Course in Delhi"
+        description: "Learn professional dry cleaning techniques, wet cleaning methods, and garment care from industry experts. Comprehensive laundry business training in Delhi with hands-on experience."
+        keywords: ["dry cleaning training course", "wet cleaning techniques training", "garment care education", "professional cleaning certification", "fabric treatment course", "stain removal training", "laundry business training delhi", "dry cleaning institute india", "wet cleaning workshop india", "cleaning entrepreneur course"]
+      au:
+        title: "Professional Dry Cleaning & Wet Cleaning Training Australia"
+        description: "Expert dry cleaning and wet cleaning training courses in Australia. Learn advanced garment care techniques and sustainable cleaning methods from industry professionals."
+        keywords: ["dry cleaning training australia", "wet cleaning course melbourne", "professional cleaning certification", "garment care education australia", "fabric treatment training", "eco-friendly cleaning course", "commercial laundry training", "dry cleaning techniques workshop"]
+        
+    "/learning/book":
+      in:
+        title: "Spotless Profit in Laundry - Dry Cleaning & Wet Cleaning Business Guide"
+        description: "Complete business guide for starting dry cleaning, wet cleaning, and laundry services. Learn garment care techniques, business strategies, and profit optimization methods."
+        keywords: ["dry cleaning business guide", "wet cleaning startup manual", "garment care industry book", "cleaning business strategies", "fabric care entrepreneurship", "professional cleaning guide", "laundry business book india", "dry cleaning profit guide", "wet cleaning business plan", "spotless profit laundry"]
+      au:
+        title: "Spotless Profit in Laundry - Australian Dry Cleaning Business Guide"
+        description: "Comprehensive business guide for starting dry cleaning and wet cleaning services in Australia. Expert strategies for profitable garment care business operations."
+        keywords: ["dry cleaning business guide australia", "wet cleaning startup manual", "australian cleaning industry", "garment care business strategies", "fabric care entrepreneurship australia", "professional cleaning business", "laundry franchise guide", "cleaning business profit optimization"]
+        
+    "/franchise":
+      in:
+        title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in India"
+        description: "Join India's leading dry cleaning and wet cleaning franchise. Profitable garment care business opportunity with comprehensive training, equipment, and ongoing support."
+        keywords: ["dry cleaning franchise india", "wet cleaning business opportunity", "garment care franchise", "cleaning services franchise", "fabric care business model", "professional cleaning chain", "laundry franchise opportunity", "dry cleaning investment", "wet cleaning franchise cost", "profitable cleaning business"]
+        
+    "/services":
+      in:
+        title: "Complete Dry Cleaning & Wet Cleaning Services"
+        description: "Comprehensive dry cleaning, wet cleaning, and specialized garment care services. Expert fabric treatment, stain removal, and preservation with modern cleaning technology."
+        keywords: ["dry cleaning services", "wet cleaning solutions", "professional garment care", "fabric cleaning specialists", "stain removal experts", "delicate fabric care", "eco-friendly cleaning", "garment preservation", "commercial cleaning services", "specialized fabric treatment"]
+      au:
+        title: "Professional Dry Cleaning & Wet Cleaning Services Australia"
+        description: "Expert dry cleaning, wet cleaning, and garment care services across Australia. Sustainable cleaning solutions for delicate fabrics, formal wear, and specialty items."
+        keywords: ["dry cleaning australia", "wet cleaning services", "professional garment care", "sustainable cleaning solutions", "fabric specialists australia", "eco-friendly dry cleaning", "premium cleaning services", "garment restoration", "commercial fabric care", "luxury item cleaning"]
+        
+    "/faq":
+      in:
+        title: "Frequently Asked Questions - Dry Cleaning & Wet Cleaning"
+        description: "Get answers to common questions about our dry cleaning, wet cleaning, and garment care services. Learn about fabric treatment, pricing, and service processes."
+        keywords: ["dry cleaning faq", "wet cleaning questions", "garment care help", "fabric cleaning questions", "stain removal faq", "cleaning service help", "laundry questions", "professional cleaning faq"]
+      au:
+        title: "FAQ - Dry Cleaning & Wet Cleaning Services Australia"
+        description: "Common questions about dry cleaning, wet cleaning, and professional garment care services in Australia. Expert answers on fabric treatment and cleaning processes."
+        keywords: ["dry cleaning faq australia", "wet cleaning questions", "garment care help australia", "fabric cleaning australia", "professional cleaning questions", "sustainable cleaning faq", "eco-friendly dry cleaning help"]
+        
+    "/policies":
+      in:
+        title: "Policies - Dry Cleaning & Wet Cleaning Services"
+        description: "Our policies for dry cleaning, wet cleaning, and garment care services. Terms, privacy, and service policies for professional fabric treatment."
+        keywords: ["dry cleaning policies", "wet cleaning terms", "garment care policies", "cleaning service terms", "fabric treatment policies", "professional cleaning policies"]
+      au:
+        title: "Policies - Professional Cleaning Services Australia"
+        description: "Service policies for dry cleaning, wet cleaning, and garment care in Australia. Terms of service, privacy policy, and professional cleaning guidelines."
+        keywords: ["dry cleaning policies australia", "wet cleaning terms", "garment care policies", "cleaning service policies australia", "professional cleaning terms", "sustainable cleaning policies"]
 
 # Global pages available by default
 global:
@@ -33,14 +109,6 @@ global:
       navbar: false
       title: "Policies"
       order: 3
-    # - path: "/locations"
-    #   navbar: true
-    #   title: "Location"
-    #   order: 4
-    # - path: "/connect"
-    #   navbar: true
-    #   title: "Connect"
-    #   order: 5
 
 # Country-specific page availability
 au:
