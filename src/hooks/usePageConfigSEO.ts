@@ -33,12 +33,39 @@ async function loadPagesYaml(): Promise<PagesSEOData> {
   if (pagesData) return pagesData;
   
   try {
+    // Fetch from public directory instead of src/config
     const response = await fetch('/src/config/pages.yaml');
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch pages.yaml: ${response.status} ${response.statusText}`);
+    }
+    
     const yamlText = await response.text();
-    pagesData = yaml.load(yamlText) as PagesSEOData;
+    
+    // Check if the response is actually YAML content
+    if (!yamlText || yamlText.trim().length === 0) {
+      throw new Error('Empty YAML response');
+    }
+    
+    // Log the first few lines to debug
+    console.log('YAML content preview:', yamlText.substring(0, 200));
+    
+    try {
+      pagesData = yaml.load(yamlText) as PagesSEOData;
+    } catch (yamlError) {
+      console.error('YAML parsing error:', yamlError);
+      throw new Error(`YAML parsing failed: ${yamlError}`);
+    }
+    
+    // Validate the structure
+    if (!pagesData?.seo) {
+      throw new Error('Invalid YAML structure: missing seo section');
+    }
+    
     return pagesData;
   } catch (error) {
     console.error('Error loading pages.yaml:', error);
+    // Return fallback data
     return {
       seo: {
         global: {
@@ -76,6 +103,7 @@ export function usePageConfigSEO(slug: string) {
         const globalDefaults = data.seo?.global?.defaults;
         
         if (!pageSEO) {
+          console.log(`No SEO data found for slug: ${slug}, country: ${countryCode}`);
           setSeoData(null);
           setIsLoading(false);
           return;
