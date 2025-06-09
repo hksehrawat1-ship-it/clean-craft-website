@@ -26,7 +26,9 @@ const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
   });
 
   const blogs = blogsResponse?.data || [];
-  const hasNextPage = blogsResponse?.meta.pagination.page < blogsResponse?.meta.pagination.pageCount;
+  const hasNextPage = blogsResponse?.meta?.pagination?.page && blogsResponse?.meta?.pagination?.pageCount 
+    ? blogsResponse.meta.pagination.page < blogsResponse.meta.pagination.pageCount 
+    : false;
 
   if (isLoading && page === 1) {
     return (

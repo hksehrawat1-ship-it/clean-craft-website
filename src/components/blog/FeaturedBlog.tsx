@@ -7,6 +7,7 @@ import { Calendar, User } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useCountry } from '@/contexts/CountryContext';
+import { cn } from '@/lib/utils';
 
 interface FeaturedBlogProps {
   blog: StrapiBlog;
