@@ -5,7 +5,7 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
+            "value": "public, max-age=0, must-revalidate"
           },
           {
             "key": "X-Content-Type-Options",
@@ -38,42 +38,7 @@
         ]
       },
       {
-        "source": "**/*.js",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/javascript; charset=utf-8"
-          },
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "**/*.css",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "text/css; charset=utf-8"
-          },
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "**/*.+(jpg|jpeg|gif|png|ico|svg|webp)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "**/*.+(woff|woff2|ttf|otf|eot)",
+        "source": "**/*.+(js|css|jpg|jpeg|gif|png|ico|svg|webp|woff|woff2|ttf|otf|eot)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -90,14 +55,6 @@
           }
         ]
       }
-    ],
-    "public": "dist",
-    "directoryListing": false,
-    "trailingSlash": false,
-    "cleanUrls": true,
-    "symlinks": true,
-    "etag": true,
-    "compress": true,
-    "cors": true
-  }
+    ]
+}
   
