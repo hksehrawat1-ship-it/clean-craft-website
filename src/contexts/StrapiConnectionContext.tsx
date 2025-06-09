@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { connectionService } from '@/lib/strapi/services/connection.service';
 
 interface StrapiConnectionState {
@@ -27,9 +27,20 @@ export function StrapiConnectionProvider({ children }: StrapiConnectionProviderP
   const [isConnected, setIsConnected] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [error, setError] = useState<string>();
+  
+  // Use refs to prevent infinite loops
+  const initializationAttempted = useRef(false);
+  const isRetrying = useRef(false);
 
   const initializeConnection = async () => {
+    // Prevent multiple simultaneous initialization attempts
+    if (initializationAttempted.current || isRetrying.current) {
+      console.log('🔄 Connection initialization already in progress, skipping...');
+      return;
+    }
+
     try {
+      initializationAttempted.current = true;
       setIsInitializing(true);
       setError(undefined);
       
@@ -52,11 +63,25 @@ export function StrapiConnectionProvider({ children }: StrapiConnectionProviderP
   };
 
   const retryConnection = async () => {
-    await initializeConnection();
+    // Prevent multiple simultaneous retry attempts
+    if (isRetrying.current) {
+      console.log('🔄 Retry already in progress, skipping...');
+      return;
+    }
+    
+    try {
+      isRetrying.current = true;
+      await initializeConnection();
+    } finally {
+      isRetrying.current = false;
+    }
   };
 
   useEffect(() => {
-    initializeConnection();
+    // Only initialize once
+    if (!initializationAttempted.current) {
+      initializeConnection();
+    }
   }, []);
 
   const value: StrapiConnectionState = {

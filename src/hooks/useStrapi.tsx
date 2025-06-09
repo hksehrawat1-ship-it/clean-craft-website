@@ -5,6 +5,7 @@ import { contentService, ContentCategory } from '@/lib/strapi/services/content.s
 import { useCountry } from '@/contexts/CountryContext';
 import { useStrapiConnection } from '@/contexts/StrapiConnectionContext';
 import { StrapiFAQ, StrapiService, StrapiTestimonial, StrapiPolicy } from '@/types/strapi';
+import { useMemo } from 'react';
 
 interface StrapiResponse<T> {
   data: T[];
@@ -38,7 +39,9 @@ export function useStrapiPage(slug: string) {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
@@ -62,7 +65,9 @@ export function useStrapiPageSEO(slug: string) {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
@@ -85,7 +90,9 @@ export function useStrapiServices() {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
@@ -99,8 +106,18 @@ export function useStrapiTestimonials(options?: {
   const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
+  // Serialize options to prevent unstable query keys
+  const serializedOptions = useMemo(() => {
+    if (!options) return null;
+    return JSON.stringify(options);
+  }, [options?.category, options?.platform, options?.sortBy, options?.sortOrder]);
+
+  const queryKey = useMemo(() => {
+    return ["testimonials", countryCode, serializedOptions];
+  }, [countryCode, serializedOptions]);
+
   return useQuery<StrapiResponse<any>>({
-    queryKey: ["testimonials", countryCode, options],
+    queryKey,
     queryFn: async () => {
       console.log(
         "🔄 Fetching testimonials for:",
@@ -118,7 +135,9 @@ export function useStrapiTestimonials(options?: {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
@@ -131,8 +150,18 @@ export function useStrapiFAQs(options?: {
   const { isConnected, isInitializing } = useStrapiConnection();
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
+  // Serialize options to prevent unstable query keys
+  const serializedOptions = useMemo(() => {
+    if (!options) return null;
+    return JSON.stringify(options);
+  }, [options?.category, options?.sortBy, options?.sortOrder]);
+
+  const queryKey = useMemo(() => {
+    return ["faqs", countryCode, serializedOptions];
+  }, [countryCode, serializedOptions]);
+
   return useQuery<StrapiResponse<any>>({
-    queryKey: ["faqs", countryCode, options],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching FAQs for:", countryCode, "Options:", options);
       try {
@@ -145,7 +174,9 @@ export function useStrapiFAQs(options?: {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
@@ -174,6 +205,8 @@ export function useStrapiPolicies() {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
