@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -40,9 +39,7 @@ export function AppRoutes() {
           <Route path=":countryCode/*" element={<CountryLayout />}>
             <Route
               index
-              element={
-                <CountryRouteGuard pagePath="/" element={<Index />} />
-              }
+              element={<CountryRouteGuard pagePath="/" element={<Index />} />}
             />
 
             <Route path="learning">
@@ -60,7 +57,11 @@ export function AppRoutes() {
                 element={
                   <CountryRouteGuard
                     pagePath="/learning/book"
-                    element={<Suspense fallback={<PageLoader />}><LazyBookPage /></Suspense>}
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyBookPage />
+                      </Suspense>
+                    }
                   />
                 }
               />
@@ -72,7 +73,11 @@ export function AppRoutes() {
               element={
                 <CountryRouteGuard
                   pagePath="/blog"
-                  element={<Suspense fallback={<PageLoader />}><LazyBlogPage /></Suspense>}
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <LazyBlogPage />
+                    </Suspense>
+                  }
                   allowEmptyContent
                 />
               }
@@ -111,7 +116,7 @@ export function AppRoutes() {
                 />
               }
             />
-            
+
             {/* Services page */}
             <Route
               path="services"
@@ -126,11 +131,15 @@ export function AppRoutes() {
 
             {/* Franchise page route */}
             <Route
-              path="franchise"
+              path="laundry-franchise"
               element={
                 <CountryRouteGuard
-                  pagePath="/franchise"
-                  element={<Suspense fallback={<PageLoader />}><LazyFranchisePage /></Suspense>}
+                  pagePath="/laundry-franchise"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <LazyFranchisePage />
+                    </Suspense>
+                  }
                   allowEmptyContent
                 />
               }
