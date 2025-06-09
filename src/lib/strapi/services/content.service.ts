@@ -80,7 +80,7 @@ export class ContentService {
         }
 
         const params: BaseQueryParams = {
-            populate: 'deep',
+            populate: '*',
             filters,
             sort: [`${sortBy}:${sortOrder}`],
             pagination: {
@@ -99,7 +99,7 @@ export class ContentService {
         locale?: string
     ): Promise<StrapiBlog | null> {
         const params: BaseQueryParams = {
-            populate: 'deep',
+            populate: '*',
             filters: {
                 slug: { $eq: slug },
                 country: {
