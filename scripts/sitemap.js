@@ -12,45 +12,89 @@ const __dirname = path.dirname(__filename);
 export const sitemapConfig = {
   baseUrl: 'https://cleancraft.com',
   countries: ['in', 'au'],
-  pages: [
-    { path: '/', changefreq: 'weekly', priority: 1.0, includeCountries: true },
-    { path: '/services', changefreq: 'weekly', priority: 0.9, includeCountries: true },
-    { path: '/learning/courses', changefreq: 'monthly', priority: 0.8, includeCountries: true },
-    { path: '/learning/book', changefreq: 'monthly', priority: 0.8, includeCountries: true },
-    { path: '/franchise', changefreq: 'monthly', priority: 0.8, includeCountries: true },
-    { path: '/faq', changefreq: 'weekly', priority: 0.7, includeCountries: true },
-    { path: '/policies', changefreq: 'monthly', priority: 0.5, includeCountries: true }
-  ]
+  defaultPriority: 0.7,
+  defaultChangefreq: 'weekly'
 };
 
 // Load pages.yaml using fs
 function loadPagesYaml() {
   try {
-    const pagesYamlPath = path.join(__dirname, '../config/pages.yaml'); // Adjust the path as needed
-    const yamlText = fs.readFileSync(pagesYamlPath, 'utf8');
+    // Try multiple possible locations for the YAML file
+    const possiblePaths = [
+      path.join(__dirname, '../src/config/pages.yaml'),  // Development source
+      path.join(__dirname, '../dist/config/pages.yaml'), // Production build from src/config
+      path.join(__dirname, '../public/config/pages.yaml'), // Public directory source
+      path.join(__dirname, '../dist/pages.yaml')  // Production build from public
+    ];
+
+    let yamlText;
+    let usedPath;
+
+    // Try each path until we find the file
+    for (const pagesYamlPath of possiblePaths) {
+      if (fs.existsSync(pagesYamlPath)) {
+        yamlText = fs.readFileSync(pagesYamlPath, 'utf8');
+        usedPath = pagesYamlPath;
+        console.log('Found pages.yaml at:', pagesYamlPath);
+        break;
+      } else {
+        console.log('pages.yaml not found at:', pagesYamlPath);
+      }
+    }
+
+    if (!yamlText) {
+      throw new Error(`pages.yaml not found in any of these locations: ${possiblePaths.join(', ')}`);
+    }
+
+    console.log('Loading pages.yaml from:', usedPath);
     const pagesYaml = yaml.load(yamlText);
-    console.log('Loaded pagesYaml:', pagesYaml); // Log the loaded YAML
     return pagesYaml;
   } catch (error) {
     console.error('Error loading pages.yaml:', error);
-    return null; // Return null or an empty object to handle errors gracefully
+    return null;
   }
 }
 
-function processPages(pages, baseUrl, now, urls, country = '') {
+function processNavigationPages(pages, baseUrl, now, urls, country = '') {
+  if (!Array.isArray(pages)) {
+    console.warn('Expected pages to be an array, got:', typeof pages);
+    return;
+  }
+
   pages.forEach(page => {
+    // Add the main page URL
     const urlPath = country ? `/${country}${page.path}` : page.path;
-    urls.push({
+    const urlData = {
       url: `${baseUrl}${urlPath}`,
       lastmod: now,
-      changefreq: 'weekly', // Default changefreq
-      priority: 0.7 // Default priority
-    });
+      changefreq: sitemapConfig.defaultChangefreq,
+      priority: page.path === '/' ? 1.0 : sitemapConfig.defaultPriority
+    };
+    urls.add(JSON.stringify(urlData)); // Convert to string for Set storage
 
-    // Recursively process children if they exist
-    if (page.children) {
-      processPages(page.children, baseUrl, now, urls, country);
+    // Process children pages if they exist
+    if (page.children && Array.isArray(page.children)) {
+      processNavigationPages(page.children, baseUrl, now, urls, country);
     }
+  });
+}
+
+function processSEOPages(seoPages, baseUrl, now, urls) {
+  // Process each SEO page path
+  Object.keys(seoPages).forEach(pagePath => {
+    const pageConfig = seoPages[pagePath];
+    
+    // Add URLs for each country that has SEO data for this page
+    Object.keys(pageConfig).forEach(country => {
+      const urlPath = `/${country}${pagePath}`;
+      const urlData = {
+        url: `${baseUrl}${urlPath}`,
+        lastmod: now,
+        changefreq: sitemapConfig.defaultChangefreq,
+        priority: pagePath === '/' ? 1.0 : sitemapConfig.defaultPriority
+      };
+      urls.add(JSON.stringify(urlData)); // Convert to string for Set storage
+    });
   });
 }
 
@@ -61,23 +105,33 @@ export function generateSitemapUrls() {
     return [];
   }
 
-  const urls = [];
+  const urls = new Set(); // Use Set to avoid duplicates
   const now = new Date().toISOString().split('T')[0];
 
-  // Process global pages
-  if (pagesYaml.global && pagesYaml.global.pages) {
-    processPages(pagesYaml.global.pages, sitemapConfig.baseUrl, now, urls);
+  // 1. Process navigation structure (global and country-specific)
+  if (pagesYaml.global?.pages) {
+    console.log('Processing global navigation pages');
+    processNavigationPages(pagesYaml.global.pages, sitemapConfig.baseUrl, now, urls);
   }
 
-  // Process country-specific pages
-  Object.keys(pagesYaml).forEach(country => {
-    if (country !== 'global' && pagesYaml[country] && pagesYaml[country].pages) {
-      processPages(pagesYaml[country].pages, sitemapConfig.baseUrl, now, urls, country);
+  // Process country-specific navigation
+  sitemapConfig.countries.forEach(country => {
+    if (pagesYaml[country]?.pages) {
+      console.log(`Processing ${country} navigation pages`);
+      processNavigationPages(pagesYaml[country].pages, sitemapConfig.baseUrl, now, urls, country);
     }
   });
 
-  console.log('Generated URLs:', urls); // Log the generated URLs
-  return urls;
+  // 2. Process SEO pages to ensure we haven't missed any
+  if (pagesYaml.seo?.pages) {
+    console.log('Processing SEO pages');
+    processSEOPages(pagesYaml.seo.pages, sitemapConfig.baseUrl, now, urls);
+  }
+
+  // Convert Set of stringified objects back to array of objects
+  const finalUrls = Array.from(urls).map(urlString => JSON.parse(urlString));
+  console.log(`Generated ${finalUrls.length} unique URLs`);
+  return finalUrls;
 }
 
 export async function generateSitemapXML() {

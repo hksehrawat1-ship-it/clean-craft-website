@@ -69,7 +69,7 @@ const Courses = () => {
   return (
     <>
       <EnhancedSEO 
-        slug="learning/courses"
+        slug="/learning/courses"
         pageType="Course"
         customKeywords={['laundry training certification', 'professional cleaning education']}
       />

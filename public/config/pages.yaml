@@ -1,3 +1,4 @@
+
 # Country metadata
 countries:
   in:
@@ -53,10 +54,6 @@ seo:
         title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in India"
         description: "Join India's leading dry cleaning and wet cleaning franchise. Profitable garment care business opportunity with comprehensive training, equipment, and ongoing support."
         keywords: ["dry cleaning franchise india", "wet cleaning business opportunity", "garment care franchise", "cleaning services franchise", "fabric care business model", "professional cleaning chain", "laundry franchise opportunity", "dry cleaning investment", "wet cleaning franchise cost", "profitable cleaning business"]
-      au:
-        title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in Australia"
-        description: "Join Australia's premier dry cleaning and wet cleaning franchise network. Profitable business opportunity with comprehensive training, equipment, and ongoing support."
-        keywords: ["dry cleaning franchise australia", "wet cleaning business opportunity", "garment care franchise australia", "cleaning services franchise", "fabric care business model", "professional cleaning chain", "laundry franchise opportunity", "dry cleaning investment australia", "wet cleaning franchise cost", "profitable cleaning business"]
         
     "/services":
       in:

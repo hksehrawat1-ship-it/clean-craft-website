@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useCountry } from '@/contexts/CountryContext';
 import yaml from 'js-yaml';
@@ -33,22 +32,27 @@ async function loadPagesYaml(): Promise<PagesSEOData> {
   if (pagesData) return pagesData;
   
   try {
-    // Fetch from public directory instead of src/config
-    const response = await fetch('/src/config/pages.yaml');
+    // Try fetching from both possible locations
+    let response;
+    let yamlText;
     
-    if (!response.ok) {
-      throw new Error(`Failed to fetch pages.yaml: ${response.status} ${response.statusText}`);
+    // First try the config directory
+    response = await fetch('/config/pages.yaml');
+    if (response.ok) {
+      yamlText = await response.text();
+    } else {
+      // If not found, try the root directory
+      response = await fetch('/pages.yaml');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch pages.yaml: ${response.status} ${response.statusText}`);
+      }
+      yamlText = await response.text();
     }
-    
-    const yamlText = await response.text();
     
     // Check if the response is actually YAML content
     if (!yamlText || yamlText.trim().length === 0) {
       throw new Error('Empty YAML response');
     }
-    
-    // Log the first few lines to debug
-    console.log('YAML content preview:', yamlText.substring(0, 200));
     
     try {
       pagesData = yaml.load(yamlText) as PagesSEOData;
@@ -96,6 +100,7 @@ export function usePageConfigSEO(slug: string) {
       setIsLoading(true);
       try {
         const data = await loadPagesYaml();
+        console.log('SEO Data from YAML:', data);
         const countryCode = currentCountry?.toLowerCase() || 'in';
         
         // Get page-specific SEO data

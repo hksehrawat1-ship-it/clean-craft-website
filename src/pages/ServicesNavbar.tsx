@@ -188,7 +188,7 @@ const ServicesPage: React.FC = () => {
   return (
     <>
       <EnhancedSEO
-        slug="services"
+        slug="/services"
         pageType="LocalBusiness"
         defaultTitle="Professional Dry Cleaning & Wet Cleaning Services | CleanCraft"
         defaultDescription="Comprehensive dry cleaning, wet cleaning, and garment care services. Expert fabric treatment with modern cleaning technology and eco-friendly solutions."

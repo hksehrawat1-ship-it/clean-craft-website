@@ -15,7 +15,9 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    yaml(),
+    yaml({
+      include: ['**/*.yaml'], // Include all YAML files
+    }),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
@@ -31,6 +33,10 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    // Output to dist directory
+    outDir: 'dist',
+    // Empty the outDir on rebuild
+    emptyOutDir: true,
     // iOS compatibility - specifically targeting modern iOS
     target: ['es2015', 'chrome61', 'firefox60', 'safari11', 'ios11'],
     minify: 'esbuild',

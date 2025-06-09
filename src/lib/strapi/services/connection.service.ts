@@ -1,4 +1,3 @@
-
 interface ConnectionStatus {
   isConnected: boolean;
   lastChecked: number;
@@ -15,6 +14,10 @@ export class ConnectionService {
   };
   private readonly STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
   private readonly CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
+  private readonly INITIAL_TIMEOUT = 30000; // 30 seconds for initial connection
+  private readonly NORMAL_TIMEOUT = 10000; // 10 seconds for subsequent checks
+  private readonly MAX_RETRIES = 3;
+  private readonly RETRY_DELAY = 2000; // 2 seconds between retries
 
   private constructor() {}
 
@@ -25,19 +28,10 @@ export class ConnectionService {
     return ConnectionService.instance;
   }
 
-  async checkConnection(): Promise<boolean> {
-    const now = Date.now();
-    
-    // Return cached result if checked recently
-    if (this.status.isConnected && (now - this.status.lastChecked) < this.CHECK_INTERVAL) {
-      return true;
-    }
-
+  private async attemptConnection(timeout: number): Promise<boolean> {
     try {
-      console.log('🔄 Checking Strapi connection...');
-      
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
 
       const response = await fetch(`${this.STRAPI_URL}/services?pagination[limit]=1`, {
         method: 'HEAD',
@@ -48,28 +42,53 @@ export class ConnectionService {
       });
 
       clearTimeout(timeoutId);
-
-      this.status.isConnected = response.ok;
-      this.status.lastChecked = now;
-      this.status.retryCount = 0;
-      this.status.error = undefined;
-
-      console.log(this.status.isConnected ? '✅ Strapi connection successful' : '❌ Strapi connection failed');
-      return this.status.isConnected;
+      return response.ok;
     } catch (error) {
-      this.status.isConnected = false;
-      this.status.lastChecked = now;
-      this.status.retryCount++;
-      this.status.error = error instanceof Error ? error.message : 'Unknown error';
-      
-      console.error('❌ Strapi connection failed:', error);
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn('⏱️ Connection attempt timed out');
+      } else {
+        console.error('❌ Connection attempt failed:', error);
+      }
       return false;
     }
   }
 
+  async checkConnection(isInitial: boolean = false): Promise<boolean> {
+    const now = Date.now();
+    
+    // Return cached result if checked recently and not an initial check
+    if (!isInitial && this.status.isConnected && (now - this.status.lastChecked) < this.CHECK_INTERVAL) {
+      return true;
+    }
+
+    const timeout = isInitial ? this.INITIAL_TIMEOUT : this.NORMAL_TIMEOUT;
+    let success = false;
+
+    for (let attempt = 1; attempt <= this.MAX_RETRIES; attempt++) {
+      console.log(`🔄 Checking Strapi connection (Attempt ${attempt}/${this.MAX_RETRIES})...`);
+      
+      success = await this.attemptConnection(timeout);
+      
+      if (success) {
+        break;
+      } else if (attempt < this.MAX_RETRIES) {
+        console.log(`⏳ Waiting ${this.RETRY_DELAY}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+      }
+    }
+
+    this.status.isConnected = success;
+    this.status.lastChecked = now;
+    this.status.retryCount = success ? 0 : this.status.retryCount + 1;
+    this.status.error = success ? undefined : 'Connection failed after multiple attempts';
+
+    console.log(success ? '✅ Strapi connection successful' : '❌ Strapi connection failed');
+    return success;
+  }
+
   async warmupConnection(): Promise<boolean> {
     console.log('🔥 Warming up Strapi connection...');
-    return this.checkConnection();
+    return this.checkConnection(true);
   }
 
   getStatus(): ConnectionStatus {
@@ -77,7 +96,7 @@ export class ConnectionService {
   }
 
   isHealthy(): boolean {
-    return this.status.isConnected && this.status.retryCount < 3;
+    return this.status.isConnected && this.status.retryCount < this.MAX_RETRIES;
   }
 }
 

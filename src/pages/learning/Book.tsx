@@ -16,7 +16,7 @@ const Book = () => {
   return (
     <Layout>
       <EnhancedSEO
-        slug="learning/book"
+        slug="/learning/book"
         pageType="Book"
         customKeywords={['spotless profit laundry', 'laundry business ebook', 'cleaning industry guide']}
       />
