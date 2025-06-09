@@ -6,11 +6,9 @@ import { useCountryConfig } from "@/hooks/use-country-config";
 import Layout from "../components/home/Layout";
 import HeroSection from "../components/home/HeroSection";
 import ServicesSection from "../components/home/ServicesSection";
-import BenefitsSection from "../components/home/BenefitsSection";
 import ProcessStepsSection from "../components/home/ProcessStepsSection";
 import YourFirstPickupEssentials from "../components/home/YourFirstPickupEssentials";
 import LaundryServiceFeatures from "../components/home/LaundryServiceFeatures";
-import CustomerTestimonials from "../components/home/CustomerTestimonials";
 import GuaranteeSection from "../components/home/GuaranteeSection";
 import FaqSection from "../components/home/FAQSection";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
@@ -57,26 +55,34 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
 export default function Index() {
   const { countryCode } = useParams<{ countryCode: string }>();
   const { currentCountry } = useCountry();
-  const { countries, getCountryByCode } = useCountryConfig();
+  const { getCountryByCode } = useCountryConfig();
   const { data: pageData } = useStrapiPage("/");
 
   // Get country name from config
   const countryData = currentCountry ? getCountryByCode(currentCountry) : null;
   const countryName = countryData?.name || "";
 
-  // Fetch FAQs and testimonials for home page
-  const { data: faqs, isLoading: faqsLoading } = useStrapiFAQs({
+  // Fetch FAQs and testimonials for home page with error handling
+  const { data: faqs, isLoading: faqsLoading, error: faqsError } = useStrapiFAQs({
     category: "home",
     sortBy: "order",
     sortOrder: "asc",
   });
 
-  const { data: testimonials, isLoading: testimonialsLoading } =
+  const { data: testimonials, isLoading: testimonialsLoading, error: testimonialsError } =
     useStrapiTestimonials({
       category: "home",
       sortBy: "rating",
       sortOrder: "desc",
     });
+
+  // Log errors for debugging
+  if (faqsError) {
+    console.error("FAQs fetch error:", faqsError);
+  }
+  if (testimonialsError) {
+    console.error("Testimonials fetch error:", testimonialsError);
+  }
 
   // Check if we have testimonials to display
   const hasTestimonials = testimonials?.data?.length && testimonials?.data?.length > 0;
@@ -106,11 +112,6 @@ export default function Index() {
           <SectionWrapper className="bg-[#1E3A8A]">
             <ServicesSection />
           </SectionWrapper>
-
-          {/* Benefits section */}
-          {/* <SectionWrapper className="bg-white">
-            <BenefitsSection />
-          </SectionWrapper> */}
 
           {/* Process steps with light blue background */}
           <SectionWrapper className="bg-[#E8F1FD]">

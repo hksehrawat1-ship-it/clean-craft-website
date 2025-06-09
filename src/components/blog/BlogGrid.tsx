@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useBlogs } from '@/hooks/useBlog';
 import BlogCard from './BlogCard';
 import { Button } from '@/components/ui/button';
@@ -13,22 +13,39 @@ const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
   const [page, setPage] = useState(1);
   const pageSize = 9;
   
+  // Memoize query options to prevent unnecessary re-renders
+  const queryOptions = useMemo(() => ({
+    category: selectedCategory || undefined,
+    featured: false, // Exclude featured posts from grid
+    page,
+    pageSize
+  }), [selectedCategory, page, pageSize]);
+  
   const { 
     data: blogsResponse, 
     isLoading, 
     isError,
     error 
-  } = useBlogs({
-    category: selectedCategory || undefined,
-    featured: false, // Exclude featured posts from grid
-    page,
-    pageSize
-  });
+  } = useBlogs(queryOptions);
 
   const blogs = blogsResponse?.data || [];
-  const hasNextPage = blogsResponse?.meta?.pagination?.page && blogsResponse?.meta?.pagination?.pageCount 
+  
+  // Safe check for pagination
+  const hasNextPage = blogsResponse?.meta?.pagination && 
+    blogsResponse.meta.pagination.page && 
+    blogsResponse.meta.pagination.pageCount 
     ? blogsResponse.meta.pagination.page < blogsResponse.meta.pagination.pageCount 
     : false;
+
+  // Memoize the load more handler
+  const handleLoadMore = useCallback(() => {
+    setPage(prev => prev + 1);
+  }, []);
+
+  // Reset page when category changes
+  React.useEffect(() => {
+    setPage(1);
+  }, [selectedCategory]);
 
   if (isLoading && page === 1) {
     return (
@@ -41,6 +58,7 @@ const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
   }
 
   if (isError) {
+    console.error("Blog grid error:", error);
     return (
       <div className="text-center py-12">
         <p className="text-gray-600">
@@ -76,7 +94,7 @@ const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
           <Button
             variant="outline"
             size="lg"
-            onClick={() => setPage(prev => prev + 1)}
+            onClick={handleLoadMore}
             disabled={isLoading}
             className="min-w-32"
           >

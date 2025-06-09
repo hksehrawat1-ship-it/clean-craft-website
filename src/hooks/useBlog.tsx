@@ -4,6 +4,7 @@ import { contentService } from '@/lib/strapi/services/content.service';
 import { useCountry } from '@/contexts/CountryContext';
 import { useStrapiConnection } from '@/contexts/StrapiConnectionContext';
 import { StrapiBlog, StrapiBlogCategory } from '@/types/strapi';
+import { useMemo } from 'react';
 
 interface StrapiResponse<T> {
   data: T[];
@@ -27,10 +28,17 @@ export function useBlogs(options?: {
 }) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
+  
+  // Memoize the query key to prevent unnecessary re-renders
+  const queryKey = useMemo(() => {
+    const countryCode = currentCountry?.toLowerCase() || 'in';
+    return ["blogs", countryCode, options];
+  }, [currentCountry, options]);
+
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<StrapiBlog>>({
-    queryKey: ["blogs", countryCode, options],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching blogs for:", countryCode, "Options:", options);
       try {
@@ -50,10 +58,16 @@ export function useBlogs(options?: {
 export function useBlogBySlug(slug: string) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
+  
+  const queryKey = useMemo(() => {
+    const countryCode = currentCountry?.toLowerCase() || 'in';
+    return ["blog", slug, countryCode];
+  }, [slug, currentCountry]);
+
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiBlog | null>({
-    queryKey: ["blog", slug, countryCode],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching blog:", slug, "Country:", countryCode);
       try {
@@ -73,10 +87,16 @@ export function useBlogBySlug(slug: string) {
 export function useBlogCategories() {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
+  
+  const queryKey = useMemo(() => {
+    const countryCode = currentCountry?.toLowerCase() || 'in';
+    return ["blogCategories", countryCode];
+  }, [currentCountry]);
+
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<StrapiBlogCategory>>({
-    queryKey: ["blogCategories", countryCode],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching blog categories for:", countryCode);
       try {
