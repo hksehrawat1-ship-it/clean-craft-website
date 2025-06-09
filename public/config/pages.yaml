@@ -49,6 +49,12 @@ seo:
         description: "Comprehensive business guide for starting dry cleaning and wet cleaning services in Australia. Expert strategies for profitable garment care business operations."
         keywords: ["dry cleaning business guide australia", "wet cleaning startup manual", "australian cleaning industry", "garment care business strategies", "fabric care entrepreneurship australia", "professional cleaning business", "laundry franchise guide", "cleaning business profit optimization"]
         
+    "/blog":
+      in:
+        title: "Laundry & Dry Cleaning Tips, Guides & Industry Insights"
+        description: "Expert tips on dry cleaning, wet cleaning, and garment care. Learn about fabric treatment, stain removal techniques, and professional laundry business insights from industry experts."
+        keywords: ["dry cleaning tips", "wet cleaning guides", "garment care advice", "fabric treatment tips", "stain removal techniques", "laundry business insights", "professional cleaning tips", "clothing care guide", "dry cleaning blog", "laundry industry news"]
+        
     "/franchise":
       in:
         title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in India"
@@ -116,6 +122,13 @@ au:
 
 in:
   pages:
+    - path: "/blog"
+      navbar: false
+      title: "Blog"
+      order: 5
+      sections:
+        - type: "faq"
+          category: "blog"
     - path: "/franchise"
       navbar: true
       title: "⁠Apply for Franchise"

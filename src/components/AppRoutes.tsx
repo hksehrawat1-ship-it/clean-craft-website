@@ -14,6 +14,7 @@ import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
 import Courses from "../pages/learning/Courses";
 import Book from "../pages/learning/Book";
+import Blog from "../pages/Blog";
 import Policies from "../pages/Policies";
 import PolicyDetails from "../pages/PolicyDetails";
 import FaqPage from "../pages/Faq";
@@ -23,6 +24,7 @@ import ServicesNavbar from "../pages/ServicesNavbar";
 /* Lazy loaded components for code splitting */
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
 const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
+const LazyBlogPage = lazy(() => import("../pages/Blog"));
 
 export function AppRoutes() {
   return (
@@ -63,6 +65,18 @@ export function AppRoutes() {
                 }
               />
             </Route>
+
+            {/* Blog routes */}
+            <Route
+              path="blog"
+              element={
+                <CountryRouteGuard
+                  pagePath="/blog"
+                  element={<Suspense fallback={<PageLoader />}><LazyBlogPage /></Suspense>}
+                  allowEmptyContent
+                />
+              }
+            />
 
             <Route path="policies">
               <Route
