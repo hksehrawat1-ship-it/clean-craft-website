@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'sonner';
-import { useCookieConsent } from './CookieConsentContext';
-import { useCountryConfig, CountryConfig } from '@/hooks/use-country-config';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import { useCookieConsent } from "./CookieConsentContext";
+import { useCountryConfig, CountryConfig } from "@/hooks/use-country-config";
 
 interface CountryContextType {
   countries: CountryConfig[];
@@ -21,13 +21,13 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
   const location = useLocation();
   const { hasConsent } = useCookieConsent();
   const { countries, isSupportedCountry } = useCountryConfig();
-  
+
   const [currentCountry, setCurrentCountry] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   // Get country from URL path
   const getCountryFromPath = () => {
-    const pathParts = location.pathname.split('/');
+    const pathParts = location.pathname.split("/");
     const countryCode = pathParts[1]?.toLowerCase();
     return countryCode && isSupportedCountry(countryCode) ? countryCode : null;
   };
@@ -35,33 +35,44 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
   // Handle country change
   const handleCountryChange = (country: string) => {
     if (!isSupportedCountry(country)) {
-      toast.error('Invalid country selected');
-      navigate('/');
+      toast.error("Invalid country selected");
+      navigate("/");
       return;
     }
-    setCurrentCountry(country);
-    if (location.pathname === '/' || !isSupportedCountry(getCountryFromPath() || '')) {
-      navigate(`/${country.toLowerCase()}`);
+
+    const targetPath = `/${country.toLowerCase()}`;
+    if (location.pathname !== targetPath) {
+      navigate(targetPath);
     }
+
+    // Only update state if value is different
+    setCurrentCountry((prev) => (prev !== country ? country : prev));
   };
 
   // Initialize country from URL or stored preference
   useEffect(() => {
     const urlCountry = getCountryFromPath();
     if (urlCountry) {
-      setCurrentCountry(urlCountry);
-    } else if (location.pathname === '/') {
-      const storedCountry = localStorage.getItem('preferredCountry');
-      if (storedCountry && isSupportedCountry(storedCountry) && hasConsent('preferences')) {
+      if (currentCountry !== urlCountry) {
+        setCurrentCountry(urlCountry);
+      }
+    } else if (location.pathname === "/") {
+      const storedCountry = localStorage.getItem("preferredCountry");
+      if (
+        storedCountry &&
+        isSupportedCountry(storedCountry) &&
+        hasConsent("preferences")
+      ) {
         navigate(`/${storedCountry.toLowerCase()}`);
       }
     }
-  }, [location.pathname, hasConsent]);
+    // ⚠️ IMPORTANT: Do not put `hasConsent` here to avoid infinite loop!
+  }, [location.pathname]);
 
   // Save country preference when changed
   useEffect(() => {
-    if (currentCountry && hasConsent('preferences')) {
-      localStorage.setItem('preferredCountry', currentCountry.toLowerCase());
+    if (currentCountry && hasConsent("preferences")) {
+      localStorage.setItem("preferredCountry", currentCountry.toLowerCase());
     }
   }, [currentCountry, hasConsent]);
 
@@ -70,20 +81,18 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
     currentCountry,
     setCurrentCountry: handleCountryChange,
     isLoading: false,
-    error
+    error,
   };
 
   return (
-    <CountryContext.Provider value={value}>
-      {children}
-    </CountryContext.Provider>
+    <CountryContext.Provider value={value}>{children}</CountryContext.Provider>
   );
 };
 
 export const useCountry = () => {
   const context = useContext(CountryContext);
   if (context === undefined) {
-    throw new Error('useCountry must be used within a CountryProvider');
+    throw new Error("useCountry must be used within a CountryProvider");
   }
   return context;
 };

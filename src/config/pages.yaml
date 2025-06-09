@@ -133,7 +133,7 @@ in:
       sections:
         - type: "faq"
           category: "blog"
-    - path: "/franchise"
+    - path: "/laundry-franchise"
       navbar: true
       title: "⁠Apply for Franchise"
       order: 6
