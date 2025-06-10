@@ -25,9 +25,8 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentCountry, setCurrentCountry] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
   
-  // Use refs to prevent infinite loops
+  // Use ref to prevent navigation loops
   const isNavigating = useRef(false);
-  const lastLocationPath = useRef(location.pathname);
 
   // Get country from URL path
   const getCountryFromPath = () => {
@@ -38,61 +37,53 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Handle country change
   const handleCountryChange = (country: string) => {
-    if (isNavigating.current) {
-      console.log('🔄 Navigation already in progress, skipping...');
-      return;
-    }
+    if (isNavigating.current) return;
 
     if (!isSupportedCountry(country)) {
       toast.error("Invalid country selected");
-      navigate("/");
       return;
     }
 
+    isNavigating.current = true;
     const targetPath = `/${country.toLowerCase()}`;
+
+    // Only navigate if we're not already on the target path
     if (location.pathname !== targetPath) {
       navigate(targetPath);
     }
 
-    // Only update state if value is different
-    setCurrentCountry((prev) => (prev !== country ? country : prev));
+    setCurrentCountry(country);
+    
+    // Store preference if allowed
+    if (hasConsent("preferences")) {
+      localStorage.setItem("preferredCountry", country);
+    }
+
+    // Reset navigation lock after a short delay
+    setTimeout(() => {
+      isNavigating.current = false;
+    }, 100);
   };
 
   // Initialize country from URL or stored preference
   useEffect(() => {
-    // Prevent processing the same path multiple times
-    if (lastLocationPath.current === location.pathname) {
-      return;
-    }
-    lastLocationPath.current = location.pathname;
+    if (isNavigating.current) return;
 
     const urlCountry = getCountryFromPath();
+    
     if (urlCountry) {
+      // URL has valid country code
       if (currentCountry !== urlCountry) {
         setCurrentCountry(urlCountry);
       }
     } else if (location.pathname === "/") {
+      // At root path, try to use stored preference
       const storedCountry = localStorage.getItem("preferredCountry");
-      if (
-        storedCountry &&
-        isSupportedCountry(storedCountry) &&
-        hasConsent("preferences")
-      ) {
-        navigate(`/${storedCountry.toLowerCase()}`);
-        setTimeout(() => {
-          isNavigating.current = false;
-        }, 100);
+      if (storedCountry && isSupportedCountry(storedCountry) && hasConsent("preferences")) {
+        handleCountryChange(storedCountry);
       }
     }
-    // ⚠️ IMPORTANT: Do not put `hasConsent` here to avoid infinite loop!
   }, [location.pathname]);
-
-  // Save country preference when changed
-  useEffect(() => {
-    if (currentCountry && hasConsent("preferences")) {
-      localStorage.setItem("preferredCountry", currentCountry.toLowerCase());
-    }
-  }, [currentCountry, hasConsent]);
 
   const value = {
     countries,
