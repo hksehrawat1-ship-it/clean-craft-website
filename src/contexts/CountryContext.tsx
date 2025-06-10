@@ -70,19 +70,25 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isNavigating.current) return;
 
     const urlCountry = getCountryFromPath();
-    
+
     if (urlCountry) {
-      // URL has valid country code
-      if (currentCountry !== urlCountry) {
-        setCurrentCountry(urlCountry);
-      }
+      // Only update state if needed
+      setCurrentCountry((prev) => (prev !== urlCountry ? urlCountry : prev));
     } else if (location.pathname === "/") {
       // At root path, try to use stored preference
       const storedCountry = localStorage.getItem("preferredCountry");
-      if (storedCountry && isSupportedCountry(storedCountry) && hasConsent("preferences")) {
-        handleCountryChange(storedCountry);
+      if (
+        storedCountry &&
+        isSupportedCountry(storedCountry) &&
+        hasConsent("preferences")
+      ) {
+        const targetPath = `/${storedCountry.toLowerCase()}`;
+        if (location.pathname !== targetPath) {
+          navigate(targetPath);
+        }
       }
     }
+    // ⚠️ intentionally not putting hasConsent in deps
   }, [location.pathname]);
 
   const value = {

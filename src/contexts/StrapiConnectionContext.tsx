@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { connectionService } from '@/lib/strapi/services/connection.service';
 
 interface StrapiConnectionState {
@@ -43,12 +42,12 @@ export function StrapiConnectionProvider({ children }: StrapiConnectionProviderP
       initializationAttempted.current = true;
       setIsInitializing(true);
       setError(undefined);
-      
+
       console.log('🚀 Initializing Strapi connection...');
       const connected = await connectionService.warmupConnection();
-      
+
       setIsConnected(connected);
-      
+
       if (!connected) {
         const status = connectionService.getStatus();
         setError(status.error || 'Failed to connect to Strapi');
@@ -63,18 +62,8 @@ export function StrapiConnectionProvider({ children }: StrapiConnectionProviderP
   };
 
   const retryConnection = async () => {
-    // Prevent multiple simultaneous retry attempts
-    if (isRetrying.current) {
-      console.log('🔄 Retry already in progress, skipping...');
-      return;
-    }
-    
-    try {
-      isRetrying.current = true;
-      await initializeConnection();
-    } finally {
-      isRetrying.current = false;
-    }
+    console.log('🔄 Retrying Strapi connection...');
+    await initializeConnection();
   };
 
   useEffect(() => {
@@ -91,6 +80,7 @@ export function StrapiConnectionProvider({ children }: StrapiConnectionProviderP
     retryConnection
   };
 
+  // Safe fallback: render children no matter what, but you can also show loader/error if needed
   return (
     <StrapiConnectionContext.Provider value={value}>
       {children}
