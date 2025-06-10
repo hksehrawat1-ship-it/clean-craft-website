@@ -52,10 +52,10 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
   // Initialize country from URL or stored preference
   useEffect(() => {
     const urlCountry = getCountryFromPath();
+
     if (urlCountry) {
-      if (currentCountry !== urlCountry) {
-        setCurrentCountry(urlCountry);
-      }
+      // Only update state if needed
+      setCurrentCountry((prev) => (prev !== urlCountry ? urlCountry : prev));
     } else if (location.pathname === "/") {
       const storedCountry = localStorage.getItem("preferredCountry");
       if (
@@ -63,10 +63,13 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
         isSupportedCountry(storedCountry) &&
         hasConsent("preferences")
       ) {
-        navigate(`/${storedCountry.toLowerCase()}`);
+        const targetPath = `/${storedCountry.toLowerCase()}`;
+        if (location.pathname !== targetPath) {
+          navigate(targetPath);
+        }
       }
     }
-    // ⚠️ IMPORTANT: Do not put `hasConsent` here to avoid infinite loop!
+    // ⚠️ intentionally not putting hasConsent in deps
   }, [location.pathname]);
 
   // Save country preference when changed
