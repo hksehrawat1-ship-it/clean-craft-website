@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { connectionService } from '@/lib/strapi/services/connection.service';
 
 interface StrapiConnectionState {
