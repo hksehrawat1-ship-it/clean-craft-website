@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -102,7 +101,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                to={createLink("/franchise")}
+                to={createLink("/laundry-franchise")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Open My Store

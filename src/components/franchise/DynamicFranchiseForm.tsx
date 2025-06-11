@@ -190,7 +190,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
             />
 
             {/* City input with search */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="city"
               render={({ field }) => (
@@ -223,10 +223,10 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                   )}
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Investment Range with Shadcn Select */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="investmentRange"
               render={({ field }) => (
@@ -247,11 +247,15 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Submit + Cancel */}
             <div className="mb-6 max-w-2xl mx-auto">
-              <Button type="submit" className="w-full text-white" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full text-white"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Submitting..." : "Submit Information"}
               </Button>
             </div>
