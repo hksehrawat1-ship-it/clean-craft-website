@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Star, StarHalf, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -49,7 +48,7 @@ function useTypewriter(words: string[], typingSpeed = 80, pause = 2000) {
 
 const HeroSection = () => {
   const { currentCountry } = useCountry();
-  
+
   return (
     <section className="flex flex-col items-center pb-24 px-6 md:px-12 lg:px-28 xl:px-32 xl:pt-0 w-full">
       <div className="max-w-7xl w-full">
@@ -70,7 +69,7 @@ const HeroSection = () => {
               borderRadius: "2rem",
             }}
           ></div>
-          
+
           {/* Hero Content */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -98,7 +97,7 @@ const HeroSection = () => {
               at your fingertips
             </h2>
             <p className="text-sm md:text-lg font-product-sans-light text-[#212121] capitalize mb-2 max-w-[280px] lg:max-w-none">
-              "30-MINUTE PICKUP, SAME-DAY CLEAN & DELIVERY!"
+              "We press. We wash. We impress Book <br /> your clean slot today"
             </p>
             {/* CTA Button */}
             <button className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[280px] lg:max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white">
@@ -139,7 +138,7 @@ const HeroSection = () => {
               </span>
             </div>
           </motion.div>
-          
+
           {/* Phone Mockup with Revolving Icons - Reduced Size */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -149,12 +148,12 @@ const HeroSection = () => {
           >
             {/* Revolving Icons */}
             <RevolvingIcons />
-            
+
             <img
               src="/lovable-uploads/hero.png"
               alt="Laundry and Dry Cleaning On-Demand App"
               className="w-auto h-auto max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[280px] 2xl:max-w-[300px] drop-shadow-lg mx-auto relative z-10"
-              style={{ maxHeight: '60vh' }}
+              style={{ maxHeight: "60vh" }}
               onError={(e) => {
                 e.currentTarget.src = "/lovable-uploads/hero.png";
               }}

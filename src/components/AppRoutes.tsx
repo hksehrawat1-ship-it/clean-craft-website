@@ -44,19 +44,19 @@ export function AppRoutes() {
 
             <Route path="learning">
               <Route
-                path="courses"
+                path="laundry-training-course"
                 element={
                   <CountryRouteGuard
-                    pagePath="/learning/courses"
+                    pagePath="/learning/laundry-training-course"
                     element={<Courses />}
                   />
                 }
               />
               <Route
-                path="book"
+                path="laundry-training-book"
                 element={
                   <CountryRouteGuard
-                    pagePath="/learning/book"
+                    pagePath="/learning/laundry-training-book"
                     element={
                       <Suspense fallback={<PageLoader />}>
                         <LazyBookPage />

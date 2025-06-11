@@ -86,7 +86,7 @@ const CareSection = () => {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-cleancraft-light/40 to-cleancraft-light/20 rounded-2xl"></div>
-            <div className="relative h-full flex items-center justify-center p-6">
+            <div className="relative h-full flex items-center justify-center ">
               <Card className="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md google-shadow">
                 <CardContent className="p-6 text-center space-y-6">
                   <div className="space-y-4">
@@ -94,20 +94,27 @@ const CareSection = () => {
                       Ready to Get Started?
                     </h3>
                     <p className="text-gray-600">
-                      Join India's most trusted laundry franchise with our Zero Risk Promise.
+                      Join India's most trusted laundry franchise with our Zero
+                      Risk Promise.
                     </p>
-                    
+
                     <div className="bg-gradient-to-r from-cleancraft-light to-cleancraft-light/50 p-4 rounded-lg">
-                      <h4 className="font-bold text-google-blue mb-2">62% ROI Potential</h4>
-                      <p className="text-sm text-gray-600">₹100,000+ monthly profit</p>
+                      <h4 className="font-bold text-google-blue mb-2">
+                        62% ROI Potential
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        ₹100,000+ monthly profit
+                      </p>
                     </div>
-                    
-                    <Button 
+
+                    <Button
                       onClick={handleFormOpen}
-                      className="text-white mb-6 max-w-xl mx-auto"
                       style={{ color: "white" }}
+                      className="text-base sm:text-lg px-7 sm:px-0"
                     >
-                      Schedule Your Franchise Consultation Today
+                      Schedule Your Franchise
+                      <br className="block sm:hidden" />
+                      Consultation Today
                     </Button>
                   </div>
                 </CardContent>

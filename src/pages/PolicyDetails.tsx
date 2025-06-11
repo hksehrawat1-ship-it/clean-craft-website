@@ -1,13 +1,12 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useStrapiPolicies } from '@/hooks/useStrapi';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
-import { SEO } from '@/components/SEO';
-import { stripHtml, sanitizeHtml } from '@/lib/utils';
-import EnhancedNavbar from '@/components/EnhancedNavbar';
-import Footer from '@/components/Footer';
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useStrapiPolicies } from "@/hooks/useStrapi";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import EnhancedNavbar from "@/components/EnhancedNavbar";
+import Footer from "@/components/Footer";
 
 export default function PolicyDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -25,7 +24,7 @@ export default function PolicyDetails() {
     );
   }
 
-  const policy = policies?.find(p => p.slug === slug);
+  const policy = policies?.find((p) => p.slug === slug);
 
   if (!policy) {
     return (
@@ -33,7 +32,9 @@ export default function PolicyDetails() {
         <EnhancedNavbar />
         <div className="bg-gray-50">
           <div className="container mx-auto px-4 py-12 md:py-16 text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Policy not found</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Policy not found
+            </h1>
           </div>
         </div>
         <Footer />
@@ -43,18 +44,18 @@ export default function PolicyDetails() {
 
   const policyName = policy.name;
   const policyDescription = policy.description;
-  const policyContent = stripHtml(policy.content).slice(0, 160);
 
-  // Helper to get a valid date string
   const getEffectiveDate = () => {
     const dateStr = policy.publishedAt;
     const date = dateStr ? new Date(dateStr) : null;
-    return date && !isNaN(date.getTime()) ? format(date, 'MMM d, yyyy') : 'Date not available';
+    return date && !isNaN(date.getTime())
+      ? format(date, "MMM d, yyyy")
+      : "Date not available";
   };
 
   return (
     <>
-      <SEO 
+      <SEO
         slug={`policies/${policy.slug}`}
         defaultTitle={`${policyName} | CleanCraft`}
         defaultDescription={policyDescription}
@@ -69,11 +70,22 @@ export default function PolicyDetails() {
               </h1>
               <div className="flex items-center text-sm text-gray-500 mb-6">
                 <CalendarIcon className="w-4 h-4 mr-2" />
-                <span>
-                  Effective: {getEffectiveDate()}
-                </span>
+                <span>Effective: {getEffectiveDate()}</span>
               </div>
-              <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(policy.content) }} />
+
+              {/* ✅ Render policy.content from JSON */}
+              <div className="prose max-w-none space-y-4">
+                {Array.isArray(policy.content) &&
+                  policy.content.map((block, index) => {
+                    if (block.type === "paragraph") {
+                      const text =
+                        block.children?.map((child) => child.text).join("") ||
+                        "";
+                      return <p key={index}>{text}</p>;
+                    }
+                    return null;
+                  })}
+              </div>
             </div>
           </div>
         </div>
@@ -81,4 +93,4 @@ export default function PolicyDetails() {
       <Footer />
     </>
   );
-} 
+}
