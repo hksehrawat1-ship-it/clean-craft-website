@@ -1,9 +1,8 @@
-
 import { getCollection } from '../client';
-import { StrapiService, StrapiTestimonial, StrapiFAQ, StrapiPolicy } from '@/types/strapi';
+import { StrapiService, StrapiTestimonial, StrapiFAQ, StrapiPolicy, StrapiBlog, StrapiBlogCategory } from '@/types/strapi';
 
 // Define valid categories
-export type ContentCategory = 'home' | 'courses' | 'book' | 'franchise' | 'policies';
+export type ContentCategory = 'home' | 'courses' | 'book' | 'franchise' | 'policies' | 'blog';
 
 interface StrapiResponse<T> {
   data: T[];
@@ -22,6 +21,10 @@ interface BaseQueryParams {
   filters?: any;
   sort?: string[];
   locale?: string;
+  pagination?: {
+    page?: number;
+    pageSize?: number;
+  };
 }
 
 export class ContentService {
@@ -34,6 +37,102 @@ export class ContentService {
             ContentService.instance = new ContentService();
         }
         return ContentService.instance;
+    }
+
+    async getBlogs(
+        countryCode: string,
+        options?: {
+            category?: string;
+            featured?: boolean;
+            page?: number;
+            pageSize?: number;
+            locale?: string;
+            sortBy?: 'publishedDate' | 'createdAt';
+            sortOrder?: 'asc' | 'desc';
+        }
+    ): Promise<StrapiResponse<StrapiBlog>> {
+        const { 
+            category, 
+            featured, 
+            page = 1, 
+            pageSize = 12, 
+            locale, 
+            sortBy = 'publishedDate', 
+            sortOrder = 'desc' 
+        } = options || {};
+
+        const filters: any = {
+            country: {
+                code: {
+                    $eq: countryCode
+                }
+            }
+        };
+
+        if (category) {
+            filters.blog_category = {
+                slug: { $eq: category }
+            };
+        }
+
+        if (featured !== undefined) {
+            filters.is_featured = { $eq: featured };
+        }
+
+        const params: BaseQueryParams = {
+            populate: '*',
+            filters,
+            sort: [`${sortBy}:${sortOrder}`],
+            pagination: {
+                page,
+                pageSize
+            },
+            locale
+        };
+
+        return getCollection<StrapiBlog>('blogs', params);
+    }
+
+    async getBlogBySlug(
+        slug: string,
+        countryCode: string,
+        locale?: string
+    ): Promise<StrapiBlog | null> {
+        const params: BaseQueryParams = {
+            populate: '*',
+            filters: {
+                slug: { $eq: slug },
+                country: {
+                    code: { $eq: countryCode }
+                }
+            },
+            locale
+        };
+
+        const response = await getCollection<StrapiBlog>('blogs', params);
+        return response.data.length > 0 ? response.data[0] : null;
+    }
+
+    async getBlogCategories(
+        countryCode?: string,
+        locale?: string
+    ): Promise<StrapiResponse<StrapiBlogCategory>> {
+        const filters: any = {};
+
+        if (countryCode) {
+            filters.country = {
+                code: { $eq: countryCode }
+            };
+        }
+
+        const params: BaseQueryParams = {
+            populate: '*',
+            filters,
+            sort: ['name:asc'],
+            locale
+        };
+
+        return getCollection<StrapiBlogCategory>('blog-categories', params);
     }
 
     async getServices(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiService>> {

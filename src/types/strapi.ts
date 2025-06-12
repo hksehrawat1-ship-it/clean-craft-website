@@ -1,3 +1,4 @@
+
 export interface StrapiImage {
     data: {
       id: number;
@@ -33,6 +34,59 @@ export interface StrapiImage {
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
+  }
+
+  export interface StrapiBlogCategory {
+    id: number;
+    documentId: string;
+    name: string;
+    slug: string;
+    description?: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }
+
+  export interface StrapiBlog {
+    id: number;
+    documentId: string;
+    title: string;
+    content: string;
+    slug: string;
+    publishedDate: string;
+    seo_title?: string;
+    seo_description?: string;
+    seo_keywords?: string;
+    is_featured?: boolean;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    author?: {
+      id: number;
+      name: string;
+      email?: string;
+      bio?: string;
+    };
+    image?: {
+      id: number;
+      name: string;
+      alternativeText: string;
+      url: string;
+      width: number;
+      height: number;
+      formats: any;
+    };
+    country: {
+      id: number;
+      code: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+      documentId: string;
+      publishedAt: string;
+      is_active: boolean;
+    };
+    blog_category?: StrapiBlogCategory;
   }
   
   export interface StrapiService {

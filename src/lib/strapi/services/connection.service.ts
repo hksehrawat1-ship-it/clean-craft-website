@@ -1,3 +1,4 @@
+
 interface ConnectionStatus {
   isConnected: boolean;
   lastChecked: number;
@@ -18,6 +19,10 @@ export class ConnectionService {
   private readonly NORMAL_TIMEOUT = 10000; // 10 seconds for subsequent checks
   private readonly MAX_RETRIES = 3;
   private readonly RETRY_DELAY = 2000; // 2 seconds between retries
+  private readonly COOLDOWN_PERIOD = 30000; // 30 seconds cooldown after max retries
+
+  // Track ongoing attempts to prevent multiple simultaneous calls
+  private isChecking = false;
 
   private constructor() {}
 
@@ -56,33 +61,53 @@ export class ConnectionService {
   async checkConnection(isInitial: boolean = false): Promise<boolean> {
     const now = Date.now();
     
+    // Prevent multiple simultaneous checks
+    if (this.isChecking) {
+      console.log('🔄 Connection check already in progress, returning cached result');
+      return this.status.isConnected;
+    }
+    
     // Return cached result if checked recently and not an initial check
     if (!isInitial && this.status.isConnected && (now - this.status.lastChecked) < this.CHECK_INTERVAL) {
       return true;
     }
 
+    // Implement cooldown period after max retries
+    if (this.status.retryCount >= this.MAX_RETRIES && (now - this.status.lastChecked) < this.COOLDOWN_PERIOD) {
+      console.log('🔒 Connection in cooldown period, skipping check');
+      return this.status.isConnected;
+    }
+
+    this.isChecking = true;
     const timeout = isInitial ? this.INITIAL_TIMEOUT : this.NORMAL_TIMEOUT;
     let success = false;
 
-    for (let attempt = 1; attempt <= this.MAX_RETRIES; attempt++) {
-      console.log(`🔄 Checking Strapi connection (Attempt ${attempt}/${this.MAX_RETRIES})...`);
+    try {
+      const maxAttempts = this.status.retryCount >= this.MAX_RETRIES ? 1 : this.MAX_RETRIES;
       
-      success = await this.attemptConnection(timeout);
-      
-      if (success) {
-        break;
-      } else if (attempt < this.MAX_RETRIES) {
-        console.log(`⏳ Waiting ${this.RETRY_DELAY}ms before retry...`);
-        await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        console.log(`🔄 Checking Strapi connection (Attempt ${attempt}/${maxAttempts})...`);
+        
+        success = await this.attemptConnection(timeout);
+        
+        if (success) {
+          break;
+        } else if (attempt < maxAttempts) {
+          console.log(`⏳ Waiting ${this.RETRY_DELAY}ms before retry...`);
+          await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+        }
       }
+
+      this.status.isConnected = success;
+      this.status.lastChecked = now;
+      this.status.retryCount = success ? 0 : this.status.retryCount + 1;
+      this.status.error = success ? undefined : 'Connection failed after multiple attempts';
+
+      console.log(success ? '✅ Strapi connection successful' : '❌ Strapi connection failed');
+    } finally {
+      this.isChecking = false;
     }
 
-    this.status.isConnected = success;
-    this.status.lastChecked = now;
-    this.status.retryCount = success ? 0 : this.status.retryCount + 1;
-    this.status.error = success ? undefined : 'Connection failed after multiple attempts';
-
-    console.log(success ? '✅ Strapi connection successful' : '❌ Strapi connection failed');
     return success;
   }
 

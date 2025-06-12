@@ -1,3 +1,4 @@
+
 # Country metadata
 countries:
   in:
@@ -47,6 +48,12 @@ seo:
         title: "Spotless Profit in Laundry - Australian Dry Cleaning Business Guide"
         description: "Comprehensive business guide for starting dry cleaning and wet cleaning services in Australia. Expert strategies for profitable garment care business operations."
         keywords: ["dry cleaning business guide australia", "wet cleaning startup manual", "australian cleaning industry", "garment care business strategies", "fabric care entrepreneurship australia", "professional cleaning business", "laundry franchise guide", "cleaning business profit optimization"]
+        
+    "/blog":
+      in:
+        title: "Laundry & Dry Cleaning Tips, Guides & Industry Insights"
+        description: "Expert tips on dry cleaning, wet cleaning, and garment care. Learn about fabric treatment, stain removal techniques, and professional laundry business insights from industry experts."
+        keywords: ["dry cleaning tips", "wet cleaning guides", "garment care advice", "fabric treatment tips", "stain removal techniques", "laundry business insights", "professional cleaning tips", "clothing care guide", "dry cleaning blog", "laundry industry news"]
         
     "/franchise":
       in:
@@ -119,7 +126,14 @@ au:
 
 in:
   pages:
-    - path: "/franchise"
+    - path: "/blog"
+      navbar: false
+      title: "Blog"
+      order: 5
+      sections:
+        - type: "faq"
+          category: "blog"
+    - path: "/laundry-franchise"
       navbar: true
       title: "⁠Apply for Franchise"
       order: 6
@@ -133,7 +147,7 @@ in:
       title: "Learning"
       order: 7
       children:
-        - path: "/learning/courses"
+        - path: "/learning/laundry-training-course"
           navbar: true
           title: "Courses"
           order: 1
@@ -142,7 +156,7 @@ in:
               category: "courses"
             - type: "testimonial"
               category: "courses"
-        - path: "/learning/book"
+        - path: "/learning/laundry-training-book"
           navbar: true
           title: "Book"
           order: 2

@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -14,6 +13,7 @@ import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
 import Courses from "../pages/learning/Courses";
 import Book from "../pages/learning/Book";
+import Blog from "../pages/Blog";
 import Policies from "../pages/Policies";
 import PolicyDetails from "../pages/PolicyDetails";
 import FaqPage from "../pages/Faq";
@@ -23,6 +23,7 @@ import ServicesNavbar from "../pages/ServicesNavbar";
 /* Lazy loaded components for code splitting */
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
 const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
+const LazyBlogPage = lazy(() => import("../pages/Blog"));
 
 export function AppRoutes() {
   return (
@@ -38,31 +39,49 @@ export function AppRoutes() {
           <Route path=":countryCode/*" element={<CountryLayout />}>
             <Route
               index
-              element={
-                <CountryRouteGuard pagePath="/" element={<Index />} />
-              }
+              element={<CountryRouteGuard pagePath="/" element={<Index />} />}
             />
 
             <Route path="learning">
               <Route
-                path="courses"
+                path="laundry-training-course"
                 element={
                   <CountryRouteGuard
-                    pagePath="/learning/courses"
+                    pagePath="/learning/laundry-training-course"
                     element={<Courses />}
                   />
                 }
               />
               <Route
-                path="book"
+                path="laundry-training-book"
                 element={
                   <CountryRouteGuard
-                    pagePath="/learning/book"
-                    element={<Suspense fallback={<PageLoader />}><LazyBookPage /></Suspense>}
+                    pagePath="/learning/laundry-training-book"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyBookPage />
+                      </Suspense>
+                    }
                   />
                 }
               />
             </Route>
+
+            {/* Blog routes */}
+            <Route
+              path="blog"
+              element={
+                <CountryRouteGuard
+                  pagePath="/blog"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <LazyBlogPage />
+                    </Suspense>
+                  }
+                  allowEmptyContent
+                />
+              }
+            />
 
             <Route path="policies">
               <Route
@@ -97,7 +116,7 @@ export function AppRoutes() {
                 />
               }
             />
-            
+
             {/* Services page */}
             <Route
               path="services"
@@ -112,11 +131,15 @@ export function AppRoutes() {
 
             {/* Franchise page route */}
             <Route
-              path="franchise"
+              path="laundry-franchise"
               element={
                 <CountryRouteGuard
-                  pagePath="/franchise"
-                  element={<Suspense fallback={<PageLoader />}><LazyFranchisePage /></Suspense>}
+                  pagePath="/laundry-franchise"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <LazyFranchisePage />
+                    </Suspense>
+                  }
                   allowEmptyContent
                 />
               }

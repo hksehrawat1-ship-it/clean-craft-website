@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react';
 import { useCountry } from '@/contexts/CountryContext';
 import pagesConfig from '../config/pages.yaml';
 
@@ -15,11 +16,10 @@ interface CountryPages {
 
 export function usePagesConfig() {
   const { currentCountry } = useCountry();
-  
-  const getConfig = (): PageConfig[] => {
-    // Start with global pages
+
+  const getConfig = useCallback((): PageConfig[] => {
     const globalPages = (pagesConfig.global as CountryPages).pages || [];
-    
+
     if (!currentCountry) {
       return globalPages;
     }
@@ -31,8 +31,6 @@ export function usePagesConfig() {
       return globalPages;
     }
 
-    // Merge country-specific pages with global pages
-    // Country-specific pages override global ones if they have the same path
     const countryPages = countryConfig.pages || [];
     const mergedPages = [...globalPages];
 
@@ -46,9 +44,9 @@ export function usePagesConfig() {
     });
 
     return mergedPages;
-  };
+  }, [currentCountry]);
 
-  const isPageEnabled = (path: string): boolean => {
+  const isPageEnabled = useCallback((path: string): boolean => {
     const pages = getConfig();
     const findInPages = (pagesArray: PageConfig[], searchPath: string): boolean => {
       for (const page of pagesArray) {
@@ -57,17 +55,17 @@ export function usePagesConfig() {
       }
       return false;
     };
-    
+
     return findInPages(pages, path);
-  };
+  }, [getConfig]);
 
-  const getNavbarItems = () => {
+  const getNavbarItems = useCallback(() => {
     return getConfig().filter(page => page.navbar);
-  };
+  }, [getConfig]);
 
-  return {
+  return useMemo(() => ({
     getConfig,
     isPageEnabled,
     getNavbarItems,
-  };
-} 
+  }), [getConfig, isPageEnabled, getNavbarItems]);
+}

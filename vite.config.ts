@@ -3,8 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import yaml from '@rollup/plugin-yaml';
+import removeConsole from "vite-plugin-remove-console"; // ✅ ADD THIS
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -16,10 +16,14 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     yaml({
-      include: ['**/*.yaml'], // Include all YAML files
+      include: ['**/*.yaml'],
     }),
-    mode === 'development' &&
-    componentTagger(),
+    ...(mode === 'production' ? [
+      removeConsole({
+        external: ['error', 'warn']  // ✅ KEEP error/warn in prod
+      })
+    ] : []),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -33,17 +37,13 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Output to dist directory
     outDir: 'dist',
-    // Empty the outDir on rebuild
     emptyOutDir: true,
-    // iOS compatibility - specifically targeting modern iOS
     target: ['es2015', 'chrome61', 'firefox60', 'safari11', 'ios11'],
     minify: 'esbuild',
     cssMinify: true,
     rollupOptions: {
       output: {
-        // Optimize chunks for mobile
         manualChunks: {
           'vendor': ['react', 'react-dom'],
           'router': ['react-router-dom'],
@@ -52,19 +52,15 @@ export default defineConfig(({ mode }) => ({
           'query': ['@tanstack/react-query'],
           'forms': ['react-hook-form', '@hookform/resolvers'],
         },
-        // Optimize chunk names for caching
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
-    // Reduce chunk size for mobile
     chunkSizeWarningLimit: 800,
-    // Disable sourcemaps in production for better performance
     sourcemap: false,
   },
   optimizeDeps: {
-    // Pre-bundle dependencies for faster dev startup
     include: [
       'react',
       'react-dom',
@@ -75,11 +71,8 @@ export default defineConfig(({ mode }) => ({
       'lucide-react'
     ],
   },
-  // Performance monitoring
   esbuild: {
-    // Remove console logs in production but keep them in development for mobile debugging
     drop: mode === 'production' ? ['debugger'] : [],
-    // Keep console logs for mobile debugging
     keepNames: true,
   },
 }));

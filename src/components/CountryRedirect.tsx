@@ -25,6 +25,7 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = "" }) => {
 
   // Guard to run detection only once
   const hasRunDetection = useRef(false);
+  const isNavigating = useRef(false);
 
   /* --------------------- Toasts --------------------- */
   useEffect(() => {
@@ -61,70 +62,69 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = "" }) => {
     {}
   );
 
-  /* ------------- Main Detection Effect on "/" ------------- */
+  /* ------------- Handle Navigation ------------- */
+  const handleNavigation = (countryCode: string) => {
+    if (isNavigating.current) return;
+
+    isNavigating.current = true;
+    const targetPath = `/${countryCode.toLowerCase()}${path}`;
+    
+    if (hasConsent("preferences")) {
+      localStorage.setItem("selectedCountry", countryCode.toUpperCase());
+    }
+
+    navigate(targetPath, { replace: true });
+    
+    setTimeout(() => {
+      isNavigating.current = false;
+    }, 100);
+  };
+
+  /* ------------- Main Detection Effect ------------- */
   useEffect(() => {
-    // Only run when on "/" and countries are loaded and we haven't run detection before
     if (
       window.location.pathname !== "/" ||
       countries.length === 0 ||
-      hasRunDetection.current
+      hasRunDetection.current ||
+      isNavigating.current
     ) {
-      if (window.location.pathname !== "/") {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
       return;
     }
 
-    hasRunDetection.current = true;
-    setDetecting(true);
-    setDetectError(null);
-
-    const ipdata = new IPData(IPDATA_API_KEY);
-
-    const runDetection = async () => {
+    const detectCountry = async () => {
       try {
-        // STEP 1: Check localStorage first
+        hasRunDetection.current = true;
+        setDetecting(true);
+        setDetectError(null);
+
+        // Check stored preference first
         const stored = localStorage.getItem("selectedCountry")?.toLowerCase();
         if (stored && countries.some((c) => c.code.toLowerCase() === stored)) {
-          navigate(`/${stored}${path}`, { replace: true });
-          const countryName =
-            countries.find((c) => c.code.toLowerCase() === stored)?.name ||
-            stored.toUpperCase();
-          toast.success(`Welcome back! Showing content for ${countryName}`);
+          handleNavigation(stored);
           return;
         }
 
-        // STEP 2: Use ipdata client to look up current IP
-        const info = await ipdata.lookup(); 
-        // info.country_code is uppercase, e.g. "US", "AU", "IN"
-        const rawCode = info.country_code;
-        const detected = typeof rawCode === "string" ? rawCode.toLowerCase() : null;
+        // Use IP detection as fallback
+        const ipdata = new IPData(IPDATA_API_KEY);
+        const info = await ipdata.lookup();
+        const detected = info.country_code?.toLowerCase();
 
-        if (
-          detected &&
-          countries.some((c) => c.code.toLowerCase() === detected)
-        ) {
-          navigate(`/${detected}${path}`, { replace: true });
-          if (hasConsent("preferences")) {
-            localStorage.setItem("selectedCountry", detected.toUpperCase());
-          }
-          return;
+        if (detected && countries.some((c) => c.code.toLowerCase() === detected)) {
+          handleNavigation(detected);
+        } else {
+          setIsLoading(false);
         }
-
-        // STEP 3: No valid match → manual picker
-        toast.info("Please select your country from the list below", {
-          duration: 5000,
-        });
       } catch (err) {
         setDetectError(err as Error);
+        setIsLoading(false);
       } finally {
         setDetecting(false);
-        setIsLoading(false);
       }
     };
 
-    runDetection();
-  }, [countries, navigate, path, hasConsent]);
+    detectCountry();
+  }, [countries, path, hasConsent]);
 
   /* ------------------ Loading UI ------------------ */
   if (isLoading || detecting) {
@@ -138,10 +138,7 @@ const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = "" }) => {
 
   /* ------------ Manual Country Picker UI ------------ */
   const handleManualSelect = (code: string) => {
-    navigate(`/${code.toLowerCase()}${path}`);
-    if (hasConsent("preferences")) {
-      localStorage.setItem("selectedCountry", code.toUpperCase());
-    }
+    handleNavigation(code);
   };
 
   return (

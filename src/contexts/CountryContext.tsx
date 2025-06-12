@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'sonner';
-import { useCookieConsent } from './CookieConsentContext';
-import { useCountryConfig, CountryConfig } from '@/hooks/use-country-config';
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import { useCookieConsent } from "./CookieConsentContext";
+import { useCountryConfig, CountryConfig } from "@/hooks/use-country-config";
 
 interface CountryContextType {
   countries: CountryConfig[];
@@ -14,76 +14,91 @@ interface CountryContextType {
 
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
-export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { hasConsent } = useCookieConsent();
   const { countries, isSupportedCountry } = useCountryConfig();
-  
+
   const [currentCountry, setCurrentCountry] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const isNavigating = useRef(false); // prevent navigation loop
 
-  // Get country from URL path
+  // Get country from URL
   const getCountryFromPath = () => {
-    const pathParts = location.pathname.split('/');
+    const pathParts = location.pathname.split("/");
     const countryCode = pathParts[1]?.toLowerCase();
     return countryCode && isSupportedCountry(countryCode) ? countryCode : null;
   };
 
   // Handle country change
   const handleCountryChange = (country: string) => {
+    if (isNavigating.current) return;
+
     if (!isSupportedCountry(country)) {
-      toast.error('Invalid country selected');
-      navigate('/');
+      toast.error("Invalid country selected");
       return;
     }
-    setCurrentCountry(country);
-    if (location.pathname === '/' || !isSupportedCountry(getCountryFromPath() || '')) {
-      navigate(`/${country.toLowerCase()}`);
+
+    isNavigating.current = true;
+    const targetPath = `/${country.toLowerCase()}`;
+
+    if (location.pathname !== targetPath) {
+      navigate(targetPath);
     }
+
+    setCurrentCountry((prev) => (prev !== country ? country : prev));
+
+    if (hasConsent("preferences")) {
+      localStorage.setItem("preferredCountry", country);
+    }
+
+    // Unlock after short delay
+    setTimeout(() => {
+      isNavigating.current = false;
+    }, 100);
   };
 
-  // Initialize country from URL or stored preference
+  // On initial load: set from URL or fallback to localStorage
   useEffect(() => {
+    if (isNavigating.current) return;
+
     const urlCountry = getCountryFromPath();
+
     if (urlCountry) {
-      setCurrentCountry(urlCountry);
-    } else if (location.pathname === '/') {
-      const storedCountry = localStorage.getItem('preferredCountry');
-      if (storedCountry && isSupportedCountry(storedCountry) && hasConsent('preferences')) {
-        navigate(`/${storedCountry.toLowerCase()}`);
+      setCurrentCountry((prev) => (prev !== urlCountry ? urlCountry : prev));
+    } else if (location.pathname === "/") {
+      const storedCountry = localStorage.getItem("preferredCountry");
+      if (
+        storedCountry &&
+        isSupportedCountry(storedCountry) &&
+        hasConsent("preferences")
+      ) {
+        const targetPath = `/${storedCountry.toLowerCase()}`;
+        if (location.pathname !== targetPath) {
+          navigate(targetPath);
+        }
       }
     }
-  }, [location.pathname, hasConsent]);
-
-  // Save country preference when changed
-  useEffect(() => {
-    if (currentCountry && hasConsent('preferences')) {
-      localStorage.setItem('preferredCountry', currentCountry.toLowerCase());
-    }
-  }, [currentCountry, hasConsent]);
+  }, [location.pathname]);
 
   const value = {
     countries,
     currentCountry,
     setCurrentCountry: handleCountryChange,
     isLoading: false,
-    error
+    error,
   };
 
   return (
-    <CountryContext.Provider value={value}>
-      {children}
-    </CountryContext.Provider>
+    <CountryContext.Provider value={value}>{children}</CountryContext.Provider>
   );
 };
 
 export const useCountry = () => {
   const context = useContext(CountryContext);
   if (context === undefined) {
-    throw new Error('useCountry must be used within a CountryProvider');
+    throw new Error("useCountry must be used within a CountryProvider");
   }
   return context;
 };
