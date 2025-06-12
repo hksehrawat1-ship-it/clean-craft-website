@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Layout from '@/components/home/Layout';
 import { EnhancedSEO } from '@/components/EnhancedSEO';
 import BlogHero from '@/components/blog/BlogHero';
@@ -11,13 +11,23 @@ import { useBlogs } from '@/hooks/useBlog';
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   
-  // Fetch featured blog
-  const { data: featuredResponse } = useBlogs({
+  // Memoize the callback to prevent unnecessary re-renders
+  const handleCategorySelect = useCallback((category: string | null) => {
+    setSelectedCategory(category);
+  }, []);
+  
+  // Fetch featured blog with error handling
+  const { data: featuredResponse, error: featuredError } = useBlogs({
     featured: true,
     pageSize: 1
   });
   
-  const featuredBlog = featuredResponse?.data[0];
+  const featuredBlog = featuredResponse?.data?.[0];
+
+  // Add error logging for debugging
+  if (featuredError) {
+    console.error("Featured blog fetch error:", featuredError);
+  }
 
   return (
     <Layout showOfferCarousel={false}>
@@ -37,7 +47,7 @@ const Blog = () => {
           <div className="mb-8">
             <BlogFilters 
               selectedCategory={selectedCategory}
-              onCategorySelect={setSelectedCategory}
+              onCategorySelect={handleCategorySelect}
             />
           </div>
           

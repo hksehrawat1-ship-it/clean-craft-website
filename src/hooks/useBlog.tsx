@@ -4,6 +4,7 @@ import { contentService } from '@/lib/strapi/services/content.service';
 import { useCountry } from '@/contexts/CountryContext';
 import { useStrapiConnection } from '@/contexts/StrapiConnectionContext';
 import { StrapiBlog, StrapiBlogCategory } from '@/types/strapi';
+import { useMemo } from 'react';
 
 interface StrapiResponse<T> {
   data: T[];
@@ -27,10 +28,23 @@ export function useBlogs(options?: {
 }) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
+  
+  // Serialize options to prevent unstable query keys
+  const serializedOptions = useMemo(() => {
+    if (!options) return null;
+    return JSON.stringify(options);
+  }, [options?.category, options?.featured, options?.page, options?.pageSize, options?.sortBy, options?.sortOrder]);
+
+  // Memoize the query key with serialized options
+  const queryKey = useMemo(() => {
+    const countryCode = currentCountry?.toLowerCase() || 'in';
+    return ["blogs", countryCode, serializedOptions];
+  }, [currentCountry, serializedOptions]);
+
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<StrapiBlog>>({
-    queryKey: ["blogs", countryCode, options],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching blogs for:", countryCode, "Options:", options);
       try {
@@ -43,17 +57,25 @@ export function useBlogs(options?: {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2, // Limit retries to prevent infinite loops
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
 export function useBlogBySlug(slug: string) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
+  
+  const queryKey = useMemo(() => {
+    const countryCode = currentCountry?.toLowerCase() || 'in';
+    return ["blog", slug, countryCode];
+  }, [slug, currentCountry]);
+
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiBlog | null>({
-    queryKey: ["blog", slug, countryCode],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching blog:", slug, "Country:", countryCode);
       try {
@@ -66,17 +88,25 @@ export function useBlogBySlug(slug: string) {
       }
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    enabled: !!slug && !!currentCountry && isConnected && !isInitializing
+    enabled: !!slug && !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }
 
 export function useBlogCategories() {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
+  
+  const queryKey = useMemo(() => {
+    const countryCode = currentCountry?.toLowerCase() || 'in';
+    return ["blogCategories", countryCode];
+  }, [currentCountry]);
+
   const countryCode = currentCountry?.toLowerCase() || 'in';
 
   return useQuery<StrapiResponse<StrapiBlogCategory>>({
-    queryKey: ["blogCategories", countryCode],
+    queryKey,
     queryFn: async () => {
       console.log("🔄 Fetching blog categories for:", countryCode);
       try {
@@ -89,6 +119,8 @@ export function useBlogCategories() {
       }
     },
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
-    enabled: !!currentCountry && isConnected && !isInitializing
+    enabled: !!currentCountry && isConnected && !isInitializing,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 }

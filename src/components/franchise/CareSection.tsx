@@ -86,7 +86,7 @@ const CareSection = () => {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-cleancraft-light/40 to-cleancraft-light/20 rounded-2xl"></div>
-            <div className="relative h-full flex items-center justify-center ">
+            <div className="relative h-full flex items-center justify-center">
               <Card className="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md google-shadow">
                 <CardContent className="p-6 text-center space-y-6">
                   <div className="space-y-4">

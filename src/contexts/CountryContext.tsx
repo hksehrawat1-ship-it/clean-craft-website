@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { useCookieConsent } from "./CookieConsentContext";
@@ -14,9 +14,7 @@ interface CountryContextType {
 
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
-export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { hasConsent } = useCookieConsent();
@@ -24,8 +22,9 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [currentCountry, setCurrentCountry] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const isNavigating = useRef(false); // prevent navigation loop
 
-  // Get country from URL path
+  // Get country from URL
   const getCountryFromPath = () => {
     const pathParts = location.pathname.split("/");
     const countryCode = pathParts[1]?.toLowerCase();
@@ -34,27 +33,39 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Handle country change
   const handleCountryChange = (country: string) => {
+    if (isNavigating.current) return;
+
     if (!isSupportedCountry(country)) {
       toast.error("Invalid country selected");
-      navigate("/");
       return;
     }
 
+    isNavigating.current = true;
     const targetPath = `/${country.toLowerCase()}`;
+
     if (location.pathname !== targetPath) {
       navigate(targetPath);
     }
 
-    // Only update state if value is different
     setCurrentCountry((prev) => (prev !== country ? country : prev));
+
+    if (hasConsent("preferences")) {
+      localStorage.setItem("preferredCountry", country);
+    }
+
+    // Unlock after short delay
+    setTimeout(() => {
+      isNavigating.current = false;
+    }, 100);
   };
 
-  // Initialize country from URL or stored preference
+  // On initial load: set from URL or fallback to localStorage
   useEffect(() => {
+    if (isNavigating.current) return;
+
     const urlCountry = getCountryFromPath();
 
     if (urlCountry) {
-      // Only update state if needed
       setCurrentCountry((prev) => (prev !== urlCountry ? urlCountry : prev));
     } else if (location.pathname === "/") {
       const storedCountry = localStorage.getItem("preferredCountry");
@@ -69,15 +80,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     }
-    // ⚠️ intentionally not putting hasConsent in deps
   }, [location.pathname]);
-
-  // Save country preference when changed
-  useEffect(() => {
-    if (currentCountry && hasConsent("preferences")) {
-      localStorage.setItem("preferredCountry", currentCountry.toLowerCase());
-    }
-  }, [currentCountry, hasConsent]);
 
   const value = {
     countries,
