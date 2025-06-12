@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AppProviders } from "./components/AppProviders";
 import { AppRoutes } from "./components/AppRoutes";
@@ -11,6 +10,7 @@ function App() {
   // Initialize performance optimizations
   useEffect(() => {
     initializePerformanceOptimizations();
+    console.log("🔥 Ye log sirf development me dikhna chahiye");
   }, []);
 
   return (

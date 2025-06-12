@@ -1,13 +1,8 @@
-import * as React from 'react';
-import BookingButton from './BookingButton';
-import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  FaCalendarCheck,
-  FaBoxOpen,
-  FaTag,
-  FaDoorOpen,
-} from 'react-icons/fa';
-import { IconType } from 'react-icons';
+import * as React from "react";
+import BookingButton from "./BookingButton";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { FaCalendarCheck, FaBoxOpen, FaTag, FaDoorOpen } from "react-icons/fa";
+import { IconType } from "react-icons";
 
 interface Step {
   icon: IconType;
@@ -18,25 +13,25 @@ interface Step {
 const steps: Step[] = [
   {
     icon: FaCalendarCheck,
-    title: 'Select & Schedule',
+    title: "Select & Schedule",
     description:
-      'Begin by choosing the services you need – Wash and Fold, Dry Cleaning, or Shoe Cleaning. Schedule a convenient pickup time directly through our app.',
+      "Begin by choosing the services you need – Wash and Fold, Dry Cleaning, or Shoe Cleaning. Schedule a convenient pickup time directly through our app.",
   },
   {
     icon: FaBoxOpen,
-    title: 'Pack One Service per bag',
+    title: "Pack One Service per bag",
     description:
-      'For example, place items for Wash and Iron in Bag 1, Wash and Fold in Bag 2, and Dry Cleaning in Bag 3. You can use disposable bags for your first order; your items will be returned in reusable CleanCraft bags.',
+      "For example, place items for Wash and Iron in Bag 1, Wash and Fold in Bag 2, and Dry Cleaning in Bag 3. You can use disposable bags for your first order; your items will be returned in reusable CleanCraft bags.",
   },
   {
     icon: FaTag,
-    title: 'Tag Your Bags',
+    title: "Tag Your Bags",
     description:
-      'Use sticky notes to label each bag, ensuring we process your items accurately. Thank you!',
+      "Use sticky notes to label each bag, ensuring we process your items accurately. Thank you!",
   },
   {
     icon: FaDoorOpen,
-    title: 'Doorstep Pickup',
+    title: "Doorstep Pickup",
     description:
       "We keep you in the loop! You'll receive a notification when your Dasher is en-route to collect your bags. They'll bring them to our nearest CleanCraft Live Studio for the premium care your items deserve.",
   },
@@ -69,17 +64,25 @@ const DesktopStep: React.FC<Step> = ({ icon: Icon, title, description }) => (
 const YourFirstPickupEssentials: React.FC = () => {
   const isMobile = useIsMobile();
 
+  const handleBookingClick = () => {
+    if (import.meta.env.DEV) {
+      console.log("Booking initiated");
+    }
+    // TODO: Add real booking action here
+  };
+
   return (
     <div className="container mx-auto">
       <div
         className={`flex ${
-          isMobile ? 'flex-col' : 'flex-row'
+          isMobile ? "flex-col" : "flex-row"
         } justify-between gap-10 md:gap-20 max-w-7xl w-full`}
       >
         {isMobile ? (
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <h1 className="text-[32px] font-black text-stone-950 mb-6">
-              Your First Pickup <span className="text-[#1869D3]">Essentials</span>
+              Your First Pickup{" "}
+              <span className="text-[#1869D3]">Essentials</span>
             </h1>
 
             <div className="flex flex-col divide-y">
@@ -90,7 +93,7 @@ const YourFirstPickupEssentials: React.FC = () => {
 
             <button
               className="button-primary w-full mt-8 flex items-center justify-center"
-              onClick={() => console.log('Booking initiated')}
+              onClick={handleBookingClick}
             >
               Book For Today
               <svg
@@ -115,7 +118,7 @@ const YourFirstPickupEssentials: React.FC = () => {
                 Pickup <br />
                 <span className="text-[#1869D3]">Essentials</span>
               </h1>
-              <BookingButton onClick={() => console.log('Booking initiated')} />
+              <BookingButton onClick={handleBookingClick} />
             </header>
 
             <div className="flex flex-col justify-center items-start gap-6 min-w-60 w-[596px] max-md:max-w-full">
