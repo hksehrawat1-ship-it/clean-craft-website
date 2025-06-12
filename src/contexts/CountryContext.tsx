@@ -14,9 +14,7 @@ interface CountryContextType {
 
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
-export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { hasConsent } = useCookieConsent();
@@ -24,11 +22,9 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [currentCountry, setCurrentCountry] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  
-  // Use ref to prevent navigation loops
-  const isNavigating = useRef(false);
+  const isNavigating = useRef(false); // prevent navigation loop
 
-  // Get country from URL path
+  // Get country from URL
   const getCountryFromPath = () => {
     const pathParts = location.pathname.split("/");
     const countryCode = pathParts[1]?.toLowerCase();
@@ -47,35 +43,31 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
     isNavigating.current = true;
     const targetPath = `/${country.toLowerCase()}`;
 
-    // Only navigate if we're not already on the target path
     if (location.pathname !== targetPath) {
       navigate(targetPath);
     }
 
-    setCurrentCountry(country);
-    
-    // Store preference if allowed
+    setCurrentCountry((prev) => (prev !== country ? country : prev));
+
     if (hasConsent("preferences")) {
       localStorage.setItem("preferredCountry", country);
     }
 
-    // Reset navigation lock after a short delay
+    // Unlock after short delay
     setTimeout(() => {
       isNavigating.current = false;
     }, 100);
   };
 
-  // Initialize country from URL or stored preference
+  // On initial load: set from URL or fallback to localStorage
   useEffect(() => {
     if (isNavigating.current) return;
 
     const urlCountry = getCountryFromPath();
 
     if (urlCountry) {
-      // Only update state if needed
       setCurrentCountry((prev) => (prev !== urlCountry ? urlCountry : prev));
     } else if (location.pathname === "/") {
-      // At root path, try to use stored preference
       const storedCountry = localStorage.getItem("preferredCountry");
       if (
         storedCountry &&
@@ -88,7 +80,6 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     }
-    // ⚠️ intentionally not putting hasConsent in deps
   }, [location.pathname]);
 
   const value = {

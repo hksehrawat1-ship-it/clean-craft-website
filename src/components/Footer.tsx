@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
               href="https://www.youtube.com/@thecleancraft"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-100 transition-all duration-200"
+              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-100 transition-all duration-200 flex justify-center items-center text-center"
               aria-label="YouTube"
             >
               <Youtube size={20} />
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
               href="https://www.instagram.com/clean.craft?igsh=MWxxYTYzdnZtZ2ludA=="
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-pink-500 hover:bg-pink-100 transition-all duration-200"
+              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-pink-500 hover:bg-pink-100 transition-all duration-200 flex justify-center text-center items-center"
               aria-label="Instagram"
             >
               <Instagram size={20} />
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
               href="https://www.facebook.com/share/1CJKTFbd2S/"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-all duration-200"
+              className="bg-gray-100 p-2 flex justify-center text-center items-center rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-all duration-200"
               aria-label="Facebook"
             >
               <Facebook size={20} />
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
               href="https://www.linkedin.com/in/himanshu-sehrawat-3b1227319/"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-100 p-2 rounded-full text-gray-500 hover:text-blue-700 hover:bg-blue-100 transition-all duration-200"
+              className="bg-gray-100 p-2 flex justify-center items-center text-center rounded-full text-gray-500 hover:text-blue-700 hover:bg-blue-100 transition-all duration-200"
               aria-label="LinkedIn"
             >
               <Linkedin size={20} />
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                to={createLink("/learning/book")}
+                to={createLink("/learning/laundry-training-book")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Buy Laundry Book
@@ -117,7 +117,7 @@ const Footer: React.FC = () => {
             <li>
               <Link
                 style={{ textDecoration: "none" }}
-                to={createLink("/")}
+                to={createLink("/blog")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Blogs

@@ -11,6 +11,7 @@ function App() {
   // Initialize performance optimizations
   useEffect(() => {
     initializePerformanceOptimizations();
+    console.log("🔥 Ye log sirf development me dikhna chahiye");
   }, []);
 
   return (

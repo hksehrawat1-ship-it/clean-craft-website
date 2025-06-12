@@ -17,24 +17,20 @@ function useTypewriter(words: string[], typingSpeed = 80, pause = 2000) {
 
     if (typing && !deleting) {
       if (displayed.length < words[wordIndex].length) {
-        // Typing the word
         timeout = setTimeout(() => {
           setDisplayed(words[wordIndex].slice(0, displayed.length + 1));
         }, typingSpeed);
       } else {
-        // Word fully typed, wait before deleting
         timeout = setTimeout(() => {
           setDeleting(true);
         }, pause);
       }
     } else if (deleting) {
       if (displayed.length > 0) {
-        // Deleting the word
         timeout = setTimeout(() => {
           setDisplayed(displayed.slice(0, -1));
         }, typingSpeed / 2);
       } else {
-        // Word fully deleted, move to next word
         setDeleting(false);
         setWordIndex((i) => (i + 1) % words.length);
       }
@@ -53,13 +49,11 @@ const HeroSection = () => {
     <section className="flex flex-col items-center pb-24 px-6 md:px-12 lg:px-28 xl:px-32 xl:pt-0 w-full">
       <div className="max-w-7xl w-full">
         <div className="relative flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-24 rounded-2xl p-6 md:p-10 bg-white overflow-hidden">
-          {/* Animated, subtle background element */}
           <motion.div
             className="hidden lg:block absolute -top-16 -left-24 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-[#eaf3fb] to-[#b3d8fa] blur-3xl opacity-60 z-[-2]"
             animate={{ y: [0, 20, 0] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* Line streaks gradient (decorative, not full background) */}
           <div
             className="hidden lg:block absolute top-0 left-1/4 w-1/2 h-full pointer-events-none z-[-1]"
             style={{
@@ -70,14 +64,12 @@ const HeroSection = () => {
             }}
           ></div>
 
-          {/* Hero Content */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="flex flex-col justify-center items-center lg:items-start gap-3 w-full lg:w-1/2 text-center lg:text-left z-10"
           >
-            {/* Animated Service Heading */}
             <div
               style={{
                 minWidth: "22ch",
@@ -97,9 +89,9 @@ const HeroSection = () => {
               at your fingertips
             </h2>
             <p className="text-sm md:text-lg font-product-sans-light text-[#212121] capitalize mb-2 max-w-[280px] lg:max-w-none">
-              "We press. We wash. We impress Book your clean slot today"
+              We press. We wash. We impress <br /> Book your clean slot today
             </p>
-            {/* CTA Button */}
+
             <button className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[280px] lg:max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white">
               <span className="flex items-center gap-3">
                 <span className="flex flex-col">
@@ -124,7 +116,7 @@ const HeroSection = () => {
                 <ArrowRight className="w-5 h-5" />
               </span>
             </button>
-            {/* Rating */}
+
             <div className="flex items-center gap-2 mt-2">
               <div className="flex">
                 <Star className="w-4 h-4 lg:w-5 lg:h-5 text-[#FFB400]" />
@@ -139,14 +131,12 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Phone Mockup with Revolving Icons - Reduced Size */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="w-full lg:w-1/2 flex justify-center items-center z-10 relative"
           >
-            {/* Revolving Icons */}
             <RevolvingIcons />
 
             <img
@@ -161,7 +151,6 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Stats Section - Improved Mobile Layout */}
         <div className="w-full overflow-hidden mt-8">
           <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 lg:gap-16 py-8 px-2 max-w-5xl mx-auto">
             <div className="flex-1 min-w-0 text-center">
@@ -196,4 +185,5 @@ const HeroSection = () => {
     </section>
   );
 };
+
 export default HeroSection;

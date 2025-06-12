@@ -3,19 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   ShieldCheck,
-  Award,
   Trophy,
-  Check,
-  Clock,
-  CreditCard,
   Shirt,
-  Banknote,
-  Calendar,
+  BadgePercent,
   Users,
   BadgeCheck,
-  FileCheck,
   CircleCheckBig,
-  BadgePercent,
+  Check,
+  Clock,
+  Banknote,
+  Calendar,
 } from "lucide-react";
 import { useState } from "react";
 import FranchiseFormModal from "./FranchiseFormModal";
@@ -30,6 +27,7 @@ const FeaturesSection = () => {
   return (
     <section id="features" className="section bg-white">
       <div className="container">
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <Badge className="bg-google-blue text-white mb-4 hover:bg-google-blue/90 px-4 py-1.5">
             Our Value Proposition
@@ -65,8 +63,7 @@ const FeaturesSection = () => {
                 </h3>
                 <p className="text-gray-600">
                   Unlike food or fashion, laundry is a non-optional, weekly need
-                  – everyone wears clothes and needs them cleaned. You're
-                  solving a daily life problem, not chasing trends.
+                  – everyone wears clothes and needs them cleaned.
                 </p>
               </CardContent>
             </Card>
@@ -97,15 +94,14 @@ const FeaturesSection = () => {
                 </h3>
                 <p className="text-gray-600">
                   No perishables, no cooking licenses, no wastage. Just pure
-                  service + system + scale. If you can manage a small team and
-                  follow simple systems, this business will work for you.
+                  service + system + scale.
                 </p>
               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Why Buy From Me */}
+        {/* Why Buy From Us */}
         <div className="mb-16">
           <div className="flex items-center justify-center gap-3 mb-8">
             <div className="h-12 w-12 rounded-full bg-google-green/10 flex items-center justify-center">
@@ -127,8 +123,7 @@ const FeaturesSection = () => {
                 </h3>
                 <p className="text-gray-600">
                   We've built Clean Craft to make you win – not just us. 100+
-                  franchise owners have already joined, and over 94% break even
-                  within 7 months.
+                  franchise owners have already joined.
                 </p>
               </div>
 
@@ -146,22 +141,16 @@ const FeaturesSection = () => {
                         <ul className="text-gray-600 mt-2 space-y-2">
                           <li className="flex items-center">
                             <Check className="h-4 w-4 text-google-green mr-2 flex-shrink-0" />
-                            <span>
-                              1000 customers in your first year – or we fund
-                              your next 6 months of marketing
-                            </span>
+                            1000 customers in your first year – or we fund your
+                            next 6 months of marketing
                           </li>
                           <li className="flex items-center">
                             <Check className="h-4 w-4 text-google-green mr-2 flex-shrink-0" />
-                            <span>
-                              Store not ready in 30 days? We pay your rent
-                            </span>
+                            Store not ready in 30 days? We pay your rent
                           </li>
                           <li className="flex items-center">
                             <Check className="h-4 w-4 text-google-green mr-2 flex-shrink-0" />
-                            <span>
-                              Don't break even? Get 100% royalty-free for life
-                            </span>
+                            Don’t break even? Get 100% royalty-free for life
                           </li>
                         </ul>
                       </div>
@@ -178,20 +167,16 @@ const FeaturesSection = () => {
                         <ul className="text-gray-600 mt-2 space-y-2">
                           <li className="flex items-center">
                             <Check className="h-4 w-4 text-google-green mr-2 flex-shrink-0" />
-                            <span>Complete store setup done for you</span>
+                            Complete store setup done for you
                           </li>
                           <li className="flex items-center">
                             <Check className="h-4 w-4 text-google-green mr-2 flex-shrink-0" />
-                            <span>
-                              Training that reveals every secret we've learned
-                            </span>
+                            Training that reveals every secret we've learned
                           </li>
                           <li className="flex items-center">
                             <Check className="h-4 w-4 text-google-green mr-2 flex-shrink-0" />
-                            <span>
-                              Tech and branding designed to convert footfall
-                              into loyalty
-                            </span>
+                            Tech and branding designed to convert footfall into
+                            loyalty
                           </li>
                         </ul>
                       </div>
@@ -230,8 +215,7 @@ const FeaturesSection = () => {
                     </h3>
                     <p className="text-gray-600">
                       The laundry industry is consolidating fast, and early
-                      movers are locking in premium territories. Every month you
-                      delay, someone else takes a lead in your area.
+                      movers are locking in premium territories.
                     </p>
                   </div>
                 </div>
@@ -255,8 +239,7 @@ const FeaturesSection = () => {
                     </h3>
                     <p className="text-gray-600">
                       The investment will never be this low again, and our most
-                      powerful support guarantees are for this quarter only. The
-                      longer you wait, the more you'll wonder "what if...".
+                      powerful support guarantees are for this quarter only.
                     </p>
                   </div>
                 </div>
@@ -264,7 +247,8 @@ const FeaturesSection = () => {
             </Card>
           </div>
 
-          <div className="flex justify-center items-center  py-10 rounded-2xl">
+          {/* ✅ CTA Button (included) */}
+          <div className="flex justify-center items-center py-10 rounded-2xl">
             <Button
               onClick={handleScheduleConsultation}
               style={{ color: "white" }}

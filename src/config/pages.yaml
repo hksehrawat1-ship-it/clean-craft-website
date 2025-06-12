@@ -147,7 +147,7 @@ in:
       title: "Learning"
       order: 7
       children:
-        - path: "/learning/courses"
+        - path: "/learning/laundry-training-course"
           navbar: true
           title: "Courses"
           order: 1
@@ -156,7 +156,7 @@ in:
               category: "courses"
             - type: "testimonial"
               category: "courses"
-        - path: "/learning/book"
+        - path: "/learning/laundry-training-book"
           navbar: true
           title: "Book"
           order: 2
