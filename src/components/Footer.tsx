@@ -23,10 +23,10 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-white py-12 px-8 md:px-16 lg:px-32">
+    <footer className="bg-white py-12 px-8 md:px-16 lg:px-16">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Brand and Description */}
-        <div className="space-y-6">
+        <div className="space-y-2">
           <div className="flex items-center">
             <img
               src="/lovable-uploads/cleancraft-full-logo.png"
@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
           <ul className="space-y-4">
             <li style={{ textDecoration: "none" }}>
               <Link
-                to={createLink("")}
+                to={createLink("policies/Discover-Clean-Craft")}
                 style={{ textDecoration: "none" }}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
