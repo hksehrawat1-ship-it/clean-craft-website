@@ -36,7 +36,7 @@ function useTypewriter(words: string[], typingSpeed = 80, pause = 2000) {
       }
     }
 
-    return () => clearTimeout(timeout as NodeJS.Timeout);
+    return () => clearTimeout(timeout);
   }, [displayed, typing, deleting, wordIndex, words, typingSpeed, pause]);
 
   return displayed;
@@ -131,18 +131,19 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
+          {/* ✅ FINAL IMAGE WRAPPER – Center on mobile, right-align on desktop */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="w-full lg:w-1/2 flex justify-center items-center z-10 relative"
+            className="w-full lg:w-1/2 flex justify-center lg:justify-end items-center z-10 relative lg:-mr-6"
           >
             <RevolvingIcons />
 
             <img
               src="/lovable-uploads/hero.png"
               alt="Laundry and Dry Cleaning On-Demand App"
-              className="w-auto h-auto max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[280px] 2xl:max-w-[300px] drop-shadow-lg mx-auto relative z-10"
+              className="mx-auto lg:mx-0 w-auto h-auto max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[280px] 2xl:max-w-[300px] drop-shadow-lg relative z-10"
               style={{ maxHeight: "60vh" }}
               onError={(e) => {
                 e.currentTarget.src = "/lovable-uploads/hero.png";

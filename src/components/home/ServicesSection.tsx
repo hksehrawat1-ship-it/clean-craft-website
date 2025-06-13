@@ -41,23 +41,25 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-gray-200">
       {/* Icon with circular background */}
       <div className="flex items-center justify-between mb-6">
-        <div className="w-12 h-12 bg-[#5294FF]/10 rounded-full flex items-center justify-center">
-          {icon &&
-            React.createElement(icon, {
-              className: "w-6 h-6 text-[#5294FF]",
-            })}
+        <div className="flex items-center gap-3">
+          <img
+            src={CleanCraftIcon}
+            alt="CleanCraft"
+            className="w-7 h-7 object-contain rounded-full"
+          />
+          <h3 className="text-lg font-semibold ml-2">{name}</h3>
         </div>
         <ChevronRight className="w-5 h-5 text-gray-300" />
       </div>
-      
+
       {/* Title */}
-      <h3 className="text-xl font-semibold text-gray-900 mb-3">{name}</h3>
-      
+      {/* <h3 className="text-xl font-semibold text-gray-900 mb-3">{name}</h3> */}
+
       {/* Description */}
       <p className="text-gray-600 text-sm leading-relaxed mb-6 min-h-[60px]">
         {description}
       </p>
-      
+
       {/* Pricing */}
       <div className="border-t border-gray-100 pt-4">
         <div className="flex items-center justify-between">
@@ -65,7 +67,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             <p className="text-xs text-gray-500 mb-1">Starting from</p>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-gray-900">
-                {currencySymbol}{price_from}
+                {currencySymbol}
+                {price_from}
               </span>
               <span className="text-sm text-gray-500">/{price_type}</span>
             </div>
@@ -80,16 +83,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 };
 
 const ConnectionStatus: React.FC = () => {
-  const { isConnected, isInitializing, error, retryConnection } = useStrapiConnection();
+  const { isConnected, isInitializing, error, retryConnection } =
+    useStrapiConnection();
 
   // Log connection status for debugging
   React.useEffect(() => {
     if (isInitializing) {
-      console.log('🔄 Strapi: Connecting to services...');
+      console.log("🔄 Strapi: Connecting to services...");
     } else if (!isConnected && error) {
-      console.warn('❌ Strapi: Connection issue -', error);
+      console.warn("❌ Strapi: Connection issue -", error);
     } else if (isConnected) {
-      console.log('✅ Strapi: Live content loaded');
+      console.log("✅ Strapi: Live content loaded");
     }
   }, [isInitializing, isConnected, error]);
 
@@ -112,7 +116,7 @@ const ConnectionStatus: React.FC = () => {
       <div className="flex items-center gap-2 text-white/75 text-sm">
         <WifiOff className="w-4 h-4" />
         <span>Connection issue - showing cached content</span>
-        <button 
+        <button
           onClick={retryConnection}
           className="text-white underline hover:no-underline"
         >
@@ -124,8 +128,8 @@ const ConnectionStatus: React.FC = () => {
 
   return (
     <div className="flex items-center gap-2 text-white/75 text-sm">
-      <Wifi className="w-4 h-4" />
-      <span>Live content</span>
+      {/* <Wifi className="w-4 h-4" />
+      <span>Live content</span> */}
     </div>
   );
 };
@@ -226,10 +230,11 @@ const ServicesSection: React.FC = () => {
     let priceType = service.price_type?.trim();
 
     if (!priceType) {
+      const slugLower = service.slug?.toLowerCase() || "";
       if (
-        service.slug === "Wash_and_Fold" ||
-        service.slug === "Premium_Laundry" ||
-        service.slug === "Wash_and_Iron"
+        slugLower.includes("wash-dry-fold") ||
+        slugLower.includes("wash-iron") ||
+        slugLower.includes("premium-laundry")
       ) {
         priceType = "kg";
       } else {
