@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
@@ -14,7 +13,7 @@ interface LeadRequest {
   name: string;
   email: string;
   phone: string;
-  city: string;
+  city?: string; // Optional
   country: string;
   investmentRange?: string; // Optional for course leads
   sourceCta: string;
@@ -53,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
               <h2 style="color: #1e40af; margin-bottom: 15px;">Hi ${leadData.name},</h2>
               <p style="color: #374151; line-height: 1.6;">
                 Thank you for your interest in CleanCraft franchise opportunity! 
-                We're excited about the possibility of partnering with you in ${leadData.city}.
+                We're excited about the possibility of partnering with you.
               </p>
             </div>
 
@@ -99,7 +98,7 @@ const handler = async (req: Request): Promise<Response> => {
       adminEmailResponse = await resend.emails.send({
         from: "CleanCraft Franchise <hello@cleancraftapp.com>",
         to: ["hello@cleancraftapp.com"],
-        subject: `New Franchise Lead: ${leadData.name} from ${leadData.city}`,
+        subject: `New Franchise Lead: ${leadData.name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h1 style="color: #1e40af; margin-bottom: 20px;">New Franchise Lead</h1>
@@ -120,12 +119,8 @@ const handler = async (req: Request): Promise<Response> => {
                   <td style="padding: 8px 0; color: #6b7280;">${leadData.phone}</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td style="padding: 8px 0; font-weight: bold; color: #374151;">City:</td>
-                  <td style="padding: 8px 0; color: #6b7280;">${leadData.city}, ${leadData.country}</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td style="padding: 8px 0; font-weight: bold; color: #374151;">Investment Range:</td>
-                  <td style="padding: 8px 0; color: #6b7280;">${leadData.investmentRange}</td>
+                  <td style="padding: 8px 0; font-weight: bold; color: #374151;">Country:</td>
+                  <td style="padding: 8px 0; color: #6b7280;">${leadData.country}</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #374151;">Source CTA:</td>
@@ -216,7 +211,7 @@ const handler = async (req: Request): Promise<Response> => {
       adminEmailResponse = await resend.emails.send({
         from: "CleanCraft Training <hello@cleancraftapp.com>",
         to: ["hello@cleancraftapp.com"],
-        subject: `New Course Registration: ${leadData.name} from ${leadData.city}`,
+        subject: `New Course Registration: ${leadData.name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h1 style="color: #1e40af; margin-bottom: 20px;">New Course Registration</h1>
@@ -237,8 +232,8 @@ const handler = async (req: Request): Promise<Response> => {
                   <td style="padding: 8px 0; color: #6b7280;">${leadData.phone}</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td style="padding: 8px 0; font-weight: bold; color: #374151;">City:</td>
-                  <td style="padding: 8px 0; color: #6b7280;">${leadData.city}, ${leadData.country}</td>
+                  <td style="padding: 8px 0; font-weight: bold; color: #374151;">Country:</td>
+                  <td style="padding: 8px 0; color: #6b7280;">${leadData.country}</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #374151;">Source:</td>

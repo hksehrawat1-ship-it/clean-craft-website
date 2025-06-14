@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +21,6 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   email: z.string().email("Please enter a valid email address"),
-  investmentRange: z.string().min(1, "Please select an investment range"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -45,7 +45,6 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
       name: "",
       phone: "",
       email: "",
-      investmentRange: "",
     },
   });
 
@@ -56,9 +55,9 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
         name: data.name,
         phone: data.phone,
         email: data.email,
-        city: "",
+        city: null,
         country: "India",
-        investment_range: "",
+        investment_range: null,
         source_cta: sourceCta,
         lead_type: "franchise",
       });
@@ -68,8 +67,8 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
       await supabase.functions.invoke("submit-lead", {
         body: {
           ...data,
+          city: "",
           country: "India",
-          investmentRange: data.investmentRange,
           sourceCta,
           leadType: "franchise",
         },
@@ -158,31 +157,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               )}
             />
 
-            {/* Investment Range with Shadcn Select */}
-            {/* <FormField
-              control={form.control}
-              name="investmentRange"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Investment Range *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select investment range" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="₹15L-20L">₹15L - ₹20L</SelectItem>
-                      <SelectItem value="₹20L-25L">₹20L - ₹25L</SelectItem>
-                      <SelectItem value="₹25L+">₹25L+</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
-            {/* Submit + Cancel */}
+            {/* Submit Button */}
             <div className="mb-6 max-w-2xl mx-auto">
               <Button
                 type="submit"
