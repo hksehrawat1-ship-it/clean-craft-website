@@ -1,57 +1,62 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
+/* global layout / wrappers */
 import CookieConsentBanner from "./CookieConsentBanner";
 import CountryRedirect from "./CountryRedirect";
 import CountryRouteGuard from "./CountryRouteGuard";
-// import { SitemapGenerator } from "./SitemapGenerator";
 import CountryLayout from "./CountryLayout";
 import { PageLoader } from "./PageLoader";
 
-/* pages */
+/* statically‑rendered pages (small + always needed) */
 import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
-import Courses from "../pages/learning/Courses";
-import Book from "../pages/learning/Book";
-import Blog from "../pages/Blog";
-import Policies from "../pages/Policies";
 import PolicyDetails from "../pages/PolicyDetails";
 import FaqPage from "../pages/Faq";
-import Franchise from "../pages/Franchise";
 import ServicesNavbar from "../pages/ServicesNavbar";
 
-/* Lazy loaded components for code splitting */
+/* ✨ Lazy‑loaded (code‑split) pages */
+const LazyCoursesPage = lazy(() => import("../pages/learning/Courses"));
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
-const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
 const LazyBlogPage = lazy(() => import("../pages/Blog"));
+const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
+const LazyPoliciesPage = lazy(() => import("../pages/Policies"));
 
 export function AppRoutes() {
   return (
     <>
       <CookieConsentBanner />
-      {/* <SitemapGenerator /> */}
+
+      {/* Outer suspense ensures a single fallback while any lazy chunk loads */}
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* root → geo-IP redirect or manual picker */}
+          {/* 🌍 Geo‑IP redirect or manual picker */}
           <Route path="/" element={<CountryRedirect />} />
 
-          {/* country-specific section */}
+          {/* ───────────────── Country‑scoped section ───────────────── */}
           <Route path=":countryCode/*" element={<CountryLayout />}>
+            {/* Home */}
             <Route
               index
               element={<CountryRouteGuard pagePath="/" element={<Index />} />}
             />
 
+            {/* Learning section */}
             <Route path="learning">
               <Route
                 path="laundry-training-course"
                 element={
                   <CountryRouteGuard
                     pagePath="/learning/laundry-training-course"
-                    element={<Courses />}
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyCoursesPage />
+                      </Suspense>
+                    }
                   />
                 }
               />
+
               <Route
                 path="laundry-training-book"
                 element={
@@ -67,7 +72,7 @@ export function AppRoutes() {
               />
             </Route>
 
-            {/* Blog routes */}
+            {/* Blog */}
             <Route
               path="blog"
               element={
@@ -83,13 +88,18 @@ export function AppRoutes() {
               }
             />
 
+            {/* Policies */}
             <Route path="policies">
               <Route
                 index
                 element={
                   <CountryRouteGuard
                     pagePath="/policies"
-                    element={<Policies />}
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyPoliciesPage />
+                      </Suspense>
+                    }
                     allowEmptyContent
                   />
                 }
@@ -105,7 +115,7 @@ export function AppRoutes() {
               />
             </Route>
 
-            {/* FAQ page route */}
+            {/* FAQ */}
             <Route
               path="faq"
               element={
@@ -117,7 +127,7 @@ export function AppRoutes() {
               }
             />
 
-            {/* Services page */}
+            {/* Services */}
             <Route
               path="services"
               element={
@@ -129,7 +139,7 @@ export function AppRoutes() {
               }
             />
 
-            {/* Franchise page route */}
+            {/* Franchise */}
             <Route
               path="laundry-franchise"
               element={
@@ -144,10 +154,12 @@ export function AppRoutes() {
                 />
               }
             />
+
+            {/* 404 inside country scope */}
             <Route path="*" element={<NotFound />} />
           </Route>
 
-          {/* 404 fallback */}
+          {/* global 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

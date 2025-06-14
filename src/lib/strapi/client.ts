@@ -1,14 +1,27 @@
-
 import qs from 'qs';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
-const isDev = import.meta.env.DEV;
-if (!isDev) {
-  if (!STRAPI_URL) throw new Error('VITE_STRAPI_URL is not defined');
-  if (!STRAPI_TOKEN) throw new Error('VITE_STRAPI_API_TOKEN is not defined');
+if (!STRAPI_URL) throw new Error('VITE_STRAPI_URL is not defined');
+if (!STRAPI_TOKEN) throw new Error('VITE_STRAPI_API_TOKEN is not defined');
+
+// 🔧 Clean undefined values (even nested)
+function cleanUndefined(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(cleanUndefined);
+  } else if (obj && typeof obj === 'object') {
+    return Object.fromEntries(
+      Object.entries(obj)
+        .filter(([_, v]) => v !== undefined)
+        .map(([k, v]) => [k, cleanUndefined(v)])
+    );
+  }
+  return obj;
 }
+
+const stringifyParams = (params: Record<string, any>) =>
+  qs.stringify(cleanUndefined(params), { encodeValuesOnly: true });
 
 interface StrapiResponse<T> {
   data: T[];
@@ -27,13 +40,10 @@ interface StrapiSingleResponse<T> {
   meta: Record<string, unknown>;
 }
 
-const stringifyParams = (params: Record<string, any>) =>
-  qs.stringify(params, { encodeValuesOnly: true });
-
 async function fetchWithTimeout(
   url: string,
   options: RequestInit = {},
-  timeout: number = 15000
+  timeout = 15000
 ): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -43,7 +53,7 @@ async function fetchWithTimeout(
       ...options,
       signal: controller.signal,
       headers: {
-        'Authorization': `Bearer ${STRAPI_TOKEN}`,
+        Authorization: `Bearer ${STRAPI_TOKEN}`,
         'Content-Type': 'application/json',
         ...options.headers,
       },
@@ -60,7 +70,7 @@ async function fetchWithTimeout(
 async function retryFetch(
   url: string,
   options: RequestInit = {},
-  maxRetries: number = 3
+  maxRetries = 3
 ): Promise<Response> {
   let lastError: Error;
 
@@ -68,7 +78,7 @@ async function retryFetch(
     try {
       console.log(`🔄 Attempt ${attempt}/${maxRetries} for ${url}`);
       const response = await fetchWithTimeout(url, options);
-      
+
       if (response.ok) {
         console.log(`✅ Success on attempt ${attempt} for ${url}`);
         return response;
@@ -80,7 +90,7 @@ async function retryFetch(
       console.warn(`❌ Attempt ${attempt} failed for ${url}:`, lastError.message);
 
       if (attempt < maxRetries) {
-        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff, max 5s
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff
         console.log(`⏳ Waiting ${delay}ms before retry...`);
         await new Promise(resolve => setTimeout(resolve, delay));
       }
@@ -95,18 +105,12 @@ export const getCollection = async <T>(
   params: Record<string, any> = {}
 ): Promise<StrapiResponse<T>> => {
   try {
-    if (isDev && !STRAPI_TOKEN) {
-      throw new Error('Development mode: No Strapi token available');
-    }
-
     const queryString = stringifyParams(params);
     const url = `${STRAPI_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`;
 
     console.log(`🔗 Fetching: ${url}`);
-    console.log(`📋 Params:`, params);
-
     const response = await retryFetch(url);
-    const json = await response.json() as StrapiResponse<T>;
+    const json = (await response.json()) as StrapiResponse<T>;
 
     console.log(`✅ [${endpoint}] fetched successfully`);
     return json;
@@ -120,27 +124,37 @@ export const getSingle = async <T>(
   singleName: string,
   params?: Record<string, any>
 ): Promise<T> => {
-  const queryString = params ? `?${stringifyParams(params)}` : '';
-  const url = `${STRAPI_URL}/${singleName}${queryString}`;
+  try {
+    const queryString = params ? `?${stringifyParams(params)}` : '';
+    const url = `${STRAPI_URL}/${singleName}${queryString}`;
 
-  const response = await retryFetch(url);
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
+    const response = await retryFetch(url);
+    const json = (await response.json()) as StrapiSingleResponse<T>;
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error in getSingle:`, error);
+    throw error;
+  }
 };
 
 export const createEntry = async <T>(
   collectionName: string,
   data: Record<string, any>
 ): Promise<T> => {
-  const url = `${STRAPI_URL}/${collectionName}`;
+  try {
+    const url = `${STRAPI_URL}/${collectionName}`;
 
-  const response = await retryFetch(url, {
-    method: 'POST',
-    body: JSON.stringify({ data }),
-  });
+    const response = await retryFetch(url, {
+      method: 'POST',
+      body: JSON.stringify({ data }),
+    });
 
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
+    const json = (await response.json()) as StrapiSingleResponse<T>;
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error in createEntry:`, error);
+    throw error;
+  }
 };
 
 export const updateEntry = async <T>(
@@ -148,33 +162,37 @@ export const updateEntry = async <T>(
   id: string | number,
   data: Record<string, any>
 ): Promise<T> => {
-  const url = `${STRAPI_URL}/${collectionName}/${id}`;
+  try {
+    const url = `${STRAPI_URL}/${collectionName}/${id}`;
 
-  const response = await retryFetch(url, {
-    method: 'PUT',
-    body: JSON.stringify({ data }),
-  });
+    const response = await retryFetch(url, {
+      method: 'PUT',
+      body: JSON.stringify({ data }),
+    });
 
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
+    const json = (await response.json()) as StrapiSingleResponse<T>;
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error in updateEntry:`, error);
+    throw error;
+  }
 };
 
 export const deleteEntry = async <T>(
   collectionName: string,
   id: string | number
 ): Promise<T> => {
-  const url = `${STRAPI_URL}/${collectionName}/${id}`;
+  try {
+    const url = `${STRAPI_URL}/${collectionName}/${id}`;
 
-  const response = await retryFetch(url, {
-    method: 'DELETE',
-  });
+    const response = await retryFetch(url, {
+      method: 'DELETE',
+    });
 
-  const json = await response.json() as StrapiSingleResponse<T>;
-  return json.data;
+    const json = (await response.json()) as StrapiSingleResponse<T>;
+    return json.data;
+  } catch (error) {
+    console.error(`❌ Error in deleteEntry:`, error);
+    throw error;
+  }
 };
-
-// Remove the old strapi client export since we're not using it anymore
-// export const strapiClient = strapi({
-//   baseURL: STRAPI_URL,
-//   auth: STRAPI_TOKEN,
-// });
