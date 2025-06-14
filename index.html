@@ -31,53 +31,78 @@
   <!-- Google Tag Manager -->
   <script>
     (function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start': new Date().getTime(), event: 'gtm.js'
-      });
+      w[l] = w[l] || []
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
       var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-NZZ325HD');
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : ''
+      j.async = true
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
+      f.parentNode.insertBefore(j, f)
+    })(window, document, 'script', 'dataLayer', 'GTM-NZZ325HD')
   </script>
   <!-- End Google Tag Manager -->
 
-  <!-- Preload critical resources for faster mobile loading -->
+  <!-- Preload critical resources -->
   <link rel="preload" href="/lovable-uploads/cleancraft-full-logo.png" as="image" />
   <link rel="preload" href="/lovable-uploads/hero.png" as="image" />
-
-  <!-- Lovable Script (Safe load) -->
-  <!-- <script type="module">
-    try {
-      import('https://cdn.gpteng.co/gptengineer.js');
-    } catch (e) {
-      console.warn('GPT Engineer script failed to load:', e);
-    }
-  </script> -->
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NZZ325HD" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe>
+      style="display: none; visibility: hidden"></iframe>
   </noscript>
-  <!-- End Google Tag Manager (noscript) -->
+  <!-- End Google Tag Manager -->
 
   <div id="root"></div>
 
-  <!-- Main App Script -->
+  <!-- Main App -->
   <script type="module" src="/src/main.tsx"></script>
 
   <!-- ✅ Improved fallback for old mobile browsers -->
-  <script nomodule>
-    document.getElementById('root').innerHTML =
-      '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;font-family:system-ui;padding:2rem;background:#1869D3;color:white;">' +
-      '<h1 style="margin-bottom:1rem;font-size:2rem;">CleanCraft</h1>' +
-      '<p style="margin-bottom:2rem;font-size:1.1rem;">Please update your browser to view this site.</p>' +
-      '<p style="font-size:0.9rem;opacity:0.8;">We recommend using Chrome, Safari, or another modern browser.</p>' +
-      '</div>';
-  </script>
+  <!-- Commented out legacy scripts to fix white screen on iPhone -->
+
+  <!--
+    <script nomodule>
+      document.getElementById('root').innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;font-family:system-ui;padding:2rem;background:#1869D3;color:white;">' +
+        '<h1 style="margin-bottom:1rem;font-size:2rem;">CleanCraft</h1>' +
+        '<p style="margin-bottom:2rem;font-size:1.1rem;">Please update your browser to view this site.</p>' +
+        '<p style="font-size:0.9rem;opacity:0.8;">We recommend using Chrome, Safari, or another modern browser.</p>' +
+        '</div>';
+    </script>
+
+    <script nomodule>
+      !function(){
+        var e=document,t=e.createElement("script");
+        if(!("noModule"in t)&&"onbeforeload"in t){
+          var n=!1;
+          e.addEventListener("beforeload",(function(e){
+            if(e.target===t)n=!0;
+            else if(!e.target.hasAttribute("nomodule")||!n)return;
+            e.preventDefault()
+          }),!0);
+          t.type="module",t.src=".",e.head.appendChild(t),t.remove()
+        }
+      }();
+    </script>
+
+    <script
+      nomodule
+      crossorigin
+      id="vite-legacy-polyfill"
+      src="/assets/polyfills-legacy-*.js"
+    ></script>
+
+    <script
+      nomodule
+      crossorigin
+      id="vite-legacy-entry"
+      data-src="/assets/index-legacy-*.js"
+    ></script>
+    -->
 </body>
 
 </html>
