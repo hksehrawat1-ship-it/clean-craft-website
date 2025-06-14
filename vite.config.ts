@@ -15,12 +15,7 @@ export default defineConfig(({ mode }) => ({
   },
 
   plugins: [
-    react({
-      jsxImportSource: "@emotion/react",
-      babel: {
-        plugins: ["@emotion/babel-plugin"],
-      },
-    }),
+    react(),
 
     legacy({
      
