@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
 /* global layout / wrappers */
@@ -20,6 +20,7 @@ const LazyCoursesPage = lazy(() => import("../pages/learning/Courses"));
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
 const LazyBlogPage = lazy(() => import("../pages/Blog"));
 const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
+
 const LazyPoliciesPage = lazy(() => import("../pages/Policies"));
 
 export function AppRoutes() {

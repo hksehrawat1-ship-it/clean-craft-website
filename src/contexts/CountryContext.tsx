@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { useCookieConsent } from "./CookieConsentContext";
-import { useCountryConfig, CountryConfig } from "@/hooks/use-country-config";
+import { countryConfig, CountryConfig } from "@/hooks/use-country-config";
 
 interface CountryContextType {
   countries: CountryConfig[];
@@ -18,7 +18,7 @@ export const CountryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const navigate = useNavigate();
   const location = useLocation();
   const { hasConsent } = useCookieConsent();
-  const { countries, isSupportedCountry } = useCountryConfig();
+  const { countries, isSupportedCountry } = countryConfig;
 
   const [currentCountry, setCurrentCountry] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);

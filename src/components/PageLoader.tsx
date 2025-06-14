@@ -1,6 +1,4 @@
 
-import React from 'react';
-
 export function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-screen">

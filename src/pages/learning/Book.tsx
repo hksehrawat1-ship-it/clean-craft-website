@@ -1,5 +1,3 @@
-
-import React from "react";
 import BookHero from "@/components/book/Hero";
 import BookFeatures from "@/components/book/Features";
 import BookBenefits from "@/components/book/Benefits";

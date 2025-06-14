@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import IPData from "ipdata"; // Official ipdata client
-import { useCountryConfig } from "@/hooks/use-country-config";
+import { countryConfig } from "@/hooks/use-country-config";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Globe, Loader2 } from "lucide-react";
@@ -15,7 +15,7 @@ interface CountryRedirectProps {
 const IPDATA_API_KEY = "6aee2f02cd09fb288e6b7e1f824c5f60debac930d5f68326041a1777";
 
 const CountryRedirect: React.FC<CountryRedirectProps> = ({ path = "" }) => {
-  const { countries } = useCountryConfig();
+  const { countries } = countryConfig;
   const { hasConsent } = useCookieConsent();
   const navigate = useNavigate();
 
