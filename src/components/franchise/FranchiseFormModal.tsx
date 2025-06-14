@@ -26,7 +26,7 @@ const FranchiseFormModal: React.FC<FranchiseFormModalProps> = ({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           {/* Header title optional */}
-          {/* <DialogTitle>Franchise Inquiry</DialogTitle> */}
+          <DialogTitle>Franchise Inquiry</DialogTitle>
         </DialogHeader>
 
         {/* Directly render form without Suspense */}

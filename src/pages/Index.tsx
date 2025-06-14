@@ -1,8 +1,5 @@
-
-import React from "react";
-import { useParams } from "react-router-dom";
 import { useCountry } from "@/contexts/CountryContext";
-import { useCountryConfig } from "@/hooks/use-country-config";
+import { countryConfig } from "@/hooks/use-country-config";
 import Layout from "../components/home/Layout";
 import HeroSection from "../components/home/HeroSection";
 import ServicesSection from "../components/home/ServicesSection";
@@ -14,23 +11,10 @@ import FaqSection from "../components/home/FAQSection";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
 import { cn } from "@/lib/utils";
 import {
-  useStrapiPage,
   useStrapiFAQs,
   useStrapiTestimonials,
 } from "@/hooks/useStrapi";
 import TestimonialSection from "@/components/home/TestimonialSection";
-
-interface StrapiResponse<T> {
-  data: T[];
-  meta: {
-    pagination: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
-}
 
 interface SectionWrapperProps {
   children: React.ReactNode;
@@ -53,10 +37,8 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
 };
 
 export default function Index() {
-  const { countryCode } = useParams<{ countryCode: string }>();
   const { currentCountry } = useCountry();
-  const { getCountryByCode } = useCountryConfig();
-  const { data: pageData } = useStrapiPage("/");
+  const { getCountryByCode } = countryConfig;
 
   // Get country name from config
   const countryData = currentCountry ? getCountryByCode(currentCountry) : null;

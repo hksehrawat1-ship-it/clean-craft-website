@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,24 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { State, City } from "country-state-city";
 import ProgressiveStepper from "./ProgressiveStepper";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   email: z.string().email("Please enter a valid email address"),
-  city: z.string().min(1, "Please select a city"),
-  investmentRange: z.string().min(1, "Please select an investment range"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -47,19 +38,6 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [cityInputFocused, setCityInputFocused] = useState(false);
-
-  const indianCities = useMemo(() => {
-    const states = State.getStatesOfCountry("IN");
-    const allCities: string[] = [];
-
-    states.forEach((state) => {
-      const stateCities = City.getCitiesOfState("IN", state.isoCode);
-      stateCities.forEach((city) => allCities.push(city.name));
-    });
-
-    return [...new Set(allCities)].sort();
-  }, []);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -67,18 +45,8 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
       name: "",
       phone: "",
       email: "",
-      city: "",
-      investmentRange: "",
     },
   });
-
-  const cityValue = form.watch("city");
-
-  const filteredCities = cityValue
-    ? indianCities.filter((city) =>
-        city.toLowerCase().includes(cityValue.toLowerCase())
-      )
-    : [];
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -87,9 +55,9 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
         name: data.name,
         phone: data.phone,
         email: data.email,
-        city: data.city,
+        city: null,
         country: "India",
-        investment_range: data.investmentRange,
+        investment_range: null,
         source_cta: sourceCta,
         lead_type: "franchise",
       });
@@ -99,8 +67,8 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
       await supabase.functions.invoke("submit-lead", {
         body: {
           ...data,
+          city: "",
           country: "India",
-          investmentRange: data.investmentRange,
           sourceCta,
           leadType: "franchise",
         },
@@ -189,67 +157,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               )}
             />
 
-            {/* City input with search */}
-            {/* <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem className="relative">
-                  <FormLabel>City *</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Start typing your city"
-                      {...field}
-                      autoComplete="off"
-                      onFocus={() => setCityInputFocused(true)}
-                      onBlur={() => {
-                        setTimeout(() => setCityInputFocused(false), 150);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                  {cityInputFocused && filteredCities.length > 0 && (
-                    <ul className="absolute z-50 max-h-48 w-full overflow-auto rounded border border-gray-300 bg-white shadow-lg">
-                      {filteredCities.map((city) => (
-                        <li
-                          key={city}
-                          className="cursor-pointer px-4 py-2 hover:bg-blue-100"
-                          onMouseDown={() => field.onChange(city)}
-                        >
-                          {city}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </FormItem>
-              )}
-            /> */}
-
-            {/* Investment Range with Shadcn Select */}
-            {/* <FormField
-              control={form.control}
-              name="investmentRange"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Investment Range *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select investment range" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="₹15L-20L">₹15L - ₹20L</SelectItem>
-                      <SelectItem value="₹20L-25L">₹20L - ₹25L</SelectItem>
-                      <SelectItem value="₹25L+">₹25L+</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
-            {/* Submit + Cancel */}
+            {/* Submit Button */}
             <div className="mb-6 max-w-2xl mx-auto">
               <Button
                 type="submit"

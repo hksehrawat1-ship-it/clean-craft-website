@@ -310,6 +310,216 @@ export type Database = {
           },
         ]
       }
+      blog_categories: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_categories_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_categories_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blogs: {
+        Row: {
+          content: Json | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          published_at: string | null
+          published_date: string | null
+          slug: string | null
+          title: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          published_date?: string | null
+          slug?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          published_at?: string | null
+          published_date?: string | null
+          slug?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blogs_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blogs_author_lnk: {
+        Row: {
+          blog_id: number | null
+          id: number
+          inv_blog_id: number | null
+        }
+        Insert: {
+          blog_id?: number | null
+          id?: number
+          inv_blog_id?: number | null
+        }
+        Update: {
+          blog_id?: number | null
+          id?: number
+          inv_blog_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_author_lnk_fk"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blogs_author_lnk_ifk"
+            columns: ["inv_blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blogs_blog_category_lnk: {
+        Row: {
+          blog_category_id: number | null
+          blog_id: number | null
+          id: number
+        }
+        Insert: {
+          blog_category_id?: number | null
+          blog_id?: number | null
+          id?: number
+        }
+        Update: {
+          blog_category_id?: number | null
+          blog_id?: number | null
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_blog_category_lnk_fk"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blogs_blog_category_lnk_ifk"
+            columns: ["blog_category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blogs_country_lnk: {
+        Row: {
+          blog_id: number | null
+          country_id: number | null
+          id: number
+        }
+        Insert: {
+          blog_id?: number | null
+          country_id?: number | null
+          id?: number
+        }
+        Update: {
+          blog_id?: number | null
+          country_id?: number | null
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_country_lnk_fk"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blogs_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cookie_consents: {
         Row: {
           analytics: boolean | null
@@ -775,7 +985,7 @@ export type Database = {
       }
       franchise_leads: {
         Row: {
-          city: string
+          city: string | null
           country: string
           created_at: string
           email: string
@@ -788,7 +998,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          city: string
+          city?: string | null
           country?: string
           created_at?: string
           email: string
@@ -801,7 +1011,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          city?: string
+          city?: string | null
           country?: string
           created_at?: string
           email?: string

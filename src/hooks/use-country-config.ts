@@ -19,33 +19,31 @@ interface PagesYamlConfig {
   };
 }
 
-export function useCountryConfig() {
-  const countries = Object.entries((pagesConfig as PagesYamlConfig).countries || {}).map(
-    ([code, data]): CountryConfig => ({
-      code,
-      name: data.name,
-      flag_emoji: data.flag_emoji,
-      region: data.region,
-    })
-  );
+const countries: CountryConfig[] = Object.entries((pagesConfig as PagesYamlConfig).countries || {}).map(
+  ([code, data]): CountryConfig => ({
+    code,
+    name: data.name,
+    flag_emoji: data.flag_emoji,
+    region: data.region,
+  })
+);
 
-  const isSupportedCountry = (code: string): boolean => {
-    return countries.some((c) => c.code.toLowerCase() === code.toLowerCase());
-  };
+function isSupportedCountry(code: string): boolean {
+  return countries.some((c) => c.code.toLowerCase() === code.toLowerCase());
+}
 
-  const getCountryByCode = (code: string): CountryConfig | undefined => {
-    return countries.find((c) => c.code.toLowerCase() === code.toLowerCase());
-  };
+function getCountryByCode(code: string): CountryConfig | undefined {
+  return countries.find((c) => c.code.toLowerCase() === code.toLowerCase());
+}
 
-  const getCountryRegion = (code: string): string => {
-    const country = getCountryByCode(code);
-    return country?.region || 'OTHER REGIONS';
-  };
+function getCountryRegion(code: string): string {
+  const country = getCountryByCode(code);
+  return country?.region || 'OTHER REGIONS';
+}
 
-  return {
-    countries,
-    isSupportedCountry,
-    getCountryByCode,
-    getCountryRegion,
-  };
-} 
+export const countryConfig = {
+  countries,
+  isSupportedCountry,
+  getCountryByCode,
+  getCountryRegion,
+}; 

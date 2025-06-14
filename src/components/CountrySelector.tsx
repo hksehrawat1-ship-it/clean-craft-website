@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCountry } from '@/contexts/CountryContext';
-import { useCountryConfig } from '@/hooks/use-country-config';
+import { countryConfig } from "@/hooks/use-country-config";
 import { Check, Globe } from 'lucide-react';
 import { 
   Select,
@@ -12,12 +12,12 @@ import {
 
 const CountrySelector: React.FC = () => {
   const { currentCountry, setCurrentCountry } = useCountry();
-  const { countries, getCountryByCode, getCountryRegion } = useCountryConfig();
+  const { countries } = countryConfig;
 
   if (!currentCountry || countries.length <= 1) return null;
 
   // Get current country data
-  const currentCountryData = currentCountry ? getCountryByCode(currentCountry) : null;
+  const currentCountryData = currentCountry ? countryConfig.getCountryByCode(currentCountry) : null;
 
   return (
     <div className="relative">
@@ -38,7 +38,7 @@ const CountrySelector: React.FC = () => {
           {['ASIA/PACIFIC', 'EUROPE', 'AMERICAS', 'MIDDLE EAST', 'OTHER REGIONS'].map(region => {
             // Get countries for this region
             const regionCountries = countries.filter(c => 
-              getCountryRegion(c.code) === region
+              countryConfig.getCountryRegion(c.code) === region
             );
             
             if (regionCountries.length === 0) return null;

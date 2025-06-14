@@ -1,6 +1,6 @@
 import React from 'react';
 import EnhancedNavbar from '../../components/EnhancedNavbar';
-import OfferCarousel from './OfferCarousel';
+// import OfferCarousel from './OfferCarousel';
 import Footer from '../../components/Footer'; // Using the more branded Footer
 
 interface LayoutProps {

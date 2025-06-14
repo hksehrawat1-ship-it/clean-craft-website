@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 import { useCountry } from '@/contexts/CountryContext';
-import { usePagesConfig } from '@/hooks/use-pages-config';
+import { isPageEnabled } from '@/hooks/use-pages-config';
 
 interface Props {
   pagePath: string;
@@ -22,7 +22,7 @@ const CountryRouteGuard: React.FC<Props> = ({
   const { currentCountry, isLoading: isCountriesLoading } = useCountry();
 
   /* 2 ─ YAML page-matrix (synchronous once loaded) */
-  const { isPageEnabled } = usePagesConfig();
+  // const { isPageEnabled } = usePagesConfig();
 
   /* spinner until country list is ready */
   if (isCountriesLoading || !currentCountry) {
@@ -35,7 +35,7 @@ const CountryRouteGuard: React.FC<Props> = ({
 
   if (!countryCode) return <Navigate to="/" replace />;
 
-  if (!isPageEnabled(pagePath)) {
+  if (!isPageEnabled(currentCountry, pagePath)) {
     return <Navigate to={`/${countryCode}/not-found`} replace />;
   }
 

@@ -5,7 +5,9 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCountry } from "@/contexts/CountryContext";
-import { usePagesConfig } from "@/hooks/use-pages-config";
+import { getNavbarItems } from "@/hooks/use-pages-config";
+import type { PageData } from '@/types/config';
+
 
 const EnhancedNavbar: React.FC = () => {
   /* ────────────────────────── state ────────────────────────── */
@@ -16,8 +18,7 @@ const EnhancedNavbar: React.FC = () => {
 
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
-  const { getNavbarItems } = usePagesConfig();
-  const navItems = getNavbarItems();
+  const navItems = getNavbarItems(currentCountry);
 
   /* ─────────────────── helpers ─────────────────── */
   const createLink = (path: string) =>

@@ -22,7 +22,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   email: z.string().email("Please enter a valid email address"),
-  city: z.string().min(1, "Please select a city"),
+  // city: z.string().min(1, "Please select a city"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -33,36 +33,15 @@ const RegistrationForm: React.FC = () => {
   const [redirectCountdown, setRedirectCountdown] = useState(5);
   const [cityInputFocused, setCityInputFocused] = useState(false);
 
-  // Get Indian cities using country-state-city package
-  const indianCities = useMemo(() => {
-    const states = State.getStatesOfCountry("IN");
-    const allCities: string[] = [];
-
-    states.forEach((state) => {
-      const stateCities = City.getCitiesOfState("IN", state.isoCode);
-      stateCities.forEach((city) => allCities.push(city.name));
-    });
-
-    return [...new Set(allCities)].sort();
-  }, []);
-
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       phone: "",
       email: "",
-      city: "",
+      // city: "",
     },
   });
-
-  const cityValue = form.watch("city");
-
-  const filteredCities = cityValue
-    ? indianCities.filter((city) =>
-        city.toLowerCase().includes(cityValue.toLowerCase())
-      )
-    : [];
 
   const handlePaymentRedirect = () => {
     window.open("https://cleancraft.mojo.page/best-laundry-training-institute-in-india", "_blank");
@@ -87,15 +66,11 @@ const RegistrationForm: React.FC = () => {
         name: data.name,
         phone: data.phone,
         email: data.email,
+        city: "", // Always send city as empty string
         country: "India",
         source_cta: "Course Registration",
         lead_type: "course",
       };
-
-      // Only include city if it's provided
-      if (data.city) {
-        insertData.city = data.city;
-      }
 
       // Submit to Supabase
       const { error } = await supabase
@@ -263,45 +238,6 @@ const RegistrationForm: React.FC = () => {
                       </FormItem>
                     )}
                   />
-
-                  {/* City input with search */}
-                  {/* <FormField
-                    control={form.control}
-                    name="city"
-                    render={({ field }) => (
-                      <FormItem className="relative">
-                        <FormLabel className="text-body-sm font-medium text-gray-700">
-                          City *
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Start typing your city"
-                            className="input-enhanced h-12"
-                            {...field}
-                            autoComplete="off"
-                            onFocus={() => setCityInputFocused(true)}
-                            onBlur={() => {
-                              setTimeout(() => setCityInputFocused(false), 150);
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                        {cityInputFocused && filteredCities.length > 0 && (
-                          <ul className="absolute z-50 max-h-48 w-full overflow-auto rounded border border-gray-300 bg-white shadow-lg">
-                            {filteredCities.map((city) => (
-                              <li
-                                key={city}
-                                className="cursor-pointer px-4 py-2 hover:bg-blue-100"
-                                onMouseDown={() => field.onChange(city)}
-                              >
-                                {city}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </FormItem>
-                    )}
-                  /> */}
 
                   <div className="pt-4">
                     <Button
