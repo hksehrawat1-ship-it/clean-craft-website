@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useStrapiPolicies } from "@/hooks/useStrapi";
@@ -73,13 +74,13 @@ export default function PolicyDetails() {
                 <span>Effective: {getEffectiveDate()}</span>
               </div>
 
-              {/* ✅ Render policy.content from JSON */}
+              {/* ✅ Render policy.content from JSON with proper typing */}
               <div className="prose max-w-none space-y-4">
                 {Array.isArray(policy.content) &&
-                  policy.content.map((block, index) => {
+                  policy.content.map((block: any, index: number) => {
                     if (block.type === "paragraph") {
                       const text =
-                        block.children?.map((child) => child.text).join("") ||
+                        block.children?.map((child: { text: string }) => child.text).join("") ||
                         "";
                       return <p key={index}>{text}</p>;
                     }

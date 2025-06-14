@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import legacy from "@vitejs/plugin-legacy";
@@ -15,11 +16,9 @@ export default defineConfig(({ mode }) => ({
 
   plugins: [
     react({
-      swcOptions: {
-        jsc: {
-          target: "es2015",          // ✅ iOS/Safari‑safe
-          parser: { syntax: "typescript", tsx: true },
-        },
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
       },
     }),
 
@@ -50,9 +49,6 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist",
     emptyOutDir: true,
-    /* ❌ build.target हटाया — legacy‑plugin अब कुछ override नहीं करेगा
-    target: ["es2015", "chrome61", "firefox60", "safari11", "ios11"], 
-    */
     minify: "esbuild",
     cssMinify: true,
 
