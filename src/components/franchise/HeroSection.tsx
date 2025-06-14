@@ -1,8 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import LaundryRoiCalculator from "@/components/franchise/LaundryRoiCalculator";
 import { ShieldCheck, Star, Award } from "lucide-react";
-import LaundryRoiCalculator from "./LaundryRoiCalculator";
 import { useState } from "react";
 import FranchiseFormModal from "./FranchiseFormModal";
 
