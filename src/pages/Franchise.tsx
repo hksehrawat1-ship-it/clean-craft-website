@@ -1,4 +1,3 @@
-
 import Layout from "@/components/home/Layout";
 import HeroSection from "@/components/franchise/HeroSection";
 import IdealCustomerSection from "@/components/franchise/IdealCustomerSection";

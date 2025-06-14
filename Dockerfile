@@ -1,54 +1,59 @@
-# ─────────── Build Stage ───────────
-FROM node:18-alpine AS builder
+########################  Build stage  ########################
+# Use the full (glibc) image instead of alpine during build—
+# it avoids random “out of memory” crashes from musl + esbuild
+# and is only an intermediate layer.
+FROM --platform=$BUILDPLATFORM node:20-bookworm-slim AS builder
 
-# 1. Set working dir
+# 1️⃣ Cache folder for npm / esbuild between layers
+RUN --mount=type=cache,target=/root/.cache mkdir -p /root/.cache
+
+# 2️⃣ Project files & deps
 WORKDIR /app
-
-# 2. Copy package manifests & install deps
 COPY package*.json ./
-RUN npm install
 
-# 3. Copy source & build
+# Prefer deterministic, CI-friendly installs
+RUN --mount=type=cache,target=/root/.cache \
+    npm ci --legacy-peer-deps
+
+# 3️⃣ Copy the rest of the source
 COPY . .
-ENV NODE_ENV=production
-# Build target supports modern browsers including mobile
-ENV VITE_BUILD_TARGET=modern
 
-# 4. Generate sitemap and robots.txt for production
-RUN npm run build
+########################  Build & optimise  ########################
+# Give Node a 4 GB heap so Vite/ESBuild won't crash.
+# Make sure Docker Desktop (or your CI runner) actually has ≥4 GB RAM.
+ENV NODE_ENV=production \
+    VITE_BUILD_TARGET=modern \
+    NODE_OPTIONS=--max-old-space-size=4096
 
-RUN npm run generate-sitemap
-# 6. Clean up unnecessary files
+# Disable source-maps in prod to shrink memory & artefacts
+ENV VITE_SOURCEMAP=false
+
+# Build + sitemap, re-using the cache mount
+RUN --mount=type=cache,target=/root/.cache \
+    npm run build && \
+    npm run generate-sitemap
+
+# Remove everything we no longer need in the final artefact
 RUN rm -rf node_modules src scripts
 
-# ────────── Runtime Stage ──────────
-FROM node:18-alpine AS runner
+########################  Runtime stage  ########################
+FROM node:20-alpine AS runner
 
-# 1. Install the 'serve' CLI with specific version for stability
+# 1. Minimal static file server
 RUN npm install -g serve@14.2.4
 
-# 2. Create an unprivileged user
+# 2. Non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# 3. Set working dir and ensure it exists
+# 3. Copy built assets
 WORKDIR /app
-RUN mkdir -p dist
-
-# 4. Copy built assets and config
 COPY --from=builder /app/dist ./dist/
-COPY ./serve.config.json ./serve.config.json
+COPY --from=builder /app/serve.config.json ./serve.config.json
 
-# 6. Set correct permissions
+# 4. Permissions & environment
 RUN chown -R appuser:appgroup /app
-
-# 7. Switch to non-root user
 USER appuser
-
-# 8. Expose the port
-EXPOSE 3000
-
-# 9. Set NODE_ENV for serve
 ENV NODE_ENV=production
 
-# 10. Use serve with specific configuration and SPA handling
+EXPOSE 3000
 CMD ["serve", "--config", "/app/serve.config.json", "-s", "dist"]
