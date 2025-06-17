@@ -7,15 +7,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import FranchiseFormModal from "./FranchiseFormModal";
 
 const LaundryRoiCalculator = () => {
-  const [investment, setInvestment] = useState<string>("1500000");
+  // ⬇️ Start empty so the placeholder shows
+  const [investment, setInvestment] = useState<string>("");
   const [showResults, setShowResults] = useState(false);
   const [monthlyRoi, setMonthlyRoi] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const formatIndianNumber = (num: number) => {
-    return num.toLocaleString("en-IN");
-  };
+  const formatIndianNumber = (num: number) => num.toLocaleString("en-IN");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
@@ -34,25 +33,22 @@ const LaundryRoiCalculator = () => {
     const monthly = Math.floor(annualProfit / 12);
     setMonthlyRoi(formatIndianNumber(monthly));
     setShowResults(true);
-    setIsFormOpen(true); // 🚀 Modal opens instantly now
+    setIsFormOpen(true);
   };
 
   const totalReturn = calculateReturn();
-  const monthlyReturn = totalReturn / 12;
+  const monthlyReturn = Math.floor(totalReturn / 12);
 
-  const getFormTitle = () => {
-    if (showResults && monthlyRoi) {
-      return `Start Earning ₹${formatIndianNumber(
-        monthlyReturn
-      )} in Just a Month`;
-    }
-    return "Your Earnings Are a Call Away";
-  };
+  const getFormTitle = () =>
+    showResults && monthlyRoi
+      ? `Start Earning ₹${formatIndianNumber(monthlyReturn)} in Just a Month`
+      : "Your Earnings Are a Call Away";
 
   return (
     <>
       <div className="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md mx-auto google-shadow">
         <div className="p-6">
+          {/* Logo & Heading */}
           <div className="flex items-center justify-center mb-6">
             <img
               src="/lovable-uploads/cleancraft-icon.png"
@@ -67,7 +63,9 @@ const LaundryRoiCalculator = () => {
             Laundry Franchise ROI Calculator
           </h3>
 
+          {/* Calculator Fields */}
           <div className={`space-y-${isMobile ? "3" : "4"}`}>
+            {/* 1. Initial Investment */}
             <div className="bg-cleancraft-light/10 p-3 rounded-lg">
               <div className="flex items-center mb-1">
                 <BadgeIndianRupee className="h-4 w-4 mr-2 text-google-blue" />
@@ -82,31 +80,43 @@ const LaundryRoiCalculator = () => {
                 <Input
                   type="text"
                   className="w-full pl-8 pr-3 py-2 border rounded-md border-gray-300 focus:ring-2 focus:ring-cleancraft-gold focus:border-transparent"
-                  placeholder="15,00,000"
-                  value={investment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  placeholder="Enter Your Investment"
+                  value={
+                    investment
+                      ? investment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      : "" /* ← keep placeholder visible */
+                  }
                   onChange={handleInputChange}
                   aria-label="Enter initial investment amount"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Typical range: ₹15-25 Lakh
+                Typical range: ₹23 – 25 Lakh
               </p>
             </div>
 
+            {/* 2. Expected Annual Return */}
             <div className="bg-cleancraft-light/10 p-3 rounded-lg">
               <div className="flex items-center mb-1">
                 <Calculator className="h-4 w-4 mr-2 text-google-red" />
                 <label className="block text-sm font-medium text-gray-600">
-                  2. Expected Annual Return (62% of investment)
+                  2. Expected Annual Return (62 % of investment)
                 </label>
               </div>
               <div className="relative bg-cleancraft-light/20 py-3 px-4 rounded-md">
-                <span className="text-google-blue font-medium">
-                  ₹{formatIndianNumber(totalReturn)}
+                <span
+                  className={`font-medium ${
+                    investment ? "text-google-blue" : "text-gray-500 italic"
+                  }`}
+                >
+                  {investment
+                    ? `₹${formatIndianNumber(totalReturn)}`
+                    : "Check Gross Margin"}
                 </span>
               </div>
             </div>
 
+            {/* 3. Monthly ROI */}
             <div className="bg-cleancraft-light/10 p-3 rounded-lg">
               <div className="flex items-center mb-1">
                 <Calculator className="h-4 w-4 mr-2 text-google-red" />
@@ -122,17 +132,18 @@ const LaundryRoiCalculator = () => {
                 } py-3 px-4 rounded-md transition-colors duration-300`}
               >
                 <span
-                  className={`${
+                  className={`transition-colors duration-300 ${
                     showResults
                       ? "text-google-green font-semibold"
                       : "text-gray-400"
-                  } transition-colors duration-300`}
+                  }`}
                 >
                   {showResults ? `₹${monthlyRoi}` : "Calculate to see results"}
                 </span>
               </div>
             </div>
 
+            {/* Calculate Button */}
             <div className="pt-2">
               <Button
                 onClick={handleCalculate}
@@ -141,30 +152,31 @@ const LaundryRoiCalculator = () => {
                 Calculate ROI
               </Button>
             </div>
-
             <p className="text-center text-sm text-gray-500 pt-1">
               Schedule a franchise consultation today
             </p>
           </div>
         </div>
 
+        {/* Footer Badge */}
         <div className="bg-cleancraft-light/30 p-4 border-t border-cleancraft-light">
           <div className="flex flex-col items-center justify-center space-y-1">
             <div className="flex items-center">
               <Badge className="bg-google-green text-white mr-2">
-                Zero Risk
+                Zero Risk
               </Badge>
               <p className="text-sm font-medium text-google-gray">
-                100% Royalty Free Guarantee
+                100 % Royalty Free Guarantee
               </p>
             </div>
             <p className="text-xs italic text-gray-600">
-              The Perfect Time Is Now
+              The Perfect Time Is Now
             </p>
           </div>
         </div>
       </div>
 
+      {/* Franchise Form Modal */}
       <FranchiseFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
