@@ -319,6 +319,7 @@ export type Database = {
           locale: string | null
           name: string | null
           published_at: string | null
+          slug: string | null
           updated_at: string | null
           updated_by_id: number | null
         }
@@ -330,6 +331,7 @@ export type Database = {
           locale?: string | null
           name?: string | null
           published_at?: string | null
+          slug?: string | null
           updated_at?: string | null
           updated_by_id?: number | null
         }
@@ -341,6 +343,7 @@ export type Database = {
           locale?: string | null
           name?: string | null
           published_at?: string | null
+          slug?: string | null
           updated_at?: string | null
           updated_by_id?: number | null
         }
@@ -361,6 +364,39 @@ export type Database = {
           },
         ]
       }
+      blog_categories_country_lnk: {
+        Row: {
+          blog_category_id: number | null
+          country_id: number | null
+          id: number
+        }
+        Insert: {
+          blog_category_id?: number | null
+          country_id?: number | null
+          id?: number
+        }
+        Update: {
+          blog_category_id?: number | null
+          country_id?: number | null
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_categories_country_lnk_fk"
+            columns: ["blog_category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_categories_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blogs: {
         Row: {
           content: Json | null
@@ -368,6 +404,7 @@ export type Database = {
           created_by_id: number | null
           document_id: string | null
           id: number
+          is_featured: boolean | null
           locale: string | null
           published_at: string | null
           published_date: string | null
@@ -382,6 +419,7 @@ export type Database = {
           created_by_id?: number | null
           document_id?: string | null
           id?: number
+          is_featured?: boolean | null
           locale?: string | null
           published_at?: string | null
           published_date?: string | null
@@ -396,6 +434,7 @@ export type Database = {
           created_by_id?: number | null
           document_id?: string | null
           id?: number
+          is_featured?: boolean | null
           locale?: string | null
           published_at?: string | null
           published_date?: string | null

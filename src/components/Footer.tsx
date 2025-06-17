@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -84,7 +85,7 @@ const Footer: React.FC = () => {
           <ul className="space-y-4">
             <li style={{ textDecoration: "none" }}>
               <Link
-                to={createLink("policies/Discover-Clean-Craft")}
+                to={createLink("/discover-cleancraft")}
                 style={{ textDecoration: "none" }}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
