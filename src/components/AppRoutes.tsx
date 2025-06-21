@@ -20,6 +20,7 @@ import ServicesNavbar from "../pages/ServicesNavbar";
 const LazyCoursesPage = lazy(() => import("../pages/learning/Courses"));
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
 const LazyBlogPage = lazy(() => import("../pages/Blog"));
+const LazyBlogDetailPage = lazy(() => import("../pages/BlogDetail"));
 const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
 const LazyPoliciesPage = lazy(() => import("../pages/Policies"));
 const LazyDiscoverCleanCraftPage = lazy(() => import("../pages/DiscoverCleanCraft"));
@@ -75,20 +76,36 @@ export function AppRoutes() {
             </Route>
 
             {/* Blog */}
-            <Route
-              path="blog"
-              element={
-                <CountryRouteGuard
-                  pagePath="/blog"
-                  element={
-                    <Suspense fallback={<PageLoader />}>
-                      <LazyBlogPage />
-                    </Suspense>
-                  }
-                  allowEmptyContent
-                />
-              }
-            />
+            <Route path="blog">
+              <Route
+                index
+                element={
+                  <CountryRouteGuard
+                    pagePath="/blog"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyBlogPage />
+                      </Suspense>
+                    }
+                    allowEmptyContent
+                  />
+                }
+              />
+              <Route
+                path=":slug"
+                element={
+                  <CountryRouteGuard
+                    pagePath="/blog"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyBlogDetailPage />
+                      </Suspense>
+                    }
+                    allowEmptyContent
+                  />
+                }
+              />
+            </Route>
 
             {/* Policies */}
             <Route path="policies">
