@@ -24,6 +24,9 @@ COPY . .
 ENV NODE_ENV=production \
     VITE_BUILD_TARGET=modern \
     NODE_OPTIONS=--max-old-space-size=4096
+ENV VITE_STRAPI_URL=${VITE_STRAPI_URL}
+ENV VITE_STRAPI_API_TOKEN=${VITE_STRAPI_API_TOKEN}
+ENV VITE_PUBLIC_BUILDER_KEY=${VITE_PUBLIC_BUILDER_KEY}
 
 # Disable source-maps in prod to shrink memory & artefacts
 ENV VITE_SOURCEMAP=false
