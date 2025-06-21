@@ -1,6 +1,8 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { contentService } from "@/lib/strapi/services/content.service";
 import { useStrapiConnection } from "@/contexts/StrapiConnectionContext";
+import { useCountry } from "@/contexts/CountryContext";
 import { StrapiBlog, StrapiBlogCategory } from "@/types/strapi";
 import { useMemo } from "react";
 
@@ -16,9 +18,6 @@ interface StrapiResponse<T> {
   };
 }
 
-// 🔒 हमेशा India (id=8, code='in') के लिये कॉल करो
-const COUNTRY_CODE = "in";
-
 export function useBlogs(options?: {
   category?: string;
   featured?: boolean;
@@ -28,11 +27,14 @@ export function useBlogs(options?: {
   sortOrder?: "asc" | "desc";
 }) {
   const { isConnected, isInitializing } = useStrapiConnection();
-  const key = useMemo(() => ["blogs", COUNTRY_CODE, options], [options]);
+  const { currentCountry } = useCountry();
+  const countryCode = currentCountry?.toLowerCase() || "in";
+  
+  const key = useMemo(() => ["blogs", countryCode, options], [countryCode, options]);
 
   return useQuery<StrapiResponse<StrapiBlog>>({
     queryKey: key,
-    queryFn: () => contentService.getBlogs(COUNTRY_CODE, options),
+    queryFn: () => contentService.getBlogs(countryCode, options),
     staleTime: 300_000, // 5 minutes
     enabled: isConnected && !isInitializing,
     retry: 2,
@@ -42,11 +44,14 @@ export function useBlogs(options?: {
 
 export function useBlogBySlug(slug: string) {
   const { isConnected, isInitializing } = useStrapiConnection();
-  const key = useMemo(() => ["blog", slug, COUNTRY_CODE], [slug]);
+  const { currentCountry } = useCountry();
+  const countryCode = currentCountry?.toLowerCase() || "in";
+  
+  const key = useMemo(() => ["blog", slug, countryCode], [slug, countryCode]);
 
   return useQuery<StrapiBlog | null>({
     queryKey: key,
-    queryFn: () => contentService.getBlogBySlug(slug, COUNTRY_CODE),
+    queryFn: () => contentService.getBlogBySlug(slug, countryCode),
     staleTime: 300_000,
     enabled: !!slug && isConnected && !isInitializing,
     retry: 2,

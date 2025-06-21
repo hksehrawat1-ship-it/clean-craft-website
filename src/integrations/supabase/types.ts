@@ -1064,6 +1064,90 @@ export type Database = {
         }
         Relationships: []
       }
+      franchises: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          email: string | null
+          fablean_user_details: string | null
+          franchise_name: string | null
+          franchise_owner_phone: string | null
+          id: number
+          locale: string | null
+          opening_date: string | null
+          owner_name: string | null
+          published_at: string | null
+          state: string | null
+          store_incharge_name: string | null
+          store_incharge_phone: string | null
+          store_phone: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          fablean_user_details?: string | null
+          franchise_name?: string | null
+          franchise_owner_phone?: string | null
+          id?: number
+          locale?: string | null
+          opening_date?: string | null
+          owner_name?: string | null
+          published_at?: string | null
+          state?: string | null
+          store_incharge_name?: string | null
+          store_incharge_phone?: string | null
+          store_phone?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          fablean_user_details?: string | null
+          franchise_name?: string | null
+          franchise_owner_phone?: string | null
+          id?: number
+          locale?: string | null
+          opening_date?: string | null
+          owner_name?: string | null
+          published_at?: string | null
+          state?: string | null
+          store_incharge_name?: string | null
+          store_incharge_phone?: string | null
+          store_phone?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchises_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "franchises_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       i18n_locale: {
         Row: {
           code: string | null

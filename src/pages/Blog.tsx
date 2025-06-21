@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from "react";
 import Layout from "@/components/home/Layout";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
@@ -5,17 +6,16 @@ import BlogHero from "@/components/blog/BlogHero";
 import BlogFilters from "@/components/blog/BlogFilters";
 import FeaturedBlog from "@/components/blog/FeaturedBlog";
 import BlogGrid from "@/components/blog/BlogGrid";
+import ConnectionStatus from "@/components/blog/ConnectionStatus";
 import { useBlogs } from "@/hooks/useBlog";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  /* 🔹 category change handler */
   const handleCategorySelect = useCallback((category: string | null) => {
     setSelectedCategory(category);
   }, []);
 
-  /* 🔸 Featured blogs */
   const { data: featuredRes, error: featuredError } = useBlogs({
     featured: true,
     sortBy: "publishedDate",
@@ -24,7 +24,6 @@ const Blog = () => {
   const featuredBlogs = featuredRes?.data ?? [];
   if (featuredError) console.error("Featured blog fetch error:", featuredError);
 
-  /* 🔸 Quick check for at least one latest blog (non‑featured, all categories) */
   const { data: latestQuickRes } = useBlogs({
     featured: false,
     pageSize: 1,
@@ -45,46 +44,44 @@ const Blog = () => {
         ]}
       />
 
-      <main className="blog-page">
+      <main className="blog-page min-h-screen bg-gray-50">
         <BlogHero />
+        <ConnectionStatus />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Filters */}
-          <div className="mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+          <div className="mb-6 lg:mb-8">
             <BlogFilters
               selectedCategory={selectedCategory}
               onCategorySelect={handleCategorySelect}
             />
           </div>
 
-          {/* Featured Blogs */}
           {!selectedCategory && featuredBlogs.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <section className="mb-8 lg:mb-12">
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6">
                 Featured Articles
               </h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 {featuredBlogs.slice(0, 2).map((b) => (
                   <FeaturedBlog key={b.id} blog={b.attributes ?? (b as any)} />
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Blog Grid */}
-          <div>
+          <section>
             {selectedCategory ? (
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6">
                 Filtered Articles
               </h2>
             ) : hasLatest ? (
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6">
                 Latest Articles
               </h2>
             ) : null}
 
             <BlogGrid selectedCategory={selectedCategory} />
-          </div>
+          </section>
         </div>
       </main>
     </Layout>

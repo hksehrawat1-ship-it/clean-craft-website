@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useCallback,
@@ -8,7 +9,8 @@ import React, {
 import { useBlogs } from "@/hooks/useBlog";
 import BlogCard from "./BlogCard";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2, AlertCircle } from "lucide-react";
 
 interface BlogGridProps {
   selectedCategory: string | null;
@@ -17,11 +19,8 @@ interface BlogGridProps {
 
 const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
   const [page, setPage] = useState(1);
-
-  /* aggregated list */
   const [allBlogs, setAllBlogs] = useState<any[]>([]);
 
-  /* 👇 featured=false सिर्फ तब, जब कोई category नहीं चुनी */
   const queryOptions = useMemo(
     () => ({
       category: selectedCategory || undefined,
@@ -39,10 +38,8 @@ const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
     error,
   } = useBlogs(queryOptions);
 
-  /* blogs for current page */
   const currentPageBlogs = blogsResponse?.data ?? [];
 
-  /* aggregate pages into allBlogs */
   useEffect(() => {
     if (currentPageBlogs.length) {
       setAllBlogs((prev) =>
@@ -51,7 +48,6 @@ const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
     }
   }, [currentPageBlogs, page]);
 
-  /* reset when category changes */
   useEffect(() => {
     setPage(1);
     setAllBlogs([]);
@@ -63,61 +59,93 @@ const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
 
   const handleLoadMore = useCallback(() => setPage((p) => p + 1), []);
 
-  /* ---------- UI ---------- */
+  // Loading skeleton for first load
   if (isLoading && page === 1) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: Math.min(6, pageSize) }).map((_, i) => (
-          <div key={i} className="bg-gray-200 rounded-lg h-96 animate-pulse" />
-        ))}
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          {Array.from({ length: Math.min(6, pageSize) }).map((_, i) => (
+            <div key={i} className="space-y-3">
+              <Skeleton className="aspect-[16/10] w-full rounded-lg" />
+              <div className="p-4 space-y-3">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <div className="flex gap-4">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
+  // Error state
   if (isError) {
     console.error("Blog grid error:", error);
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600">
+        <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          Unable to load blogs
+        </h3>
+        <p className="text-gray-600 mb-4">
           {error instanceof Error
             ? error.message
             : "Failed to load blogs. Please try again later."}
         </p>
+        <Button onClick={() => window.location.reload()} variant="outline">
+          Try Again
+        </Button>
       </div>
     );
   }
 
-  /* 🛑 No blogs case */
+  // No blogs case
   if (!allBlogs.length) {
-    /* category selected → show “no blogs in category” */
     if (selectedCategory) {
       return (
-        <div className="text-center py-12 text-gray-600">
-          No blogs found in this category.
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No articles found
+          </h3>
+          <p className="text-gray-600">
+            No blogs found in this category. Try selecting a different category.
+          </p>
         </div>
       );
     }
-    /* default latest view → render nothing */
-    return <Fragment />; // nothing
+    return <Fragment />;
   }
 
-  /* ✅ blogs exist */
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-6 lg:space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         {allBlogs.map((blog) => (
-          <BlogCard key={blog.id} blog={{ id: blog.id, ...blog.attributes }} />
+          <BlogCard 
+            key={`${blog.id}-${blog.slug}`} 
+            blog={{ id: blog.id, ...blog.attributes }} 
+          />
         ))}
       </div>
 
       {hasNextPage && (
-        <div className="text-center">
+        <div className="text-center pt-4">
           <Button
             variant="outline"
             size="lg"
             onClick={handleLoadMore}
             disabled={isLoading}
-            className="min-w-32"
+            className="min-w-32 bg-white hover:bg-gray-50 border-gray-300"
           >
             {isLoading ? (
               <>
@@ -125,7 +153,7 @@ const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
                 Loading...
               </>
             ) : (
-              "Load More"
+              "Load More Articles"
             )}
           </Button>
         </div>
