@@ -1,4 +1,3 @@
-
 // lib/strapi/services/content.service.ts
 import { getCollection } from "../client";
 import {
@@ -86,10 +85,20 @@ class ContentService {
 
     /* --- params ---------------------------------------------------- */
     const params: BaseQueryParams = {
-      /* Nested‑object format => no comma issue */
+      /* Enhanced image population */
       populate: {
-        image:         { fields: ["url", "alternativeText"] },
-        blog_category: true,
+        image: {
+          fields: ["url", "alternativeText", "width", "height", "formats"]
+        },
+        blog_category: {
+          fields: ["name", "slug"]
+        },
+        author: {
+          fields: ["name", "email", "bio"]
+        },
+        country: {
+          fields: ["code", "name"]
+        }
       },
       filters,
       sort:       [`${sortBy}:${sortOrder}`],
@@ -97,20 +106,42 @@ class ContentService {
       locale,
     };
 
-    return getCollection<StrapiBlog>("blogs", clean(params));
+    console.log("📝 Blog list API call params:", JSON.stringify(params, null, 2));
+    const result = await getCollection<StrapiBlog>("blogs", clean(params));
+    console.log("📝 Blog list API response:", JSON.stringify(result, null, 2));
+    return result;
   }
 
   /* ───────── SINGLE BLOG ───────── */
   async getBlogBySlug(slug: string, countryCode: string, locale?: string) {
+    console.log("🔍 Fetching blog by slug:", slug, "Country:", countryCode);
+    
     const params: BaseQueryParams = {
-      populate: "deep",
+      populate: {
+        image: {
+          fields: ["url", "alternativeText", "width", "height", "formats"]
+        },
+        blog_category: {
+          fields: ["name", "slug"]
+        },
+        author: {
+          fields: ["name", "email", "bio"]
+        },
+        country: {
+          fields: ["code", "name"]
+        }
+      },
       filters: {
         slug:    { $eq: slug },
         country: { code: { $eq: countryCode.toLowerCase() } },
       },
       locale,
     };
+    
+    console.log("🔍 Blog detail API call params:", JSON.stringify(params, null, 2));
     const res = await getCollection<StrapiBlog>("blogs", clean(params));
+    console.log("🔍 Blog detail API response:", JSON.stringify(res, null, 2));
+    
     return res.data[0] ?? null;
   }
 

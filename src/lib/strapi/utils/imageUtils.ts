@@ -3,37 +3,58 @@
  * Utility function to handle Strapi image URLs consistently
  */
 export function getStrapiImageUrl(imageObj: any): string | null {
-  console.log("🖼️ Image object received:", imageObj);
+  console.log("🖼️ Raw image object received:", JSON.stringify(imageObj, null, 2));
   
-  if (!imageObj) return null;
-  
-  // Handle array format (multiple images)
-  if (Array.isArray(imageObj)) {
-    imageObj = imageObj[0];
+  if (!imageObj) {
+    console.log("❌ No image object provided");
+    return null;
   }
   
-  // Handle nested data.attributes format (v4 format)
-  let image = imageObj?.data?.attributes ?? imageObj;
+  let imageUrl = null;
   
-  // Handle direct object format (what we're actually getting)
-  if (!image?.url && imageObj?.url) {
-    image = imageObj;
+  // Handle different Strapi image formats
+  
+  // Format 1: Direct URL (simple string or object with url)
+  if (typeof imageObj === 'string') {
+    imageUrl = imageObj;
+  } else if (imageObj.url) {
+    imageUrl = imageObj.url;
   }
   
-  if (!image?.url) {
-    console.log("❌ No URL found in image object");
+  // Format 2: Nested data.attributes format (Strapi v4 format)
+  else if (imageObj.data?.attributes?.url) {
+    imageUrl = imageObj.data.attributes.url;
+  }
+  
+  // Format 3: Array format (multiple images, take first)
+  else if (Array.isArray(imageObj) && imageObj.length > 0) {
+    const firstImage = imageObj[0];
+    if (firstImage.url) {
+      imageUrl = firstImage.url;
+    } else if (firstImage.data?.attributes?.url) {
+      imageUrl = firstImage.data.attributes.url;
+    }
+  }
+  
+  // Format 4: Alternative nested structure
+  else if (imageObj.attributes?.url) {
+    imageUrl = imageObj.attributes.url;
+  }
+  
+  if (!imageUrl) {
+    console.log("❌ No URL found in image object structure");
     return null;
   }
   
   // Return full URL if already complete
-  if (image.url.startsWith('http')) {
-    console.log("✅ Full URL found:", image.url);
-    return image.url;
+  if (imageUrl.startsWith('http')) {
+    console.log("✅ Full URL found:", imageUrl);
+    return imageUrl;
   }
   
   // Construct full URL from relative path
   const baseUrl = import.meta.env.VITE_STRAPI_URL?.replace('/api', '') ?? '';
-  const fullUrl = `${baseUrl}${image.url}`;
+  const fullUrl = `${baseUrl}${imageUrl}`;
   console.log("🔗 Constructed URL:", fullUrl);
   return fullUrl;
 }
@@ -49,8 +70,12 @@ export function getStrapiImageAlt(imageObj: any, fallback: string = ''): string 
     imageObj = imageObj[0];
   }
   
-  // Handle data.attributes format
-  const image = imageObj?.data?.attributes ?? imageObj;
+  // Try different nested formats for alt text
+  const altText = 
+    imageObj?.alternativeText ||
+    imageObj?.data?.attributes?.alternativeText ||
+    imageObj?.attributes?.alternativeText ||
+    fallback;
   
-  return image?.alternativeText || fallback;
+  return altText;
 }
