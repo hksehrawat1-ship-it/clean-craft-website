@@ -6,7 +6,6 @@ import BlogHero from "@/components/blog/BlogHero";
 import BlogFilters from "@/components/blog/BlogFilters";
 import FeaturedBlog from "@/components/blog/FeaturedBlog";
 import BlogGrid from "@/components/blog/BlogGrid";
-import ConnectionStatus from "@/components/blog/ConnectionStatus";
 import { useBlogs } from "@/hooks/useBlog";
 
 const Blog = () => {
@@ -46,7 +45,6 @@ const Blog = () => {
 
       <main className="blog-page min-h-screen bg-gray-50">
         <BlogHero />
-        <ConnectionStatus />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
           <div className="mb-6 lg:mb-8">

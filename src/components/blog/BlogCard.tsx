@@ -21,9 +21,33 @@ const BlogCard = ({ blog }: BlogCardProps) => {
     navigate(`/${currentCountry?.toLowerCase()}/blog/${blog.slug}`);
   };
 
-  const getPlainText = (richText: string) => {
-    if (!richText) return "";
-    return richText.replace(/<[^>]*>/g, "").substring(0, 120) + "...";
+  const getPlainText = (content: any) => {
+    if (!content) return "";
+    
+    // Handle if content is already a string
+    if (typeof content === 'string') {
+      return content.replace(/<[^>]*>/g, "").substring(0, 120) + "...";
+    }
+    
+    // Handle JSON content from Strapi rich text
+    if (typeof content === 'object') {
+      // Extract text from rich text JSON structure
+      const extractText = (blocks: any[]): string => {
+        if (!Array.isArray(blocks)) return "";
+        
+        return blocks.map(block => {
+          if (block.type === 'paragraph' && block.children) {
+            return block.children.map((child: any) => child.text || "").join("");
+          }
+          return "";
+        }).join(" ");
+      };
+      
+      const text = extractText(content);
+      return text.substring(0, 120) + (text.length > 120 ? "..." : "");
+    }
+    
+    return "";
   };
 
   const getFormattedDate = () => {
