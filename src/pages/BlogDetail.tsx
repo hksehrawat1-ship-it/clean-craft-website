@@ -118,7 +118,7 @@ const BlogDetail = () => {
     <Layout showOfferCarousel={false}>
       <EnhancedSEO
         slug={`/blog/${blog.slug}`}
-        pageType="Article"
+        pageType="Organization"
         defaultTitle={blog.seo_title || blog.title}
         defaultDescription={blog.seo_description || `Read our latest article: ${blog.title}`}
         customKeywords={blog.seo_keywords ? blog.seo_keywords.split(',').map(k => k.trim()) : undefined}
