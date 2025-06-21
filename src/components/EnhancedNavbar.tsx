@@ -1,4 +1,4 @@
-/* EnhancedNavbar.tsx */
+/* EnhancedNavbar.tsx – fixed auto‑close bug, single toggle icon */
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -6,8 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCountry } from "@/contexts/CountryContext";
 import { getNavbarItems } from "@/hooks/use-pages-config";
-import type { PageData } from '@/types/config';
+import type { PageData } from "@/types/config";
 
+/**
+ * Navbar with desktop dropdowns and animated mobile drawer
+ * ‑ Keeps only one toggle icon (burger/X)
+ * ‑ Fix: menu no longer auto‑closes on first tap (removed premature close logic)
+ */
 
 const EnhancedNavbar: React.FC = () => {
   /* ────────────────────────── state ────────────────────────── */
@@ -25,18 +30,18 @@ const EnhancedNavbar: React.FC = () => {
     currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
 
   /* ────────────────── effects ────────────────── */
+  // Header shrink on scroll
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close menu when user clicks outside (only while menu is open)
   useEffect(() => {
-    if (!isMobile) setIsMenuOpen(false);
-
+    if (!isMenuOpen) return;
     const closeOnBodyClick = (e: MouseEvent) => {
       if (
-        isMenuOpen &&
         !(e.target as HTMLElement).closest(".mobile-menu-container") &&
         !(e.target as HTMLElement).closest(".menu-toggle-btn")
       ) {
@@ -45,7 +50,14 @@ const EnhancedNavbar: React.FC = () => {
     };
     document.body.addEventListener("click", closeOnBodyClick);
     return () => document.body.removeEventListener("click", closeOnBodyClick);
-  }, [isMenuOpen, isMobile]);
+  }, [isMenuOpen]);
+
+  // Close menu automatically if we switch to desktop view while it's open
+  useEffect(() => {
+    if (!isMobile && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [isMobile, isMenuOpen]);
 
   /* ────────── dropdown hover helpers (desktop) ────────── */
   const openDD = (path: string) => {
@@ -58,8 +70,7 @@ const EnhancedNavbar: React.FC = () => {
 
   /* Common typography for desktop nav labels */
   const commonLink =
-    "inline-flex items-center font-medium text-gray-700 " +
-    "hover:text-primary transition-colors duration-200";
+    "inline-flex items-center font-medium text-gray-700 hover:text-primary transition-colors duration-200";
 
   /* ────────────────────────── JSX ────────────────────────── */
   return (
@@ -150,13 +161,13 @@ const EnhancedNavbar: React.FC = () => {
           </Button>
         </div>
 
-        {/* ─── Mobile burger ─── */}
+        {/* ─── Mobile burger / close ─── */}
         <button
           aria-label="Toggle menu"
-          className="menu-toggle-btn z-20 text-gray-700 md:hidden"
+          className="menu-toggle-btn z-50 text-gray-800 md:hidden p-2"
           onClick={(e) => {
             e.stopPropagation();
-            setIsMenuOpen(!isMenuOpen);
+            setIsMenuOpen((prev) => !prev);
           }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}

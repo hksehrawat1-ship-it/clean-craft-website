@@ -1,56 +1,73 @@
-
-import React, { useState, useCallback, useMemo } from 'react';
-import { useBlogs } from '@/hooks/useBlog';
-import BlogCard from './BlogCard';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  Fragment,
+} from "react";
+import { useBlogs } from "@/hooks/useBlog";
+import BlogCard from "./BlogCard";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface BlogGridProps {
   selectedCategory: string | null;
+  pageSize?: number;
 }
 
-const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
+const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
   const [page, setPage] = useState(1);
-  const pageSize = 9;
-  
-  // Memoize query options to prevent unnecessary re-renders
-  const queryOptions = useMemo(() => ({
-    category: selectedCategory || undefined,
-    featured: false, // Exclude featured posts from grid
-    page,
-    pageSize
-  }), [selectedCategory, page, pageSize]);
-  
-  const { 
-    data: blogsResponse, 
-    isLoading, 
+
+  /* aggregated list */
+  const [allBlogs, setAllBlogs] = useState<any[]>([]);
+
+  /* 👇 featured=false सिर्फ तब, जब कोई category नहीं चुनी */
+  const queryOptions = useMemo(
+    () => ({
+      category: selectedCategory || undefined,
+      featured: selectedCategory ? undefined : false,
+      page,
+      pageSize,
+    }),
+    [selectedCategory, page, pageSize]
+  );
+
+  const {
+    data: blogsResponse,
+    isLoading,
     isError,
-    error 
+    error,
   } = useBlogs(queryOptions);
 
-  const blogs = blogsResponse?.data || [];
-  
-  // Safe check for pagination
-  const hasNextPage = blogsResponse?.meta?.pagination && 
-    blogsResponse.meta.pagination.page && 
-    blogsResponse.meta.pagination.pageCount 
-    ? blogsResponse.meta.pagination.page < blogsResponse.meta.pagination.pageCount 
-    : false;
+  /* blogs for current page */
+  const currentPageBlogs = blogsResponse?.data ?? [];
 
-  // Memoize the load more handler
-  const handleLoadMore = useCallback(() => {
-    setPage(prev => prev + 1);
-  }, []);
+  /* aggregate pages into allBlogs */
+  useEffect(() => {
+    if (currentPageBlogs.length) {
+      setAllBlogs((prev) =>
+        page === 1 ? currentPageBlogs : [...prev, ...currentPageBlogs]
+      );
+    }
+  }, [currentPageBlogs, page]);
 
-  // Reset page when category changes
-  React.useEffect(() => {
+  /* reset when category changes */
+  useEffect(() => {
     setPage(1);
+    setAllBlogs([]);
   }, [selectedCategory]);
 
+  const hasNextPage =
+    (blogsResponse?.meta?.pagination?.page ?? 1) <
+    (blogsResponse?.meta?.pagination?.pageCount ?? 1);
+
+  const handleLoadMore = useCallback(() => setPage((p) => p + 1), []);
+
+  /* ---------- UI ---------- */
   if (isLoading && page === 1) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(6)].map((_, i) => (
+        {Array.from({ length: Math.min(6, pageSize) }).map((_, i) => (
           <div key={i} className="bg-gray-200 rounded-lg h-96 animate-pulse" />
         ))}
       </div>
@@ -62,33 +79,37 @@ const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
     return (
       <div className="text-center py-12">
         <p className="text-gray-600">
-          {error instanceof Error ? error.message : 'Failed to load blogs. Please try again later.'}
+          {error instanceof Error
+            ? error.message
+            : "Failed to load blogs. Please try again later."}
         </p>
       </div>
     );
   }
 
-  if (blogs.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">
-          {selectedCategory 
-            ? `No blogs found in this category.` 
-            : 'No blogs available at the moment.'
-          }
-        </p>
-      </div>
-    );
+  /* 🛑 No blogs case */
+  if (!allBlogs.length) {
+    /* category selected → show “no blogs in category” */
+    if (selectedCategory) {
+      return (
+        <div className="text-center py-12 text-gray-600">
+          No blogs found in this category.
+        </div>
+      );
+    }
+    /* default latest view → render nothing */
+    return <Fragment />; // nothing
   }
 
+  /* ✅ blogs exist */
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {blogs.map((blog) => (
-          <BlogCard key={blog.id} blog={blog} />
+        {allBlogs.map((blog) => (
+          <BlogCard key={blog.id} blog={{ id: blog.id, ...blog.attributes }} />
         ))}
       </div>
-      
+
       {hasNextPage && (
         <div className="text-center">
           <Button
@@ -104,7 +125,7 @@ const BlogGrid = ({ selectedCategory }: BlogGridProps) => {
                 Loading...
               </>
             ) : (
-              'Load More'
+              "Load More"
             )}
           </Button>
         </div>
