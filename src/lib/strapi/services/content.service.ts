@@ -85,21 +85,8 @@ class ContentService {
 
     /* --- params ---------------------------------------------------- */
     const params: BaseQueryParams = {
-      /* Enhanced image population */
-      populate: {
-        image: {
-          fields: ["url", "alternativeText", "width", "height", "formats"]
-        },
-        blog_category: {
-          fields: ["name", "slug"]
-        },
-        author: {
-          fields: ["name", "email", "bio"]
-        },
-        country: {
-          fields: ["code", "name"]
-        }
-      },
+      /* Simplified populate using wildcards */
+      populate: "*",
       filters,
       sort:       [`${sortBy}:${sortOrder}`],
       pagination: { page, pageSize },
@@ -117,20 +104,8 @@ class ContentService {
     console.log("🔍 Fetching blog by slug:", slug, "Country:", countryCode);
     
     const params: BaseQueryParams = {
-      populate: {
-        image: {
-          fields: ["url", "alternativeText", "width", "height", "formats"]
-        },
-        blog_category: {
-          fields: ["name", "slug"]
-        },
-        author: {
-          fields: ["name", "email", "bio"]
-        },
-        country: {
-          fields: ["code", "name"]
-        }
-      },
+      /* Simplified populate - use wildcard to get all related data */
+      populate: "*",
       filters: {
         slug:    { $eq: slug },
         country: { code: { $eq: countryCode.toLowerCase() } },
