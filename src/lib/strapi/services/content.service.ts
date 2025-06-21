@@ -1,3 +1,4 @@
+
 // lib/strapi/services/content.service.ts
 import { getCollection } from "../client";
 import {
@@ -28,6 +29,8 @@ interface BaseQueryParams {
   locale?: string;
   pagination?: { page?: number; pageSize?: number };
 }
+
+export type ContentCategory = 'home' | 'courses' | 'book';
 
 const clean = (o: any): any =>
   Array.isArray(o)
@@ -119,7 +122,101 @@ class ContentService {
     });
   }
 
-  /* ---- remaining endpoints unchanged for brevity ---- */
+  /* ───────── SERVICES ───────── */
+  async getServices(countryCode: string): Promise<StrapiResponse<StrapiService>> {
+    const params: BaseQueryParams = {
+      populate: {
+        icon: { fields: ["url", "alternativeText"] },
+        country: true,
+      },
+      filters: {
+        country: { code: { $eq: countryCode.toLowerCase() } },
+      },
+      sort: ["name:asc"],
+    };
+
+    return getCollection<StrapiService>("services", clean(params));
+  }
+
+  /* ───────── TESTIMONIALS ───────── */
+  async getTestimonials(
+    countryCode: string,
+    opts: {
+      category?: ContentCategory;
+      platform?: string;
+      sortBy?: "rating" | "order";
+      sortOrder?: "asc" | "desc";
+    } = {}
+  ): Promise<StrapiResponse<StrapiTestimonial>> {
+    const {
+      category,
+      platform,
+      sortBy = "rating",
+      sortOrder = "desc",
+    } = opts;
+
+    const filters: any = {
+      country: { code: { $eq: countryCode.toLowerCase() } },
+    };
+    if (category) filters.category = { $eq: category };
+    if (platform) filters.platform = { $eq: platform };
+
+    const params: BaseQueryParams = {
+      populate: {
+        country: true,
+      },
+      filters,
+      sort: [`${sortBy}:${sortOrder}`],
+    };
+
+    return getCollection<StrapiTestimonial>("testimonials", clean(params));
+  }
+
+  /* ───────── FAQS ───────── */
+  async getFAQs(
+    countryCode: string,
+    opts: {
+      category?: ContentCategory;
+      sortBy?: "order";
+      sortOrder?: "asc" | "desc";
+    } = {}
+  ): Promise<StrapiResponse<StrapiFAQ>> {
+    const {
+      category,
+      sortBy = "order",
+      sortOrder = "asc",
+    } = opts;
+
+    const filters: any = {
+      country: { code: { $eq: countryCode.toLowerCase() } },
+    };
+    if (category) filters.category = { $eq: category };
+
+    const params: BaseQueryParams = {
+      populate: {
+        country: true,
+      },
+      filters,
+      sort: [`${sortBy}:${sortOrder}`],
+    };
+
+    return getCollection<StrapiFAQ>("faqs", clean(params));
+  }
+
+  /* ───────── POLICIES ───────── */
+  async getPolicies(countryCode: string): Promise<StrapiResponse<StrapiPolicy>> {
+    const params: BaseQueryParams = {
+      populate: {
+        country: true,
+      },
+      filters: {
+        country: { code: { $eq: countryCode.toLowerCase() } },
+      },
+      sort: ["name:asc"],
+    };
+
+    return getCollection<StrapiPolicy>("policies", clean(params));
+  }
 }
 
 export const contentService = ContentService.getInstance();

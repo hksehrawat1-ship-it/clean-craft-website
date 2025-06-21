@@ -62,8 +62,8 @@ const Blog = () => {
                 Featured Articles
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-                {featuredBlogs.slice(0, 2).map((b) => (
-                  <FeaturedBlog key={b.id} blog={b.attributes ?? (b as any)} />
+                {featuredBlogs.slice(0, 2).map((blog) => (
+                  <FeaturedBlog key={blog.id} blog={blog} />
                 ))}
               </div>
             </section>

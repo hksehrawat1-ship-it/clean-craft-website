@@ -133,7 +133,7 @@ const BlogGrid = ({ selectedCategory, pageSize = 9 }: BlogGridProps) => {
         {allBlogs.map((blog) => (
           <BlogCard 
             key={`${blog.id}-${blog.slug}`} 
-            blog={{ id: blog.id, ...blog.attributes }} 
+            blog={blog} 
           />
         ))}
       </div>
