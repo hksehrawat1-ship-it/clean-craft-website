@@ -1,6 +1,6 @@
 ########################  Build stage  ########################
 # Use the full (glibc) image instead of alpine during build—
-# it avoids random “out of memory” crashes from musl + esbuild
+# it avoids random "out of memory" crashes from musl + esbuild
 # and is only an intermediate layer.
 FROM --platform=$BUILDPLATFORM node:20-bookworm-slim AS builder
 
@@ -21,12 +21,19 @@ COPY . .
 ########################  Build & optimise  ########################
 # Give Node a 4 GB heap so Vite/ESBuild won't crash.
 # Make sure Docker Desktop (or your CI runner) actually has ≥4 GB RAM.
+
+# Declare build arguments that can be passed with --build-arg
+ARG VITE_STRAPI_URL
+ARG VITE_STRAPI_API_TOKEN
+ARG VITE_PUBLIC_BUILDER_KEY
+
 ENV NODE_ENV=production \
     VITE_BUILD_TARGET=modern \
-    NODE_OPTIONS=--max-old-space-size=4096
-ENV VITE_STRAPI_URL=${VITE_STRAPI_URL}
-ENV VITE_STRAPI_API_TOKEN=${VITE_STRAPI_API_TOKEN}
-ENV VITE_PUBLIC_BUILDER_KEY=${VITE_PUBLIC_BUILDER_KEY}
+    NODE_OPTIONS=--max-old-space-size=4096 \
+    # Set VITE variables from the build arguments
+    VITE_STRAPI_URL=$VITE_STRAPI_URL \
+    VITE_STRAPI_API_TOKEN=$VITE_STRAPI_API_TOKEN \
+    VITE_PUBLIC_BUILDER_KEY=$VITE_PUBLIC_BUILDER_KEY
 
 # Disable source-maps in prod to shrink memory & artefacts
 ENV VITE_SOURCEMAP=false
