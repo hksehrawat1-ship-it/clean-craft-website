@@ -23,7 +23,7 @@ const Offer = () => {
               <span className="font-semibold">
                 How to Start Laundry Business in India
               </span>{" "}
-              from <span className="font-bold">Himanshu Sir</span>
+              from <span className="font-bold">Mr.Himanshu Sir</span>
             </p>
             <p className="text-xl text-blue-500 font-bold mb-6">
               25% OFF on Premium Training Program
@@ -48,9 +48,10 @@ const Offer = () => {
               className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-lg py-6 px-8"
             >
               <a
-                href=" https://www.cleancraftapp.com/in/learning/courses"
+                href="https://www.cleancraftapp.com/in/learning/courses"
                 target="_blank"
                 rel="noopener noreferrer"
+                className=" w-full flex justify-center items-center text-center"
               >
                 KNOW MORE
               </a>
