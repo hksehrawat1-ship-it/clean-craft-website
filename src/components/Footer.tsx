@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -129,7 +128,7 @@ const Footer: React.FC = () => {
                 to={createLink("/faq")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                FAQ
+                FAQs
               </Link>
             </li>
             <li>
@@ -152,8 +151,8 @@ const Footer: React.FC = () => {
             <li className="flex gap-3">
               <MapPin className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <span className="text-gray-600">
-                Plot no 9, Police enclave, Kotla Vihar Phase 4, Tilangpur Kotla,
-                Delhi, 110043
+                Plot NO. 9 & Police enclave, Kotla Vihar Phase 4, Tilangpur
+                Kotla, Delhi, 110043
               </span>
             </li>
             <li className="flex gap-3">
@@ -162,7 +161,7 @@ const Footer: React.FC = () => {
             </li>
             <li className="flex gap-3">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />
-              <span className="text-gray-600">hello@cleancraftaap.com</span>
+              <span className="text-gray-600">hello@cleancraftapp.com</span>
             </li>
           </ul>
         </div>

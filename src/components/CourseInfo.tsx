@@ -24,7 +24,7 @@ const CourseInfo = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">Schedule</h3>
                 <p className="text-gray-700">
-                  5 Days Intensive Training | 10:00 AM to 6:00 PM daily
+                  5 Days Intensive Training | 10:00 AM to 6:00 PM daily.
                 </p>
               </div>
             </div>
@@ -38,7 +38,7 @@ const CourseInfo = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">Location</h3>
                 <p className="text-gray-700">
-                  Clean Craft Training Center | Delhi, India
+                  Clean Craft Training Center | Delhi, India.
                 </p>
               </div>
             </div>
@@ -52,7 +52,7 @@ const CourseInfo = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">Investment</h3>
                 <p className="text-gray-700">
-                  Learn the laundry business cost in India & setup strategies
+                  Learn the laundry business cost in India & setup strategies.
                 </p>
               </div>
             </div>
@@ -66,7 +66,7 @@ const CourseInfo = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">Limited Spots</h3>
                 <p className="text-gray-700">
-                  50 students per batch | Small groups for hands-on training
+                  50 students per batch | Small groups for hands-on training.
                 </p>
               </div>
             </div>
@@ -80,7 +80,7 @@ const CourseInfo = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">Comprehensive</h3>
                 <p className="text-gray-700">
-                  Covers everything on how to run a successful laundry business
+                  Covers everything on how to run a successful laundry business.
                 </p>
               </div>
             </div>
@@ -94,7 +94,7 @@ const CourseInfo = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">Online Access</h3>
                 <p className="text-gray-700">
-                  Online laundry business course India resources included
+                  Online laundry business course India resources included.
                 </p>
               </div>
             </div>
