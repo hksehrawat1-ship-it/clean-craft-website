@@ -48,7 +48,7 @@ const Offer = () => {
               className="bg-[#1A73E8] hover:bg-[#1557B0] text-white text-lg py-6 px-8"
             >
               <a
-                href="https://www.cleancraftapp.com/in/learning/courses"
+                href="https://cleancraftapp.com/in/learning/laundry-training-course"
                 target="_blank"
                 rel="noopener noreferrer"
                 className=" w-full flex justify-center items-center text-center"
