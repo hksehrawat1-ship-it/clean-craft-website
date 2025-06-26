@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -104,20 +105,20 @@ const config: Config = {
 				display: ['Inter', 'system-ui', 'sans-serif']
 			},
 			fontSize: {
-				// Display headings (H1) - Hero sections
-				'display-lg': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 48px
-				'display-md': ['2.625rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 42px
-				'display-sm': ['2.25rem', { lineHeight: '1.25', letterSpacing: '-0.02em', fontWeight: '700' }], // 36px
+				// Display headings (H1) - Hero sections with uppercase and letter spacing
+				'display-lg': ['3rem', { lineHeight: '1.2', letterSpacing: '0.1em', fontWeight: '700', textTransform: 'uppercase' }], // 48px
+				'display-md': ['2.625rem', { lineHeight: '1.2', letterSpacing: '0.1em', fontWeight: '700', textTransform: 'uppercase' }], // 42px
+				'display-sm': ['2.25rem', { lineHeight: '1.25', letterSpacing: '0.1em', fontWeight: '700', textTransform: 'uppercase' }], // 36px
 				
-				// Section headings (H2) - Main sections
-				'heading-lg': ['2.625rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 42px
-				'heading-md': ['2.25rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 36px
-				'heading-sm': ['2rem', { lineHeight: '1.35', letterSpacing: '-0.01em', fontWeight: '600' }], // 32px
+				// Section headings (H2) - Main sections with uppercase and letter spacing
+				'heading-lg': ['2.625rem', { lineHeight: '1.3', letterSpacing: '0.075em', fontWeight: '600', textTransform: 'uppercase' }], // 42px
+				'heading-md': ['2.25rem', { lineHeight: '1.3', letterSpacing: '0.075em', fontWeight: '600', textTransform: 'uppercase' }], // 36px
+				'heading-sm': ['2rem', { lineHeight: '1.35', letterSpacing: '0.075em', fontWeight: '600', textTransform: 'uppercase' }], // 32px
 				
-				// Subsection headings (H3, H4)
-				'title-lg': ['1.5rem', { lineHeight: '1.4', fontWeight: '600' }], // 24px
-				'title-md': ['1.25rem', { lineHeight: '1.4', fontWeight: '600' }], // 20px
-				'title-sm': ['1.125rem', { lineHeight: '1.5', fontWeight: '600' }], // 18px
+				// Subsection headings (H3, H4) with uppercase and letter spacing
+				'title-lg': ['1.5rem', { lineHeight: '1.4', letterSpacing: '0.05em', fontWeight: '600', textTransform: 'uppercase' }], // 24px
+				'title-md': ['1.25rem', { lineHeight: '1.4', letterSpacing: '0.05em', fontWeight: '600', textTransform: 'uppercase' }], // 20px
+				'title-sm': ['1.125rem', { lineHeight: '1.5', letterSpacing: '0.05em', fontWeight: '600', textTransform: 'uppercase' }], // 18px
 				
 				// Body text
 				'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }], // 18px
@@ -131,7 +132,7 @@ const config: Config = {
 				
 				// Small text
 				'caption': ['0.75rem', { lineHeight: '1.5', fontWeight: '400' }], // 12px
-				'overline': ['0.625rem', { lineHeight: '1.5', fontWeight: '500', letterSpacing: '0.1em' }], // 10px
+				'overline': ['0.625rem', { lineHeight: '1.5', fontWeight: '500', letterSpacing: '0.1em', textTransform: 'uppercase' }], // 10px
 			},
 			spacing: {
 				'xs': '0.25rem', // 4px
