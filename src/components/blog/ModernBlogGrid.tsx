@@ -125,13 +125,6 @@ const ModernBlogGrid = ({ selectedCategory, pageSize = 9 }: ModernBlogGridProps)
             <p className="text-gray-600 mb-6">
               We couldn't find any articles in this category. Try selecting a different category or browse all articles.
             </p>
-            <Button 
-              variant="outline"
-              onClick={() => setSelectedCategory && setSelectedCategory(null)}
-              className="border-blue-300 text-blue-600 hover:bg-blue-50"
-            >
-              View All Articles
-            </Button>
           </div>
         </div>
       );
