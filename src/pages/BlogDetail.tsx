@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/home/Layout";
@@ -7,7 +8,7 @@ import { useCountry } from "@/contexts/CountryContext";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, User, ArrowLeft, Clock, Share2, BookmarkPlus } from "lucide-react";
+import { Calendar, User, ArrowLeft, Clock, Share2, BookmarkPlus, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { getStrapiImageUrl, getStrapiImageAlt } from "@/lib/strapi/utils/imageUtils";
 import BlogBreadcrumb from "@/components/blog/BlogBreadcrumb";
@@ -27,20 +28,47 @@ const BlogDetail = () => {
     if (!content) return "";
     
     if (typeof content === 'string') {
-      return <div dangerouslySetInnerHTML={{ __html: content }} className="prose prose-lg prose-blue max-w-none" />;
+      return (
+        <div 
+          dangerouslySetInnerHTML={{ __html: content }} 
+          className="prose prose-lg prose-blue max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-li:text-gray-700 prose-strong:text-gray-900"
+        />
+      );
     }
     
     if (typeof content === 'object' && Array.isArray(content)) {
       return (
-        <div className="prose prose-lg prose-blue max-w-none">
+        <div className="space-y-6">
           {content.map((block: any, index: number) => {
             if (block.type === 'paragraph' && block.children) {
               return (
-                <p key={index} className="mb-6 text-lg leading-relaxed text-gray-700">
+                <p key={index} className="text-lg leading-relaxed text-gray-700 mb-6">
+                  {block.children.map((child: any, childIndex: number) => (
+                    <span key={childIndex} className={child.bold ? 'font-semibold text-gray-900' : ''}>
+                      {child.text || ""}
+                    </span>
+                  ))}
+                </p>
+              );
+            }
+            if (block.type === 'heading' && block.children) {
+              const level = block.level || 2;
+              const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+              const headingClasses = {
+                1: 'text-4xl font-bold text-gray-900 mb-6 mt-8',
+                2: 'text-3xl font-bold text-gray-900 mb-4 mt-8',
+                3: 'text-2xl font-semibold text-gray-900 mb-4 mt-6',
+                4: 'text-xl font-semibold text-gray-900 mb-3 mt-6',
+                5: 'text-lg font-semibold text-gray-900 mb-3 mt-4',
+                6: 'text-base font-semibold text-gray-900 mb-2 mt-4'
+              };
+              
+              return (
+                <HeadingTag key={index} className={headingClasses[level as keyof typeof headingClasses]}>
                   {block.children.map((child: any, childIndex: number) => (
                     <span key={childIndex}>{child.text || ""}</span>
                   ))}
-                </p>
+                </HeadingTag>
               );
             }
             return null;
@@ -63,20 +91,22 @@ const BlogDetail = () => {
   if (isLoading) {
     return (
       <Layout showOfferCarousel={false}>
-        <BlogBreadcrumb />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <Skeleton className="h-64 w-full" />
-            <div className="p-8">
-              <Skeleton className="h-8 w-3/4 mb-6" />
-              <div className="flex gap-4 mb-8">
-                <Skeleton className="h-6 w-24" />
-                <Skeleton className="h-6 w-32" />
-              </div>
-              <div className="space-y-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <Skeleton key={i} className="h-4 w-full" />
-                ))}
+        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
+          <BlogBreadcrumb />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <Skeleton className="h-64 w-full" />
+              <div className="p-8">
+                <Skeleton className="h-8 w-3/4 mb-6" />
+                <div className="flex gap-4 mb-8">
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-6 w-32" />
+                </div>
+                <div className="space-y-4">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <Skeleton key={i} className="h-4 w-full" />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -88,17 +118,19 @@ const BlogDetail = () => {
   if (isError || !blog) {
     return (
       <Layout showOfferCarousel={false}>
-        <BlogBreadcrumb />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Article Not Found</h1>
-            <p className="text-gray-600 mb-8 text-lg">
-              {error instanceof Error ? error.message : "The article you're looking for doesn't exist or has been moved."}
-            </p>
-            <Button onClick={handleGoBack} className="bg-blue-600 hover:bg-blue-700">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Blog
-            </Button>
+        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
+          <BlogBreadcrumb />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">Article Not Found</h1>
+              <p className="text-gray-600 mb-8 text-lg">
+                {error instanceof Error ? error.message : "The article you're looking for doesn't exist or has been moved."}
+              </p>
+              <Button onClick={handleGoBack} className="bg-blue-600 hover:bg-blue-700">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Blog
+              </Button>
+            </div>
           </div>
         </div>
       </Layout>
@@ -118,31 +150,39 @@ const BlogDetail = () => {
         customKeywords={blog.seo_keywords ? blog.seo_keywords.split(',').map(k => k.trim()) : undefined}
       />
 
-      <BlogBreadcrumb 
-        title={blog.title}
-        category={blog.blog_category?.name}
-        showBackButton={true}
-      />
+      <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
+        <BlogBreadcrumb 
+          title={blog.title}
+          category={blog.blog_category?.name}
+          showBackButton={true}
+        />
 
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          {/* Article Header */}
-          <div className="relative">
-            {imageUrl && (
-              <div className="aspect-[21/9] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                <img
-                  src={imageUrl}
-                  alt={imageAlt}
-                  className="w-full h-full object-cover"
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              </div>
-            )}
+        {/* Hero Section with Background Image */}
+        <section className="relative overflow-hidden">
+          {/* Background Image */}
+          {imageUrl && (
+            <div className="absolute inset-0">
+              <img
+                src={imageUrl}
+                alt={imageAlt}
+                className="w-full h-full object-cover"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
+            </div>
+          )}
 
-            {/* Floating Article Meta */}
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-center gap-3 mb-4">
+          {/* Background Pattern for non-image articles */}
+          {!imageUrl && (
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.4%22%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+            </div>
+          )}
+
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="text-center md:text-left">
+              {/* Article Meta */}
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-6">
                 {blog.blog_category?.name && (
                   <Badge className="bg-white/90 backdrop-blur-sm text-blue-700 hover:bg-white border-0 px-4 py-2 font-semibold">
                     {blog.blog_category.name}
@@ -159,64 +199,92 @@ const BlogDetail = () => {
                     <Clock className="h-4 w-4" />
                     <span>5 min read</span>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Eye className="h-4 w-4" />
+                    <span>2.3K views</span>
+                  </div>
                 </div>
               </div>
 
-              <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+              {/* Article Title */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
                 {blog.title}
               </h1>
-            </div>
-          </div>
 
-          {/* Article Content */}
-          <div className="p-8 lg:p-12">
-            {/* Author Info */}
-            {blog.author?.name && (
-              <div className="flex items-center justify-between mb-8 pb-8 border-b border-gray-100">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              {/* Author Info */}
+              {blog.author?.name && (
+                <div className="flex items-center justify-center md:justify-start gap-4 mb-6">
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {blog.author.name.charAt(0)}
                   </div>
-                  <div>
-                    <div className="font-semibold text-gray-900 text-lg">{blog.author.name}</div>
-                    <div className="text-gray-500">Expert Writer</div>
+                  <div className="text-left">
+                    <div className="font-semibold text-white text-lg">{blog.author.name}</div>
+                    <div className="text-white/80">Expert Writer</div>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <Button variant="outline" size="sm" className="rounded-full">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
-                  <Button variant="outline" size="sm" className="rounded-full">
-                    <BookmarkPlus className="h-4 w-4 mr-2" />
-                    Save
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Article Body */}
-            <div className="prose prose-lg prose-blue max-w-none">
-              {renderContent(blog.content)}
+              )}
             </div>
+          </div>
+        </section>
 
-            {/* Article Footer */}
-            <footer className="mt-12 pt-8 border-t border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="text-gray-500">
-                  Published on {getFormattedDate()}
-                  {blog.author?.name && ` by ${blog.author.name}`}
+        {/* Article Content */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <article className="bg-white rounded-t-3xl shadow-2xl -mt-8 relative z-10">
+            <div className="p-8 lg:p-12">
+              {/* Action Buttons */}
+              <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <Button variant="outline" size="sm" className="rounded-full hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200">
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share Article
+                  </Button>
+                  <Button variant="outline" size="sm" className="rounded-full hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200">
+                    <BookmarkPlus className="h-4 w-4 mr-2" />
+                    Save for Later
+                  </Button>
                 </div>
-                <Button onClick={handleGoBack} variant="outline" className="rounded-full">
+                <Button onClick={handleGoBack} variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Blog
                 </Button>
               </div>
-            </footer>
-          </div>
+
+              {/* Article Body */}
+              <div className="article-content">
+                {renderContent(blog.content)}
+              </div>
+
+              {/* Article Footer */}
+              <footer className="mt-16 pt-8 border-t border-gray-200">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="text-gray-500">
+                    <p className="mb-2">
+                      Published on {getFormattedDate()}
+                      {blog.author?.name && ` by ${blog.author.name}`}
+                    </p>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="flex items-center gap-1">
+                        <Eye className="h-4 w-4" />
+                        2.3K views
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        5 min read
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button onClick={handleGoBack} className="bg-blue-600 hover:bg-blue-700 rounded-full px-6">
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back to Blog
+                    </Button>
+                  </div>
+                </div>
+              </footer>
+            </div>
+          </article>
         </div>
-      </article>
+      </div>
     </Layout>
   );
 };
