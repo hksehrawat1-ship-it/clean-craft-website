@@ -1071,6 +1071,7 @@ export type Database = {
           created_at: string | null
           created_by_id: number | null
           document_id: string | null
+          email: string | null
           fablean_user_details: string | null
           franchise_name: string | null
           franchise_owner_phone: string | null
@@ -1079,6 +1080,7 @@ export type Database = {
           opening_date: string | null
           owner_name: string | null
           published_at: string | null
+          sr_no: number | null
           state: string | null
           store_incharge_name: string | null
           store_incharge_phone: string | null
@@ -1092,6 +1094,7 @@ export type Database = {
           created_at?: string | null
           created_by_id?: number | null
           document_id?: string | null
+          email?: string | null
           fablean_user_details?: string | null
           franchise_name?: string | null
           franchise_owner_phone?: string | null
@@ -1100,6 +1103,7 @@ export type Database = {
           opening_date?: string | null
           owner_name?: string | null
           published_at?: string | null
+          sr_no?: number | null
           state?: string | null
           store_incharge_name?: string | null
           store_incharge_phone?: string | null
@@ -1113,6 +1117,7 @@ export type Database = {
           created_at?: string | null
           created_by_id?: number | null
           document_id?: string | null
+          email?: string | null
           fablean_user_details?: string | null
           franchise_name?: string | null
           franchise_owner_phone?: string | null
@@ -1121,6 +1126,7 @@ export type Database = {
           opening_date?: string | null
           owner_name?: string | null
           published_at?: string | null
+          sr_no?: number | null
           state?: string | null
           store_incharge_name?: string | null
           store_incharge_phone?: string | null
