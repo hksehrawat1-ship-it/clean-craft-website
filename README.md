@@ -1,73 +1,104 @@
-# Welcome to your Lovable project
+# CleanCraft Website
 
-## Project info
+This project is the main frontend application for CleanCraft, built with a modern, performant, and scalable tech stack.
 
-**URL**: https://lovable.dev/projects/2d88696a-ec3f-4af6-9b33-133ce0c5ca40
+## Tech Stack
 
-## How can I edit this code?
+- **Framework**: [React](https://react.dev/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Routing**: [React Router](https://reactrouter.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **Deployment**: Docker
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Project Structure
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2d88696a-ec3f-4af6-9b33-133ce0c5ca40) and start prompting.
+The codebase is organized to separate concerns and facilitate maintainability.
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+/
+├── public/               # Static assets (images, fonts, etc.)
+├── src/
+│   ├── components/       # Reusable React components (UI, layout, etc.)
+│   ├── config/           # Application configuration (e.g., react-query)
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Core libraries and utilities (e.g., Strapi client)
+│   ├── pages/            # Page components mapped to routes
+│   └── App.tsx           # Main application component, sets up providers
+├── .github/workflows/    # CI/CD workflows (e.g., build and push to ECR)
+├── Dockerfile            # Multi-stage Dockerfile for building a production image
+└── package.json          # Project dependencies and scripts
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Routing and Application Flow
 
-**Use GitHub Codespaces**
+The application uses a country-scoped routing system managed by `react-router-dom`.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1.  **Initial Visit**: A user visiting the root `/` is immediately redirected by the `CountryRedirect` component to a path prefixed with their country code (e.g., `/us/`).
+2.  **Layout Shell**: All subsequent navigation happens within a `/:countryCode/*` route, which renders the `CountryLayout` component. This component acts as a persistent shell, providing a consistent header, footer, and other global elements.
+3.  **Page Loading**: Most pages are lazy-loaded using `React.lazy()` to improve initial load times. A `PageLoader` component is shown as a fallback during code-splitting.
+4.  **Routing Configuration**: The central routing configuration is located in `src/components/AppRoutes.tsx`.
 
-## What technologies are used for this project?
+### Available Routes
 
-This project is built with:
+| Path                                        | Page Component             | Description                                      |
+| ------------------------------------------- | -------------------------- | ------------------------------------------------ |
+| `/`                                         | `CountryRedirect`          | Geo-IP redirect to the appropriate country scope.|
+| `/:countryCode/`                            | `Index`                    | The main landing page.                           |
+| `/:countryCode/blog`                        | `Blog` (lazy)              | Displays a list of blog articles.                |
+| `/:countryCode/faq`                         | `Faq`                      | Shows frequently asked questions.                |
+| `/:countryCode/services`                    | `ServicesNavbar`           | The main services page.                          |
+| `/:countryCode/discover-cleancraft`         | `DiscoverCleanCraft` (lazy)| Information about the CleanCraft brand.          |
+| `/:countryCode/laundry-franchise`           | `Franchise` (lazy)         | Page for franchise opportunities.                |
+| `/:countryCode/learning/laundry-training-course` | `Courses` (lazy)         | Details about the laundry training course.       |
+| `/:countryCode/learning/laundry-training-book`   | `Book` (lazy)            | Details about the laundry training book.         |
+| `/:countryCode/policies`                    | `Policies` (lazy)          | Lists all legal policies.                        |
+| `/:countryCode/policies/:slug`              | `PolicyDetails`            | Displays the content of a specific policy.       |
+| `/:countryCode/*`                           | `NotFound`                 | A 404 page for any unmatched routes.             |
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## Environment Variables & Configuration
 
-Simply open [Lovable](https://lovable.dev/projects/2d88696a-ec3f-4af6-9b33-133ce0c5ca40) and click on Share -> Publish.
+The application is configured at **build time**. This means that environment variables are baked into the static files when the Docker image is built.
 
-## Can I connect a custom domain to my Lovable project?
+The `Dockerfile` accepts the following build arguments to configure the application:
 
-Yes, you can!
+- `VITE_STRAPI_URL` (required): The base URL for the Strapi API.
+- `VITE_PUBLIC_BUILDER_KEY` (required): Public key for the Builder.io integration.
+- `VITE_STRAPI_API_TOKEN` (optional): An authentication token for making authenticated requests to Strapi. If omitted, the client will make unauthenticated public requests.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+See the `push-to-ecr.yml` workflow for an example of how these are passed during the CI/CD process.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+---
+
+## Local Development
+
+1.  **Install Dependencies**:
+    ```sh
+    npm install
+    ```
+2.  **Create Environment File**:
+    - Copy the `.env.example` file (if one exists) to a new `.env` file.
+    - Populate it with the necessary variables for your local development environment.
+3.  **Run the Development Server**:
+    ```sh
+    npm run dev
+    ```
+
+## Building for Production
+
+The application is containerized using a multi-stage `Dockerfile`. To build a production-ready image locally, you can run:
+
+```sh
+docker build -t cleancraft-website \
+  --build-arg VITE_STRAPI_URL="<your_strapi_url>" \
+  --build-arg VITE_PUBLIC_BUILDER_KEY="<your_builder_key>" \
+  --build-arg VITE_STRAPI_API_TOKEN="<your_optional_token>" \
+  .
+```
