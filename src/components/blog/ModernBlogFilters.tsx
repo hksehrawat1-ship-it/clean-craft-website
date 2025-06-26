@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBlogCategories } from "@/hooks/useBlog";
 import { Filter, X, TrendingUp, Sparkles } from "lucide-react";
+import { formatCategoryName } from "@/lib/text-utils";
 
 interface ModernBlogFiltersProps {
   selectedCategory: string | null;
@@ -17,7 +18,7 @@ const ModernBlogFilters = ({ selectedCategory, onCategorySelect }: ModernBlogFil
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-8">
         <div className="flex items-center gap-3 mb-4">
           <Skeleton className="h-6 w-6 rounded" />
           <Skeleton className="h-6 w-32" />
@@ -36,7 +37,7 @@ const ModernBlogFilters = ({ selectedCategory, onCategorySelect }: ModernBlogFil
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border-0 p-6 mb-8">
+    <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border-0 p-6 mb-8">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-blue-100 rounded-lg">
           <Filter className="h-5 w-5 text-blue-600" />
@@ -67,6 +68,8 @@ const ModernBlogFilters = ({ selectedCategory, onCategorySelect }: ModernBlogFil
         {/* Category Buttons */}
         {categories.map((category) => {
           const isSelected = selectedCategory === category.slug;
+          const categoryName = formatCategoryName(category.name);
+          
           return (
             <Button
               key={category.id}
@@ -78,7 +81,7 @@ const ModernBlogFilters = ({ selectedCategory, onCategorySelect }: ModernBlogFil
                   : "border-gray-300 text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50"
               }`}
             >
-              {category.name}
+              {categoryName}
               {isSelected && (
                 <X className="h-4 w-4 ml-2" />
               )}

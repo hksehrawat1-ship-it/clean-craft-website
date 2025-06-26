@@ -1,10 +1,28 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Search, TrendingUp, Users, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const EnhancedBlogHero = () => {
+interface EnhancedBlogHeroProps {
+  onSearch?: (query: string) => void;
+}
+
+const EnhancedBlogHero = ({ onSearch }: EnhancedBlogHeroProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = () => {
+    if (onSearch && searchQuery.trim()) {
+      onSearch(searchQuery.trim());
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 overflow-hidden">
       {/* Background Pattern */}
@@ -46,9 +64,13 @@ const EnhancedBlogHero = () => {
               <Input
                 type="text"
                 placeholder="Search articles, tips, or topics..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="w-full pl-12 pr-32 py-4 text-lg rounded-full border-0 bg-white/90 backdrop-blur-sm focus:bg-white transition-all duration-300"
               />
               <Button 
+                onClick={handleSearch}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-blue-600 hover:bg-blue-700 px-6"
               >
                 Search

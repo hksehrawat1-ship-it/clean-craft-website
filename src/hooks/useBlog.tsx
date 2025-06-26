@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { contentService } from "@/lib/strapi/services/content.service";
 import { useStrapiConnection } from "@/contexts/StrapiConnectionContext";
@@ -21,6 +20,7 @@ interface StrapiResponse<T> {
 export function useBlogs(options?: {
   category?: string;
   featured?: boolean;
+  search?: string;
   page?: number;
   pageSize?: number;
   sortBy?: "publishedDate" | "createdAt";
