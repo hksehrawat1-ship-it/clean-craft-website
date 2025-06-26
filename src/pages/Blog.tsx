@@ -6,7 +6,9 @@ import EnhancedBlogHero from "@/components/blog/EnhancedBlogHero";
 import ModernBlogFilters from "@/components/blog/ModernBlogFilters";
 import ModernBlogCard from "@/components/blog/ModernBlogCard";
 import ModernBlogGrid from "@/components/blog/ModernBlogGrid";
+import BlogBreadcrumb from "@/components/blog/BlogBreadcrumb";
 import { useBlogs } from "@/hooks/useBlog";
+import { toTitleCase } from "@/lib/text-utils";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -44,10 +46,11 @@ const Blog = () => {
         ]}
       />
 
-      <div className="blog-page bg-gray-50">
+      <div className="blog-page bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
+        <BlogBreadcrumb />
         <EnhancedBlogHero />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
           <div className="mb-8 lg:mb-12">
             <ModernBlogFilters
               selectedCategory={selectedCategory}
@@ -59,10 +62,10 @@ const Blog = () => {
             <section className="mb-12 lg:mb-16">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
                     Featured Articles
                   </h2>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-blue-100 text-lg">
                     Our most popular and trending content
                   </p>
                 </div>
@@ -87,25 +90,28 @@ const Blog = () => {
           <section>
             {selectedCategory ? (
               <div className="mb-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                  {selectedCategory} Articles
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                  {toTitleCase(selectedCategory)} Articles
                 </h2>
-                <p className="text-gray-600 text-lg">
+                <p className="text-blue-100 text-lg">
                   Specialized content in your selected category
                 </p>
               </div>
             ) : hasLatest ? (
               <div className="mb-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
                   Latest Articles
                 </h2>
-                <p className="text-gray-600 text-lg">
+                <p className="text-blue-100 text-lg">
                   Fresh insights and expert advice
                 </p>
               </div>
             ) : null}
 
-            <ModernBlogGrid selectedCategory={selectedCategory} />
+            <ModernBlogGrid 
+              selectedCategory={selectedCategory} 
+              searchQuery=""
+            />
           </section>
         </div>
       </div>

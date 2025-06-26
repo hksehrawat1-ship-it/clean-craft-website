@@ -9,10 +9,11 @@ import BlogLoadMoreButton from "./BlogLoadMoreButton";
 
 interface ModernBlogGridProps {
   selectedCategory: string | null;
+  searchQuery?: string;
   pageSize?: number;
 }
 
-const ModernBlogGrid = ({ selectedCategory, pageSize = 9 }: ModernBlogGridProps) => {
+const ModernBlogGrid = ({ selectedCategory, searchQuery = "", pageSize = 9 }: ModernBlogGridProps) => {
   const [page, setPage] = useState(1);
   const [allBlogs, setAllBlogs] = useState<any[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -20,11 +21,12 @@ const ModernBlogGrid = ({ selectedCategory, pageSize = 9 }: ModernBlogGridProps)
   const queryOptions = useMemo(
     () => ({
       category: selectedCategory || undefined,
-      featured: selectedCategory ? undefined : false,
+      featured: selectedCategory || searchQuery ? undefined : false,
+      search: searchQuery || undefined,
       page,
       pageSize,
     }),
-    [selectedCategory, page, pageSize]
+    [selectedCategory, searchQuery, page, pageSize]
   );
 
   const {
@@ -47,7 +49,7 @@ const ModernBlogGrid = ({ selectedCategory, pageSize = 9 }: ModernBlogGridProps)
   useEffect(() => {
     setPage(1);
     setAllBlogs([]);
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   const hasNextPage =
     (blogsResponse?.meta?.pagination?.page ?? 1) <
@@ -69,7 +71,7 @@ const ModernBlogGrid = ({ selectedCategory, pageSize = 9 }: ModernBlogGridProps)
 
   // No blogs case
   if (!allBlogs.length) {
-    return <BlogEmptyState selectedCategory={selectedCategory} />;
+    return <BlogEmptyState selectedCategory={selectedCategory} searchQuery={searchQuery} />;
   }
 
   return (
@@ -79,6 +81,7 @@ const ModernBlogGrid = ({ selectedCategory, pageSize = 9 }: ModernBlogGridProps)
         onViewModeChange={handleViewModeChange}
         blogCount={allBlogs.length}
         selectedCategory={selectedCategory}
+        searchQuery={searchQuery}
       />
 
       <BlogGridContent blogs={allBlogs} viewMode={viewMode} />
