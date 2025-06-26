@@ -59,6 +59,7 @@ class ContentService {
     opts: {
       category?: string;
       featured?: boolean;
+      search?: string;
       page?: number;
       pageSize?: number;
       locale?: string;
@@ -69,6 +70,7 @@ class ContentService {
     const {
       category,
       featured,
+      search,
       page      = 1,
       pageSize  = 9,
       locale,
@@ -82,6 +84,15 @@ class ContentService {
     };
     if (featured !== undefined)          filters[FEATURED_FIELD] = { $eq: featured };
     if (category)                        filters.blog_category   = { slug: { $eq: category } };
+    
+    // Add search functionality
+    if (search && search.trim()) {
+      filters.$or = [
+        { title: { $containsi: search.trim() } },
+        { content: { $containsi: search.trim() } },
+        { seo_description: { $containsi: search.trim() } }
+      ];
+    }
 
     /* --- params ---------------------------------------------------- */
     const params: BaseQueryParams = {

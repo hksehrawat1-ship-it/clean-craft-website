@@ -7,7 +7,8 @@ const STRAPI_URL   = import.meta.env.VITE_STRAPI_URL   || "http://localhost:1337
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 if (!STRAPI_URL)   throw new Error("VITE_STRAPI_URL is not defined");
-if (!STRAPI_TOKEN) throw new Error("VITE_STRAPI_API_TOKEN is not defined");
+// No longer require a token, requests can be public
+// if (!STRAPI_TOKEN) throw new Error("VITE_STRAPI_API_TOKEN is not defined");
 
 /* ------------------------------------------------------------------ */
 /*  Utility: recursively drop undefined                               */
@@ -65,8 +66,8 @@ async function fetchWithTimeout(
       ...options,
       signal: controller.signal,
       headers: {
-        Authorization: `Bearer ${STRAPI_TOKEN}`,
         "Content-Type": "application/json",
+        ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
         ...options.headers,
       },
     });
