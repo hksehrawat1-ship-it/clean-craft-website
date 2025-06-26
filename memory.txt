@@ -1,0 +1,34 @@
+# Franchise and Courses Page Stack Overflow Investigation
+
+## Franchise Page (`src/pages/Franchise.tsx`)
+- Renders a set of static sections, including CareSection, FaqSection, and FranchiseFormModal.
+- CareSection opens FranchiseFormModal, which renders DynamicFranchiseForm.
+- DynamicFranchiseForm uses React hooks and does not have recursion or infinite loops.
+- No direct or indirect recursion found in Franchise page or its dependencies.
+
+## Courses Page (`src/pages/learning/Courses.tsx`)
+- Renders static sections and includes EnhancedNavbar, RegistrationForm, and shared FAQs.
+- EnhancedNavbar uses getNavbarItems from use-pages-config.
+- getNavbarItems merges global and country-specific pages from YAML config, no recursion.
+- No direct or indirect recursion found in Courses page or its dependencies.
+
+## Shared Logic
+- Both pages use EnhancedNavbar, which calls getNavbarItems(currentCountry).
+- getNavbarItems and getPagesConfig only merge arrays and do not recurse infinitely.
+- PageData type allows children, but the YAML config does not contain circular references.
+
+## YAML Config
+- No circular references or self-referential children in the pages structure.
+- Franchise and Courses pages are defined as expected.
+
+## Hypotheses
+- No evidence of direct or indirect recursion in render or data logic.
+- Possible stack overflow could be caused by:
+  - A third-party component (Accordion, Dialog, etc.) with a bug.
+  - An import cycle not visible in the code snippets.
+  - A bug in the runtime environment or a corrupted node_modules.
+
+## Next Steps
+- Check browser stack trace for the exact file/line of the error.
+- Check for infinite re-rendering in hooks or context providers.
+- Check for import cycles using a tool or by examining the build output. 

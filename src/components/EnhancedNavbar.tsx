@@ -1,16 +1,13 @@
-/* EnhancedNavbar.tsx */
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCountry } from "@/contexts/CountryContext";
 import { getNavbarItems } from "@/hooks/use-pages-config";
-import type { PageData } from '@/types/config';
-
+import type { PageData } from "@/types/config";
 
 const EnhancedNavbar: React.FC = () => {
-  /* ────────────────────────── state ────────────────────────── */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -19,12 +16,18 @@ const EnhancedNavbar: React.FC = () => {
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
   const navItems = getNavbarItems(currentCountry);
+  const location = useLocation();
 
-  /* ─────────────────── helpers ─────────────────── */
   const createLink = (path: string) =>
     currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
 
-  /* ────────────────── effects ────────────────── */
+  const handleLogoClick = () => {
+    setIsMenuOpen(false);
+    if (location.pathname === createLink("")) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
@@ -32,11 +35,9 @@ const EnhancedNavbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) setIsMenuOpen(false);
-
+    if (!isMenuOpen) return;
     const closeOnBodyClick = (e: MouseEvent) => {
       if (
-        isMenuOpen &&
         !(e.target as HTMLElement).closest(".mobile-menu-container") &&
         !(e.target as HTMLElement).closest(".menu-toggle-btn")
       ) {
@@ -45,9 +46,14 @@ const EnhancedNavbar: React.FC = () => {
     };
     document.body.addEventListener("click", closeOnBodyClick);
     return () => document.body.removeEventListener("click", closeOnBodyClick);
-  }, [isMenuOpen, isMobile]);
+  }, [isMenuOpen]);
 
-  /* ────────── dropdown hover helpers (desktop) ────────── */
+  useEffect(() => {
+    if (!isMobile && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [isMobile, isMenuOpen]);
+
   const openDD = (path: string) => {
     if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
     setOpenDropdown(path);
@@ -56,12 +62,9 @@ const EnhancedNavbar: React.FC = () => {
     dropdownTimeout.current = setTimeout(() => setOpenDropdown(null), 150);
   };
 
-  /* Common typography for desktop nav labels */
   const commonLink =
-    "inline-flex items-center font-medium text-gray-700 " +
-    "hover:text-primary transition-colors duration-200";
+    "inline-flex items-center font-medium text-gray-700 hover:text-primary transition-colors duration-200";
 
-  /* ────────────────────────── JSX ────────────────────────── */
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -70,7 +73,11 @@ const EnhancedNavbar: React.FC = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         {/* ─── Logo ─── */}
-        <Link to={createLink("")} className="z-20 flex items-center">
+        <Link
+          to={createLink("")}
+          onClick={handleLogoClick}
+          className="z-20 flex items-center"
+        >
           <img
             src="/lovable-uploads/cleancraft-icon.png"
             alt="CleanCraft Icon"
@@ -150,13 +157,13 @@ const EnhancedNavbar: React.FC = () => {
           </Button>
         </div>
 
-        {/* ─── Mobile burger ─── */}
+        {/* ─── Mobile burger / close ─── */}
         <button
           aria-label="Toggle menu"
-          className="menu-toggle-btn z-20 text-gray-700 md:hidden"
+          className="menu-toggle-btn z-50 text-gray-800 md:hidden p-2"
           onClick={(e) => {
             e.stopPropagation();
-            setIsMenuOpen(!isMenuOpen);
+            setIsMenuOpen((prev) => !prev);
           }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}

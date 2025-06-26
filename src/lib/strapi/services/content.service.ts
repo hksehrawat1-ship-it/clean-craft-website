@@ -1,269 +1,238 @@
-import { getCollection } from '../client';
+// lib/strapi/services/content.service.ts
+import { getCollection } from "../client";
 import {
-  StrapiService,
-  StrapiTestimonial,
+  StrapiBlog,
+  StrapiBlogCategory,
   StrapiFAQ,
   StrapiPolicy,
-  StrapiBlog,
-  StrapiBlogCategory
-} from '@/types/strapi';
+  StrapiService,
+  StrapiTestimonial,
+} from "@/types/strapi";
 
-export type ContentCategory = 'home' | 'courses' | 'book' | 'franchise' | 'policies' | 'blog';
+const FEATURED_FIELD        = "is_featured";
+const SORT_FIELD_PUBLISHED  = "publishedDate";
 
+/* ------------------------------------------------------------------ */
+/*  Common response + helper                                          */
+/* ------------------------------------------------------------------ */
 interface StrapiResponse<T> {
   data: T[];
-  meta: {
-    pagination: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
+  meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
 }
 
 interface BaseQueryParams {
-  populate?: string;
+  /*  ⬇︎ populate can now be string | string[] | object  */
+  populate?: string | string[] | Record<string, any>;
   filters?: any;
   sort?: string[];
   locale?: string;
-  pagination?: {
-    page?: number;
-    pageSize?: number;
-  };
+  pagination?: { page?: number; pageSize?: number };
 }
 
-// 🧹 Helper to remove undefined/null values
-function cleanParams(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(cleanParams);
-  } else if (typeof obj === 'object' && obj !== null) {
-    return Object.fromEntries(
-      Object.entries(obj)
-        .filter(([_, v]) => v !== undefined && v !== null)
-        .map(([k, v]) => [k, cleanParams(v)])
-    );
-  }
-  return obj;
-}
+export type ContentCategory = 'home' | 'courses' | 'book';
 
-export class ContentService {
-  private static instance: ContentService;
+const clean = (o: any): any =>
+  Array.isArray(o)
+    ? o.map(clean)
+    : o && typeof o === "object"
+      ? Object.fromEntries(
+          Object.entries(o)
+            .filter(([, v]) => v !== undefined && v !== null && v !== "")
+            .map(([k, v]) => [k, clean(v)])
+        )
+      : o;
 
+/* ------------------------------------------------------------------ */
+/*  Singleton service                                                 */
+/* ------------------------------------------------------------------ */
+class ContentService {
+  private static inst: ContentService;
   private constructor() {}
-
-  public static getInstance(): ContentService {
-    if (!ContentService.instance) {
-      ContentService.instance = new ContentService();
-    }
-    return ContentService.instance;
+  static getInstance() {
+    if (!ContentService.inst) ContentService.inst = new ContentService();
+    return ContentService.inst;
   }
 
+  /* ───────── BLOG LIST ───────── */
   async getBlogs(
     countryCode: string,
-    options?: {
+    opts: {
       category?: string;
       featured?: boolean;
+      search?: string;
       page?: number;
       pageSize?: number;
       locale?: string;
-      sortBy?: 'publishedDate' | 'createdAt';
-      sortOrder?: 'asc' | 'desc';
-    }
+      sortBy?: "publishedDate" | "createdAt";
+      sortOrder?: "asc" | "desc";
+    } = {}
   ): Promise<StrapiResponse<StrapiBlog>> {
     const {
       category,
       featured,
-      page = 1,
-      pageSize = 12,
+      search,
+      page      = 1,
+      pageSize  = 9,
       locale,
-      sortBy = 'publishedDate',
-      sortOrder = 'desc'
-    } = options || {};
+      sortBy    = SORT_FIELD_PUBLISHED,
+      sortOrder = "desc",
+    } = opts;
 
+    /* --- filters --------------------------------------------------- */
     const filters: any = {
-      country: {
-        code: {
-          $eq: countryCode
-        }
-      }
+      country: { code: { $eq: countryCode.toLowerCase() } },
     };
-
-    if (category !== undefined) {
-      filters.blog_category = {
-        slug: { $eq: category }
-      };
+    if (featured !== undefined)          filters[FEATURED_FIELD] = { $eq: featured };
+    if (category)                        filters.blog_category   = { slug: { $eq: category } };
+    
+    // Add search functionality
+    if (search && search.trim()) {
+      filters.$or = [
+        { title: { $containsi: search.trim() } },
+        { content: { $containsi: search.trim() } },
+        { seo_description: { $containsi: search.trim() } }
+      ];
     }
 
-    if (featured !== undefined) {
-      filters.is_featured = { $eq: featured };
-    }
-
+    /* --- params ---------------------------------------------------- */
     const params: BaseQueryParams = {
-      populate: '*',
+      /* Simplified populate using wildcards */
+      populate: "*",
       filters,
-      sort: [`${sortBy}:${sortOrder}`],
-      pagination: {
-        page,
-        pageSize
-      },
-      locale
+      sort:       [`${sortBy}:${sortOrder}`],
+      pagination: { page, pageSize },
+      locale,
     };
 
-    const cleanedParams = cleanParams(params);
-    return getCollection<StrapiBlog>('blogs', cleanedParams);
+    console.log("📝 Blog list API call params:", JSON.stringify(params, null, 2));
+    const result = await getCollection<StrapiBlog>("blogs", clean(params));
+    console.log("📝 Blog list API response:", JSON.stringify(result, null, 2));
+    return result;
   }
 
-  async getBlogBySlug(
-    slug: string,
-    countryCode: string,
-    locale?: string
-  ): Promise<StrapiBlog | null> {
+  /* ───────── SINGLE BLOG ───────── */
+  async getBlogBySlug(slug: string, countryCode: string, locale?: string) {
+    console.log("🔍 Fetching blog by slug:", slug, "Country:", countryCode);
+    
     const params: BaseQueryParams = {
-      populate: '*',
+      /* Simplified populate - use wildcard to get all related data */
+      populate: "*",
       filters: {
-        slug: { $eq: slug },
-        country: {
-          code: { $eq: countryCode }
-        }
+        slug:    { $eq: slug },
+        country: { code: { $eq: countryCode.toLowerCase() } },
       },
-      locale
+      locale,
     };
-
-    const cleanedParams = cleanParams(params);
-    const response = await getCollection<StrapiBlog>('blogs', cleanedParams);
-    return response.data.length > 0 ? response.data[0] : null;
+    
+    console.log("🔍 Blog detail API call params:", JSON.stringify(params, null, 2));
+    const res = await getCollection<StrapiBlog>("blogs", clean(params));
+    console.log("🔍 Blog detail API response:", JSON.stringify(res, null, 2));
+    
+    return res.data[0] ?? null;
   }
 
-  async getBlogCategories(
-    countryCode?: string,
-    locale?: string
-  ): Promise<StrapiResponse<StrapiBlogCategory>> {
-    const filters: any = {};
-
-    if (countryCode) {
-      filters.country = {
-        code: { $eq: countryCode }
-      };
-    }
-
-    const params: BaseQueryParams = {
-      populate: '*',
-      filters,
-      sort: ['name:asc'],
-      locale
-    };
-
-    const cleanedParams = cleanParams(params);
-    return getCollection<StrapiBlogCategory>('blog-categories', cleanedParams);
+  /* ───────── BLOG CATEGORIES ───────── */
+  async getBlogCategories() {
+    return getCollection<StrapiBlogCategory>("blog-categories", {
+      populate: "*",
+      sort:     ["name:asc"],
+    });
   }
 
-  async getServices(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiService>> {
+  /* ───────── SERVICES ───────── */
+  async getServices(countryCode: string): Promise<StrapiResponse<StrapiService>> {
     const params: BaseQueryParams = {
-      populate: '*',
+      populate: {
+        icon: { fields: ["url", "alternativeText"] },
+        country: true,
+      },
       filters: {
-        country: {
-          code: {
-            $eq: countryCode
-          }
-        }
+        country: { code: { $eq: countryCode.toLowerCase() } },
       },
-      sort: ['name:asc'],
-      locale
+      sort: ["name:asc"],
     };
 
-    const cleanedParams = cleanParams(params);
-    return getCollection<StrapiService>('services', cleanedParams);
+    return getCollection<StrapiService>("services", clean(params));
   }
 
+  /* ───────── TESTIMONIALS ───────── */
   async getTestimonials(
     countryCode: string,
-    options?: {
+    opts: {
       category?: ContentCategory;
       platform?: string;
-      locale?: string;
-      sortBy?: 'rating' | 'order';
-      sortOrder?: 'asc' | 'desc';
-    }
+      sortBy?: "rating" | "order";
+      sortOrder?: "asc" | "desc";
+    } = {}
   ): Promise<StrapiResponse<StrapiTestimonial>> {
-    const { category, platform, locale, sortBy = 'rating', sortOrder = 'desc' } = options || {};
+    const {
+      category,
+      platform,
+      sortBy = "rating",
+      sortOrder = "desc",
+    } = opts;
 
     const filters: any = {
-      country: {
-        code: {
-          $eq: countryCode
-        }
-      }
+      country: { code: { $eq: countryCode.toLowerCase() } },
     };
-
-    if (category !== undefined) {
-      filters.category = { $eq: category };
-    }
-
-    if (platform !== undefined) {
-      filters.platform = { $eq: platform };
-    }
+    if (category) filters.category = { $eq: category };
+    if (platform) filters.platform = { $eq: platform };
 
     const params: BaseQueryParams = {
-      populate: '*',
+      populate: {
+        country: true,
+      },
       filters,
       sort: [`${sortBy}:${sortOrder}`],
-      locale
     };
 
-    const cleanedParams = cleanParams(params);
-    return getCollection<StrapiTestimonial>('testimonials', cleanedParams);
+    return getCollection<StrapiTestimonial>("testimonials", clean(params));
   }
 
+  /* ───────── FAQS ───────── */
   async getFAQs(
     countryCode: string,
-    options?: {
+    opts: {
       category?: ContentCategory;
-      locale?: string;
-      sortBy?: 'order';
-      sortOrder?: 'asc' | 'desc';
-    }
+      sortBy?: "order";
+      sortOrder?: "asc" | "desc";
+    } = {}
   ): Promise<StrapiResponse<StrapiFAQ>> {
-    const { category, locale, sortBy = 'order', sortOrder = 'asc' } = options || {};
+    const {
+      category,
+      sortBy = "order",
+      sortOrder = "asc",
+    } = opts;
 
     const filters: any = {
-      country: {
-        code: {
-          $eq: countryCode
-        }
-      }
+      country: { code: { $eq: countryCode.toLowerCase() } },
     };
-
-    if (category !== undefined) {
-      filters.category = { $eq: category };
-    }
+    if (category) filters.category = { $eq: category };
 
     const params: BaseQueryParams = {
-      populate: '*',
+      populate: {
+        country: true,
+      },
       filters,
       sort: [`${sortBy}:${sortOrder}`],
-      locale
     };
 
-    const cleanedParams = cleanParams(params);
-    return getCollection<StrapiFAQ>('faqs', cleanedParams);
+    return getCollection<StrapiFAQ>("faqs", clean(params));
   }
 
-  async getPolicies(countryCode: string, locale?: string): Promise<StrapiResponse<StrapiPolicy>> {
+  /* ───────── POLICIES ───────── */
+  async getPolicies(countryCode: string): Promise<StrapiResponse<StrapiPolicy>> {
     const params: BaseQueryParams = {
-      populate: '*',
-      filters: {
-        country: {
-          code: {
-            $eq: countryCode
-          }
-        }
+      populate: {
+        country: true,
       },
-      locale
+      filters: {
+        country: { code: { $eq: countryCode.toLowerCase() } },
+      },
+      sort: ["name:asc"],
     };
 
-    const cleanedParams = cleanParams(params);
-    return getCollection<StrapiPolicy>('policies', cleanedParams);
+    return getCollection<StrapiPolicy>("policies", clean(params));
   }
 }
 

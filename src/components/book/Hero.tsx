@@ -15,7 +15,7 @@ const Hero = () => {
             <p className="text-lg md:text-xl text-gray-900 font-bold mb-4">
               India's first complete guide on{" "}
               <span className="font-black">
-                how to start laundry business in India
+                how to start a laundry business in India
               </span>
             </p>
             <p className="text-lg text-gray-700 mb-8">
@@ -29,7 +29,7 @@ const Hero = () => {
               </span>{" "}
               for maximum returns. Perfect for entrepreneurs seeking{" "}
               <span className="font-bold">
-                profitable business in India 2025
+                profitable businesses in India by 2025
               </span>
               .
             </p>

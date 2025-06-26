@@ -195,7 +195,7 @@ export function useStrapiPolicies() {
         }
         const response = await contentService.getPolicies(countryCode);
         console.log("✅ Policies:", response.data);
-        return response.data.map((policy) => ({
+        return response.data.map((policy: StrapiPolicy) => ({
           ...policy,
           country: policy.country,
         }));

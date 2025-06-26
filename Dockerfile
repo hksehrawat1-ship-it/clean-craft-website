@@ -32,8 +32,9 @@ ENV NODE_ENV=production \
     NODE_OPTIONS=--max-old-space-size=4096 \
     # Set VITE variables from the build arguments
     VITE_STRAPI_URL=$VITE_STRAPI_URL \
-    VITE_STRAPI_API_TOKEN=$VITE_STRAPI_API_TOKEN \
     VITE_PUBLIC_BUILDER_KEY=$VITE_PUBLIC_BUILDER_KEY
+# Conditionally set the token only if it's provided
+ENV VITE_STRAPI_API_TOKEN=$VITE_STRAPI_API_TOKEN
 
 # Disable source-maps in prod to shrink memory & artefacts
 ENV VITE_SOURCEMAP=false

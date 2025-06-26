@@ -49,7 +49,7 @@ const HeroSection = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Register with Rs. 500
+                  Register with ₹500
                 </a>
               </Button>
             </div>
@@ -71,9 +71,13 @@ const HeroSection = () => {
                   alt="Clean Craft Laundry Training Facility"
                   className="w-full h-[400px] object-cover"
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white">
-                  <p className="text-xl font-bold">Hands-on Training</p>
-                  <p>Learn from industry experts in Delhi</p>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-black">
+                  <p className="text-xl font-bold text-white">
+                    Hands-on Training
+                  </p>
+                  <p className="text-white">
+                    Learn from industry experts in Delhi
+                  </p>
                 </div>
               </div>
             </div>

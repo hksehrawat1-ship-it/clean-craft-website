@@ -46,7 +46,7 @@ const Curriculum = () => {
           {/* Theoretical Topics Card - Optimized for Desktop */}
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-8">
             <h3 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
-              <span className="bg-[#1A73E8] text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-3">
+              <span className="bg-[#1A73E8] text-white rounded-full w-12 h-12 inline-flex items-center justify-center mr-3">
                 38
               </span>
               Theoretical Topics
@@ -59,12 +59,13 @@ const Curriculum = () => {
               {theoreticalTopics.map((topic, index) => (
                 <div
                   key={index}
-                  className="bg-white p-3 rounded-lg flex items-center shadow-sm hover:shadow transition-all"
+                  className="bg-white p-4 rounded-lg flex items-center shadow-sm hover:shadow transition-all"
                 >
-                  <div className="bg-[#1A73E8] w-6 h-6 rounded-full text-white flex items-center justify-center mr-2 text-xs">
+                  <div className="w-8 aspect-square bg-[#1A73E8] rounded-full text-white flex items-center justify-center text-[10px] font-medium leading-none mr-2 font-mono">
                     {index + 1}
                   </div>
-                  <span className="text-gray-700">{topic}</span>
+
+                  <span className="text-gray-700 text-sm">{topic}</span>
                 </div>
               ))}
               <div className="bg-white p-3 rounded-lg flex items-center shadow-sm hover:shadow transition-all">
