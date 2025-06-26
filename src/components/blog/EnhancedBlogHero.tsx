@@ -1,28 +1,8 @@
 
-import React, { useState } from "react";
-import { Search, TrendingUp, Users, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { TrendingUp, Users, BookOpen } from "lucide-react";
 
-interface EnhancedBlogHeroProps {
-  onSearch?: (query: string) => void;
-}
-
-const EnhancedBlogHero = ({ onSearch }: EnhancedBlogHeroProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = () => {
-    if (onSearch && searchQuery.trim()) {
-      onSearch(searchQuery.trim());
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
+const EnhancedBlogHero = () => {
   return (
     <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 overflow-hidden">
       {/* Background Pattern */}
@@ -56,27 +36,6 @@ const EnhancedBlogHero = ({ onSearch }: EnhancedBlogHeroProps) => {
             Professional tips, industry trends, and expert advice for garment care, 
             cleaning techniques, and franchise growth opportunities.
           </p>
-
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-10">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search articles, tips, or topics..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="w-full pl-12 pr-32 py-4 text-lg rounded-full border-0 bg-white/90 backdrop-blur-sm focus:bg-white transition-all duration-300"
-              />
-              <Button 
-                onClick={handleSearch}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-blue-600 hover:bg-blue-700 px-6"
-              >
-                Search
-              </Button>
-            </div>
-          </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
