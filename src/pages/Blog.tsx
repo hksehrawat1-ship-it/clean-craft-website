@@ -8,7 +8,7 @@ import ModernBlogCard from "@/components/blog/ModernBlogCard";
 import ModernBlogGrid from "@/components/blog/ModernBlogGrid";
 import BlogBreadcrumb from "@/components/blog/BlogBreadcrumb";
 import { useBlogs } from "@/hooks/useBlog";
-import { formatCategoryName } from "@/lib/text-utils";
+import { toTitleCase } from "@/lib/text-utils";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -52,9 +52,12 @@ const Blog = () => {
       />
 
       <div className="blog-page bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
-        <EnhancedBlogHero onSearch={handleSearch} />
-        
-        <BlogBreadcrumb />
+        <div className="relative">
+          <EnhancedBlogHero onSearch={handleSearch} />
+          <div className="absolute bottom-0 left-0 right-0">
+            <BlogBreadcrumb />
+          </div>
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
           <div className="mb-8 lg:mb-12">
@@ -97,7 +100,7 @@ const Blog = () => {
             {selectedCategory ? (
               <div className="mb-8">
                 <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
-                  {formatCategoryName(selectedCategory)} Articles
+                  {toTitleCase(selectedCategory)} Articles
                 </h2>
                 <p className="text-blue-100 text-lg">
                   Specialized content in your selected category
