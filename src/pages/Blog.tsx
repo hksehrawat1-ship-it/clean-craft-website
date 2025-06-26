@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from "react";
 import Layout from "@/components/home/Layout";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
@@ -43,7 +44,7 @@ const Blog = () => {
         ]}
       />
 
-      <main className="blog-page min-h-screen bg-gray-50">
+      <div className="blog-page bg-gray-50">
         <EnhancedBlogHero />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
@@ -107,7 +108,7 @@ const Blog = () => {
             <ModernBlogGrid selectedCategory={selectedCategory} />
           </section>
         </div>
-      </main>
+      </div>
     </Layout>
   );
 };
