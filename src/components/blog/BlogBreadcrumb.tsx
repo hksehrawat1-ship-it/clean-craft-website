@@ -23,39 +23,39 @@ const BlogBreadcrumb = ({ title, category, showBackButton = false }: BlogBreadcr
   };
 
   return (
-    <div className="bg-white border-b border-gray-100 py-4">
+    <div className="bg-white/10 backdrop-blur-sm border-b border-white/20 py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center space-x-2 text-sm">
             <Link 
               to={createLink("/")}
-              className="flex items-center text-gray-500 hover:text-blue-600 transition-colors duration-200"
+              className="flex items-center text-white/80 hover:text-white transition-colors duration-200"
             >
               <Home className="h-4 w-4 mr-1" />
               Home
             </Link>
             
-            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <ChevronRight className="h-4 w-4 text-white/60" />
             
             <Link 
               to={createLink("/blog")}
-              className="text-gray-500 hover:text-blue-600 transition-colors duration-200"
+              className="text-white/80 hover:text-white transition-colors duration-200"
             >
               Blog
             </Link>
 
             {category && (
               <>
-                <ChevronRight className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-500">{category}</span>
+                <ChevronRight className="h-4 w-4 text-white/60" />
+                <span className="text-white/80">{category}</span>
               </>
             )}
 
             {title && (
               <>
-                <ChevronRight className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-900 font-medium line-clamp-1 max-w-xs">
+                <ChevronRight className="h-4 w-4 text-white/60" />
+                <span className="text-white font-medium line-clamp-1 max-w-xs">
                   {title}
                 </span>
               </>
@@ -68,7 +68,7 @@ const BlogBreadcrumb = ({ title, category, showBackButton = false }: BlogBreadcr
               onClick={handleGoBack} 
               variant="ghost" 
               size="sm"
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              className="text-white/80 hover:text-white hover:bg-white/10"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Blog
