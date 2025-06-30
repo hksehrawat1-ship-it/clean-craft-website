@@ -31,7 +31,7 @@ const HeroSection = () => {
                   ₹20,000
                 </span>
                 <span className="text-2xl md:text-3xl text-primary font-bold">
-                  ₹15,000
+                  ₹14,500
                 </span>
                 <span className="bg-[#1A73E8] text-white px-2 py-1 rounded text-sm">
                   25% OFF
