@@ -1,11 +1,10 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useStrapiPolicies } from '@/hooks/useStrapi';
-import Layout from '@/components/home/Layout';
-import { useCountry } from '@/contexts/CountryContext';
-import { FileText, ArrowRight, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useStrapiPolicies } from "@/hooks/useStrapi";
+import Layout from "@/components/home/Layout";
+import { useCountry } from "@/contexts/CountryContext";
+import { FileText, ArrowRight, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Policies = () => {
   const { currentCountry } = useCountry();
@@ -13,7 +12,7 @@ const Policies = () => {
 
   // Helper function to create country-specific links
   const createLink = (path: string): string => {
-    if (!currentCountry) return '/';
+    if (!currentCountry) return "/";
     return `/${currentCountry.toLowerCase()}${path}`;
   };
 
@@ -46,11 +45,13 @@ const Policies = () => {
         <div className="min-h-screen bg-gray-50 py-16">
           <div className="max-w-4xl mx-auto px-4 text-center">
             <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Policies</h1>
-            <p className="text-gray-600 mb-6">We're having trouble loading the policies. Please try again later.</p>
-            <Button onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Error Loading Policies
+            </h1>
+            <p className="text-gray-600 mb-6">
+              We're having trouble loading the policies. Please try again later.
+            </p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
           </div>
         </div>
       </Layout>
@@ -63,9 +64,12 @@ const Policies = () => {
         <div className="max-w-4xl mx-auto px-4">
           {/* Header Section */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Policies</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Our Policy
+            </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Learn about our terms, policies, and guidelines that ensure the best service experience for you.
+              Learn about our terms, policies, and guidelines that ensure the
+              best service experience for you.
             </p>
           </div>
 
@@ -73,8 +77,8 @@ const Policies = () => {
           {policies && policies.length > 0 ? (
             <div className="grid gap-6">
               {policies.map((policy) => (
-                <div 
-                  key={policy.id} 
+                <div
+                  key={policy.id}
                   className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-all duration-200 group"
                 >
                   <div className="flex items-start space-x-4">
@@ -83,19 +87,19 @@ const Policies = () => {
                         <FileText className="h-6 w-6 text-blue-600" />
                       </div>
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <h2 className="text-xl font-semibold text-gray-900 mb-2">
                         {policy.name}
                       </h2>
-                      
+
                       {policy.description && (
                         <p className="text-gray-600 mb-4 leading-relaxed">
                           {policy.description}
                         </p>
                       )}
-                      
-                      <Link 
+
+                      <Link
                         to={createLink(`/policies/${policy.slug}`)}
                         className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium group-hover:translate-x-1 transition-all duration-200"
                       >
@@ -115,12 +119,11 @@ const Policies = () => {
                 No Policies Available
               </h3>
               <p className="text-gray-600 mb-6">
-                No policies are currently available for your region. Please check back later.
+                No policies are currently available for your region. Please
+                check back later.
               </p>
-              <Link to={createLink('/')}>
-                <Button variant="outline">
-                  Return to Home
-                </Button>
+              <Link to={createLink("/")}>
+                <Button variant="outline">Return to Home</Button>
               </Link>
             </div>
           )}
@@ -134,8 +137,8 @@ const Policies = () => {
                   Questions about our policies?
                 </h3>
                 <p className="text-blue-700 text-sm">
-                  If you have any questions or need clarification about our policies, 
-                  please don't hesitate to contact our support team.
+                  If you have any questions or need clarification about our
+                  policies, please don't hesitate to contact our support team.
                 </p>
               </div>
             </div>

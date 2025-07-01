@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 @import './styles/base.css';
 @import './styles/franchise.css';
@@ -75,13 +76,26 @@
     @apply space-y-6 md:space-y-8;
   }
 
-  /* Typography */
+  /* Enhanced Typography with Uppercase and Letter Spacing */
   .section-heading {
-    @apply text-4xl md:text-6xl font-medium tracking-tight text-gray-900 mb-4 md:mb-6;
+    @apply text-4xl md:text-6xl font-medium tracking-widest uppercase text-gray-900 mb-4 md:mb-6;
   }
 
   .section-subheading {
     @apply text-lg md:text-xl font-medium text-gray-700 mb-4 md:mb-8;
+  }
+
+  /* Sleek Heading Utilities */
+  .heading-primary {
+    @apply text-display-sm md:text-display-md lg:text-display-lg font-bold tracking-widest uppercase text-gray-900;
+  }
+
+  .heading-secondary {
+    @apply text-heading-sm md:text-heading-md lg:text-heading-lg font-semibold tracking-wider uppercase text-gray-900;
+  }
+
+  .heading-tertiary {
+    @apply text-title-sm md:text-title-md lg:text-title-lg font-semibold tracking-wide uppercase text-gray-900;
   }
 
   /* Paragraphs and Lists */

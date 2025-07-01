@@ -1,6 +1,5 @@
-/* EnhancedNavbar.tsx – fixed auto‑close bug, single toggle icon */
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,14 +7,7 @@ import { useCountry } from "@/contexts/CountryContext";
 import { getNavbarItems } from "@/hooks/use-pages-config";
 import type { PageData } from "@/types/config";
 
-/**
- * Navbar with desktop dropdowns and animated mobile drawer
- * ‑ Keeps only one toggle icon (burger/X)
- * ‑ Fix: menu no longer auto‑closes on first tap (removed premature close logic)
- */
-
 const EnhancedNavbar: React.FC = () => {
-  /* ────────────────────────── state ────────────────────────── */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -24,20 +16,24 @@ const EnhancedNavbar: React.FC = () => {
   const isMobile = useIsMobile();
   const { currentCountry } = useCountry();
   const navItems = getNavbarItems(currentCountry);
+  const location = useLocation();
 
-  /* ─────────────────── helpers ─────────────────── */
   const createLink = (path: string) =>
     currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
 
-  /* ────────────────── effects ────────────────── */
-  // Header shrink on scroll
+  const handleLogoClick = () => {
+    setIsMenuOpen(false);
+    if (location.pathname === createLink("")) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close menu when user clicks outside (only while menu is open)
   useEffect(() => {
     if (!isMenuOpen) return;
     const closeOnBodyClick = (e: MouseEvent) => {
@@ -52,14 +48,12 @@ const EnhancedNavbar: React.FC = () => {
     return () => document.body.removeEventListener("click", closeOnBodyClick);
   }, [isMenuOpen]);
 
-  // Close menu automatically if we switch to desktop view while it's open
   useEffect(() => {
     if (!isMobile && isMenuOpen) {
       setIsMenuOpen(false);
     }
   }, [isMobile, isMenuOpen]);
 
-  /* ────────── dropdown hover helpers (desktop) ────────── */
   const openDD = (path: string) => {
     if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
     setOpenDropdown(path);
@@ -68,11 +62,9 @@ const EnhancedNavbar: React.FC = () => {
     dropdownTimeout.current = setTimeout(() => setOpenDropdown(null), 150);
   };
 
-  /* Common typography for desktop nav labels */
   const commonLink =
     "inline-flex items-center font-medium text-gray-700 hover:text-primary transition-colors duration-200";
 
-  /* ────────────────────────── JSX ────────────────────────── */
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -81,7 +73,11 @@ const EnhancedNavbar: React.FC = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         {/* ─── Logo ─── */}
-        <Link to={createLink("")} className="z-20 flex items-center">
+        <Link
+          to={createLink("")}
+          onClick={handleLogoClick}
+          className="z-20 flex items-center"
+        >
           <img
             src="/lovable-uploads/cleancraft-icon.png"
             alt="CleanCraft Icon"

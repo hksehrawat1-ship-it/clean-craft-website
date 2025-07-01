@@ -17,7 +17,7 @@ export const DisplayHeading: React.FC<TypographyProps> = ({
   <Component 
     className={cn(
       'text-display-sm md:text-display-md lg:text-display-lg',
-      'text-gray-900 font-display tracking-tight',
+      'text-gray-900 font-display tracking-widest uppercase',
       className
     )}
   >
@@ -34,7 +34,7 @@ export const SectionHeading: React.FC<TypographyProps> = ({
   <Component 
     className={cn(
       'text-heading-sm md:text-heading-md lg:text-heading-lg',
-      'text-gray-900 font-display',
+      'text-gray-900 font-display tracking-wider uppercase',
       className
     )}
   >
@@ -51,7 +51,7 @@ export const SubsectionHeading: React.FC<TypographyProps> = ({
   <Component 
     className={cn(
       'text-title-sm md:text-title-md lg:text-title-lg',
-      'text-gray-900 font-display',
+      'text-gray-900 font-display tracking-wide uppercase',
       className
     )}
   >
@@ -102,7 +102,7 @@ export const Overline: React.FC<TypographyProps> = ({
   <Component 
     className={cn(
       'text-overline',
-      'text-brand-blue font-medium',
+      'text-brand-blue font-medium tracking-widest uppercase',
       className
     )}
   >

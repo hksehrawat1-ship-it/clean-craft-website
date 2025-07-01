@@ -20,11 +20,11 @@ const EnhancedBlogHero = () => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <TrendingUp className="h-4 w-4 text-blue-200" />
-            <span className="text-blue-100 text-sm font-medium">Latest Industry Insights</span>
+            <span className="text-blue-100 text-sm font-medium tracking-wide uppercase">Latest Industry Insights</span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+          <h1 className="heading-primary text-white mb-6 leading-tight">
             <span className="block">Laundry & Dry Cleaning</span>
             <span className="block bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">
               Expert Insights
@@ -44,21 +44,21 @@ const EnhancedBlogHero = () => {
                 <BookOpen className="h-6 w-6 text-blue-200" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">150+</div>
-              <div className="text-blue-200">Expert Articles</div>
+              <div className="text-blue-200 text-sm tracking-wide uppercase">Expert Articles</div>
             </div>
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full mb-4">
                 <Users className="h-6 w-6 text-blue-200" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">10K+</div>
-              <div className="text-blue-200">Monthly Readers</div>
+              <div className="text-blue-200 text-sm tracking-wide uppercase">Monthly Readers</div>
             </div>
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full mb-4">
                 <TrendingUp className="h-6 w-6 text-blue-200" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">Weekly</div>
-              <div className="text-blue-200">New Content</div>
+              <div className="text-blue-200 text-sm tracking-wide uppercase">New Content</div>
             </div>
           </div>
         </div>
