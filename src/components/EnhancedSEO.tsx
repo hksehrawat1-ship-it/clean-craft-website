@@ -1,4 +1,3 @@
-
 import { Helmet } from 'react-helmet-async';
 import { useCountry } from '@/contexts/CountryContext';
 import { usePageConfigSEO } from '@/hooks/usePageConfigSEO';
@@ -30,12 +29,15 @@ export function EnhancedSEO({
   
   const countryCode = currentCountry?.toLowerCase() || 'in';
   
+  // Base domain used in canonical and hreflang URLs
+  const baseUrl = 'https://cleancraftapp.com';
+  
   // Prioritize: YAML config > Default props
   const title = seoData?.seo_title || defaultTitle || 'CleanCraft';
   const description = seoData?.seo_description || defaultDescription || 'Professional dry cleaning and wet cleaning services';
   const yamlKeywords = seoData?.seo_keywords ? seoData.seo_keywords.split(', ') : [];
   const keywords = [...yamlKeywords, ...customKeywords].join(', ');
-  const image = seoData?.seo_image || 'https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png';
+  const image = seoData?.seo_image || 'https://cleancraftapp.com/lovable-uploads/cleancraft-full-logo.png';
   
   // Generate page-type specific robots meta tags
   const generateRobotsContent = () => {
@@ -83,7 +85,7 @@ export function EnhancedSEO({
   
   // Generate hreflang URLs
   const generateHreflangUrls = () => {
-    const baseUrl = 'https://cleancraft.com';
+    const baseUrl = 'https://cleancraftapp.com';
     const supportedCountries = ['in', 'au'];
     
     return supportedCountries.map(country => ({
@@ -93,7 +95,7 @@ export function EnhancedSEO({
   };
   
   const hreflangUrls = generateHreflangUrls();
-  const canonicalUrl = `https://cleancraft.com/${countryCode}${slug === '/' ? '' : slug}`;
+  const canonicalUrl = `${baseUrl}/${countryCode}${slug === '/' ? '' : slug}`;
 
   return (
     <Helmet>
@@ -112,6 +114,9 @@ export function EnhancedSEO({
       {hreflangUrls.map(({ hreflang, href }) => (
         <link key={hreflang} rel="alternate" hrefLang={hreflang} href={href} />
       ))}
+      
+      {/* Default international version */}
+      <link rel="alternate" hrefLang="x-default" href={baseUrl} />
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />

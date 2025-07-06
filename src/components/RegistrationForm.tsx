@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { State, City } from 'country-state-city';
 import { CheckCircle, ExternalLink } from "lucide-react";
 import { DisplayHeading, BodyText, Caption, SectionHeading } from "@/components/ui/typography";
+import { useNavigate, useParams } from "react-router-dom";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -29,7 +30,8 @@ type FormData = z.infer<typeof formSchema>;
 
 const RegistrationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
+  const { countryCode } = useParams<{ countryCode: string }>();
   const [redirectCountdown, setRedirectCountdown] = useState(5);
   const [cityInputFocused, setCityInputFocused] = useState(false);
 
@@ -48,15 +50,15 @@ const RegistrationForm: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (isSubmitted && redirectCountdown > 0) {
+    if (redirectCountdown > 0) {
       const timer = setTimeout(() => {
         setRedirectCountdown(redirectCountdown - 1);
       }, 1000);
       return () => clearTimeout(timer);
-    } else if (isSubmitted && redirectCountdown === 0) {
+    } else if (redirectCountdown === 0) {
       handlePaymentRedirect();
     }
-  }, [isSubmitted, redirectCountdown]);
+  }, [redirectCountdown]);
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -94,7 +96,7 @@ const RegistrationForm: React.FC = () => {
         // Don't throw error - form submission was successful even if email fails
       }
 
-      setIsSubmitted(true);
+      navigate(`/${countryCode?.toLowerCase() || "in"}/thank-you`);
     } catch (error) {
       console.error("Error submitting registration:", error);
       alert("There was an error submitting your registration. Please try again.");
@@ -102,64 +104,6 @@ const RegistrationForm: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  if (isSubmitted) {
-    return (
-      <section className="section-padding bg-white">
-        <div className="container-enhanced">
-          <div className="max-w-2xl mx-auto">
-            <Card className="shadow-elevation-2 border-0">
-              <CardContent className="p-8 text-center">
-                <div className="mb-8">
-                  <CheckCircle className="h-16 w-16 text-brand-blue mx-auto mb-6" />
-                  <SectionHeading className="text-brand-blue mb-4">
-                    Registration Successful!
-                  </SectionHeading>
-                  <BodyText className="text-gray-600">
-                    Thank you for registering for our professional laundry training course.
-                  </BodyText>
-                </div>
-                
-                <div className="bg-brand-blue-light p-6 rounded-lg mb-8">
-                  <h4 className="text-title-md font-semibold text-brand-blue mb-3">
-                    Complete Your Enrollment
-                  </h4>
-                  <BodyText className="text-brand-blue mb-6">
-                    Redirecting to payment page in {redirectCountdown} seconds...
-                  </BodyText>
-                  
-                  <Button 
-                    onClick={handlePaymentRedirect}
-                    variant="secondary"
-                    size="lg"
-                    className="w-full"
-                  >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Complete Payment Now
-                  </Button>
-                </div>
-
-                <div className="space-y-2">
-                  <Caption className="flex items-center justify-center text-green-600">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Registration confirmed
-                  </Caption>
-                  <Caption className="flex items-center justify-center text-green-600">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Confirmation email sent
-                  </Caption>
-                  <Caption className="flex items-center justify-center text-green-600">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Complete payment to secure your spot
-                  </Caption>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="section-padding bg-brand-blue-light" id="registration-form">
