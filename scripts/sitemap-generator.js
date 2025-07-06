@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { sitemapConfig, generateSitemapUrls } from './sitemap.js';
 
-export function generateSitemapFiles() {
+export async function generateSitemapFiles() {
   const urls = generateSitemapUrls();
   
   // Determine if we're in production based on environment
@@ -12,7 +12,21 @@ export function generateSitemapFiles() {
                       process.env.VITE_ENVIRONMENT === 'production' ||
                       process.argv.includes('--production');
   
-  // Generate main sitemap.xml
+  // Load pages.yaml to get site configuration
+  const { loadPagesYaml } = await import('./sitemap.js');
+  const pagesYaml = loadPagesYaml();
+  
+  // Determine base URL from pages.yaml if available
+  let baseUrl;
+  if (pagesYaml?.site) {
+    baseUrl = isProduction ? 
+      (pagesYaml.site.production_url || 'https://cleancraftapp.com') : 
+      (pagesYaml.site.development_url || 'http://localhost:8080');
+  } else {
+    baseUrl = isProduction ? 'https://cleancraftapp.com' : 'http://localhost:8080';
+  }
+  
+  // Generate single sitemap.xml
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
   
@@ -41,16 +55,25 @@ export function generateSitemapFiles() {
   fs.writeFileSync(path.join(outputDir, 'sitemap.xml'), xml);
   
   // Generate robots.txt for the environment
-  const robotsTxt = generateRobotsTxtContent(isProduction);
+  const robotsTxt = generateRobotsTxtContent(isProduction, pagesYaml);
   fs.writeFileSync(path.join(outputDir, 'robots.txt'), robotsTxt);
   
   console.log(`✅ Generated sitemap.xml and robots.txt in ${outputDir}`);
   console.log(`📄 Sitemap contains ${urls.length} URLs`);
   console.log(`🌍 Environment: ${isProduction ? 'Production' : 'Development'}`);
+  console.log(`🔗 Base URL: ${baseUrl}`);
 }
 
-function generateRobotsTxtContent(isProduction = true) {
-  const baseUrl = isProduction ? 'https://cleancraft.com' : 'http://localhost:8080';
+function generateRobotsTxtContent(isProduction = true, pagesYaml = null) {
+  let baseUrl;
+  
+  if (pagesYaml?.site) {
+    baseUrl = isProduction ? 
+      (pagesYaml.site.production_url || 'https://cleancraftapp.com') : 
+      (pagesYaml.site.development_url || 'http://localhost:8080');
+  } else {
+    baseUrl = isProduction ? 'https://cleancraftapp.com' : 'http://localhost:8080';
+  }
   
   let robotsTxt = '';
   
@@ -122,9 +145,9 @@ function generateRobotsTxtContent(isProduction = true) {
 }
 
 // CLI function for manual generation
-export function runSitemapGeneration() {
+export async function runSitemapGeneration() {
   try {
-    generateSitemapFiles();
+    await generateSitemapFiles();
   } catch (error) {
     console.error('❌ Error generating sitemap:', error);
     process.exit(1);

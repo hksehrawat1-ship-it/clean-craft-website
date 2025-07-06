@@ -1,50 +1,44 @@
-
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
-/* global layout / wrappers */
 import CookieConsentBanner from "./CookieConsentBanner";
 import CountryRedirect from "./CountryRedirect";
 import CountryRouteGuard from "./CountryRouteGuard";
 import CountryLayout from "./CountryLayout";
 import { PageLoader } from "./PageLoader";
 
-/* statically‑rendered pages (small + always needed) */
 import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
 import PolicyDetails from "../pages/PolicyDetails";
 import FaqPage from "../pages/Faq";
 import ServicesNavbar from "../pages/ServicesNavbar";
+import ThankYouPage from "../pages/ThankYouPage";
 
-/* ✨ Lazy‑loaded (code‑split) pages */
 const LazyCoursesPage = lazy(() => import("../pages/learning/Courses"));
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
 const LazyBlogPage = lazy(() => import("../pages/Blog"));
 const LazyBlogDetailPage = lazy(() => import("../pages/BlogDetail"));
 const LazyFranchisePage = lazy(() => import("../pages/Franchise"));
 const LazyPoliciesPage = lazy(() => import("../pages/Policies"));
-const LazyDiscoverCleanCraftPage = lazy(() => import("../pages/DiscoverCleanCraft"));
+const LazyDiscoverCleanCraftPage = lazy(
+  () => import("../pages/DiscoverCleanCraft")
+);
 
 export function AppRoutes() {
   return (
     <>
       <CookieConsentBanner />
 
-      {/* Outer suspense ensures a single fallback while any lazy chunk loads */}
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* 🌍 Geo‑IP redirect or manual picker */}
           <Route path="/" element={<CountryRedirect />} />
 
-          {/* ───────────────── Country‑scoped section ───────────────── */}
           <Route path=":countryCode/*" element={<CountryLayout />}>
-            {/* Home */}
             <Route
               index
               element={<CountryRouteGuard pagePath="/" element={<Index />} />}
             />
 
-            {/* Learning section */}
             <Route path="learning">
               <Route
                 path="laundry-training-course"
@@ -59,7 +53,6 @@ export function AppRoutes() {
                   />
                 }
               />
-
               <Route
                 path="laundry-training-book"
                 element={
@@ -75,7 +68,6 @@ export function AppRoutes() {
               />
             </Route>
 
-            {/* Blog */}
             <Route path="blog">
               <Route
                 index
@@ -107,7 +99,6 @@ export function AppRoutes() {
               />
             </Route>
 
-            {/* Policies */}
             <Route path="policies">
               <Route
                 index
@@ -134,7 +125,6 @@ export function AppRoutes() {
               />
             </Route>
 
-            {/* FAQ */}
             <Route
               path="faq"
               element={
@@ -145,8 +135,6 @@ export function AppRoutes() {
                 />
               }
             />
-
-            {/* Services */}
             <Route
               path="services"
               element={
@@ -158,7 +146,6 @@ export function AppRoutes() {
               }
             />
 
-            {/* Discover Clean Craft */}
             <Route
               path="discover-cleancraft"
               element={
@@ -174,7 +161,6 @@ export function AppRoutes() {
               }
             />
 
-            {/* Franchise */}
             <Route
               path="laundry-franchise"
               element={
@@ -190,11 +176,23 @@ export function AppRoutes() {
               }
             />
 
-            {/* 404 inside country scope */}
+            {/* ✅ Fixed Thank You Page Route */}
+            <Route
+              path="thank-you"
+              element={
+                <CountryRouteGuard
+                  pagePath="/thank-you"
+                  element={<ThankYouPage />}
+                  allowEmptyContent // 🔥 Most important for static pages
+                />
+              }
+            />
+
+            {/* Country-level fallback */}
             <Route path="*" element={<NotFound />} />
           </Route>
 
-          {/* global 404 */}
+          {/* Global fallback */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

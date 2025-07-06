@@ -62,7 +62,7 @@ const Blog = () => {
             <section className="mb-12 lg:mb-16">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                  <h2 className="heading-secondary text-white mb-2 drop-shadow-lg">
                     Featured Articles
                   </h2>
                   <p className="text-blue-100 text-lg">
@@ -90,7 +90,7 @@ const Blog = () => {
           <section>
             {selectedCategory ? (
               <div className="mb-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                <h2 className="heading-secondary text-white mb-2 drop-shadow-lg">
                   {toTitleCase(selectedCategory)} Articles
                 </h2>
                 <p className="text-blue-100 text-lg">
@@ -99,7 +99,7 @@ const Blog = () => {
               </div>
             ) : hasLatest ? (
               <div className="mb-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                <h2 className="heading-secondary text-white mb-2 drop-shadow-lg">
                   Latest Articles
                 </h2>
                 <p className="text-blue-100 text-lg">
