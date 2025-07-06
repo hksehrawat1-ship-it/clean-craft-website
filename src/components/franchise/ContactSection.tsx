@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ShieldCheck } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -15,6 +15,9 @@ const ContactSection = () => {
     investmentLevel: "",
     message: "",
   });
+
+  const navigate = useNavigate();
+  const { countryCode } = useParams<{ countryCode: string }>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -32,6 +35,9 @@ const ContactSection = () => {
       description: "A franchise consultant will contact you within 24 hours.",
       duration: 5000,
     });
+    
+    // Navigate to thank-you page after toast
+    navigate(`/${countryCode?.toLowerCase() || "in"}/thank-you`);
     
     // Reset form
     setFormState({
