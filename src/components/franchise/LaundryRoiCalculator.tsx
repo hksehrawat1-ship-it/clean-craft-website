@@ -7,7 +7,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import FranchiseFormModal from "./FranchiseFormModal";
 
 const LaundryRoiCalculator = () => {
-  // ⬇️ Start empty so the placeholder shows
   const [investment, setInvestment] = useState<string>("");
   const [showResults, setShowResults] = useState(false);
   const [monthlyRoi, setMonthlyRoi] = useState("");
@@ -29,6 +28,11 @@ const LaundryRoiCalculator = () => {
   };
 
   const handleCalculate = () => {
+    if (!investment) {
+      alert("Please enter your investment amount.");
+      return;
+    }
+
     const annualProfit = calculateReturn();
     const monthly = Math.floor(annualProfit / 12);
     setMonthlyRoi(formatIndianNumber(monthly));
@@ -84,7 +88,7 @@ const LaundryRoiCalculator = () => {
                   value={
                     investment
                       ? investment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      : "" /* ← keep placeholder visible */
+                      : ""
                   }
                   onChange={handleInputChange}
                   aria-label="Enter initial investment amount"
@@ -147,7 +151,8 @@ const LaundryRoiCalculator = () => {
             <div className="pt-2">
               <Button
                 onClick={handleCalculate}
-                className="w-full bg-cleancraft-gold hover:bg-cleancraft-darkgold text-white font-semibold"
+                disabled={!investment}
+                className="w-full bg-cleancraft-gold hover:bg-cleancraft-darkgold text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Calculate ROI
               </Button>

@@ -1,8 +1,8 @@
-
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import ProgressiveStepper from "./ProgressiveStepper";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -34,10 +33,10 @@ interface DynamicFranchiseFormProps {
 const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
   title,
   sourceCta,
-  onClose,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
+  const { countryCode } = useParams();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -51,7 +50,9 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("franchise_leads").insert({
+      console.time("Form Submission");
+
+      const insertPromise = supabase.from("franchise_leads").insert({
         name: data.name,
         phone: data.phone,
         email: data.email,
@@ -62,9 +63,7 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
         lead_type: "franchise",
       });
 
-      if (error) throw error;
-
-      await supabase.functions.invoke("submit-lead", {
+      const functionPromise = supabase.functions.invoke("submit-lead", {
         body: {
           ...data,
           city: "",
@@ -74,7 +73,17 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
         },
       });
 
-      setIsSubmitted(true);
+      const [insertResult, functionResult] = await Promise.all([
+        insertPromise,
+        functionPromise,
+      ]);
+
+      if (insertResult.error) throw insertResult.error;
+      if (functionResult.error) throw functionResult.error;
+
+      console.timeEnd("Form Submission");
+
+      navigate(`/${countryCode || "in"}/thank-you`);
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Submission failed. Please try again.");
@@ -83,27 +92,8 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
     }
   };
 
-  if (isSubmitted) {
-    return (
-      <Card className="w-full max-w-lg mx-auto">
-        <CardContent className="p-8 text-center">
-          <h3 className="text-2xl font-bold text-brand-blue mb-6">Success!</h3>
-          <p className="text-gray-600 mb-8">
-            Thank you for your interest! Here's what happens next:
-          </p>
-          <ProgressiveStepper />
-          {onClose && (
-            <Button onClick={onClose} className="w-full mt-6">
-              Close
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="w-full max-w-lg mx-auto">
+    <Card className="w-full max-w-lg mx-auto shadow-lg border border-gray-200">
       <CardHeader>
         <CardTitle className="text-center text-xl font-bold text-cleancraft-darkgold">
           {title}
@@ -112,7 +102,6 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
       <CardContent className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Name */}
             <FormField
               control={form.control}
               name="name"
@@ -126,8 +115,6 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                 </FormItem>
               )}
             />
-
-            {/* Phone */}
             <FormField
               control={form.control}
               name="phone"
@@ -141,8 +128,6 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                 </FormItem>
               )}
             />
-
-            {/* Email */}
             <FormField
               control={form.control}
               name="email"
@@ -157,14 +142,39 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               )}
             />
 
-            {/* Submit Button */}
             <div className="mb-6 max-w-2xl mx-auto">
               <Button
                 type="submit"
                 className="w-full text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit Information"}
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg
+                      className="animate-spin h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      />
+                    </svg>
+                    Submitting...
+                  </span>
+                ) : (
+                  "Submit Information"
+                )}
               </Button>
             </div>
           </form>
