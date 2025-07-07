@@ -41,8 +41,7 @@ ENV VITE_SOURCEMAP=false
 
 # Build + sitemap, re-using the cache mount
 RUN --mount=type=cache,target=/root/.cache \
-    npm run build && \
-    npm run generate-sitemap
+    npm run build
 
 # Remove everything we no longer need in the final artefact
 RUN rm -rf node_modules src scripts

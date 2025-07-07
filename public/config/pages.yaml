@@ -1,3 +1,9 @@
+# Site configuration
+site:
+  production_url: "https://cleancraftapp.com"
+  development_url: "http://localhost:8080"
+  name: "CleanCraft"
+  default_language: "en"
 
 # Country metadata
 countries:
@@ -5,10 +11,16 @@ countries:
     name: "India"
     flag_emoji: "🇮🇳"
     region: "ASIA/PACIFIC"
+    language: "en"
+    currency: "INR"
+    timezone: "Asia/Kolkata"
   au:
     name: "Australia"
     flag_emoji: "🇦🇺"
     region: "ASIA/PACIFIC"
+    language: "en"
+    currency: "AUD"
+    timezone: "Australia/Sydney"
 
 # SEO Configuration
 seo:
@@ -16,10 +28,12 @@ seo:
     defaults:
       title_suffix: " | CleanCraft"
       keywords_base: ["professional cleaning", "garment care", "fabric treatment"]
-      image: "https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png"
+      image: "https://cleancraftapp.com/lovable-uploads/cleancraft-full-logo.png"
       
   pages:
     "/":
+      priority: 1.0
+      changefreq: "weekly"
       in:
         title: "Professional Dry Cleaning & Wet Cleaning Services in India"
         description: "Premium dry cleaning, wet cleaning, and laundry services across India. Expert garment care, stain removal, and fabric preservation with eco-friendly cleaning solutions."
@@ -28,8 +42,18 @@ seo:
         title: "Premium Dry Cleaning & Wet Cleaning Services Australia"
         description: "Professional dry cleaning, wet cleaning, and garment care services across Australia. Expert fabric treatment in Melbourne, Sydney, Brisbane with sustainable cleaning methods."
         keywords: ["dry cleaning australia", "wet cleaning services melbourne sydney", "professional garment care australia", "eco-friendly dry cleaning", "green wet cleaning", "sustainable fabric care", "premium dry cleaning melbourne", "organic wet cleaning sydney", "luxury garment care australia", "commercial laundry services"]
+
+    "/discover-cleancraft":
+      priority: 0.8
+      changefreq: "monthly"
+      in:
+        title: "Discover Clean Craft - India's Leading Laundry & Dry Cleaning Franchise"
+        description: "Discover Clean Craft, India's fastest growing laundry and dry cleaning franchise brand. Offering coaching, franchise opportunities, and premium products for garment care excellence."
+        keywords: ["Clean Craft India", "laundry franchise India", "dry cleaning franchise", "laundry business coaching", "garment care franchise", "cleaning products India", "professional laundry training", "franchise opportunities India", "spotless personality", "laundry entrepreneur"]
         
-    "/learning/courses":
+    "/learning/laundry-training-course":
+      priority: 0.8
+      changefreq: "monthly"
       in:
         title: "Professional Dry Cleaning & Wet Cleaning Training Course in Delhi"
         description: "Learn professional dry cleaning techniques, wet cleaning methods, and garment care from industry experts. Comprehensive laundry business training in Delhi with hands-on experience."
@@ -39,7 +63,9 @@ seo:
         description: "Expert dry cleaning and wet cleaning training courses in Australia. Learn advanced garment care techniques and sustainable cleaning methods from industry professionals."
         keywords: ["dry cleaning training australia", "wet cleaning course melbourne", "professional cleaning certification", "garment care education australia", "fabric treatment training", "eco-friendly cleaning course", "commercial laundry training", "dry cleaning techniques workshop"]
         
-    "/learning/book":
+    "/learning/laundry-training-book":
+      priority: 0.7
+      changefreq: "monthly"
       in:
         title: "Spotless Profit in Laundry - Dry Cleaning & Wet Cleaning Business Guide"
         description: "Complete business guide for starting dry cleaning, wet cleaning, and laundry services. Learn garment care techniques, business strategies, and profit optimization methods."
@@ -50,18 +76,28 @@ seo:
         keywords: ["dry cleaning business guide australia", "wet cleaning startup manual", "australian cleaning industry", "garment care business strategies", "fabric care entrepreneurship australia", "professional cleaning business", "laundry franchise guide", "cleaning business profit optimization"]
         
     "/blog":
+      priority: 0.8
+      changefreq: "daily"
       in:
         title: "Laundry & Dry Cleaning Tips, Guides & Industry Insights"
         description: "Expert tips on dry cleaning, wet cleaning, and garment care. Learn about fabric treatment, stain removal techniques, and professional laundry business insights from industry experts."
         keywords: ["dry cleaning tips", "wet cleaning guides", "garment care advice", "fabric treatment tips", "stain removal techniques", "laundry business insights", "professional cleaning tips", "clothing care guide", "dry cleaning blog", "laundry industry news"]
         
-    "/franchise":
+    "/laundry-franchise":
+      priority: 0.9
+      changefreq: "monthly"
       in:
         title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in India"
         description: "Join India's leading dry cleaning and wet cleaning franchise. Profitable garment care business opportunity with comprehensive training, equipment, and ongoing support."
         keywords: ["dry cleaning franchise india", "wet cleaning business opportunity", "garment care franchise", "cleaning services franchise", "fabric care business model", "professional cleaning chain", "laundry franchise opportunity", "dry cleaning investment", "wet cleaning franchise cost", "profitable cleaning business"]
+      au:
+        title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in Australia"
+        description: "Join Australia's premier dry cleaning and wet cleaning franchise network. Profitable business opportunity with comprehensive training, equipment, and ongoing support."
+        keywords: ["dry cleaning franchise australia", "wet cleaning business opportunity", "garment care franchise australia", "cleaning services franchise", "fabric care business model", "professional cleaning chain", "laundry franchise opportunity", "dry cleaning investment australia", "wet cleaning franchise cost", "profitable cleaning business"]
         
     "/services":
+      priority: 0.9
+      changefreq: "monthly"
       in:
         title: "Complete Dry Cleaning & Wet Cleaning Services"
         description: "Comprehensive dry cleaning, wet cleaning, and specialized garment care services. Expert fabric treatment, stain removal, and preservation with modern cleaning technology."
@@ -72,6 +108,8 @@ seo:
         keywords: ["dry cleaning australia", "wet cleaning services", "professional garment care", "sustainable cleaning solutions", "fabric specialists australia", "eco-friendly dry cleaning", "premium cleaning services", "garment restoration", "commercial fabric care", "luxury item cleaning"]
         
     "/faq":
+      priority: 0.5
+      changefreq: "monthly"
       in:
         title: "Frequently Asked Questions - Dry Cleaning & Wet Cleaning"
         description: "Get answers to common questions about our dry cleaning, wet cleaning, and garment care services. Learn about fabric treatment, pricing, and service processes."
@@ -82,6 +120,8 @@ seo:
         keywords: ["dry cleaning faq australia", "wet cleaning questions", "garment care help australia", "fabric cleaning australia", "professional cleaning questions", "sustainable cleaning faq", "eco-friendly dry cleaning help"]
         
     "/policies":
+      priority: 0.5
+      changefreq: "monthly"
       in:
         title: "Policies - Dry Cleaning & Wet Cleaning Services"
         description: "Our policies for dry cleaning, wet cleaning, and garment care services. Terms, privacy, and service policies for professional fabric treatment."
@@ -129,7 +169,7 @@ in:
       sections:
         - type: "faq"
           category: "blog"
-    - path: "/franchise"
+    - path: "/laundry-franchise"
       navbar: true
       title: "⁠Apply for Franchise"
       order: 6
@@ -143,7 +183,7 @@ in:
       title: "Learning"
       order: 7
       children:
-        - path: "/learning/courses"
+        - path: "/learning/laundry-training-course"
           navbar: true
           title: "Courses"
           order: 1
@@ -152,7 +192,7 @@ in:
               category: "courses"
             - type: "testimonial"
               category: "courses"
-        - path: "/learning/book"
+        - path: "/learning/laundry-training-book"
           navbar: true
           title: "Book"
           order: 2
@@ -161,6 +201,10 @@ in:
               category: "book"
             - type: "testimonial"
               category: "book"
+    - path: "/discover-cleancraft"
+      navbar: false
+      title: "Discover Clean Craft"
+      order: 8
 
 sg:
   pages: []  # Uses only global pages

@@ -1,4 +1,3 @@
-
 # Robots.txt for CleanCraft - Production optimized
 
 # Main search engine bots - full access with crawl delay
@@ -53,6 +52,4 @@ Allow: /css/
 Allow: /js/
 
 # Sitemap references
-Sitemap: https://cleancraft.com/sitemap.xml
-Sitemap: https://cleancraft.com/sitemap-services.xml
-Sitemap: https://cleancraft.com/sitemap-courses.xml
+Sitemap: https://cleancraftapp.com/sitemap.xml

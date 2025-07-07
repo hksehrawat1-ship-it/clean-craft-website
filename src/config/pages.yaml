@@ -1,3 +1,9 @@
+# Site configuration
+site:
+  production_url: "https://cleancraftapp.com"
+  development_url: "http://localhost:8080"
+  name: "CleanCraft"
+  default_language: "en"
 
 # Country metadata
 countries:
@@ -5,10 +11,16 @@ countries:
     name: "India"
     flag_emoji: "🇮🇳"
     region: "ASIA/PACIFIC"
+    language: "en"
+    currency: "INR"
+    timezone: "Asia/Kolkata"
   au:
     name: "Australia"
     flag_emoji: "🇦🇺"
     region: "ASIA/PACIFIC"
+    language: "en"
+    currency: "AUD"
+    timezone: "Australia/Sydney"
 
 # SEO Configuration
 seo:
@@ -16,10 +28,13 @@ seo:
     defaults:
       title_suffix: " | CleanCraft"
       keywords_base: ["professional cleaning", "garment care", "fabric treatment"]
-      image: "https://cleancraft.com/lovable-uploads/cleancraft-full-logo.png"
+      image: "https://cleancraftapp.com/lovable-uploads/cleancraft-full-logo.png"
       
   pages:
     "/":
+      priority: 1.0
+      changefreq: "daily"
+      lastmod: "2025-07-06"
       in:
         title: "Professional Dry Cleaning & Wet Cleaning Services in India"
         description: "Premium dry cleaning, wet cleaning, and laundry services across India. Expert garment care, stain removal, and fabric preservation with eco-friendly cleaning solutions."
@@ -30,12 +45,18 @@ seo:
         keywords: ["dry cleaning australia", "wet cleaning services melbourne sydney", "professional garment care australia", "eco-friendly dry cleaning", "green wet cleaning", "sustainable fabric care", "premium dry cleaning melbourne", "organic wet cleaning sydney", "luxury garment care australia", "commercial laundry services"]
 
     "/discover-cleancraft":
+      priority: 1.0
+      changefreq: "weekly"
+      lastmod: "2025-07-06"
       in:
         title: "Discover Clean Craft - India's Leading Laundry & Dry Cleaning Franchise"
         description: "Discover Clean Craft, India's fastest growing laundry and dry cleaning franchise brand. Offering coaching, franchise opportunities, and premium products for garment care excellence."
         keywords: ["Clean Craft India", "laundry franchise India", "dry cleaning franchise", "laundry business coaching", "garment care franchise", "cleaning products India", "professional laundry training", "franchise opportunities India", "spotless personality", "laundry entrepreneur"]
         
     "/learning/laundry-training-course":
+      priority: 1.0
+      changefreq: "weekly"
+      lastmod: "2025-07-06"
       in:
         title: "Professional Dry Cleaning & Wet Cleaning Training Course in Delhi"
         description: "Learn professional dry cleaning techniques, wet cleaning methods, and garment care from industry experts. Comprehensive laundry business training in Delhi with hands-on experience."
@@ -46,6 +67,9 @@ seo:
         keywords: ["dry cleaning training australia", "wet cleaning course melbourne", "professional cleaning certification", "garment care education australia", "fabric treatment training", "eco-friendly cleaning course", "commercial laundry training", "dry cleaning techniques workshop"]
         
     "/learning/laundry-training-book":
+      priority: 1.0
+      changefreq: "weekly"
+      lastmod: "2025-07-06"
       in:
         title: "Spotless Profit in Laundry - Dry Cleaning & Wet Cleaning Business Guide"
         description: "Complete business guide for starting dry cleaning, wet cleaning, and laundry services. Learn garment care techniques, business strategies, and profit optimization methods."
@@ -56,12 +80,18 @@ seo:
         keywords: ["dry cleaning business guide australia", "wet cleaning startup manual", "australian cleaning industry", "garment care business strategies", "fabric care entrepreneurship australia", "professional cleaning business", "laundry franchise guide", "cleaning business profit optimization"]
         
     "/blog":
+      priority: 1.0
+      changefreq: "daily"
+      lastmod: "2025-07-06"
       in:
         title: "Laundry & Dry Cleaning Tips, Guides & Industry Insights"
         description: "Expert tips on dry cleaning, wet cleaning, and garment care. Learn about fabric treatment, stain removal techniques, and professional laundry business insights from industry experts."
         keywords: ["dry cleaning tips", "wet cleaning guides", "garment care advice", "fabric treatment tips", "stain removal techniques", "laundry business insights", "professional cleaning tips", "clothing care guide", "dry cleaning blog", "laundry industry news"]
         
     "/laundry-franchise":
+      priority: 1.0
+      changefreq: "daily"
+      lastmod: "2025-07-06"
       in:
         title: "Dry Cleaning & Wet Cleaning Franchise Opportunity in India"
         description: "Join India's leading dry cleaning and wet cleaning franchise. Profitable garment care business opportunity with comprehensive training, equipment, and ongoing support."
@@ -72,6 +102,9 @@ seo:
         keywords: ["dry cleaning franchise australia", "wet cleaning business opportunity", "garment care franchise australia", "cleaning services franchise", "fabric care business model", "professional cleaning chain", "laundry franchise opportunity", "dry cleaning investment australia", "wet cleaning franchise cost", "profitable cleaning business"]
         
     "/services":
+      priority: 1.0
+      changefreq: "daily"
+      lastmod: "2025-07-06"
       in:
         title: "Complete Dry Cleaning & Wet Cleaning Services"
         description: "Comprehensive dry cleaning, wet cleaning, and specialized garment care services. Expert fabric treatment, stain removal, and preservation with modern cleaning technology."
@@ -82,6 +115,9 @@ seo:
         keywords: ["dry cleaning australia", "wet cleaning services", "professional garment care", "sustainable cleaning solutions", "fabric specialists australia", "eco-friendly dry cleaning", "premium cleaning services", "garment restoration", "commercial fabric care", "luxury item cleaning"]
         
     "/faq":
+      priority: 1.0
+      changefreq: "weekly"
+      lastmod: "2025-07-06"
       in:
         title: "Frequently Asked Questions - Dry Cleaning & Wet Cleaning"
         description: "Get answers to common questions about our dry cleaning, wet cleaning, and garment care services. Learn about fabric treatment, pricing, and service processes."
@@ -92,6 +128,9 @@ seo:
         keywords: ["dry cleaning faq australia", "wet cleaning questions", "garment care help australia", "fabric cleaning australia", "professional cleaning questions", "sustainable cleaning faq", "eco-friendly dry cleaning help"]
         
     "/policies":
+      priority: 1.0
+      changefreq: "weekly"
+      lastmod: "2023-10-01"
       in:
         title: "Policies - Dry Cleaning & Wet Cleaning Services"
         description: "Our policies for dry cleaning, wet cleaning, and garment care services. Terms, privacy, and service policies for professional fabric treatment."
