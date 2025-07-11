@@ -13,6 +13,7 @@ import {
   FaBroom,
 } from "react-icons/fa";
 import { IconType } from "react-icons";
+import { Link } from "react-router-dom";
 
 interface ServiceCardProps {
   name: string;
@@ -39,7 +40,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-gray-200">
-      {/* Icon with circular background */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <img
@@ -51,16 +51,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         </div>
         <ChevronRight className="w-5 h-5 text-gray-300" />
       </div>
-
-      {/* Title */}
-      {/* <h3 className="text-xl font-semibold text-gray-900 mb-3">{name}</h3> */}
-
-      {/* Description */}
       <p className="text-gray-600 text-sm leading-relaxed mb-6 min-h-[60px]">
         {description}
       </p>
-
-      {/* Pricing */}
       <div className="border-t border-gray-100 pt-4">
         <div className="flex items-center justify-between">
           <div>
@@ -86,7 +79,6 @@ const ConnectionStatus: React.FC = () => {
   const { isConnected, isInitializing, error, retryConnection } =
     useStrapiConnection();
 
-  // Log connection status for debugging
   React.useEffect(() => {
     if (isInitializing) {
       console.log("🔄 Strapi: Connecting to services...");
@@ -97,10 +89,7 @@ const ConnectionStatus: React.FC = () => {
     }
   }, [isInitializing, isConnected, error]);
 
-  // Only show UI in development mode
-  if (!import.meta.env.DEV) {
-    return null;
-  }
+  if (!import.meta.env.DEV) return null;
 
   if (isInitializing) {
     return (
@@ -126,12 +115,7 @@ const ConnectionStatus: React.FC = () => {
     );
   }
 
-  return (
-    <div className="flex items-center gap-2 text-white/75 text-sm">
-      {/* <Wifi className="w-4 h-4" />
-      <span>Live content</span> */}
-    </div>
-  );
+  return <div className="flex items-center gap-2 text-white/75 text-sm"></div>;
 };
 
 const serviceIcons: Record<string, IconType> = {
@@ -156,111 +140,29 @@ const currencySymbols: Record<string, string> = {
   it: "€",
 };
 
-const fallbackServices = [
-  {
-    id: "wash-dry-fold",
-    name: "Wash, Dry & Fold",
-    description:
-      "Professional laundry service charged per kilogram. Perfect for everyday clothes, bedding, and towels.",
-    price_from: 6.5,
-    price_type: "",
-    slug: "wash-dry-fold",
-  },
-  {
-    id: "wash-iron",
-    name: "Wash & Iron",
-    description: "For everyday laundry that requires ironing.",
-    price_from: 7.5,
-    price_type: "",
-    slug: "wash-iron",
-  },
-  {
-    id: "dry-cleaning",
-    name: "Dry Cleaning",
-    description: "For delicate items and fabrics.",
-    price_from: 12.95,
-    price_type: "",
-    slug: "dry-cleaning",
-  },
-  {
-    id: "ironing",
-    name: "Ironing only",
-    description: "For items that are already clean.",
-    price_from: 3.95,
-    price_type: "",
-    slug: "ironing",
-  },
-  {
-    id: "duvets",
-    name: "Duvets & Bulky Items",
-    description: "For larger items that require extra care.",
-    price_from: 24.95,
-    price_type: "",
-    slug: "duvets",
-  },
-];
-
 const ServicesSection: React.FC = () => {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
   const [showAll, setShowAll] = useState(false);
 
-  // Show loading spinner if Strapi is initializing or data is loading
-  if (isInitializing || (isLoading && isConnected)) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  const countryCode = currentCountry?.toLowerCase() || "in";
+  const currencySymbol = currencySymbols[countryCode] || "₹";
 
-  if (error && isConnected) {
-    console.error("Error loading services:", error);
-    toast.error("Failed to load services");
-  }
-
-  const displayServicesRaw =
-    strapiServices?.data && strapiServices.data.length > 0
-      ? strapiServices.data
-      : fallbackServices;
-
-  // Fix price_type fallback based on slug
-  const displayServices = displayServicesRaw.map((service) => {
-    let priceType = service.price_type?.trim();
-
-    if (!priceType) {
-      const slugLower = service.slug?.toLowerCase() || "";
-      if (
-        slugLower.includes("wash-dry-fold") ||
-        slugLower.includes("wash-iron") ||
-        slugLower.includes("premium-laundry")
-      ) {
-        priceType = "kg";
-      } else {
-        priceType = "item";
-      }
-    }
-
-    return {
-      ...service,
-      price_type: priceType,
-    };
+  const displayServices = (strapiServices?.data || []).map((service: any) => {
+    const priceType =
+      service.price_type || (service.slug?.includes("wash") ? "kg" : "item");
+    return { ...service, price_type: priceType };
   });
 
-  const visibleServicesDesktop = showAll
+  const visibleServices = showAll
     ? displayServices
     : displayServices.slice(0, 2);
 
-  const visibleServicesMobile = displayServices;
-
-  const countryCode = currentCountry?.toLowerCase() || "in";
-
   return (
     <div className="w-full px-2 md:px-4">
-      {/* Mobile View */}
       <div className="lg:hidden">
-        <div className="max-w-7xl mx-auto bg-[#1E3A8A] p-6 rounded-3xl">
+        <div className=" mx-auto bg-[#1E3A8A]  rounded-3xl">
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-3xl font-bold text-white">
@@ -269,69 +171,75 @@ const ServicesSection: React.FC = () => {
               <ConnectionStatus />
             </div>
             <p className="text-lg text-white">
-              Your clothes are treated with the utmost care, receiving the
-              attention they deserve.
+              Wide range of laundry service with free home pickup & delivery
             </p>
           </div>
           <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory">
-            {visibleServicesMobile.map((service) => (
+            {displayServices.map((service: any) => (
               <div key={service.id} className="snap-start min-w-[320px]">
                 <ServiceCard {...service} icon={serviceIcons[service.name]} />
               </div>
             ))}
           </div>
-          <p className="text-sm text-white/75 mt-4">
-            Our minimum order value is {currencySymbols[countryCode]}350. All
-            orders include free delivery.
-          </p>
+          <div className="mt-4">
+            <p className="text-sm text-white/75 mb-4">
+              Our minimum order value is {currencySymbol}350. All orders include
+              free delivery.
+            </p>
+            <Link to="/book-now">
+              <button className="bg-white text-[#1E3A8A] px-5 py-2 rounded-full font-semibold text-sm shadow-md hover:bg-gray-100 transition">
+                Schedule Pickup
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Desktop View */}
       <div
         className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
-        style={{ height: "calc(100vh - 64px)" }}
+        style={{ height: "calc(100vh - 260px)" }}
       >
-        {/* Static Left */}
-        <div className="w-1/2 bg-[#1E3A8A] text-white p-16 flex flex-col">
-          <div>
+        <div className="w-1/2 bg-[#1E3A8A] text-white px-16 ">
+          <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-4xl font-bold">Explore our services</h2>
               <ConnectionStatus />
             </div>
-            <p className="text-lg mb-8 text-white">
-              Your clothes are treated with the utmost care, receiving the
-              attention they deserve.
+            <p className="text-lg text-white">
+              Wide range of laundry service with free home pickup & delivery
             </p>
-            <button className="flex items-center text-lg hover:underline">
+            <button className="flex items-center text-lg text-white  hover:no-underline">
               Explore pricing <ArrowRight className="ml-2 w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-white mt-16">
-            Our minimum order value is {currencySymbols[countryCode]}350. All
-            orders include free delivery.
-          </p>
+          <div>
+            <p className="text-sm text-white mb-6">
+              Our minimum order value is {currencySymbol}350. All orders include
+              free delivery.
+            </p>
+            <Link to="/book-now">
+              <button className="bg-white text-[#1E3A8A] px-6 py-3 rounded-full font-semibold text-base shadow-md hover:bg-gray-100 transition">
+                Schedule Pickup
+              </button>
+            </Link>
+          </div>
         </div>
 
-        {/* Dynamic Right */}
         <div className="w-1/2 bg-gray-50 p-16 overflow-y-auto hide-scrollbar">
           <div className="space-y-6 max-w-xl">
-            {visibleServicesDesktop.map((service) => (
+            {visibleServices.map((service: any) => (
               <ServiceCard
                 key={service.id}
                 {...service}
                 icon={serviceIcons[service.name]}
               />
             ))}
-
-            <div className="hidden lg:block">
-              <button
-                onClick={() => setShowAll(!showAll)}
-                className="text-blue-600 underline text-sm mt-4"
-              >
-                {showAll ? "Show less" : "Show more"}
-              </button>
-            </div>
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="text-blue-600 underline text-sm mt-4"
+            >
+              {showAll ? "Show less" : "Show more"}
+            </button>
           </div>
         </div>
       </div>

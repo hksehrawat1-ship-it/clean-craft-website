@@ -101,7 +101,7 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
-        <div className="mt-16 bg-cleancraft-light/30 rounded-xl p-6 md:p-8 google-shadow">
+        <div className="mt-16 bg-cleancraft-light/30 rounded-xl p-2 md:p-8 google-shadow">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl font-bold mb-4 text-google-blue">
@@ -112,46 +112,44 @@ const TestimonialsSection = () => {
                 performance metrics across the board.
               </p>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-google-blue mb-1">
-                    94%
+              {/* Responsive Grid: 1 column on mobile, 2 on large screens */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {[
+                  {
+                    value: "94%",
+                    color: "text-google-blue",
+                    text: "of franchisees break even within 7 months",
+                  },
+                  {
+                    value: "45%",
+                    color: "text-google-green",
+                    text: "average profit margin across all locations",
+                  },
+                  {
+                    value: "250+",
+                    color: "text-google-red",
+                    text: "franchise locations nationwide",
+                  },
+                  {
+                    value: "92%",
+                    color: "text-google-yellow",
+                    text: "franchise owner satisfaction rating",
+                  },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-white p-4 rounded-lg shadow-sm"
+                  >
+                    <div className={`text-3xl font-bold mb-1 ${item.color}`}>
+                      {item.value}
+                    </div>
+                    <div className="text-gray-600 text-sm">{item.text}</div>
                   </div>
-                  <div className="text-gray-600 text-sm">
-                    of franchisees break even within 7 months
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-google-green mb-1">
-                    45%
-                  </div>
-                  <div className="text-gray-600 text-sm">
-                    average profit margin across all locations
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-google-red mb-1">
-                    250+
-                  </div>
-                  <div className="text-gray-600 text-sm">
-                    franchise locations nationwide
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-google-yellow mb-1">
-                    92%
-                  </div>
-                  <div className="text-gray-600 text-sm">
-                    franchise owner satisfaction rating
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="bg-white px-1 md:px-4 rounded-lg shadow-sm">
               <div className="flex items-center mb-4">
                 <div className="h-12 w-12 mr-4">
                   <img
@@ -161,7 +159,7 @@ const TestimonialsSection = () => {
                   />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-google-blue">
+                  <h4 className="font-semibold text-google-blue text-sm">
                     Himanshu Sehrawat
                   </h4>
                   <div className="text-sm text-gray-500">CEO & Founder</div>
@@ -169,12 +167,29 @@ const TestimonialsSection = () => {
               </div>
 
               <blockquote className="text-gray-600">
-                <p className="mb-4">
-                  "Jab maine clean craft ka franchise model banya tho mujhe dil
-                  se pata tha ki ye paisa apka save kiya hua hai, apki mehnat ka
-                  paise hai. Isliye mene ise ese banaya ki apko jald se jald
-                  profit mile apka breakeven aye or apki tention dooor ho... ye
-                  sirf ek laundry shop nahi proven business model hai.."
+                <p className="mb-3">
+                  “Laundry is the next big thing in India — and it’s already
+                  happening!”
+                </p>
+                <p className="mb-3">
+                  By 2035, there will be a laundry outlet at every corner, just
+                  like tea stalls and kirana shops today. And those who invest
+                  early will own the market.
+                </p>
+                <p className="mb-3">
+                  With a super-high ROI of 62% and gross margins of 33.7%, Clean
+                  Craft isn’t just a laundry brand — it’s a cashflow engine
+                  designed for smart franchise owners.
+                </p>
+                <p className="mb-1">You don’t need crores.</p>
+                <p className="mb-1">You don’t even need ₹30 lakh.</p>
+                <p className="mb-3">
+                  Our franchise setup cost is just ₹20–24 lakhless than a
+                  Scorpio N.
+                </p>
+                <p>
+                  Don’t wait for 2035. This is your moment to do the right thing
+                  — at the right time.”
                 </p>
               </blockquote>
             </div>

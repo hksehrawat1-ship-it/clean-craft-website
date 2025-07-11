@@ -1,17 +1,16 @@
-
 import { Award, BookOpen, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TrainerSection = () => {
   const scrollToRegistration = () => {
-    const registrationForm = document.getElementById('registration-form');
+    const registrationForm = document.getElementById("registration-form");
     if (registrationForm) {
-      registrationForm.scrollIntoView({ behavior: 'smooth' });
+      registrationForm.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <section id="trainer" className="py-16 bg-blue-50">
+    <section id="trainer" className="md:py-10 py-2 bg-blue-50">
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -25,7 +24,7 @@ const TrainerSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="rounded-xl overflow-hidden shadow-lg">
             <img
-              src="/lovable-uploads/73900c5b-c9fc-44e4-a27d-fa62eba82bdb.png"
+              src="/lovable-uploads/himanshusir.jpg"
               alt="Mr. Himanshu Sehrawat"
               className="w-full h-auto object-cover"
             />

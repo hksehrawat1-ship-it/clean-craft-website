@@ -21,6 +21,9 @@ import FaqSection from "@/components/franchise/FaqSection";
 import CareSection from "@/components/franchise/CareSection";
 
 import { EnhancedSEO } from "@/components/EnhancedSEO";
+import AsFeaturedOn from "@/components/franchise/AsFeaturedOn";
+import SuccessStories from "@/components/franchise/SuccessStories";
+import StudentGallery from "@/components/franchise/StudentGallery";
 
 const Franchise = () => {
   return (
@@ -42,10 +45,13 @@ const Franchise = () => {
         <IdealCustomerSection />
         <ComparisonSection />
         <FeaturesSection />
+        <StudentGallery />
         <GuaranteeSection />
         <ProcessSection />
+        <AsFeaturedOn />
         <TestimonialsSection />
         <CareSection />
+        <SuccessStories />
         <FaqSection />
       </main>
     </Layout>
