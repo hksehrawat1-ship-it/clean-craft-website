@@ -35,7 +35,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className=" md:py-6 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -67,6 +67,18 @@ const Features = () => {
             <span className="text-laundry-gold">No More Secrets</span> in
             Laundry and Dry Cleaning.
           </p>
+
+          {/* ✅ CTA Updated */}
+          <div className="mt-8">
+            <a
+              href="https://cleancraft.mojo.page/online-laundry-training-in-india"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-8 py-3 text-white bg-[#1869D3] hover:bg-[#155bb6] rounded-full text-lg font-semibold transition duration-300"
+            >
+              Buy Now
+            </a>
+          </div>
         </div>
       </div>
     </section>

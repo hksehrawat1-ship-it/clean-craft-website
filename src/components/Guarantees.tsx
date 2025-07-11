@@ -68,12 +68,20 @@ const Guarantees = () => {
               <h3 className="text-2xl md:text-3xl font-bold mb-2 text-gray-800">
                 Money-Back Guarantee
               </h3>
-              <p className="text-lg text-gray-700">
+              <p className="text-lg text-gray-700 mb-4">
                 If after the first two classes you feel this training isn't for
                 you, we'll refund{" "}
                 <span className="font-bold">100% of your fees</span>. No
                 questions asked.
               </p>
+              <a
+                href="https://cleancraft.mojo.page/best-laundry-training-institute-in-india"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-[#1A73E8] text-white text-sm font-semibold hover:bg-[#1666c1] transition min-h-[20px] min-w-[180px] px-5 py-2 rounded-full"
+              >
+                Get No.1 Laundry Store
+              </a>
             </div>
           </div>
         </div>

@@ -1,9 +1,7 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
   Shield,
-  Check,
   Clock,
   Award,
   Zap,
@@ -12,18 +10,29 @@ import {
   FileCheck,
   PackageCheck,
   DollarSign,
+  ChevronRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import FranchiseFormModal from "./FranchiseFormModal";
 
 const GuaranteeSection = () => {
   const isMobile = useIsMobile();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
 
   const handleClaimTerritory = () => {
     setIsFormOpen(true);
+  };
+
+  const handleNextScroll = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({
+        left: 320,
+        behavior: "smooth",
+      });
+    }
   };
 
   const guarantees = [
@@ -112,6 +121,7 @@ const GuaranteeSection = () => {
   return (
     <section id="guarantees" className="section-padding bg-white">
       <div className="container-custom">
+        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -142,39 +152,53 @@ const GuaranteeSection = () => {
           </div>
         </motion.div>
 
-        {/* Carousel for mobile, grid for desktop */}
+        {/* Mobile view */}
         {isMobile ? (
-          <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory"
-          >
-            {guarantees.map((guarantee, index) => (
-              <motion.div
-                key={index}
-                variants={item}
-                className="snap-center min-w-[300px] max-w-[300px] flex-shrink-0"
-              >
-                <Card className="h-full border-0 hover:shadow-md transition-all duration-300 bg-white overflow-hidden hover:scale-[1.02] group">
-                  <div className="p-6">
-                    <div className="bg-google-blue/5 p-4 rounded-lg mb-5 w-16 h-16 flex items-center justify-center group-hover:bg-google-blue/10 transition-colors duration-300">
-                      {guarantee.icon}
+          <div className="relative">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory no-scrollbar"
+              ref={carouselRef}
+            >
+              {guarantees.map((guarantee, index) => (
+                <motion.div
+                  key={index}
+                  variants={item}
+                  className="snap-center min-w-[300px] max-w-[300px] flex-shrink-0"
+                >
+                  <Card className="h-full border-0 hover:shadow-md transition-all duration-300 bg-white overflow-hidden hover:scale-[1.02] group">
+                    <div className="p-6">
+                      <div className="bg-google-blue/5 p-4 rounded-lg mb-5 w-16 h-16 flex items-center justify-center group-hover:bg-google-blue/10 transition-colors duration-300">
+                        {guarantee.icon}
+                      </div>
+                      <h3 className="font-bold text-xl text-google-gray mb-2 group-hover:text-google-blue transition-colors duration-300">
+                        {guarantee.title}
+                      </h3>
+                      <p className="text-google-blue font-medium mb-4">
+                        {guarantee.subtitle}
+                      </p>
+                      <p className="text-gray-600">{guarantee.description}</p>
                     </div>
-                    <h3 className="font-bold text-xl text-google-gray mb-2 group-hover:text-google-blue transition-colors duration-300">
-                      {guarantee.title}
-                    </h3>
-                    <p className="text-google-blue font-medium mb-4">
-                      {guarantee.subtitle}
-                    </p>
-                    <p className="text-gray-600">{guarantee.description}</p>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Scroll Button */}
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleNextScroll}
+                className="bg-google-blue text-white rounded-full p-3 shadow hover:bg-google-blue/90 transition"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
         ) : (
+          // Desktop Grid
           <motion.div
             variants={container}
             initial="hidden"
@@ -203,7 +227,7 @@ const GuaranteeSection = () => {
           </motion.div>
         )}
 
-        {/* CTA Section */}
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -212,7 +236,10 @@ const GuaranteeSection = () => {
           className="mt-16 rounded-2xl overflow-hidden shadow-lg"
         >
           <div className="bg-google-blue text-white p-8 text-center">
-            <h3 className="text-3xl font-bold mb-4" style={{ color: "white" }}>
+            <h3
+              className="text-3xl font-bold mb-4 text-white"
+              style={{ color: "white" }}
+            >
               Ready to become our next success story?
             </h3>
             <p
@@ -225,27 +252,11 @@ const GuaranteeSection = () => {
             <div className="flex flex-col items-center">
               <button
                 onClick={handleClaimTerritory}
-                className="inline-flex items-center justify-center bg-white text-blue-600 font-semibold rounded-full shadow-md transition-all duration-300 cursor-pointer select-none group"
-                style={{ padding: "16px", backgroundColor: "white" }}
+                className="inline-flex items-center justify-center bg-white text-blue-600 font-semibold rounded-full shadow-md transition-all duration-300 cursor-pointer select-none group px-6 py-3"
               >
                 Claim Your Territory Today
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="ml-2 transition-transform duration-300"
-                >
-                  <path d="M5 12h14"></path>
-                  <path d="m12 5 7 7-7 7"></path>
-                </svg>
+                <ChevronRight className="ml-2 w-5 h-5" />
               </button>
-
               <p
                 className="text-white/80 mt-4 italic text-sm"
                 style={{ color: "white" }}

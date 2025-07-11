@@ -31,10 +31,10 @@ const FaqPage: React.FC = () => {
   const { countryCode } = useParams();
   const { faqsByCategory, categories, isLoading, error } = useFAQs(countryCode);
 
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  // ✅ Set "home" as the default category
+  const [selectedCategory, setSelectedCategory] = useState<string>("home");
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // Filter FAQs based on selected category
   const filteredFAQs = useMemo(() => {
     if (selectedCategory === "all") {
       return Object.values(faqsByCategory).flat();
@@ -45,25 +45,21 @@ const FaqPage: React.FC = () => {
   const totalFAQs = filteredFAQs.length;
   const totalPages = Math.ceil(totalFAQs / PAGE_SIZE);
 
-  // Slice current page FAQs
   const currentFAQs = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
     return filteredFAQs.slice(start, start + PAGE_SIZE);
   }, [filteredFAQs, currentPage]);
 
-  // On category change reset to page 1
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
     setCurrentPage(1);
   };
 
-  // Handle page change with scroll
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Smart pagination numbers logic
   const getPageNumbers = () => {
     const delta = 2;
     const pages: (number | string)[] = [];
@@ -104,7 +100,8 @@ const FaqPage: React.FC = () => {
           <div className="container mx-auto px-4 py-16 md:py-24">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-5xl font-black mb-8 text-center">
-                Frequently Asked <span className="text-primary">Questions</span>
+                FAQs - Your Questions{" "}
+                <span className="text-primary">Answered</span>
               </h1>
 
               <p className="text-lg text-gray-600 text-center mb-12">
@@ -134,7 +131,8 @@ const FaqPage: React.FC = () => {
                             value={category}
                             className="capitalize"
                           >
-                            {category}
+                            {category.charAt(0).toUpperCase() +
+                              category.slice(1)}
                           </SelectItem>
                         ))}
                     </SelectContent>
@@ -160,8 +158,9 @@ const FaqPage: React.FC = () => {
                     <>
                       {" "}
                       in{" "}
-                      <span className="font-medium capitalize">
-                        {selectedCategory}
+                      <span className="font-medium">
+                        {selectedCategory.charAt(0).toUpperCase() +
+                          selectedCategory.slice(1)}
                       </span>
                     </>
                   )}

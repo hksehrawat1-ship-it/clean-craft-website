@@ -79,8 +79,8 @@ const YourFirstPickupEssentials: React.FC = () => {
         } justify-between gap-10 md:gap-20 max-w-7xl w-full`}
       >
         {isMobile ? (
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
-            <h1 className="text-[32px] font-black text-stone-950 mb-6">
+          <div className="bg-white rounded-2xl px-2 py-2 shadow-sm">
+            <h1 className="text-[20px] font-bold  text-center text-stone-950 mb-6">
               Your First Pickup{" "}
               <span className="text-[#1869D3]">Essentials</span>
             </h1>
@@ -113,9 +113,8 @@ const YourFirstPickupEssentials: React.FC = () => {
         ) : (
           <>
             <header className="flex flex-col justify-center my-auto min-w-60 w-full md:w-[381px]">
-              <h1 className="text-4xl md:text-7xl font-black text-stone-950">
-                Your First <br />
-                Pickup <br />
+              <h1 className="text-3xl md:text-7xl font-black text-stone-950">
+                Your First Pickup <br />
                 <span className="text-[#1869D3]">Essentials</span>
               </h1>
               <BookingButton onClick={handleBookingClick} />

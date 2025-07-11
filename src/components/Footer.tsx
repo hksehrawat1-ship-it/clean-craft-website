@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
         <div className="space-y-2">
           <div className="flex items-center">
             <img
-              src="/lovable-uploads/cleancraft-full-logo.png"
+              src="/lovable-uploads/Clean Craft logo (688x144)-01.svg"
               alt="CleanCraft Laundry and Dry Cleaning Logo"
               className="h-14 w-auto"
             />

@@ -1,13 +1,40 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
 
+  // 🔁 Dynamic next 25th batch date with suffix (e.g., 25th July 2025)
+  const getNextBatchDate = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    const batchDate =
+      today.getDate() < 25
+        ? new Date(currentYear, currentMonth, 25)
+        : new Date(currentYear, currentMonth + 1, 25);
+
+    const day = batchDate.getDate();
+    const suffix =
+      day === 1 || day === 21 || day === 31
+        ? "st"
+        : day === 2 || day === 22
+        ? "nd"
+        : day === 3 || day === 23
+        ? "rd"
+        : "th";
+
+    const month = batchDate.toLocaleString("default", { month: "long" });
+    const year = batchDate.getFullYear();
+
+    return `${day}${suffix} ${month} ${year}`;
+  };
+
   return (
-    <section className="pt-16 pb-12 md:pt-24 md:pb-20">
-      <div className="container mx-auto px-4">
+    <section className="pt-16 pb-0 md:pt-24 md:pb-2">
+      <div className="container mx-auto px-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="animate-fade-in">
             <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-primary text-sm font-medium mb-4">
@@ -34,7 +61,7 @@ const HeroSection = () => {
                   ₹14,500
                 </span>
                 <span className="bg-[#1A73E8] text-white px-2 py-1 rounded text-sm">
-                  25% OFF
+                  27.5% OFF
                 </span>
               </div>
             </div>
@@ -56,7 +83,7 @@ const HeroSection = () => {
             <div className="flex items-center gap-4 mt-8">
               <span className="text-sm text-gray-500">Next Batch:</span>
               <span className="py-1 px-3 rounded-full bg-blue-100 text-primary text-sm font-medium">
-                25th June, 2025
+                {getNextBatchDate()}
               </span>
             </div>
           </div>

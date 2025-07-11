@@ -43,7 +43,7 @@
   </script>
   <!-- End Google Tag Manager -->
 
-  <!-- Preload critical resources -->
+  <!-- Preload important images -->
   <link rel="preload" href="/lovable-uploads/cleancraft-full-logo.png" as="image" />
   <link rel="preload" href="/lovable-uploads/hero.png" as="image" />
 </head>
@@ -58,51 +58,18 @@
 
   <div id="root"></div>
 
-  <!-- Main App -->
+  <!-- Main React App -->
   <script type="module" src="/src/main.tsx"></script>
 
-  <!-- ✅ Improved fallback for old mobile browsers -->
-  <!-- Commented out legacy scripts to fix white screen on iPhone -->
-
-  <!--
-    <script nomodule>
-      document.getElementById('root').innerHTML =
-        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;font-family:system-ui;padding:2rem;background:#1869D3;color:white;">' +
-        '<h1 style="margin-bottom:1rem;font-size:2rem;">CleanCraft</h1>' +
-        '<p style="margin-bottom:2rem;font-size:1.1rem;">Please update your browser to view this site.</p>' +
-        '<p style="font-size:0.9rem;opacity:0.8;">We recommend using Chrome, Safari, or another modern browser.</p>' +
-        '</div>';
-    </script>
-
-    <script nomodule>
-      !function(){
-        var e=document,t=e.createElement("script");
-        if(!("noModule"in t)&&"onbeforeload"in t){
-          var n=!1;
-          e.addEventListener("beforeload",(function(e){
-            if(e.target===t)n=!0;
-            else if(!e.target.hasAttribute("nomodule")||!n)return;
-            e.preventDefault()
-          }),!0);
-          t.type="module",t.src=".",e.head.appendChild(t),t.remove()
-        }
-      }();
-    </script>
-
-    <script
-      nomodule
-      crossorigin
-      id="vite-legacy-polyfill"
-      src="/assets/polyfills-legacy-*.js"
-    ></script>
-
-    <script
-      nomodule
-      crossorigin
-      id="vite-legacy-entry"
-      data-src="/assets/index-legacy-*.js"
-    ></script>
-    -->
+  <!-- ✅ iPhone White Screen Fix (fallback for old browsers) -->
+  <script nomodule>
+    document.getElementById('root').innerHTML =
+      '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;font-family:system-ui;padding:2rem;background:#1869D3;color:white;">' +
+      '<h1 style="margin-bottom:1rem;font-size:2rem;">CleanCraft</h1>' +
+      '<p style="margin-bottom:2rem;font-size:1.1rem;">Please update your browser to view this site.</p>' +
+      '<p style="font-size:0.9rem;opacity:0.8;">We recommend using Chrome, Safari, or another modern browser.</p>' +
+      '</div>';
+  </script>
 </body>
 
 </html>
