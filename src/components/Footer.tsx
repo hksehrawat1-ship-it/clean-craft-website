@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
         <div className="space-y-2">
           <div className="flex items-center">
             <img
-              src="/lovable-uploads/cleancraft-full-logo.png"
+              src="/lovable-uploads/Clean Craft logo (688x144)-01.svg"
               alt="CleanCraft Laundry and Dry Cleaning Logo"
               className="h-14 w-auto"
             />
@@ -157,11 +157,22 @@ const Footer: React.FC = () => {
             </li>
             <li className="flex gap-3">
               <Phone className="text-blue-500 mt-1 flex-shrink-0" size={18} />
-              <span className="text-gray-600">(+91) 88-00-77-1349</span>
+              <a
+                href="tel:+918800771349"
+                className="text-gray-600 hover:text-blue-500 transition-colors"
+              >
+                (+91) 88-00-77-1349
+              </a>
             </li>
+
             <li className="flex gap-3">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />
-              <span className="text-gray-600">hello@cleancraftapp.com</span>
+              <a
+                href="mailto:hello@cleancraftapp.com"
+                className="text-gray-600 hover:text-blue-500 transition-colors"
+              >
+                hello@cleancraftapp.com
+              </a>
             </li>
           </ul>
         </div>

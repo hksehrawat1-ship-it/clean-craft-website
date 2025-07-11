@@ -23,9 +23,9 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
       : "Happy Readers";
 
   return (
-    <section className="w-full py-16 px-4 md:px-8 bg-[#F8FAFC]">
+    <section className="w-full py-0 mx:py-10 px-4 md:px-8 bg-[#F8FAFC]">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-black text-center mb-16">
+        <h2 className="text-3xl md:text-5xl font-black text-center mb-16">
           <span className="text-[#1869D3]">{title}</span>
         </h2>
 
@@ -35,7 +35,7 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="bg-white rounded-xl p-6 shadow-sm w-[300px] flex-none"
+                className="bg-white rounded-xl px-2 py-2 shadow-sm w-[300px] flex-none"
               >
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
@@ -50,7 +50,7 @@ const TestimonialDisplay: React.FC<TestimonialDisplayProps> = ({
                   ))}
                 </div>
 
-                <p className="text-gray-700 mb-6 text-lg">
+                <p className="text-gray-700 mb-6 text-[16px]">
                   "{testimonial.content}"
                 </p>
 

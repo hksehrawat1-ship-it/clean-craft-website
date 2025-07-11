@@ -134,9 +134,9 @@ const franchiseCategories = [
 
 const ComparisonSection = () => {
   return (
-    <section className="bg-gray-50 py-16">
+    <section className="bg-gray-50 py-8">
       <div className="container-custom">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             2025 Franchise <span className="gradient-text">Comparison</span>
           </h2>

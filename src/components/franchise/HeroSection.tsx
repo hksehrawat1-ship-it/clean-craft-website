@@ -22,12 +22,12 @@ const HeroSection = () => {
           <div className="space-y-8 franchise-fade-in">
             <Badge
               variant="outline"
-              className="bg-cleancraft-light text-cleancraft-darkgold px-6 py-2 text-base font-medium"
+              className="bg-cleancraft-light text-cleancraft-darkgold px-6 py-2 text-sm md:text-base font-medium"
             >
-              Premium Laundry Franchise Opportunity
+              #No. 1 Laundry Franchise opportunity in India
             </Badge>
 
-            <h1 className="text-display-lg font-bold leading-tight">
+            <h1 className="md:text-lg text-sm font-bold leading-tight">
               Own a Thriving{" "}
               <span className="gradient-text">Laundry &amp; Dry Cleaning</span>{" "}
               Franchise
@@ -60,8 +60,10 @@ const HeroSection = () => {
                     India's Best Laundry Franchise:
                   </h3>
                   <p className="text-gray-700">
-                    Revolutionary Laundry Business Solutions With Global
-                    Recognition
+                    Join CleanCraft’s all India laundry and dry cleaning
+                    franchise business opportunity with 100% growth potential.
+                    Low investment, high returns, and full training support
+                    included.
                   </p>
                 </div>
               </div>
@@ -73,7 +75,7 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Button 
+              <Button
                 onClick={handleRequestInfo}
                 className="bg-google-blue hover:bg-google-blue/90 text-white font-medium text-base"
               >

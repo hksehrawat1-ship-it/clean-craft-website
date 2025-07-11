@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -14,31 +13,41 @@ interface StepData {
 const ProcessStepsSection = () => {
   const isMobile = useIsMobile();
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [countrySuffix, setCountrySuffix] = useState<string>("");
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.startsWith("/in")) {
+      setCountrySuffix("-in");
+    } else {
+      setCountrySuffix(""); // default (for /au or others)
+    }
+  }, []);
 
   const steps: StepData[] = [
     {
       id: 1,
       title: "Select Order Type",
       description: "Choose between on-demand or scheduling ahead.",
-      imageSrc: "/lovable-uploads/step-1-steps-laundry.png",
+      imageSrc: `/lovable-uploads/step-1-steps-laundry${countrySuffix}.png`,
     },
     {
       id: 2,
       title: "Pick Your Services",
       description: "Your one-stop solution for all laundry needs.",
-      imageSrc: "/lovable-uploads/step-2-steps-laundry.png",
+      imageSrc: `/lovable-uploads/step-2-steps-laundry${countrySuffix}.png`,
     },
     {
       id: 3,
       title: "Choose Payment Method",
       description: "Secure payments via Apple Pay, Google Pay, or card.",
-      imageSrc: "/lovable-uploads/step-3-steps-laundry.png",
+      imageSrc: `/lovable-uploads/step-3-steps-laundry${countrySuffix}.png`,
     },
     {
       id: 4,
       title: "Place Your Order & Track It",
       description: "Get real-time updates on your order status.",
-      imageSrc: "/lovable-uploads/step-4-steps-laundry.png",
+      imageSrc: `/lovable-uploads/step-4-steps-laundry${countrySuffix}.png`,
     },
   ];
 
@@ -99,7 +108,7 @@ const ProcessStepsSection = () => {
   };
 
   return (
-    <section className="py-16 md:py-20 px-4 md:px-12 lg:px-28 xl:px-32 bg-[#E8F1FD]">
+    <section className="py-0 md:py-10 px-2 md:px-12 lg:px-28 xl:px-32 bg-[#E8F1FD]">
       <div className="container mx-auto">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-5xl font-black mb-4 md:mb-6">
@@ -120,14 +129,14 @@ const ProcessStepsSection = () => {
 
         {isMobile ? (
           <div className="flex flex-col gap-6">
-            {/* Mobile Images - Enlarged */}
-            <div className="relative h-[280px] flex items-center justify-center">
+            {/* Mobile Images - enlarged to 420px */}
+            <div className="relative h-[420px] flex items-center justify-center">
               {steps.map((step, index) => (
                 <img
                   key={step.id}
                   src={step.imageSrc}
                   alt={step.title}
-                  className={`absolute w-auto h-full max-h-[280px] object-contain transition-all duration-300 ${
+                  className={`absolute w-auto h-full max-h-[420px] object-contain transition-all duration-300 ${
                     activeStep === index
                       ? "opacity-100 scale-100"
                       : "opacity-0 scale-95"
@@ -136,7 +145,7 @@ const ProcessStepsSection = () => {
               ))}
             </div>
 
-            {/* Scrollable steps */}
+            {/* Scrollable Steps */}
             <div className="overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4">
               <div className="flex space-x-3">
                 {steps.map((step, index) => (
@@ -147,7 +156,7 @@ const ProcessStepsSection = () => {
           </div>
         ) : (
           <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-            {/* Enlarged Image for Desktop */}
+            {/* Desktop Image */}
             <div className="md:w-3/5 lg:w-7/12 relative flex items-center justify-center">
               <img
                 src={steps[activeStep].imageSrc}
@@ -157,7 +166,7 @@ const ProcessStepsSection = () => {
               />
             </div>
 
-            {/* Steps with vertical progress */}
+            {/* Desktop Steps */}
             <div className="md:w-2/5 lg:w-5/12 relative flex flex-col gap-6">
               <div
                 className="absolute left-5 top-0 bottom-0 w-1 bg-gray-200 rounded-full z-0"

@@ -10,11 +10,9 @@ import GuaranteeSection from "../components/home/GuaranteeSection";
 import FaqSection from "../components/home/FAQSection";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
 import { cn } from "@/lib/utils";
-import {
-  useStrapiFAQs,
-  useStrapiTestimonials,
-} from "@/hooks/useStrapi";
+import { useStrapiFAQs, useStrapiTestimonials } from "@/hooks/useStrapi";
 import TestimonialSection from "@/components/home/TestimonialSection";
+import Offers from "@/components/home/Offers";
 
 interface SectionWrapperProps {
   children: React.ReactNode;
@@ -45,18 +43,25 @@ export default function Index() {
   const countryName = countryData?.name || "";
 
   // Fetch FAQs and testimonials for home page with error handling
-  const { data: faqs, isLoading: faqsLoading, error: faqsError } = useStrapiFAQs({
+  const {
+    data: faqs,
+    isLoading: faqsLoading,
+    error: faqsError,
+  } = useStrapiFAQs({
     category: "home",
     sortBy: "order",
     sortOrder: "asc",
   });
 
-  const { data: testimonials, isLoading: testimonialsLoading, error: testimonialsError } =
-    useStrapiTestimonials({
-      category: "home",
-      sortBy: "rating",
-      sortOrder: "desc",
-    });
+  const {
+    data: testimonials,
+    isLoading: testimonialsLoading,
+    error: testimonialsError,
+  } = useStrapiTestimonials({
+    category: "home",
+    sortBy: "rating",
+    sortOrder: "desc",
+  });
 
   // Log errors for debugging
   if (faqsError) {
@@ -67,7 +72,8 @@ export default function Index() {
   }
 
   // Check if we have testimonials to display
-  const hasTestimonials = testimonials?.data?.length && testimonials?.data?.length > 0;
+  const hasTestimonials =
+    testimonials?.data?.length && testimonials?.data?.length > 0;
 
   return (
     <>
@@ -80,11 +86,17 @@ export default function Index() {
         defaultDescription={`Experience premium dry cleaning and laundry services with CleanCraft${
           countryName ? ` in ${countryName}` : ""
         }. Professional cleaning, expert care, and convenient solutions for all your laundry and dry cleaning needs.`}
-        customKeywords={['professional laundry services', 'dry cleaning near me', 'wet cleaning solutions']}
+        customKeywords={[
+          "professional laundry services",
+          "dry cleaning near me",
+          "wet cleaning solutions",
+        ]}
       />
 
       <Layout>
         <div className="flex flex-col w-full">
+          {/*offer section doesn't need standard padding */}
+          <Offers />
           {/* Hero section doesn't need standard padding */}
           <SectionWrapper noPadding>
             <HeroSection />

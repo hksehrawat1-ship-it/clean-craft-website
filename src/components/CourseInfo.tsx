@@ -3,8 +3,9 @@ import FileText from "@/components/FileText";
 
 const CourseInfo = () => {
   return (
-    <section id="course" className="py-16 bg-white">
+    <div id="course" className="md:py-10 py-0  bg-white">
       <div className="container mx-auto">
+        {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Course Details
@@ -15,10 +16,12 @@ const CourseInfo = () => {
           </p>
         </div>
 
+        {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
+          {/* Schedule */}
+          <div className="bg-white rounded-xl px-2 py-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
+              <div className="bg-[#1A73E8] rounded-full  inline-flex">
                 <Calendar className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -30,7 +33,8 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
+          {/* Location */}
+          <div className="bg-white rounded-xl p-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
               <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <MapPin className="h-6 w-6 text-white" />
@@ -44,7 +48,8 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
+          {/* Investment */}
+          <div className="bg-white rounded-xl p-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
               <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <IndianRupee className="h-6 w-6 text-white" />
@@ -58,7 +63,8 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
+          {/* Limited Spots */}
+          <div className="bg-white rounded-xl p-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
               <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <Users className="h-6 w-6 text-white" />
@@ -72,7 +78,8 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
+          {/* Comprehensive */}
+          <div className="bg-white rounded-xl p-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
               <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <Clock className="h-6 w-6 text-white" />
@@ -86,7 +93,8 @@ const CourseInfo = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
+          {/* Online Access */}
+          <div className="bg-white rounded-xl p-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
               <div className="bg-[#1A73E8] rounded-full p-3 inline-flex">
                 <FileText className="h-6 w-6 text-white" />
@@ -101,8 +109,9 @@ const CourseInfo = () => {
           </div>
         </div>
 
+        {/* Why Choose Block */}
         <div className="mt-12 max-w-3xl mx-auto text-center">
-          <div className="bg-blue-50 p-6 rounded-xl shadow-md">
+          <div className="bg-blue-50 p-2 rounded-xl shadow-md">
             <h3 className="text-2xl font-bold mb-3 text-[#1A73E8]">
               Why Choose Our Dry Cleaning Training Course India?
             </h3>
@@ -114,8 +123,20 @@ const CourseInfo = () => {
             </p>
           </div>
         </div>
+
+        {/* CTA Button */}
+        <div className="mt-12 mb-0 text-center">
+          <a
+            href="https://cleancraft.mojo.page/best-laundry-training-institute-in-india"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#1A73E8] hover:bg-[#1557B0] text-white font-semibold px-8 py-3 rounded-full text-lg shadow-md transition"
+          >
+            Book My Seat
+          </a>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

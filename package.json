@@ -5,13 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-<<<<<<< Updated upstream
-    "build": "vite build && npm run generate-sitemap",
-=======
     "build": "vite build && npm run postbuild && npm run generate-sitemap",
     "build:docker": "vite build && npm run generate-sitemap",
     "postbuild": "react-snap",
->>>>>>> Stashed changes
     "build:dev": "vite build --mode development && npm run generate-sitemap:dev",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -110,8 +106,6 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
     "vite-plugin-remove-console": "^2.2.0"
-<<<<<<< Updated upstream
-=======
   },
   "reactSnap": {
     "source": "dist",
@@ -121,6 +115,5 @@
     "minifyHtml": {
       "collapseWhitespace": true
     }
->>>>>>> Stashed changes
   }
 }
