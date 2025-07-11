@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Robots.txt for CleanCraft - Production optimized
 
 # Main search engine bots - full access with crawl delay
@@ -32,18 +33,24 @@ Allow: /
 Crawl-delay: 3
 
 # Default rule for all other bots
+=======
+>>>>>>> Stashed changes
 User-agent: *
-Allow: /
-Crawl-delay: 2
-
-# Disallow admin and development paths
 Disallow: /admin/
+Disallow: /login/
+Disallow: /signup/
+Disallow: /user/
+Disallow: /privacy-policy/
+Disallow: /terms-and-conditions/
+Disallow: /api/
 Disallow: /_dev/
 Disallow: /api/
 Disallow: /.well-known/
 Disallow: /temp/
 Disallow: /cache/
+Allow: /
 
+<<<<<<< Updated upstream
 # Allow important static assets
 Allow: /lovable-uploads/
 Allow: /assets/
@@ -53,3 +60,6 @@ Allow: /js/
 
 # Sitemap references
 Sitemap: https://cleancraftapp.com/sitemap.xml
+=======
+Sitemap: https://www.cleancraftapp.com/sitemap.xml
+>>>>>>> Stashed changes

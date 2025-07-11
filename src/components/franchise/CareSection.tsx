@@ -13,11 +13,11 @@ const CareSection = () => {
   };
 
   return (
-    <section
+    <div
       id="care"
       className="relative overflow-hidden bg-gradient-to-b from-cleancraft-light via-white to-white"
     >
-      <div className="container-custom section-padding">
+      <div className="md:py-4 py-4 container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 animate-fade-in">
             <Badge
@@ -110,9 +110,9 @@ const CareSection = () => {
                     <Button
                       onClick={handleFormOpen}
                       style={{ color: "white" }}
-                      className="text-base sm:text-lg px-7 sm:px-0"
+                      className="text-sm sm:text-lg px-7 sm:px-0"
                     >
-                      Schedule Your Franchise
+                      Schedule Your Franchise&nbsp;
                       <br className="block sm:hidden" />
                       Consultation Today
                     </Button>
@@ -134,7 +134,7 @@ const CareSection = () => {
       {/* Background elements */}
       <div className="absolute top-40 right-0 w-48 h-48 bg-cleancraft-light rounded-full opacity-40 blur-3xl -z-10"></div>
       <div className="absolute bottom-10 left-10 w-64 h-64 bg-cleancraft-light rounded-full opacity-30 blur-3xl -z-10"></div>
-    </section>
+    </div>
   );
 };
 

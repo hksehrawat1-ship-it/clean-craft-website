@@ -79,12 +79,12 @@ const EnhancedNavbar: React.FC = () => {
           className="z-20 flex items-center"
         >
           <img
-            src="/lovable-uploads/cleancraft-icon.png"
+            src="/lovable-uploads/Clean Craft logo (688x144)-01.svg"
             alt="CleanCraft Icon"
-            className="h-8 w-8 md:hidden"
+            className="h-10 w-auto md:hidden"
           />
           <img
-            src="/lovable-uploads/cleancraft-full-logo.png"
+            src="/lovable-uploads/Clean Craft logo (688x144)-01.svg"
             alt="CleanCraft Logo"
             className="hidden h-12 w-auto md:block"
           />

@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { StrapiFAQ } from "@/types/strapi";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
 interface FAQDisplayProps {
   faqs: StrapiFAQ[];
@@ -54,14 +54,13 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({ faqs, variant = "home" }) => {
   return (
     <>
       <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
-      <section className="w-full py-16 px-4 md:px-8 bg-white">
+      <section className="w-full py-0 mx:py-10 px-2 md:px-8 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black text-center mb-16">
-            Your Questions, <span className="text-[#1869D3]">Answered</span>
+          <h2 className="text-2xl md:text-5xl font-black text-center mb-8">
+            FAQs- Your Questions{" "}
+            <span className="text-[#1869D3]">Answered</span>
           </h2>
 
           <Accordion type="single" collapsible className="w-full space-y-4">
@@ -72,7 +71,7 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({ faqs, variant = "home" }) => {
                 className="border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm data-[state=open]:shadow-md transition-shadow"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50 group">
-                  <span className="text-left text-lg font-medium text-gray-900 group-hover:text-[#1869D3]">
+                  <span className="text-left md:text-lg text-sm font-medium text-gray-900 group-hover:text-[#1869D3]">
                     {faq.question}
                   </span>
                 </AccordionTrigger>

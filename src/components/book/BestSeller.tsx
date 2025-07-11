@@ -3,10 +3,10 @@ import { Award, Star } from "lucide-react";
 
 const BestSeller = () => {
   return (
-    <section className="py-12 bg-blue-50">
+    <section className="md:py-6 py-4 bg-blue-50">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white border border-blue-200 rounded-2xl shadow p-6 md:p-10 relative overflow-hidden">
+          <div className="bg-white border border-blue-200 rounded-2xl shadow p-6 md:p-5 relative overflow-hidden">
             {/* Best Seller Badge */}
             <div className="flex justify-center mb-4">
               <div className="bg-[#1A73E8] text-white px-4 py-1.5 rounded-full flex items-center gap-2 text-base font-bold shadow-sm">

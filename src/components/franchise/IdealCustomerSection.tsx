@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, DollarSign, User, Handshake } from "lucide-react";
@@ -15,8 +14,8 @@ const IdealCustomerSection = () => {
   return (
     <section className="section bg-white">
       <div className="container">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-heading-lg font-bold mb-4">
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <h2 className="md:text-heading-lg text-lg font-bold mb-4">
             This Franchise is <span className="gradient-text">PERFECT</span>{" "}
             <span className="text-google-green">If You Are:</span>
           </h2>
@@ -26,7 +25,7 @@ const IdealCustomerSection = () => {
           </p>
         </div>
 
-        <div className="franchise-grid-4 mb-16">
+        <div className="franchise-grid-4 mb-8">
           <Card
             className="franchise-card franchise-fade-in"
             style={{ animationDelay: "0.1s" }}
@@ -96,12 +95,12 @@ const IdealCustomerSection = () => {
           </Card>
         </div>
 
-        <div className="flex justify-center items-center px-4 sm:px-6 lg:px-8 py-10 rounded-2xl">
-          <Button 
+        <div className="flex justify-center items-center px-4 sm:px-6 lg:px-8 py-0 rounded-2xl">
+          <Button
             onClick={handleGetCaseStudies}
             className="text-sm sm:text-lg px-6 sm:px-10 py-6 sm:py-7 bg-green-600 text-white hover:bg-green-700 font-semibold rounded-xl shadow-md transition duration-300 w-full sm:w-auto text-center break-words max-w-full sm:max-w-xl"
           >
-            Get Case Studies from People Like You
+            Be a part of CleanCraft
           </Button>
         </div>
 
