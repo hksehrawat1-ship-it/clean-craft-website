@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronRight, ArrowRight, X } from "lucide-react";
-import { Dialog } from "@headlessui/react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCountry } from "@/contexts/CountryContext";
 import { toast } from "sonner";
 import { useStrapiServices } from "@/hooks/useStrapi";
@@ -86,50 +86,45 @@ const SchedulePickupModal = ({
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} className="fixed z-50 inset-0">
-      <div className="flex items-center justify-center min-h-screen bg-black/50 px-4">
-        <Dialog.Panel className="bg-white rounded-xl p-6 w-full max-w-md">
-          <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-lg font-bold">
-              Pickup address
-            </Dialog.Title>
-            <button onClick={onClose}>
-              <X className="h-5 w-5 text-gray-500" />
-            </button>
-          </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="w-full max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-bold">
+            Pickup address
+          </DialogTitle>
+        </DialogHeader>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border px-4 py-2 rounded-md"
-            />
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full border px-4 py-2 rounded-md"
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border px-4 py-2 rounded-md"
-            />
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md"
+          />
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md"
+          />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md"
+          />
 
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-[#1E3A8A] text-white font-semibold py-2 rounded-md hover:bg-blue-800 transition"
-            >
-              Submit
-            </button>
-          </div>
-        </Dialog.Panel>
-      </div>
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-[#1E3A8A] text-white font-semibold py-2 rounded-md hover:bg-blue-800 transition"
+          >
+            Submit
+          </button>
+        </div>
+      </DialogContent>
     </Dialog>
   );
 };
