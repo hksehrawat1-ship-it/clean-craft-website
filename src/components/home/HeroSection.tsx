@@ -112,7 +112,7 @@ const HeroSection = () => {
               at your fingertips
             </h2>
             <p className="text-sm md:text-lg font-product-sans-light text-[#212121] capitalize mb-2 mx:mb-4 max-w-[280px] lg:max-w-none ">
-              We press. We wash. We impress <br /> Book your clean slot today
+              We wash. We press. We impress <br /> Book your clean slot today
             </p>
 
             <button className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[280px] lg:max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white mb-4">
