@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run generate-sitemap",
+    "build": "vite build && npm run postbuild && npm run generate-sitemap",
     "build:docker": "vite build && npm run generate-sitemap",
+    "postbuild": "react-snap",
     "build:dev": "vite build --mode development && npm run generate-sitemap:dev",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -100,10 +101,39 @@
     "lovable-tagger": "^1.1.7",
     "postcss": "^8.4.47",
     "react-ipgeolocation": "^1.4.0",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
     "vite-plugin-remove-console": "^2.2.0"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "destination": "dist",
+    "crawlFrom": "/",
+    "include": [
+      "/",
+      "/in/",
+      "/au/",
+      "/in/services",
+      "/au/services",
+      "/in/franchise",
+      "/au/franchise",
+      "/in/courses",
+      "/au/courses",
+      "/in/book",
+      "/au/book",
+      "/in/blog",
+      "/au/blog"
+    ],
+    "skipThirdPartyRequests": true,
+    "cacheAjaxRequests": false,
+    "preloadImages": false,
+    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
+    "minifyHtml": {
+      "collapseWhitespace": true,
+      "removeComments": true
+    }
   }
 }

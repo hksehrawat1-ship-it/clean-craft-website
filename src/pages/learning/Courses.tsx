@@ -10,6 +10,7 @@ import Guarantees from '@/components/Guarantees';
 import RegistrationForm from '@/components/RegistrationForm';
 import FAQs from '@/components/shared/FAQs';
 import { EnhancedSEO } from '@/components/EnhancedSEO';
+import StudentGallery from '@/components/franchise/StudentGallery';
 
 const Courses = () => {
   useEffect(() => {
@@ -92,6 +93,9 @@ const Courses = () => {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Testimonials category="courses" />
               </div>
+            </div>
+            <div className="fade-in-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <StudentGallery />
             </div>
             <div className="fade-in-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <Guarantees />
