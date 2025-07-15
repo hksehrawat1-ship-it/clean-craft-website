@@ -21,7 +21,7 @@ const CourseInfo = () => {
           {/* Schedule */}
           <div className="bg-white rounded-xl px-2 py-2 shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-[#1A73E8]">
             <div className="flex items-center gap-4">
-              <div className="bg-[#1A73E8] rounded-full  inline-flex">
+              <div className="bg-[#1A73E8] rounded-full p-3  inline-flex">
                 <Calendar className="h-6 w-6 text-white" />
               </div>
               <div>

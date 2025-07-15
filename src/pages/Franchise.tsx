@@ -24,6 +24,7 @@ import { EnhancedSEO } from "@/components/EnhancedSEO";
 import AsFeaturedOn from "@/components/franchise/AsFeaturedOn";
 import SuccessStories from "@/components/franchise/SuccessStories";
 import StudentGallery from "@/components/franchise/StudentGallery";
+import WhyCleancraft from "@/components/franchise/WhyCleancraft";
 
 const Franchise = () => {
   return (
@@ -42,6 +43,7 @@ const Franchise = () => {
 
       <main className="franchise-page">
         <HeroSection />
+        <WhyCleancraft />
         <IdealCustomerSection />
         <ComparisonSection />
         <FeaturesSection />

@@ -40,11 +40,11 @@ const HeroSection = () => {
                 </div>
                 <div>
                   <h3 className="text-title-lg font-bold text-google-blue mb-2">
-                    Zero Risk Promise:
+                    Zero Risk Guarantees (Only by Clean Craft)
                   </h3>
                   <p className="text-gray-700">
-                    Assured Break Even in 7 Months or Get 100% Royalty Free for
-                    Life Time
+                    Get 9 guarantees from clean craft to get profitable with
+                    security
                   </p>
                 </div>
               </div>

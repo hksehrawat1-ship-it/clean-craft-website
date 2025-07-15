@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Star, Target, IndianRupee, Building2, Phone } from "lucide-react";
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -30,6 +31,7 @@ const TestimonialsSection = () => {
   return (
     <section id="testimonials" className="section">
       <div className="container">
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge className="bg-cleancraft-light text-cleancraft-darkgold mb-4">
             Success Stories
@@ -55,7 +57,8 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Testimonials - Single Card per Row Always */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
@@ -101,51 +104,57 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
+        {/* Profitability & Founder Quote Section */}
         <div className="mt-16 bg-cleancraft-light/30 rounded-xl p-2 md:p-8 google-shadow">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-2xl font-bold mb-4 text-google-blue">
-                Franchise Success By The Numbers
+            <div className=" md:mb-8 mb-2">
+              <h3 className="text-3xl font-bold  text-google-blue text-center">
+                Profitability of Franchise
               </h3>
-              <p className="text-gray-600 mb-6">
-                Our franchise network continues to grow with impressive
-                performance metrics across the board.
-              </p>
 
-              {/* Responsive Grid: 1 column on mobile, 2 on large screens */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mb-5">
                 {[
                   {
-                    value: "94%",
-                    color: "text-google-blue",
-                    text: "of franchisees break even within 7 months",
+                    icon: Target,
+                    percentage: "94%",
+                    description: "of franchises break even within 4 months",
                   },
                   {
-                    value: "45%",
-                    color: "text-google-green",
-                    text: "average profit margin across all locations",
+                    icon: IndianRupee,
+                    percentage: "62-68%",
+                    description: "average profit margin across all locations",
                   },
                   {
-                    value: "250+",
-                    color: "text-google-red",
-                    text: "franchise locations nationwide",
+                    icon: Building2,
+                    percentage: "10+",
+                    description: "store openings every month",
                   },
                   {
-                    value: "92%",
-                    color: "text-google-yellow",
-                    text: "franchise owner satisfaction rating",
+                    icon: Star,
+                    percentage: "99%",
+                    description: "franchise owner satisfaction",
                   },
-                ].map((item, index) => (
+                ].map((stat, index) => (
                   <div
                     key={index}
-                    className="bg-white p-4 rounded-lg shadow-sm"
+                    className="bg-white shadow-md rounded-xl md:p6 p-1 flex flex-col items-center text-center"
                   >
-                    <div className={`text-3xl font-bold mb-1 ${item.color}`}>
-                      {item.value}
+                    <div className="bg-blue-600/20 p-3 rounded-full mb-3">
+                      <stat.icon className="h-6 w-6 text-blue-600" />
                     </div>
-                    <div className="text-gray-600 text-sm">{item.text}</div>
+                    <div className="text-2xl font-bold text-blue-600 mb-1">
+                      {stat.percentage}
+                    </div>
+                    <p className="text-sm text-gray-700">{stat.description}</p>
                   </div>
                 ))}
+              </div>
+              {/* Call Now Button */}
+              <div className="text-center">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-full text-xl font-semibold shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <Phone className="mr-3 h-6 w-6" />
+                  Call Now: 8800771349
+                </Button>
               </div>
             </div>
 
@@ -167,24 +176,24 @@ const TestimonialsSection = () => {
               </div>
 
               <blockquote className="text-gray-600">
-                <p className="mb-3">
+                <p className="mb-2">
                   “Laundry is the next big thing in India — and it’s already
                   happening!”
                 </p>
-                <p className="mb-3">
+                <p className="mb-2">
                   By 2035, there will be a laundry outlet at every corner, just
                   like tea stalls and kirana shops today. And those who invest
                   early will own the market.
                 </p>
-                <p className="mb-3">
+                <p className="mb-2">
                   With a super-high ROI of 62% and gross margins of 33.7%, Clean
                   Craft isn’t just a laundry brand — it’s a cashflow engine
                   designed for smart franchise owners.
                 </p>
                 <p className="mb-1">You don’t need crores.</p>
                 <p className="mb-1">You don’t even need ₹30 lakh.</p>
-                <p className="mb-3">
-                  Our franchise setup cost is just ₹20–24 lakhless than a
+                <p className="mb-2">
+                  Our franchise setup cost is just ₹20–24 lakh, less than a
                   Scorpio N.
                 </p>
                 <p>

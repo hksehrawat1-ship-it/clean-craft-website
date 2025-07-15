@@ -188,6 +188,10 @@ const GuaranteeSection = () => {
             </motion.div>
 
             {/* Scroll Button */}
+            {/* Swipe Text */}
+            <p className="text-center text-sm text-gray-500 mb-2">
+              👉 Swipe left for 9 Guarantees
+            </p>
             <div className="flex justify-center mt-4">
               <button
                 onClick={handleNextScroll}
@@ -236,16 +240,10 @@ const GuaranteeSection = () => {
           className="mt-16 rounded-2xl overflow-hidden shadow-lg"
         >
           <div className="bg-google-blue text-white p-8 text-center">
-            <h3
-              className="text-3xl font-bold mb-4 text-white"
-              style={{ color: "white" }}
-            >
+            <h3 className="text-3xl font-bold mb-4 text-white">
               Ready to become our next success story?
             </h3>
-            <p
-              className="text-white mb-6 max-w-2xl mx-auto"
-              style={{ color: "white" }}
-            >
+            <p className="text-white mb-6 max-w-2xl mx-auto">
               Join the family of entrepreneurs who are building wealth with our
               industry-leading guarantees.
             </p>
@@ -257,10 +255,7 @@ const GuaranteeSection = () => {
                 Claim Your Territory Today
                 <ChevronRight className="ml-2 w-5 h-5" />
               </button>
-              <p
-                className="text-white/80 mt-4 italic text-sm"
-                style={{ color: "white" }}
-              >
+              <p className="text-white/80 mt-4 italic text-sm">
                 Stop Watching Others Win – It's Your Turn to Take the Leap.
               </p>
             </div>
