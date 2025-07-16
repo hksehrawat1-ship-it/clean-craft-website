@@ -76,12 +76,15 @@ const BlogDetail = () => {
     return format(date, "MMMM dd, yyyy");
   };
 
+  const imageUrl = getStrapiImageUrl(blog?.featured_image);
+  const imageAlt = getStrapiImageAlt(blog?.featured_image, blog?.title || "");
+
   if (isLoading) {
     return (
       <Layout showOfferCarousel={false}>
         <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
           <BlogBreadcrumb />
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
               <Skeleton className="h-64 w-full" />
               <div className="p-8">
@@ -108,7 +111,7 @@ const BlogDetail = () => {
       <Layout showOfferCarousel={false}>
         <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 min-h-screen">
           <BlogBreadcrumb />
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
               <h1 className="heading-secondary mb-4">Article Not Found</h1>
               <p className="text-gray-600 mb-8 text-lg">
@@ -130,9 +133,6 @@ const BlogDetail = () => {
     );
   }
 
-  const imageUrl = getStrapiImageUrl(blog.image);
-  const imageAlt = getStrapiImageAlt(blog.image, blog.title);
-
   return (
     <Layout showOfferCarousel={false}>
       <EnhancedSEO
@@ -143,9 +143,7 @@ const BlogDetail = () => {
           blog.seo_description || `Read our latest article: ${blog.title}`
         }
         customKeywords={
-          blog.seo_keywords
-            ? blog.seo_keywords.split(",").map((k) => k.trim())
-            : undefined
+          blog.seo_keywords?.split(",").map((k) => k.trim()) ?? undefined
         }
       />
 
@@ -168,14 +166,14 @@ const BlogDetail = () => {
               <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
             </div>
           ) : (
-            <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.4%22%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+            <div className="absolute inset-0 opacity-10 bg-gray-200" />
           )}
 
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="relative max-w-4xl mx-auto px-4 py-16 md:py-24">
             <div className="text-center md:text-left">
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-6">
                 {blog.blog_category?.name && (
-                  <Badge className="bg-white/90 backdrop-blur-sm text-blue-700 hover:bg-white border-0 px-4 py-2 font-semibold">
+                  <Badge className="bg-white/90 text-blue-700 px-4 py-2 font-semibold">
                     {blog.blog_category.name}
                   </Badge>
                 )}
@@ -197,13 +195,13 @@ const BlogDetail = () => {
                 </div>
               </div>
 
-              <h1 className="heading-primary text-white mb-6 leading-tight drop-shadow-lg">
+              <h1 className="heading-primary md:text-4xl text-xl text-white mb-0 leading-tight drop-shadow-lg">
                 {blog.title}
               </h1>
 
               {blog.author?.name && (
                 <div className="flex items-center justify-center md:justify-start gap-4 mb-6">
-                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {blog.author.name.charAt(0)}
                   </div>
                   <div className="text-left">
@@ -218,18 +216,14 @@ const BlogDetail = () => {
           </div>
         </section>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-4xl mx-auto px-4 pb-16">
           <article className="bg-white rounded-t-3xl shadow-2xl -mt-8 relative z-10">
             <div className="p-8 lg:p-12">
               <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-full hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200"
-                      >
+                      <Button variant="outline" size="sm">
                         <Share2 className="h-4 w-4 mr-2" />
                         Share Article
                       </Button>
@@ -265,7 +259,6 @@ const BlogDetail = () => {
                 </Button>
               </div>
 
-              {/* ✅ Final Blog Content Render with Link Fix */}
               <div className="article-content prose max-w-none">
                 <BlocksRenderer
                   content={blog.content}

@@ -10,11 +10,15 @@ interface BlogBreadcrumbProps {
   showBackButton?: boolean;
 }
 
-const BlogBreadcrumb = ({ title, category, showBackButton = false }: BlogBreadcrumbProps) => {
+const BlogBreadcrumb = ({
+  title,
+  category,
+  showBackButton = false,
+}: BlogBreadcrumbProps) => {
   const navigate = useNavigate();
   const { currentCountry } = useCountry();
 
-  const createLink = (path: string) => 
+  const createLink = (path: string) =>
     currentCountry ? `/${currentCountry.toLowerCase()}${path}` : path;
 
   const handleGoBack = () => {
@@ -25,12 +29,12 @@ const BlogBreadcrumb = ({ title, category, showBackButton = false }: BlogBreadcr
     <div className="bg-black/20 backdrop-blur-sm py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center relative">
-          {/* Back Button - Positioned absolutely on the left */}
+          {/* 🔙 Back Button - Only visible on sm+ */}
           {showBackButton && (
-            <div className="absolute left-0">
-              <Button 
-                onClick={handleGoBack} 
-                variant="ghost" 
+            <div className="absolute left-0 hidden sm:block">
+              <Button
+                onClick={handleGoBack}
+                variant="ghost"
                 size="sm"
                 className="text-white/80 hover:text-white hover:bg-white/10"
               >
@@ -40,36 +44,40 @@ const BlogBreadcrumb = ({ title, category, showBackButton = false }: BlogBreadcr
             </div>
           )}
 
-          {/* Breadcrumb Navigation - Centered */}
+          {/* 🔗 Breadcrumb Navigation */}
           <nav className="flex items-center space-x-2 text-sm">
-            <Link 
+            <Link
               to={createLink("/")}
               className="flex items-center text-white/80 hover:text-white transition-colors duration-200"
             >
               <Home className="h-4 w-4 mr-2" />
               Home
             </Link>
-            
+
             <ChevronRight className="h-4 w-4 text-white/60" />
-            
-            <Link 
+
+            <Link
               to={createLink("/blog")}
               className="flex items-center text-white/80 hover:text-white transition-colors duration-200"
             >
               Blog
             </Link>
 
+            {/* 🏷️ Category - hidden on mobile */}
             {category && (
               <>
-                <ChevronRight className="h-4 w-4 text-white/60" />
-                <span className="text-white/80 capitalize">{category}</span>
+                <ChevronRight className="h-4 w-4 text-white/60 hidden sm:inline" />
+                <span className="text-white/80 capitalize hidden sm:inline">
+                  {category}
+                </span>
               </>
             )}
 
+            {/* 📝 Title - hidden on mobile */}
             {title && (
               <>
-                <ChevronRight className="h-4 w-4 text-white/60" />
-                <span className="text-white font-medium line-clamp-1 max-w-xs sm:max-w-md">
+                <ChevronRight className="h-4 w-4 text-white/60 hidden sm:inline" />
+                <span className="text-white font-medium line-clamp-1 max-w-xs sm:max-w-md hidden">
                   {title}
                 </span>
               </>
