@@ -48,7 +48,7 @@ export function loadPagesYaml() {
           } else if (usedPath.includes('src/config/pages.yaml')) {
             // If it's the source file but missing site config, something is wrong
             console.warn('⚠️  Source pages.yaml missing site configuration - this should not happen');
-            break;
+        break;
           } else {
             // This is a fallback file without enhancements
             console.warn(`⚠️  Found outdated pages.yaml at ${pagesYamlPath} - continuing search for enhanced version`);

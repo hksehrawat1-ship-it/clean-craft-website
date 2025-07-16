@@ -117,7 +117,10 @@
   "reactSnap": {
     "source": "dist",
     "destination": "dist",
+<<<<<<< HEAD
     "inlineCss": true,
+=======
+>>>>>>> lovable-bot
     "crawlFrom": "/",
     "include": [
       "/",
@@ -137,7 +140,11 @@
     "skipThirdPartyRequests": true,
     "cacheAjaxRequests": false,
     "preloadImages": false,
+<<<<<<< HEAD
     "puppeteerArgs": ["--no-sandbox"],
+=======
+    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
+>>>>>>> lovable-bot
     "minifyHtml": {
       "collapseWhitespace": true,
       "removeComments": true
