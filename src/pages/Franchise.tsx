@@ -2,27 +2,19 @@
 import Layout from "@/components/home/Layout";
 
 import HeroSection from "@/components/franchise/HeroSection";
-// console.log("[Franchise] HeroSection imported");
-
 import IdealCustomerSection from "@/components/franchise/IdealCustomerSection";
-
 import ComparisonSection from "@/components/franchise/ComparisonSection";
-
 import FeaturesSection from "@/components/franchise/FeaturesSection";
-
 import GuaranteeSection from "@/components/franchise/GuaranteeSection";
-
 import ProcessSection from "@/components/franchise/ProcessSection";
-
 import TestimonialsSection from "@/components/franchise/TestimonialsSection";
-
 import FaqSection from "@/components/franchise/FaqSection";
-
 import CareSection from "@/components/franchise/CareSection";
-
 import { EnhancedSEO } from "@/components/EnhancedSEO";
 import AsFeaturedOn from "@/components/franchise/AsFeaturedOn";
 import SuccessStories from "@/components/franchise/SuccessStories";
+import StudentGallery from "@/components/franchise/StudentGallery";
+import WhyCleancraft from "@/components/franchise/WhyCleancraft";
 
 const Franchise = () => {
   return (
@@ -41,6 +33,7 @@ const Franchise = () => {
 
       <main className="franchise-page">
         <HeroSection />
+        <WhyCleancraft />
         <IdealCustomerSection />
         <ComparisonSection />
         <FeaturesSection />
@@ -50,6 +43,7 @@ const Franchise = () => {
         <TestimonialsSection />
         <CareSection />
         <SuccessStories />
+        <StudentGallery />
         <FaqSection />
       </main>
     </Layout>

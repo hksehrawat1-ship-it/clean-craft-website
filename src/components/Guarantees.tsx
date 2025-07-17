@@ -78,9 +78,9 @@ const Guarantees = () => {
                 href="https://cleancraft.mojo.page/best-laundry-training-institute-in-india"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-[#1A73E8] text-white text-sm font-semibold hover:bg-[#1666c1] transition min-h-[20px] min-w-[180px] px-5 py-2 rounded-full"
+                className="inline-block bg-[#1A73E8] text-white text-sm font-semibold text-center hover:bg-[#1666c1] transition min-h-[20px] min-w-[180px] px-5 py-2 rounded-full"
               >
-                Get No.1 Laundry Store
+                Register Now
               </a>
             </div>
           </div>

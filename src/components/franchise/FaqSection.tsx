@@ -71,7 +71,8 @@ const FaqSection = () => {
             Industry Insights
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            7 Hidden Things You Should Know Before Buying a Franchise in India
+            7 Hidden Things You Should Know Before Buying a Laundry Franchise in
+            India
           </h2>
           <p className="text-gray-600 text-lg">
             Make an informed decision with these crucial insights about
