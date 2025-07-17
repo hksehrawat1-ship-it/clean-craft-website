@@ -29,8 +29,12 @@ export function useBlogs(options?: {
   const { isConnected, isInitializing } = useStrapiConnection();
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || "in";
-  
-  const key = useMemo(() => ["blogs", countryCode, options], [countryCode, options]);
+
+  // 🔑 Proper key to re-fetch on filter/category change
+  const key = useMemo(
+    () => ["blogs", countryCode, JSON.stringify(options)],
+    [countryCode, options]
+  );
 
   return useQuery<StrapiResponse<StrapiBlog>>({
     queryKey: key,
@@ -46,7 +50,7 @@ export function useBlogBySlug(slug: string) {
   const { isConnected, isInitializing } = useStrapiConnection();
   const { currentCountry } = useCountry();
   const countryCode = currentCountry?.toLowerCase() || "in";
-  
+
   const key = useMemo(() => ["blog", slug, countryCode], [slug, countryCode]);
 
   return useQuery<StrapiBlog | null>({

@@ -1,4 +1,3 @@
-// lib/strapi/services/content.service.ts
 import { getCollection } from "../client";
 import {
   StrapiBlog,
@@ -9,19 +8,25 @@ import {
   StrapiTestimonial,
 } from "@/types/strapi";
 
-const FEATURED_FIELD        = "is_featured";
-const SORT_FIELD_PUBLISHED  = "publishedDate";
+const FEATURED_FIELD = "is_featured";
+const SORT_FIELD_PUBLISHED = "publishedDate";
 
 /* ------------------------------------------------------------------ */
 /*  Common response + helper                                          */
 /* ------------------------------------------------------------------ */
 interface StrapiResponse<T> {
   data: T[];
-  meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
 }
 
 interface BaseQueryParams {
-  /*  ⬇︎ populate can now be string | string[] | object  */
   populate?: string | string[] | Record<string, any>;
   filters?: any;
   sort?: string[];
@@ -29,18 +34,18 @@ interface BaseQueryParams {
   pagination?: { page?: number; pageSize?: number };
 }
 
-export type ContentCategory = 'home' | 'courses' | 'book';
+export type ContentCategory = "home" | "courses" | "book";
 
 const clean = (o: any): any =>
   Array.isArray(o)
     ? o.map(clean)
     : o && typeof o === "object"
-      ? Object.fromEntries(
-          Object.entries(o)
-            .filter(([, v]) => v !== undefined && v !== null && v !== "")
-            .map(([k, v]) => [k, clean(v)])
-        )
-      : o;
+    ? Object.fromEntries(
+        Object.entries(o)
+          .filter(([, v]) => v !== undefined && v !== null && v !== "")
+          .map(([k, v]) => [k, clean(v)])
+      )
+    : o;
 
 /* ------------------------------------------------------------------ */
 /*  Singleton service                                                 */
@@ -71,63 +76,54 @@ class ContentService {
       category,
       featured,
       search,
-      page      = 1,
-      pageSize  = 9,
+      page = 1,
+      pageSize = 9,
       locale,
-      sortBy    = SORT_FIELD_PUBLISHED,
+      sortBy = SORT_FIELD_PUBLISHED,
       sortOrder = "desc",
     } = opts;
 
-    /* --- filters --------------------------------------------------- */
+    // Filters build
     const filters: any = {
       country: { code: { $eq: countryCode.toLowerCase() } },
     };
-    if (featured !== undefined)          filters[FEATURED_FIELD] = { $eq: featured };
-    if (category)                        filters.blog_category   = { slug: { $eq: category } };
-    
-    // Add search functionality
+
+    if (featured !== undefined) filters[FEATURED_FIELD] = { $eq: featured };
+
+    if (category) filters.blog_categories = { slug: { $eq: category } };
+
     if (search && search.trim()) {
       filters.$or = [
         { title: { $containsi: search.trim() } },
         { content: { $containsi: search.trim() } },
-        { seo_description: { $containsi: search.trim() } }
+        { seo_description: { $containsi: search.trim() } },
       ];
     }
 
-    /* --- params ---------------------------------------------------- */
     const params: BaseQueryParams = {
-      /* Simplified populate using wildcards */
       populate: "*",
       filters,
-      sort:       [`${sortBy}:${sortOrder}`],
+      sort: [`${sortBy}:${sortOrder}`],
       pagination: { page, pageSize },
       locale,
     };
 
-    console.log("📝 Blog list API call params:", JSON.stringify(params, null, 2));
     const result = await getCollection<StrapiBlog>("blogs", clean(params));
-    console.log("📝 Blog list API response:", JSON.stringify(result, null, 2));
     return result;
   }
 
   /* ───────── SINGLE BLOG ───────── */
   async getBlogBySlug(slug: string, countryCode: string, locale?: string) {
-    console.log("🔍 Fetching blog by slug:", slug, "Country:", countryCode);
-    
     const params: BaseQueryParams = {
-      /* Simplified populate - use wildcard to get all related data */
       populate: "*",
       filters: {
-        slug:    { $eq: slug },
+        slug: { $eq: slug },
         country: { code: { $eq: countryCode.toLowerCase() } },
       },
       locale,
     };
-    
-    console.log("🔍 Blog detail API call params:", JSON.stringify(params, null, 2));
+
     const res = await getCollection<StrapiBlog>("blogs", clean(params));
-    console.log("🔍 Blog detail API response:", JSON.stringify(res, null, 2));
-    
     return res.data[0] ?? null;
   }
 
@@ -135,7 +131,7 @@ class ContentService {
   async getBlogCategories() {
     return getCollection<StrapiBlogCategory>("blog-categories", {
       populate: "*",
-      sort:     ["name:asc"],
+      sort: ["name:asc"],
     });
   }
 

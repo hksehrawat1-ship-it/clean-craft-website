@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useBlogs } from "@/hooks/useBlog";
 import BlogGridControls from "./BlogGridControls";
@@ -13,7 +12,11 @@ interface ModernBlogGridProps {
   pageSize?: number;
 }
 
-const ModernBlogGrid = ({ selectedCategory, searchQuery = "", pageSize = 9 }: ModernBlogGridProps) => {
+const ModernBlogGrid = ({
+  selectedCategory,
+  searchQuery = "",
+  pageSize = 9,
+}: ModernBlogGridProps) => {
   const [page, setPage] = useState(1);
   const [allBlogs, setAllBlogs] = useState<any[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -38,25 +41,29 @@ const ModernBlogGrid = ({ selectedCategory, searchQuery = "", pageSize = 9 }: Mo
 
   const currentPageBlogs = blogsResponse?.data ?? [];
 
-  useEffect(() => {
-    if (currentPageBlogs.length) {
-      setAllBlogs((prev) =>
-        page === 1 ? currentPageBlogs : [...prev, ...currentPageBlogs]
-      );
-    }
-  }, [currentPageBlogs, page]);
-
+  // Reset page on category or search change
   useEffect(() => {
     setPage(1);
-    setAllBlogs([]);
   }, [selectedCategory, searchQuery]);
+
+  // Replace or append blogs based on page
+  useEffect(() => {
+    if (page === 1 && currentPageBlogs.length) {
+      setAllBlogs(currentPageBlogs);
+    } else if (page > 1 && currentPageBlogs.length) {
+      setAllBlogs((prev) => [...prev, ...currentPageBlogs]);
+    }
+  }, [currentPageBlogs, page]);
 
   const hasNextPage =
     (blogsResponse?.meta?.pagination?.page ?? 1) <
     (blogsResponse?.meta?.pagination?.pageCount ?? 1);
 
   const handleLoadMore = useCallback(() => setPage((p) => p + 1), []);
-  const handleViewModeChange = useCallback((mode: "grid" | "list") => setViewMode(mode), []);
+  const handleViewModeChange = useCallback(
+    (mode: "grid" | "list") => setViewMode(mode),
+    []
+  );
 
   // Loading state for first load
   if (isLoading && page === 1) {
@@ -66,12 +73,23 @@ const ModernBlogGrid = ({ selectedCategory, searchQuery = "", pageSize = 9 }: Mo
   // Error state
   if (isError) {
     console.error("Blog grid error:", error);
-    return <BlogEmptyState selectedCategory={selectedCategory} isError={true} error={error} />;
+    return (
+      <BlogEmptyState
+        selectedCategory={selectedCategory}
+        isError={true}
+        error={error}
+      />
+    );
   }
 
   // No blogs case
   if (!allBlogs.length) {
-    return <BlogEmptyState selectedCategory={selectedCategory} searchQuery={searchQuery} />;
+    return (
+      <BlogEmptyState
+        selectedCategory={selectedCategory}
+        searchQuery={searchQuery}
+      />
+    );
   }
 
   return (

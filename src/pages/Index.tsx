@@ -95,8 +95,9 @@ export default function Index() {
 
       <Layout>
         <div className="flex flex-col w-full">
-          {/*offer section doesn't need standard padding */}
-          <Offers />
+          {/* Offer section - only visible in India */}
+          {currentCountry === "in" && <Offers />}
+
           {/* Hero section doesn't need standard padding */}
           <SectionWrapper noPadding>
             <HeroSection />
