@@ -12,8 +12,9 @@ WORKDIR /app
 COPY package*.json ./
 
 # Prefer deterministic, CI-friendly installs
+# Use --ignore-scripts to avoid Husky and other postinstall script issues
 RUN --mount=type=cache,target=/root/.cache \
-    npm ci --legacy-peer-deps
+    npm ci --legacy-peer-deps --ignore-scripts
 
 # 3️⃣ Copy the rest of the source
 COPY . .
