@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,23 +12,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { State, City } from "country-state-city";
-import { CheckCircle, ExternalLink } from "lucide-react";
-import {
-  DisplayHeading,
-  BodyText,
-  Caption,
-  SectionHeading,
-} from "@/components/ui/typography";
+import { BodyText, Caption, SectionHeading } from "@/components/ui/typography";
 import { useNavigate, useParams } from "react-router-dom";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   email: z.string().email("Please enter a valid email address"),
-  // city: z.string().min(1, "Please select a city"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -37,8 +29,6 @@ const RegistrationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { countryCode } = useParams<{ countryCode: string }>();
-  const [redirectCountdown, setRedirectCountdown] = useState(5);
-  const [cityInputFocused, setCityInputFocused] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -46,7 +36,6 @@ const RegistrationForm: React.FC = () => {
       name: "",
       phone: "",
       email: "",
-      // city: "",
     },
   });
 
@@ -57,39 +46,24 @@ const RegistrationForm: React.FC = () => {
     );
   };
 
-  React.useEffect(() => {
-    if (redirectCountdown > 0) {
-      const timer = setTimeout(() => {
-        setRedirectCountdown(redirectCountdown - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (redirectCountdown === 0) {
-      handlePaymentRedirect();
-    }
-  }, [redirectCountdown]);
-
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      // Prepare the data for insertion
       const insertData: any = {
         name: data.name,
         phone: data.phone,
         email: data.email,
-        city: "", // Always send city as empty string
+        city: "",
         country: "India",
         source_cta: "Course Registration",
         lead_type: "course",
       };
 
-      // Submit to Supabase
       const { error } = await supabase
         .from("franchise_leads")
         .insert(insertData);
-
       if (error) throw error;
 
-      // Call edge function for course lead
       const { error: emailError } = await supabase.functions.invoke(
         "submit-lead",
         {
@@ -104,10 +78,10 @@ const RegistrationForm: React.FC = () => {
 
       if (emailError) {
         console.warn("Email sending failed:", emailError);
-        // Don't throw error - form submission was successful even if email fails
       }
 
       navigate(`/${countryCode?.toLowerCase() || "in"}/thank-you`);
+      handlePaymentRedirect();
     } catch (error) {
       console.error("Error submitting registration:", error);
       alert(

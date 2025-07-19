@@ -43,7 +43,7 @@ const Franchise = () => {
         <TestimonialsSection />
         <CareSection />
         <SuccessStories />
-        <StudentGallery />
+        {/* <StudentGallery /> */}
         <FaqSection />
       </main>
     </Layout>
