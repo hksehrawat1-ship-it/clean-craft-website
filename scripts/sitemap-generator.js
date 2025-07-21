@@ -35,7 +35,7 @@ export async function generateSitemapFiles() {
     xml += `    <loc>${url.url}</loc>\n`;
     if (url.lastmod) xml += `    <lastmod>${url.lastmod}</lastmod>\n`;
     if (url.changefreq) xml += `    <changefreq>${url.changefreq}</changefreq>\n`;
-    if (url.priority) xml += `    <priority>${url.priority}</priority>\n`;
+    if (url.priority !== undefined) xml += `    <priority>${Number(url.priority).toFixed(1)}</priority>\n`;
     xml += '  </url>\n';
   });
   
