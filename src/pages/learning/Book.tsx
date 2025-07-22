@@ -14,9 +14,13 @@ const Book = () => {
   return (
     <Layout>
       <EnhancedSEO
-        slug="/learning/book"
+        slug="/learning/laundry-training-book"
         pageType="Book"
-        customKeywords={['spotless profit laundry', 'laundry business ebook', 'cleaning industry guide']}
+        customKeywords={[
+          "spotless profit laundry",
+          "laundry business ebook",
+          "cleaning industry guide",
+        ]}
       />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <BookHero />

@@ -20,9 +20,10 @@ interface ModernBlogCardProps {
   variant?: "default" | "featured" | "compact";
 }
 
-// Custom renderers for rich content
 const customBlocks = {
-  paragraph: ({ children }: any) => <p className="mb-2">{children}</p>,
+  paragraph: ({ children }: any) => (
+    <p className="mb-1 line-clamp-2 text-sm">{children}</p>
+  ),
   link: ({ children, url }: any) => (
     <a
       href={url}
@@ -35,7 +36,6 @@ const customBlocks = {
   ),
 };
 
-// Get limited preview content (2 paragraphs)
 const getPreviewContent = (content: BlocksContent, limit = 2) => {
   if (!Array.isArray(content)) return [];
   return content.filter((block) => block.type === "paragraph").slice(0, limit);
@@ -55,11 +55,11 @@ const ModernBlogCard = ({ blog, variant = "default" }: ModernBlogCardProps) => {
     return isNaN(date.getTime()) ? "Recently" : format(date, "MMM dd, yyyy");
   };
 
-  const imageUrl = getStrapiImageUrl(blog.image);
-  const imageAlt = getStrapiImageAlt(blog.image, blog.title);
+  const primaryImage = blog.featured_image || blog.image;
+  const imageUrl = getStrapiImageUrl(primaryImage);
+  const imageAlt = getStrapiImageAlt(primaryImage, blog.title || "Blog Image");
   const blogContentPreview = getPreviewContent(blog.content as BlocksContent);
 
-  // ----- FEATURED LAYOUT -----
   if (variant === "featured") {
     return (
       <Card
@@ -67,22 +67,28 @@ const ModernBlogCard = ({ blog, variant = "default" }: ModernBlogCardProps) => {
         onClick={handleClick}
       >
         <div className="relative overflow-hidden">
+          <div className="absolute z-10 top-4 left-1/2 -translate-x-1/2 text-xs bg-white px-3 py-1 rounded-full shadow text-gray-700 font-medium">
+            5 min read
+          </div>
+
           {imageUrl && (
-            <div className="aspect-[21/9] overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="aspect-[21/9] overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
               <img
                 src={imageUrl}
                 alt={imageAlt}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           )}
+
           {blog.blog_category?.name && (
             <Badge className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm text-blue-700 border-0 px-4 py-2 text-sm font-semibold shadow-lg">
               {blog.blog_category.name}
             </Badge>
           )}
+
           <div className="absolute top-6 right-6">
             <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold">
               FEATURED
@@ -90,15 +96,11 @@ const ModernBlogCard = ({ blog, variant = "default" }: ModernBlogCardProps) => {
           </div>
         </div>
 
-        <CardContent className="p-8">
-          <div className="flex items-center gap-6 mb-6 text-sm text-gray-500">
+        <CardContent className="p-6 sm:p-8">
+          <div className="flex items-center gap-6 mb-4 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               <span>{getFormattedDate()}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              <span>5 min read</span>
             </div>
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
@@ -106,32 +108,32 @@ const ModernBlogCard = ({ blog, variant = "default" }: ModernBlogCardProps) => {
             </div>
           </div>
 
-          <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300 leading-tight">
+          <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300 leading-snug">
             {blog.title}
           </h3>
 
-          <div className="prose max-w-none mb-8 text-lg leading-relaxed line-clamp-3">
+          <div className="prose max-w-none mb-4 text-base leading-normal line-clamp-3">
             <BlocksRenderer
               content={blogContentPreview}
               blocks={customBlocks}
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4">
             {blog.author?.name && (
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
+                <div className="w-9 h-9 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                   {blog.author.name.charAt(0)}
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-900">
+                  <div className="font-semibold text-gray-900 text-sm">
                     {blog.author.name}
                   </div>
-                  <div className="text-sm text-gray-500">Expert Writer</div>
+                  <div className="text-xs text-gray-500">Expert Writer</div>
                 </div>
               </div>
             )}
-            <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-4 transition-all duration-300">
+            <div className="flex items-center gap-1.5 text-blue-600 font-semibold group-hover:gap-3 transition-all duration-300 text-sm">
               <span>Read More</span>
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
             </div>
@@ -141,50 +143,59 @@ const ModernBlogCard = ({ blog, variant = "default" }: ModernBlogCardProps) => {
     );
   }
 
-  // ----- DEFAULT LAYOUT -----
   return (
     <Card
-      className="group overflow-hidden cursor-pointer bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full rounded-xl border-0 shadow-md"
+      className="group overflow-hidden cursor-pointer bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 rounded-xl border border-gray-200"
       onClick={handleClick}
     >
+      {/* Reading Time */}
+      <div className="px-4 pt-2 text-[11px] text-gray-500 font-medium">
+        5 min
+      </div>
+
+      {/* Blog Image */}
       {imageUrl && (
-        <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="relative aspect-[16/9] overflow-hidden bg-gray-100 flex items-center justify-center">
           <img
             src={imageUrl}
             alt={imageAlt}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       )}
 
-      <CardContent className="p-6 flex flex-col h-full">
-        <div className="flex items-center justify-between mb-4">
+      {/* Card Content */}
+      <CardContent className="px-4 py-3 flex flex-col justify-between">
+        <div>
+          {/* Category Badge */}
           {blog.blog_category?.name && (
             <Badge
               variant="outline"
-              className="text-xs px-3 py-1 bg-blue-50 text-blue-700 border-blue-200 font-medium"
+              className="text-[10px] px-2 py-[2px] bg-blue-50 text-blue-700 border-blue-200 font-medium mb-1"
             >
               {blog.blog_category.name}
             </Badge>
           )}
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Clock className="h-3 w-3" />
-            <span>5 min</span>
+
+          {/* Title */}
+          <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors duration-300">
+            {blog.title}
+          </h3>
+
+          {/* Content preview */}
+          <div className="prose max-w-none mb-3 text-sm leading-tight line-clamp-3 text-gray-700">
+            <BlocksRenderer
+              content={blogContentPreview}
+              blocks={customBlocks}
+            />
           </div>
         </div>
 
-        <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300 leading-tight">
-          {blog.title}
-        </h3>
-
-        <div className="prose max-w-none mb-6 text-sm lg:text-base leading-relaxed flex-grow line-clamp-3">
-          <BlocksRenderer content={blogContentPreview} blocks={customBlocks} />
-        </div>
-
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-          <div className="flex items-center gap-3 text-xs text-gray-500">
+        {/* Footer: Date + Author */}
+        <div className="flex items-center justify-between pt-2 border-t border-gray-100 mt-auto text-[11px] text-gray-500">
+          <div className="flex items-center gap-2">
             <Calendar className="h-3 w-3" />
             <span>{getFormattedDate()}</span>
             {blog.author?.name && (

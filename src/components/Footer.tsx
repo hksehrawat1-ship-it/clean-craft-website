@@ -151,7 +151,7 @@ const Footer: React.FC = () => {
             <li className="flex gap-3">
               <MapPin className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <span className="text-gray-600">
-                Plot NO. 9 & Police enclave, Kotla Vihar Phase 4, Tilangpur
+                Plot No. 9 & Police enclave, Kotla Vihar Phase 4, Tilangpur
                 Kotla, Delhi, 110043
               </span>
             </li>
@@ -165,11 +165,13 @@ const Footer: React.FC = () => {
               </a>
             </li>
 
-            <li className="flex gap-3">
+            <li className="flex gap-3 items-start">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <a
-                href="mailto:hello@cleancraftapp.com"
-                className="text-gray-600 hover:text-blue-500 transition-colors"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=hello@cleancraftapp.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-blue-500 transition-colors underline"
               >
                 hello@cleancraftapp.com
               </a>

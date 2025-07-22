@@ -1,35 +1,38 @@
-import { useEffect } from 'react';
-import EnhancedNavbar from '@/components/EnhancedNavbar';
-import Footer from '@/components/Footer';
-import HeroSection from '@/components/HeroSection';
-import CourseInfo from '@/components/CourseInfo';
-import TrainerSection from '@/components/TrainerSection';
-import Testimonials from '@/components/shared/Testimonials';
-import Curriculum from '@/components/Curriculum';
-import Guarantees from '@/components/Guarantees';
-import RegistrationForm from '@/components/RegistrationForm';
-import FAQs from '@/components/shared/FAQs';
-import { EnhancedSEO } from '@/components/EnhancedSEO';
-import StudentGallery from '@/components/franchise/StudentGallery';
+import { useEffect } from "react";
+import EnhancedNavbar from "@/components/EnhancedNavbar";
+import Footer from "@/components/Footer";
+import HeroSection from "@/components/HeroSection";
+import CourseInfo from "@/components/CourseInfo";
+import TrainerSection from "@/components/TrainerSection";
+import Testimonials from "@/components/shared/Testimonials";
+import Curriculum from "@/components/Curriculum";
+import Guarantees from "@/components/Guarantees";
+import RegistrationForm from "@/components/RegistrationForm";
+import FAQs from "@/components/shared/FAQs";
+import { EnhancedSEO } from "@/components/EnhancedSEO";
+import StudentGallery from "@/components/franchise/StudentGallery";
 
 const Courses = () => {
   useEffect(() => {
-    const fadeInSections = document.querySelectorAll('.fade-in-section');
-    const fadeInObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-        }
-      });
-    }, { 
-      threshold: 0.1,
-      rootMargin: '20px'
-    });
-    fadeInSections.forEach(section => {
+    const fadeInSections = document.querySelectorAll(".fade-in-section");
+    const fadeInObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "20px",
+      }
+    );
+    fadeInSections.forEach((section) => {
       fadeInObserver.observe(section);
     });
     return () => {
-      fadeInSections.forEach(section => {
+      fadeInSections.forEach((section) => {
         fadeInObserver.unobserve(section);
       });
     };
@@ -42,11 +45,15 @@ const Courses = () => {
   useEffect(() => {
     const viewportMeta = document.querySelector('meta[name="viewport"]');
     if (viewportMeta) {
-      viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      viewportMeta.setAttribute(
+        "content",
+        "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      );
     } else {
-      const meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      const meta = document.createElement("meta");
+      meta.name = "viewport";
+      meta.content =
+        "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
       document.head.appendChild(meta);
     }
     return () => {};
@@ -55,12 +62,15 @@ const Courses = () => {
   // Handle scroll to registration form
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const scrollTo = urlParams.get('scrollTo');
-    if (scrollTo === 'registration' || window.location.hash === '#registration') {
+    const scrollTo = urlParams.get("scrollTo");
+    if (
+      scrollTo === "registration" ||
+      window.location.hash === "#registration"
+    ) {
       setTimeout(() => {
-        const registrationForm = document.getElementById('registration-form');
+        const registrationForm = document.getElementById("registration-form");
         if (registrationForm) {
-          registrationForm.scrollIntoView({ behavior: 'smooth' });
+          registrationForm.scrollIntoView({ behavior: "smooth" });
         }
       }, 500);
     }
@@ -68,10 +78,13 @@ const Courses = () => {
 
   return (
     <>
-      <EnhancedSEO 
-        slug="/learning/courses"
+      <EnhancedSEO
+        slug="/learning/laundry-training-course"
         pageType="Course"
-        customKeywords={['laundry training certification', 'professional cleaning education']}
+        customKeywords={[
+          "laundry training certification",
+          "professional cleaning education",
+        ]}
       />
       <div className="min-h-screen flex flex-col bg-white">
         <EnhancedNavbar />

@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { Filter } from "lucide-react";
 
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
 import { useFAQs } from "@/hooks/use-faqs";
 import { FAQAccordion } from "@/components/FAQAccordion";
+import { EnhancedSEO } from "@/components/EnhancedSEO";
 
 import {
   Select,
@@ -31,7 +31,6 @@ const FaqPage: React.FC = () => {
   const { countryCode } = useParams();
   const { faqsByCategory, categories, isLoading, error } = useFAQs(countryCode);
 
-  // ✅ Set "home" as the default category
   const [selectedCategory, setSelectedCategory] = useState<string>("home");
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -67,9 +66,7 @@ const FaqPage: React.FC = () => {
     const range = (start: number, end: number) =>
       Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
-    if (totalPages <= 7) {
-      return range(1, totalPages);
-    }
+    if (totalPages <= 7) return range(1, totalPages);
 
     const left = Math.max(2, currentPage - delta);
     const right = Math.min(totalPages - 1, currentPage + delta);
@@ -85,13 +82,18 @@ const FaqPage: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Frequently Asked Questions - CleanCraft</title>
-        <meta
-          name="description"
-          content="Find answers to common questions about our services and policies."
-        />
-      </Helmet>
+      <EnhancedSEO
+        slug="/faq"
+        pageType="FAQPage"
+        defaultTitle="Frequently Asked Questions | CleanCraft"
+        defaultDescription="Find answers to common questions about CleanCraft’s services, scheduling, payments, and more."
+        customKeywords={[
+          "CleanCraft FAQs",
+          "laundry questions",
+          "dry cleaning help",
+          "pickup delivery info",
+        ]}
+      />
 
       <div className="min-h-screen flex flex-col bg-white">
         <EnhancedNavbar />

@@ -61,7 +61,7 @@ const CareSection = () => {
 
               <Button
                 variant="outline"
-                className="border-2 font-medium text-base border-gray-300"
+                className="border-2 font-medium text-base border-gray-300 hidden"
                 onClick={handleFormOpen}
               >
                 Maybe Later
