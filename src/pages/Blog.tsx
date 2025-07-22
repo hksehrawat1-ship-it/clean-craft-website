@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from "react";
 import Layout from "@/components/home/Layout";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
@@ -24,7 +23,8 @@ const Blog = () => {
     pageSize: 3,
   });
   const featuredBlogs = featuredRes?.data ?? [];
-  if (featuredError) console.error("Featured blog fetch error:", featuredError);
+  if (featuredError)
+    console.error("❌ Featured blog fetch error:", featuredError);
 
   const { data: latestQuickRes } = useBlogs({
     featured: false,
@@ -70,13 +70,17 @@ const Blog = () => {
                   </p>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {featuredBlogs.slice(0, 2).map((blog) => (
-                  <ModernBlogCard key={blog.id} blog={blog} variant="featured" />
+                  <ModernBlogCard
+                    key={blog.id}
+                    blog={blog}
+                    variant="featured"
+                  />
                 ))}
               </div>
-              
+
               {featuredBlogs.length > 2 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {featuredBlogs.slice(2).map((blog) => (
@@ -108,8 +112,8 @@ const Blog = () => {
               </div>
             ) : null}
 
-            <ModernBlogGrid 
-              selectedCategory={selectedCategory} 
+            <ModernBlogGrid
+              selectedCategory={selectedCategory}
               searchQuery=""
             />
           </section>
