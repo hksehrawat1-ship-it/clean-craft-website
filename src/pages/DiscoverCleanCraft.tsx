@@ -1,5 +1,5 @@
 import React from "react";
-import { SEO } from "@/components/SEO";
+import { EnhancedSEO } from "@/components/EnhancedSEO"; // ✅ SEO component import
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,11 +8,18 @@ import { GraduationCap, Store, Package } from "lucide-react";
 export default function DiscoverCleanCraft() {
   return (
     <>
-      <SEO
-        slug="discover-cleancraft"
-        defaultTitle="Discover Clean Craft - India's Leading Laundry & Dry Cleaning Franchise"
-        defaultDescription="Discover Clean Craft, India's fastest growing laundry and dry cleaning franchise brand. Offering coaching, franchise opportunities, and premium products for garment care excellence."
+      <EnhancedSEO
+        slug="/discover-cleancraft"
+        pageType="Organization"
+        defaultTitle="Laundry Franchise Opportunity | Clean Craft"
+        defaultDescription="Join India's most trusted laundry franchise. Get assured break-even in 7 months or 100% royalty free for life. Premium territories available."
+        customKeywords={[
+          "dry cleaning franchise",
+          "wet cleaning business opportunity",
+          "profitable laundry franchise",
+        ]}
       />
+
       <EnhancedNavbar />
 
       {/* Hero Section */}
@@ -135,35 +142,18 @@ export default function DiscoverCleanCraft() {
             </p>
 
             <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-1">
-                  1
+              {[
+                "Delivering pristine, professionally cleaned garments that enhance personal image and confidence.",
+                "Providing accessible, reliable, and eco-conscious laundry solutions that make self-care effortless.",
+                "Empowering individuals to build strong, respectable businesses through our trusted franchise model.",
+              ].map((text, index) => (
+                <div key={index} className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-1">
+                    {index + 1}
+                  </div>
+                  <p className="text-lg text-gray-700">{text}</p>
                 </div>
-                <p className="text-lg text-gray-700">
-                  Delivering pristine, professionally cleaned garments that
-                  enhance personal image and confidence.
-                </p>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-1">
-                  2
-                </div>
-                <p className="text-lg text-gray-700">
-                  Providing accessible, reliable, and eco-conscious laundry
-                  solutions that make self-care effortless.
-                </p>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-1">
-                  3
-                </div>
-                <p className="text-lg text-gray-700">
-                  Empowering individuals to build strong, respectable businesses
-                  through our trusted franchise model.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -178,65 +168,37 @@ export default function DiscoverCleanCraft() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Card className="p-6 bg-white">
-                <CardContent className="space-y-4">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    1. Spotless Excellence
-                  </h3>
-                  <p className="text-gray-700">
-                    We deliver nothing but perfection—because we understand the
-                    value of a flawless first impression.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="p-6 bg-white">
-                <CardContent className="space-y-4">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    2. Dignity Through Cleanliness
-                  </h3>
-                  <p className="text-gray-700">
-                    We believe that cleanliness uplifts, empowers, and dignifies
-                    people from all walks of life.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="p-6 bg-white">
-                <CardContent className="space-y-4">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    3. Commitment Without Compromise
-                  </h3>
-                  <p className="text-gray-700">
-                    We go the extra mile—whatever it takes—to ensure quality,
-                    customer satisfaction, and long-term trust.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="p-6 bg-white">
-                <CardContent className="space-y-4">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    4. Empowerment Through Opportunity
-                  </h3>
-                  <p className="text-gray-700">
-                    We enable aspiring entrepreneurs to create successful
-                    futures with a scalable, profitable business.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="p-6 bg-white">
-                <CardContent className="space-y-4">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    5. Sustainable Impact
-                  </h3>
-                  <p className="text-gray-700">
-                    We serve not just individuals but the planet—by using
-                    eco-friendly processes and responsible practices.
-                  </p>
-                </CardContent>
-              </Card>
+              {[
+                {
+                  title: "1. Spotless Excellence",
+                  desc: "We deliver nothing but perfection—because we understand the value of a flawless first impression.",
+                },
+                {
+                  title: "2. Dignity Through Cleanliness",
+                  desc: "We believe that cleanliness uplifts, empowers, and dignifies people from all walks of life.",
+                },
+                {
+                  title: "3. Commitment Without Compromise",
+                  desc: "We go the extra mile—whatever it takes—to ensure quality, customer satisfaction, and long-term trust.",
+                },
+                {
+                  title: "4. Empowerment Through Opportunity",
+                  desc: "We enable aspiring entrepreneurs to create successful futures with a scalable, profitable business.",
+                },
+                {
+                  title: "5. Sustainable Impact",
+                  desc: "We serve not just individuals but the planet—by using eco-friendly processes and responsible practices.",
+                },
+              ].map((val, i) => (
+                <Card key={i} className="p-6 bg-white">
+                  <CardContent className="space-y-4">
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {val.title}
+                    </h3>
+                    <p className="text-gray-700">{val.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>

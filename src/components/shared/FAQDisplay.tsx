@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { StrapiFAQ } from "@/types/strapi";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet"; // ✅ Updated here
 
 interface FAQDisplayProps {
   faqs: StrapiFAQ[];
@@ -26,7 +26,6 @@ const FAQDisplay: React.FC<FAQDisplayProps> = ({ faqs, variant = "home" }) => {
   const getAnswerText = (answer: any): string => {
     if (typeof answer === "string") return answer;
 
-    // ✅ Correctly parse the array of blocks
     if (Array.isArray(answer)) {
       return answer
         .map((block) =>

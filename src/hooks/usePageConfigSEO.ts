@@ -40,11 +40,7 @@ async function loadPagesYaml(): Promise<PagesSEOData> {
     const yamlText = await response.text();
     if (!yamlText.trim()) throw new Error("Empty YAML");
 
-    try {
-      pagesData = yaml.load(yamlText) as PagesSEOData;
-    } catch (yamlError) {
-      throw new Error(`YAML parsing failed: ${yamlError}`);
-    }
+    pagesData = yaml.load(yamlText) as PagesSEOData;
 
     if (!pagesData?.seo) throw new Error("Invalid SEO structure");
     return pagesData;
@@ -83,22 +79,23 @@ export function usePageConfigSEO(slug: string) {
       try {
         const data = await loadPagesYaml();
         const countryCode = currentCountry?.toLowerCase() || "in";
-        const cleanSlug = slug.replace(/^\/[a-z]{2}\//, "/");
-
-        const pageSEO = data.seo?.pages?.[cleanSlug]?.[countryCode];
+        const normalizedSlug = slug.replace(/^\/[a-z]{2}\//, "/");
         const globalDefaults = data.seo?.global?.defaults;
 
-        // 🐞 Debug Logs
-        console.log("✅ Full YAML:", data);
-        console.log("✅ Country:", countryCode);
-        console.log("✅ Slug:", cleanSlug);
-        console.log("✅ PageSEO:", pageSEO);
+        // ✅ Fallback logic for SEO content
+        const pageSEO =
+          data.seo?.pages?.[normalizedSlug]?.[countryCode] ||
+          data.seo?.pages?.[normalizedSlug]?.["in"] || // fallback to 'in'
+          null;
 
         const title =
-          (pageSEO?.title || "CleanCraft") + (globalDefaults?.title_suffix || "");
+          (pageSEO?.title || "CleanCraft") +
+          (globalDefaults?.title_suffix || "");
 
         const description =
-          pageSEO?.description || globalDefaults?.description || "";
+          pageSEO?.description?.trim() ||
+          globalDefaults?.description ||
+          "CleanCraft provides premium laundry services near you.";
 
         const keywords = [
           ...(pageSEO?.keywords || []),

@@ -20,7 +20,7 @@ const Franchise = () => {
   return (
     <Layout showOfferCarousel={false}>
       <EnhancedSEO
-        slug="/franchise"
+        slug="/laundry-franchise"
         pageType="Organization"
         defaultTitle="Laundry Franchise Opportunity | Clean Craft"
         defaultDescription="Join India's most trusted laundry franchise. Get assured break-even in 7 months or 100% royalty free for life. Premium territories available."
