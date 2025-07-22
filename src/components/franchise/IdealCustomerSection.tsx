@@ -107,7 +107,7 @@ const IdealCustomerSection = () => {
         <FranchiseFormModal
           isOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
-          title="Download Success Case Studies"
+          title="Apply for Franchise Now"
           sourceCta="Get Case Studies"
         />
       </div>

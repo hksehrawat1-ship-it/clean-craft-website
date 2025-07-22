@@ -2,13 +2,6 @@ import { Award, BookOpen, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TrainerSection = () => {
-  const scrollToRegistration = () => {
-    const registrationForm = document.getElementById("registration-form");
-    if (registrationForm) {
-      registrationForm.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <section id="trainer" className="md:py-10 py-2 bg-blue-50">
       <div className="container mx-auto">
@@ -75,18 +68,23 @@ const TrainerSection = () => {
             </div>
 
             <div className="pt-4">
-              <Button
-                onClick={scrollToRegistration}
-                size="lg"
-                className="bg-[#1A73E8] text-white"
-                style={{
-                  backgroundColor: "#1A73E8",
-                  padding: "0 27px",
-                  borderRadius: "11px",
-                }}
+              <a
+                href="https://cleancraft.mojo.page/best-laundry-training-institute-in-india"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Learn From The Expert
-              </Button>
+                <Button
+                  size="lg"
+                  className="bg-[#1A73E8] text-white"
+                  style={{
+                    backgroundColor: "#1A73E8",
+                    padding: "0 27px",
+                    borderRadius: "11px",
+                  }}
+                >
+                  Learn From The Expert
+                </Button>
+              </a>
             </div>
           </div>
         </div>

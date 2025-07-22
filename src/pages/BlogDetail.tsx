@@ -155,19 +155,7 @@ const BlogDetail = () => {
         />
 
         <section className="relative overflow-hidden">
-          {imageUrl ? (
-            <div className="absolute inset-0">
-              <img
-                src={imageUrl}
-                alt={imageAlt}
-                className="w-full h-full object-cover"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
-            </div>
-          ) : (
-            <div className="absolute inset-0 opacity-10 bg-gray-200" />
-          )}
+          <div className="absolute inset-0 opacity-10 bg-gray-200" />
 
           <div className="relative max-w-4xl mx-auto px-4 py-16 md:py-24">
             <div className="text-center md:text-left">
@@ -195,7 +183,7 @@ const BlogDetail = () => {
                 </div>
               </div>
 
-              <h1 className="heading-primary md:text-4xl text-xl text-white mb-0 leading-tight drop-shadow-lg">
+              <h1 className="heading-primary md:text-4xl text-xl text-white mb-6 leading-tight drop-shadow-lg">
                 {blog.title}
               </h1>
 
@@ -258,6 +246,17 @@ const BlogDetail = () => {
                   Back to Blog
                 </Button>
               </div>
+
+              {imageUrl && (
+                <div className="rounded-xl overflow-hidden mb-8">
+                  <img
+                    src={imageUrl}
+                    alt={imageAlt}
+                    className="w-full h-auto object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
 
               <div className="article-content prose max-w-none">
                 <BlocksRenderer

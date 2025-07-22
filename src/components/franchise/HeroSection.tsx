@@ -27,10 +27,12 @@ const HeroSection = () => {
               #No. 1 Laundry Franchise opportunity in India
             </Badge>
 
-            <h1 className="md:text-lg text-sm font-bold leading-tight">
-              Own a Thriving{" "}
-              <span className="gradient-text">Laundry &amp; Dry Cleaning</span>{" "}
-              Franchise
+            <h1 className="md:text-sm text-sm font-bold leading-tight">
+              Start Profitable{" "}
+              <span className="gradient-text">
+                Laundry and &amp; Dry Cleaning
+              </span>{" "}
+              Store with Clean Craft Guarantee
             </h1>
 
             <div className="franchise-card hover:shadow-md">

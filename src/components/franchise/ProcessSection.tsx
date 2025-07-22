@@ -1,14 +1,13 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  MapPin, 
-  FileText, 
-  GraduationCap, 
-  Store, 
+import {
+  MapPin,
+  FileText,
+  GraduationCap,
+  Store,
   Rocket,
-  ArrowRight 
+  ArrowRight,
 } from "lucide-react";
 import { useState } from "react";
 import FranchiseFormModal from "./FranchiseFormModal";
@@ -24,33 +23,37 @@ const ProcessSection = () => {
     {
       icon: <MapPin className="h-8 w-8" />,
       title: "Territory Selection",
-      description: "Choose your premium location with our market analysis support",
-      duration: "Day 1-3"
+      description:
+        "Choose your premium location with our market analysis support",
+      duration: "Day 1-3",
     },
     {
       icon: <FileText className="h-8 w-8" />,
       title: "Documentation & Agreement",
       description: "Complete paperwork and franchise agreement signing",
-      duration: "Day 4-7"
+      duration: "Day 4-7",
     },
     {
       icon: <GraduationCap className="h-8 w-8" />,
       title: "Training Program",
-      description: "Comprehensive training on operations, technology, and best practices",
-      duration: "Day 8-15"
+      description:
+        "Comprehensive training on operations, technology, and best practices",
+      duration: "Day 8-15",
     },
     {
       icon: <Store className="h-8 w-8" />,
       title: "Store Setup",
-      description: "Complete store setup with equipment installation and branding",
-      duration: "Day 16-30"
+      description:
+        "Complete store setup with equipment installation and branding",
+      duration: "Day 16-30",
     },
     {
       icon: <Rocket className="h-8 w-8" />,
       title: "Grand Opening",
-      description: "Launch your store with marketing support and customer acquisition",
-      duration: "Day 30+"
-    }
+      description:
+        "Launch your store with marketing support and customer acquisition",
+      duration: "Day 30+",
+    },
   ];
 
   return (
@@ -61,19 +64,18 @@ const ProcessSection = () => {
             Simple 30-Day Process
           </Badge>
           <h2 className="text-heading-lg font-bold mb-4">
-            From Application to <span className="gradient-text">Launch</span> in 30 Days
+            From Application to <span className="gradient-text">Launch</span> in
+            30 Days
           </h2>
           <p className="text-body-lg text-gray-600">
-            Our streamlined process gets you from zero to profitable franchise owner in just one month
+            Our streamlined process gets you from zero to profitable franchise
+            owner in just one month
           </p>
         </div>
 
-        <div className="franchise-grid-3 mb-16">
+        <div className="franchise-grid-3 mb-16 ">
           {processSteps.map((step, index) => (
-            <Card 
-              key={index} 
-              className="franchise-card relative"
-            >
+            <Card key={index} className="franchise-card relative bg-white">
               <CardContent className="p-6">
                 <div className="franchise-icon-container franchise-icon-blue mb-4">
                   {step.icon}
@@ -86,46 +88,30 @@ const ProcessSection = () => {
                 <h3 className="text-title-lg font-semibold mb-3">
                   {step.title}
                 </h3>
-                <p className="text-gray-600">
-                  {step.description}
-                </p>
+                <p className="text-gray-600">{step.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
         {/* Claim Your Territory CTA Section */}
-        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-dark rounded-2xl p-8 md:p-12 text-center text-white">
-          <h3 className="text-3xl font-bold mb-4" style={{ color: "white" }}>
-            Ready to Claim Your Territory?
-          </h3>
-          <p className="text-white mb-6 max-w-2xl mx-auto"
-              style={{ color: "white" }}>
-            Premium territories are filling up fast. Secure your spot in India's most profitable laundry franchise today.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              onClick={handleClaimTerritory}
-              size="lg"
-              variant="secondary"
-              className="bg-white text-brand-blue hover:bg-gray-100 font-semibold px-8 py-4 text-lg"
-            >
-              Claim Your Territory Now
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
-          </div>
 
-          <p className="text-white mb-6 max-w-2xl mx-auto"
-              style={{ color: "white" }}>
-            <br />Limited premium territories available <br />• First come, first served
-          </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button
+            onClick={handleClaimTerritory}
+            size="lg"
+            variant="secondary"
+            className=" bg-blue-500 text-white font-semibold px-8 py-4 text-lg"
+          >
+            Apply for Franchise
+            <ArrowRight className="h-5 w-5 ml-2" />
+          </Button>
         </div>
 
         <FranchiseFormModal
           isOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
-          title="Claim Your Premium Territory"
+          title="Apply for Franchise Now"
           sourceCta="Claim Territory"
         />
       </div>

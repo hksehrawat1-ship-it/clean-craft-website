@@ -76,7 +76,7 @@ const Features = () => {
               rel="noopener noreferrer"
               className="inline-block px-8 py-3 text-white bg-[#1869D3] hover:bg-[#155bb6] rounded-full text-lg font-semibold transition duration-300"
             >
-              Buy Now
+              Download Guide
             </a>
           </div>
         </div>

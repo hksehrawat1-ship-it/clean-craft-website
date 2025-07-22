@@ -144,7 +144,7 @@ function processSEOPages(seoPages, baseUrl, now, urls) {
     // Add URLs for each country that has SEO data for this page
     Object.keys(pageConfig).forEach(country => {
       // Skip metadata fields
-      if (country === 'priority' || country === 'changefreq') return;
+      if (country === 'priority' || country === 'changefreq' || country === 'lastmod')  return;
       
       const urlPath = `/${country}${pagePath}`;
       const seoData = pageConfig[country];
