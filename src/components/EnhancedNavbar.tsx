@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCountry } from "@/contexts/CountryContext";
 import { getNavbarItems } from "@/hooks/use-pages-config";
-import type { PageData } from "@/types/config";
 
 const EnhancedNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,13 +16,14 @@ const EnhancedNavbar: React.FC = () => {
   const { currentCountry } = useCountry();
   const navItems = getNavbarItems(currentCountry);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const createLink = (path: string) =>
-    currentCountry ? `/${currentCountry.toLowerCase()}${path}` : "/";
+    currentCountry ? `/${currentCountry.toLowerCase()}${path}` : path;
 
   const handleLogoClick = () => {
     setIsMenuOpen(false);
-    if (location.pathname === createLink("")) {
+    if (location.pathname === createLink("/")) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -74,7 +74,7 @@ const EnhancedNavbar: React.FC = () => {
       <div className="container mx-auto flex items-center justify-between px-4">
         {/* ─── Logo ─── */}
         <Link
-          to={createLink("")}
+          to={createLink("/")}
           onClick={handleLogoClick}
           className="z-20 flex items-center"
         >
@@ -152,7 +152,10 @@ const EnhancedNavbar: React.FC = () => {
           >
             Login
           </Button>
-          <Button className="rounded-[12px] bg-[#1A73E8] px-6 py-2 text-sm font-medium text-white hover:bg-[#1557B0]">
+          <Button
+            onClick={() => navigate(createLink("/book"))}
+            className="rounded-[12px] bg-[#1A73E8] px-6 py-2 text-sm font-medium text-white hover:bg-[#1557B0]"
+          >
             Book Now
           </Button>
         </div>
@@ -235,7 +238,13 @@ const EnhancedNavbar: React.FC = () => {
               >
                 Login
               </Button>
-              <Button className="w-full rounded-[12px] bg-[#1A73E8] px-4 py-3 text-sm font-medium text-white hover:bg-[#1557B0]">
+              <Button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(createLink("/book"));
+                }}
+                className="w-full rounded-[12px] bg-[#1A73E8] px-4 py-3 text-sm font-medium text-white hover:bg-[#1557B0]"
+              >
                 Book Now
               </Button>
             </div>

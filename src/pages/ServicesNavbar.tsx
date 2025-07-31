@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { ChevronRight, ArrowRight, X } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useCountry } from "@/contexts/CountryContext";
 import { toast } from "sonner";
 import { useStrapiServices } from "@/hooks/useStrapi";

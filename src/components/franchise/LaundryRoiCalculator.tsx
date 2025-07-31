@@ -51,19 +51,10 @@ const LaundryRoiCalculator = () => {
   return (
     <>
       <div className="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md mx-auto google-shadow">
-        <div className="p-6">
+        <div className="px-6 py-2">
           {/* Logo & Heading */}
-          <div className="flex items-center justify-center mb-6">
-            <img
-              src="/lovable-uploads/cleancraft-icon.png"
-              alt="Clean Craft Laundry Franchise Logo"
-              className="h-16 w-16 object-contain"
-            />
-            <h3 className="font-semibold text-xl text-google-gray ml-2">
-              CleanCraft
-            </h3>
-          </div>
-          <h3 className="font-semibold text-xl text-cleancraft-darkgold mb-4 text-center">
+
+          <h3 className="font-semibold text-xl text-cleancraft-darkgold mb-3 text-center">
             Laundry Franchise ROI Calculator
           </h3>
 
@@ -94,7 +85,7 @@ const LaundryRoiCalculator = () => {
                   aria-label="Enter initial investment amount"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 mb-0">
                 Typical range: ₹23 – 25 Lakh
               </p>
             </div>
