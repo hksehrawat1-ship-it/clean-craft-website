@@ -1,10 +1,10 @@
-// BookingPage.tsx
 import React, { useEffect, useState } from "react";
 import { contentService } from "../lib/strapi/services/content.service";
 import { useStrapiServices } from "@/hooks/useStrapi";
 import { useCountry } from "@/contexts/CountryContext";
 import { toast } from "sonner";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const BookingPage = () => {
   const [cities, setCities] = useState<string[]>([]);
@@ -22,6 +22,7 @@ const BookingPage = () => {
 
   const { currentCountry } = useCountry();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
+  const navigate = useNavigate(); // <-- Navigation hook
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -72,7 +73,7 @@ const BookingPage = () => {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          manual_city: formData.customCity, // 👈 correct field for Interesting-leads
+          manual_city: formData.customCity,
           services: selectedServices.join(", "),
         }
       : {
@@ -102,28 +103,37 @@ const BookingPage = () => {
       setSelectedServices([]);
       setSelectedCity("");
       setShowForm(false);
+
+      // ✅ Redirect to homepage after successful submit
+      navigate(`/${currentCountry || "in"}`);
     } catch (error) {
       console.error("Error submitting booking:", error);
       toast.error("Something went wrong while submitting.");
     }
   };
 
-  const services =
-    strapiServices?.data?.length > 0
-      ? strapiServices.data
-      : [
-          {
-            id: "default",
-            name: "Laundry Service",
-            description: "Standard service",
-            price_from: 10,
-            price_type: "kg",
-          },
-        ];
+  const displayServices = (strapiServices?.data || []).map((service: any) => {
+    let priceType = service.price_type?.trim();
+    const slug = service.slug?.toLowerCase() || "";
+    if (!priceType) {
+      priceType =
+        slug.includes("wash") || slug.includes("laundry") ? "kg" : "item";
+    }
+    return { ...service, price_type: priceType };
+  });
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Book Now</h2>
+    <div className="p-4 max-w-xl mx-auto shadow-lg">
+      <div className="flex items-center justify-center mb-4 space-x-2">
+        <Link to={`/${currentCountry || "in"}`}>
+          <img
+            src="/lovable-uploads/cleancraft-icon.png"
+            alt="CleanCraft Icon"
+            className="w-12 h-12"
+          />
+        </Link>
+        <span className="text-xl font-semibold text-gray-800">CleanCraft</span>
+      </div>
 
       <label className="block font-semibold mb-2">Select your city:</label>
       <select
@@ -150,7 +160,7 @@ const BookingPage = () => {
           <p className="text-red-500">Failed to load services</p>
         ) : (
           <div className="max-h-64 overflow-y-auto space-y-3">
-            {services.map((service: any) => (
+            {displayServices.map((service: any) => (
               <label
                 key={service.id}
                 className="block border rounded-lg p-3 bg-white hover:shadow-md transition-all duration-200 cursor-pointer"
@@ -167,14 +177,8 @@ const BookingPage = () => {
                       {service.name}
                     </div>
                     {service.description && (
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 line-clamp-2">
                         {service.description}
-                      </div>
-                    )}
-                    {service.price_from && (
-                      <div className="text-xs text-gray-400 mt-1">
-                        From ₹{service.price_from}/
-                        {service.price_type || "item"}
                       </div>
                     )}
                   </div>
@@ -189,7 +193,7 @@ const BookingPage = () => {
         <div className="mb-4">
           <label className="block font-semibold mb-1">Selected Services:</label>
           <ul className="space-y-2">
-            {services
+            {displayServices
               .filter((s: any) => selectedServices.includes(s.id))
               .map((service: any) => (
                 <li
@@ -276,7 +280,7 @@ const BookingPage = () => {
           )}
           <input
             type="text"
-            value={services
+            value={displayServices
               .filter((s: any) => selectedServices.includes(s.id))
               .map((s: any) => s.name)
               .join(", ")}

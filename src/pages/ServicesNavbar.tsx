@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronRight, ArrowRight, X } from "lucide-react";
+import { ChevronRight, ArrowRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +21,7 @@ import { IconType } from "react-icons";
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
+import { useNavigate } from "react-router-dom";
 
 interface ServiceCardProps {
   name: string;
@@ -69,80 +70,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   );
 };
 
-const SchedulePickupModal = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = () => {
-    if (!name || !phone || !email) {
-      toast.error("All fields are required");
-      return;
-    }
-
-    toast.success("Pickup Scheduled!");
-    onClose();
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="w-full max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-bold">
-            Pickup address
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border px-4 py-2 rounded-md"
-          />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full border px-4 py-2 rounded-md"
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border px-4 py-2 rounded-md"
-          />
-
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-[#1E3A8A] text-white font-semibold py-2 rounded-md hover:bg-blue-800 transition"
-          >
-            Submit
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const serviceIcons: Record<string, IconType> = {
-  Wash: FaSoap,
-  "Wash & Iron": FaTshirt,
-  "Dry Cleaning": FaRegSnowflake,
-  "Ironing only": FaBroom,
-  "Duvets & Bulky Items": FaBoxOpen,
-  "Wash, Dry & Fold": FaTshirt,
-};
-
 const currencySymbols: Record<string, string> = {
   in: "₹",
   us: "$",
@@ -154,6 +81,15 @@ const currencySymbols: Record<string, string> = {
   fr: "€",
   es: "€",
   it: "€",
+};
+
+const serviceIcons: Record<string, IconType> = {
+  Wash: FaSoap,
+  "Wash & Iron": FaTshirt,
+  "Dry Cleaning": FaRegSnowflake,
+  "Ironing only": FaBroom,
+  "Duvets & Bulky Items": FaBoxOpen,
+  "Wash, Dry & Fold": FaTshirt,
 };
 
 const fallbackServices = [
@@ -203,11 +139,14 @@ const ServicesPage: React.FC = () => {
   const { currentCountry } = useCountry();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
   const [showAll, setShowAll] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const createLink = (path: string) =>
+    currentCountry ? `/${currentCountry.toLowerCase()}${path}` : path;
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-0 mx:py-16">
+      <div className="flex items-center justify-center py-16">
         <LoadingSpinner />
       </div>
     );
@@ -258,7 +197,7 @@ const ServicesPage: React.FC = () => {
         <EnhancedNavbar />
 
         <main className="flex-grow w-full py-16 px-2 md:px-4">
-          {/* ✅ Mobile View */}
+          {/* Mobile View */}
           <div className="lg:hidden">
             <div className="max-w-7xl mx-auto bg-[#1E3A8A] p-6 rounded-3xl">
               <h2 className="text-3xl font-bold text-white mb-4">
@@ -282,7 +221,7 @@ const ServicesPage: React.FC = () => {
                 All orders include free delivery.
               </p>
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => navigate(createLink("/book"))}
                 className="w-full text-center px-6 py-3 bg-white text-[#1E3A8A] font-semibold rounded-full text-sm hover:bg-gray-100 transition"
               >
                 Pickup address
@@ -290,7 +229,7 @@ const ServicesPage: React.FC = () => {
             </div>
           </div>
 
-          {/* ✅ Desktop View */}
+          {/* Desktop View */}
           <div
             className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
             style={{ height: "calc(100vh - 200px)" }}
@@ -314,7 +253,7 @@ const ServicesPage: React.FC = () => {
                   All orders include free delivery.
                 </p>
                 <button
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => navigate(createLink("/book"))}
                   className="inline-block bg-white text-[#1E3A8A] px-6 py-3 rounded-full text-sm font-semibold hover:bg-gray-100 transition"
                 >
                   Schedule Pickup
@@ -345,12 +284,6 @@ const ServicesPage: React.FC = () => {
 
         <Footer />
       </div>
-
-      {/* ✅ Modal */}
-      <SchedulePickupModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </>
   );
 };
