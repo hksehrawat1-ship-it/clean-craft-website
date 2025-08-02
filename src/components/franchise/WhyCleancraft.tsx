@@ -9,10 +9,11 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import FranchiseFormModal from "./FranchiseFormModal"; // ✅ Import modal component
+import FranchiseFormModal from "./FranchiseFormModal";
+import LaundryRoiCalculator from "@/components/franchise/LaundryRoiCalculator";
 
 const WhyCleancraft = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false); // ✅ Add state
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleOpenForm = () => {
     setIsFormOpen(true);
@@ -45,69 +46,90 @@ const WhyCleancraft = () => {
           </p>
         </div>
 
-        {/* Revenue Chart */}
-        <Card className="border-0 shadow-lg bg-white w-full md:w-1/2 mx-auto">
-          <CardContent className="p-8">
-            <h3 className="text-2xl font-medium text-gray-800 text-center mb-8">
-              Monthly Profit Potential
-            </h3>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={revenueData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis
-                    dataKey="month"
-                    tick={{ fill: "#6b7280", fontSize: 12 }}
-                    axisLine={{ stroke: "#d1d5db" }}
-                  />
-                  <YAxis
-                    tick={{ fill: "#6b7280", fontSize: 12 }}
-                    axisLine={{ stroke: "#d1d5db" }}
-                    tickFormatter={(value) => `₹${value.toLocaleString()}`}
-                  />
-                  <Tooltip
-                    formatter={(value) => [
-                      `₹${value.toLocaleString()}`,
-                      "Revenue",
-                    ]}
-                    labelStyle={{ color: "#374151" }}
-                    contentStyle={{
-                      backgroundColor: "#f9fafb",
-                      border: "1px solid #e5e7eb",
-                      borderRadius: "8px",
-                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    }}
-                  />
-                  <Bar
-                    dataKey="revenue"
-                    fill="#2563eb"
-                    radius={[4, 4, 0, 0]}
-                    className="hover:opacity-80 transition-opacity duration-200"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="text-center text-gray-500 text-sm mt-4">
-              *Profit potential based on average franchise performance
-            </p>
-          </CardContent>
-        </Card>
+        {/* 2-column Layout with Equal Height */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Left: Bar Chart + CTA */}
+          <div className="flex flex-col justify-between flex-1">
+            <Card className="border-0 shadow-lg bg-white flex-1">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-medium text-gray-800 text-center mb-8">
+                  Monthly Profit Potential
+                </h3>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={revenueData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                      <XAxis
+                        dataKey="month"
+                        tick={{ fill: "#6b7280", fontSize: 12 }}
+                        axisLine={{ stroke: "#d1d5db" }}
+                      />
+                      <YAxis
+                        tick={{ fill: "#6b7280", fontSize: 12 }}
+                        axisLine={{ stroke: "#d1d5db" }}
+                        tickFormatter={(value) => `₹${value.toLocaleString()}`}
+                      />
+                      <Tooltip
+                        formatter={(value) => [
+                          `₹${value.toLocaleString()}`,
+                          "Revenue",
+                        ]}
+                        labelStyle={{ color: "#374151" }}
+                        contentStyle={{
+                          backgroundColor: "#f9fafb",
+                          border: "1px solid #e5e7eb",
+                          borderRadius: "8px",
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                        }}
+                      />
+                      <Bar
+                        dataKey="revenue"
+                        fill="#2563eb"
+                        radius={[4, 4, 0, 0]}
+                        className="hover:opacity-80 transition-opacity duration-200"
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                <p className="text-center text-gray-500 text-sm mt-4">
+                  *Profit potential based on average franchise performance
+                </p>
+              </CardContent>
+            </Card>
 
-        {/* CTA Button */}
-        <div className="text-center mt-12">
-          <button
-            onClick={handleOpenForm}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 rounded-full text-xl font-semibold shadow-lg transform hover:scale-105 transition-all duration-300"
-          >
-            Apply for Franchise
-          </button>
+            {/* CTA */}
+            <div className="text-center mt-6">
+              <button
+                onClick={handleOpenForm}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 rounded-full text-xl font-semibold shadow-lg transform hover:scale-105 transition-all duration-300"
+              >
+                Apply for Franchise
+              </button>
+            </div>
+          </div>
+
+          {/* Right: ROI Calculator (Desktop) */}
+          <div className="flex-1 relative hidden md:flex">
+            <div className="absolute inset-0 bg-gradient-to-r from-cleancraft-light/40 to-cleancraft-light/20 rounded-2xl"></div>
+            <div className="relative flex items-center justify-center w-full">
+              <LaundryRoiCalculator />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile ROI Calculator */}
+        <div
+          className="md:hidden franchise-fade-in mt-10"
+          style={{ animationDelay: "0.3s" }}
+        >
+          <LaundryRoiCalculator />
         </div>
       </div>
 
-      {/* Franchise Form Modal */}
+      {/* Modal */}
       <FranchiseFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}

@@ -98,7 +98,7 @@ export default defineConfig(({ mode }) => ({
       "react-dom",
       "react-router-dom",
       "@tanstack/react-query",
-      "react-helmet-async",
+      "react-helmet",
       "framer-motion",
       "lucide-react",
     ],

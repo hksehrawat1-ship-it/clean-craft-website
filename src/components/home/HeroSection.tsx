@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RevolvingIcons from "./RevolvingIcons";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import Trusted from "./Trusted";
@@ -46,6 +46,7 @@ function useTypewriter(words: string[], typingSpeed = 80, pause = 2000) {
 
 const HeroSection = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const pathCountry = location.pathname.split("/")[1].toLowerCase(); // 'in', 'au', etc.
   const [showBanner, setShowBanner] = useState(false);
 
@@ -115,7 +116,11 @@ const HeroSection = () => {
               We wash. We press. We impress <br /> Book your clean slot today
             </p>
 
-            <button className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[280px] lg:max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white mb-4">
+            {/* 🔽 Booking Button with Navigation 🔽 */}
+            <button
+              onClick={() => navigate(`/${pathCountry}/book`)}
+              className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[280px] lg:max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white mb-4"
+            >
               <span className="flex items-center gap-3">
                 <span className="flex flex-col">
                   <span className="text-base font-medium text-[#0E0E0E]">

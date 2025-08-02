@@ -49,7 +49,7 @@ const RegistrationForm: React.FC = () => {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const insertData: any = {
+      const insertData = {
         name: data.name,
         phone: data.phone,
         email: data.email,
@@ -80,7 +80,10 @@ const RegistrationForm: React.FC = () => {
         console.warn("Email sending failed:", emailError);
       }
 
-      navigate(`/${countryCode?.toLowerCase() || "in"}/thank-you`);
+      // 👇 Redirect to thank you with query param
+      navigate(
+        `/${countryCode?.toLowerCase() || "in"}/thank-you?sourceCta=course`
+      );
       handlePaymentRedirect();
     } catch (error) {
       console.error("Error submitting registration:", error);

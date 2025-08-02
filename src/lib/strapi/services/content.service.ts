@@ -11,9 +11,6 @@ import {
 const FEATURED_FIELD = "is_featured";
 const SORT_FIELD_PUBLISHED = "publishedDate";
 
-/* ------------------------------------------------------------------ */
-/*  Common response + helper                                          */
-/* ------------------------------------------------------------------ */
 interface StrapiResponse<T> {
   data: T[];
   meta: {
@@ -47,9 +44,6 @@ const clean = (o: any): any =>
       )
     : o;
 
-/* ------------------------------------------------------------------ */
-/*  Singleton service                                                 */
-/* ------------------------------------------------------------------ */
 class ContentService {
   private static inst: ContentService;
   private constructor() {}
@@ -58,7 +52,6 @@ class ContentService {
     return ContentService.inst;
   }
 
-  /* ───────── BLOG LIST ───────── */
   async getBlogs(
     countryCode: string,
     opts: {
@@ -83,15 +76,12 @@ class ContentService {
       sortOrder = "desc",
     } = opts;
 
-    // Filters build
     const filters: any = {
       country: { code: { $eq: countryCode.toLowerCase() } },
     };
 
     if (featured !== undefined) filters[FEATURED_FIELD] = { $eq: featured };
-
     if (category) filters.blog_categories = { slug: { $eq: category } };
-
     if (search && search.trim()) {
       filters.$or = [
         { title: { $containsi: search.trim() } },
@@ -108,11 +98,9 @@ class ContentService {
       locale,
     };
 
-    const result = await getCollection<StrapiBlog>("blogs", clean(params));
-    return result;
+    return getCollection<StrapiBlog>("blogs", clean(params));
   }
 
-  /* ───────── SINGLE BLOG ───────── */
   async getBlogBySlug(slug: string, countryCode: string, locale?: string) {
     const params: BaseQueryParams = {
       populate: "*",
@@ -127,7 +115,6 @@ class ContentService {
     return res.data[0] ?? null;
   }
 
-  /* ───────── BLOG CATEGORIES ───────── */
   async getBlogCategories() {
     return getCollection<StrapiBlogCategory>("blog-categories", {
       populate: "*",
@@ -135,7 +122,6 @@ class ContentService {
     });
   }
 
-  /* ───────── SERVICES ───────── */
   async getServices(countryCode: string): Promise<StrapiResponse<StrapiService>> {
     const params: BaseQueryParams = {
       populate: {
@@ -151,7 +137,6 @@ class ContentService {
     return getCollection<StrapiService>("services", clean(params));
   }
 
-  /* ───────── TESTIMONIALS ───────── */
   async getTestimonials(
     countryCode: string,
     opts: {
@@ -185,7 +170,6 @@ class ContentService {
     return getCollection<StrapiTestimonial>("testimonials", clean(params));
   }
 
-  /* ───────── FAQS ───────── */
   async getFAQs(
     countryCode: string,
     opts: {
@@ -216,7 +200,6 @@ class ContentService {
     return getCollection<StrapiFAQ>("faqs", clean(params));
   }
 
-  /* ───────── POLICIES ───────── */
   async getPolicies(countryCode: string): Promise<StrapiResponse<StrapiPolicy>> {
     const params: BaseQueryParams = {
       populate: {
@@ -230,6 +213,39 @@ class ContentService {
 
     return getCollection<StrapiPolicy>("policies", clean(params));
   }
+
+async getCitiesForBooking(): Promise<string[]> {
+  try {
+    const result = await getCollection<any>("franchises", {
+      sort: ["city:asc"],
+    });
+
+    console.log("✅ Franchise API Response:", result);
+
+    if (!result || !Array.isArray(result.data)) {
+      console.warn("⚠️ Invalid franchise data format");
+      return [];
+    }
+
+    const cities: string[] = result.data
+      .map((item: any) => {
+        const city = item.city || item.attributes?.city;
+        return typeof city === "string" && city.trim() !== "" ? city.trim() : null;
+      })
+      .filter((city: string | null) => !!city) as string[];
+
+    const uniqueCities = [...new Set(cities)];
+
+    console.log("🏙️ Final Unique Cities List:", uniqueCities);
+
+    return uniqueCities;
+  } catch (error) {
+    console.error("❌ Error fetching cities from Strapi:", error);
+    return [];
+  }
+}
+
+
 }
 
 export const contentService = ContentService.getInstance();

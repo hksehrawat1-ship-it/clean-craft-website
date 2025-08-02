@@ -114,7 +114,7 @@ const Hero = () => {
             <div className="relative">
               <div className="absolute -inset-1 bg-primary/20 rounded-lg blur"></div>
               <img
-                src="/lovable-uploads/b407647c-af87-49b9-8a60-06b9a0328332.png"
+                src="/lovable-uploads/Front.jpg"
                 alt="Spotless Profit in Laundry eBook Cover - How to Start Laundry Business in India"
                 className="relative w-auto max-h-[500px] rounded-lg shadow-xl"
               />

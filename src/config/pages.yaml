@@ -166,6 +166,15 @@ in:
       sections:
         - type: "faq"
           category: "blog"
+    - path: "/services"
+      navbar: true
+      title: "Services"
+      order: 4
+      sections:
+        - type: "faq"
+          category: "services"
+        - type: "testimonial"
+          category: "services"
     - path: "/laundry-franchise"
       navbar: true
       title: "⁠Apply for Franchise"
@@ -205,7 +214,3 @@ in:
 
 sg:
   pages: []  # Uses only global pages
-
-
-
-
