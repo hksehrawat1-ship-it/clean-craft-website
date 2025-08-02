@@ -155,7 +155,16 @@ global:
 
 # Country-specific page availability
 au:
-  pages: []  # Uses only global pages
+  pages:
+    - path: "/services"
+      navbar: true
+      title: "Services"
+      order: 2
+      sections:
+        - type: "faq"
+          category: "services"
+        - type: "testimonial"
+          category: "services"
 
 in:
   pages:
@@ -213,4 +222,13 @@ in:
       order: 8
 
 sg:
-  pages: []  # Uses only global pages
+  pages:
+    - path: "/services"
+      navbar: true
+      title: "Services"
+      order: 2
+      sections:
+        - type: "faq"
+          category: "services"
+        - type: "testimonial"
+          category: "services"

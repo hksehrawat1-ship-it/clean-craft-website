@@ -153,7 +153,13 @@ const EnhancedNavbar: React.FC = () => {
             Login
           </Button>
           <Button
-            onClick={() => navigate(createLink("/book"))}
+            onClick={() => {
+              if (currentCountry?.toLowerCase() === "au") {
+                window.open("https://cleancloudapp.com/s3/27145", "_blank");
+              } else {
+                navigate(createLink("/book"));
+              }
+            }}
             className="rounded-[12px] bg-[#1A73E8] px-6 py-2 text-sm font-medium text-white hover:bg-[#1557B0]"
           >
             Book Now
@@ -241,7 +247,11 @@ const EnhancedNavbar: React.FC = () => {
               <Button
                 onClick={() => {
                   setIsMenuOpen(false);
-                  navigate(createLink("/book"));
+                  if (currentCountry?.toLowerCase() === "au") {
+                    window.open("https://cleancloudapp.com/s3/27145", "_blank");
+                  } else {
+                    navigate(createLink("/book"));
+                  }
                 }}
                 className="w-full rounded-[12px] bg-[#1A73E8] px-4 py-3 text-sm font-medium text-white hover:bg-[#1557B0]"
               >
