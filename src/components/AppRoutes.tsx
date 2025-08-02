@@ -13,6 +13,7 @@ import PolicyDetails from "../pages/PolicyDetails";
 import FaqPage from "../pages/Faq";
 import ServicesNavbar from "../pages/ServicesNavbar";
 import ThankYouPage from "../pages/ThankYouPage";
+import BookingPage from "@/pages/BookingPage";
 
 const LazyCoursesPage = lazy(() => import("../pages/learning/Courses"));
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
@@ -135,6 +136,7 @@ export function AppRoutes() {
                 />
               }
             />
+
             <Route
               path="services"
               element={
@@ -176,14 +178,26 @@ export function AppRoutes() {
               }
             />
 
-            {/* ✅ Fixed Thank You Page Route */}
+            {/* ✅ Correct Booking Page Route (no leading slash) */}
+            <Route
+              path="book"
+              element={
+                <CountryRouteGuard
+                  pagePath="/book"
+                  element={<BookingPage />}
+                  allowEmptyContent
+                />
+              }
+            />
+
+            {/* ✅ Thank You Page Route */}
             <Route
               path="thank-you"
               element={
                 <CountryRouteGuard
                   pagePath="/thank-you"
                   element={<ThankYouPage />}
-                  allowEmptyContent // 🔥 Most important for static pages
+                  allowEmptyContent
                 />
               }
             />

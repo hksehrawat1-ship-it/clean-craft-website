@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronRight, ArrowRight, Wifi, WifiOff } from "lucide-react";
+import { ChevronRight, ArrowRight, WifiOff } from "lucide-react";
 import { useCountry } from "@/contexts/CountryContext";
 import { useStrapiConnection } from "@/contexts/StrapiConnectionContext";
 import { toast } from "sonner";
@@ -13,7 +13,7 @@ import {
   FaBroom,
 } from "react-icons/fa";
 import { IconType } from "react-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface ServiceCardProps {
   name: string;
@@ -145,13 +145,26 @@ const ServicesSection: React.FC = () => {
   const { isConnected, isInitializing } = useStrapiConnection();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
   const [showAll, setShowAll] = useState(false);
+  const navigate = useNavigate();
 
   const countryCode = currentCountry?.toLowerCase() || "in";
   const currencySymbol = currencySymbols[countryCode] || "₹";
 
+  const createLink = (path: string) =>
+    currentCountry ? `/${currentCountry.toLowerCase()}${path}` : path;
+
   const displayServices = (strapiServices?.data || []).map((service: any) => {
-    const priceType =
-      service.price_type || (service.slug?.includes("wash") ? "kg" : "item");
+    let priceType = service.price_type?.trim()?.toLowerCase();
+
+    if (!priceType) {
+      const slug = service.slug?.toLowerCase() || "";
+      if (slug.includes("wash") || slug.includes("laundry")) {
+        priceType = "kg";
+      } else {
+        priceType = "item";
+      }
+    }
+
     return { ...service, price_type: priceType };
   });
 
@@ -161,8 +174,9 @@ const ServicesSection: React.FC = () => {
 
   return (
     <div className="w-full px-2 md:px-4">
+      {/* MOBILE SECTION */}
       <div className="lg:hidden">
-        <div className=" mx-auto bg-[#1E3A8A]  rounded-3xl">
+        <div className="mx-auto bg-[#1E3A8A] rounded-3xl">
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-3xl font-bold text-white">
@@ -186,20 +200,23 @@ const ServicesSection: React.FC = () => {
               Our minimum order value is {currencySymbol}350. All orders include
               free delivery.
             </p>
-            <Link to="/book-now">
-              <button className="bg-white text-[#1E3A8A] px-5 py-2 rounded-full font-semibold text-sm shadow-md hover:bg-gray-100 transition">
-                Schedule Pickup
-              </button>
-            </Link>
+
+            <button
+              onClick={() => navigate(createLink("/book"))}
+              className="bg-white text-[#1E3A8A] px-5 py-2 rounded-full font-semibold text-sm shadow-md hover:bg-gray-100 transition"
+            >
+              Schedule Pickup
+            </button>
           </div>
         </div>
       </div>
 
+      {/* DESKTOP SECTION */}
       <div
         className="hidden lg:flex max-w-7xl mx-auto rounded-3xl overflow-hidden"
         style={{ height: "calc(100vh - 260px)" }}
       >
-        <div className="w-1/2 bg-[#1E3A8A] text-white px-16 ">
+        <div className="w-1/2 bg-[#1E3A8A] text-white px-16">
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-4xl font-bold">Explore our services</h2>
@@ -208,20 +225,24 @@ const ServicesSection: React.FC = () => {
             <p className="text-lg text-white">
               Wide range of laundry service with free home pickup & delivery
             </p>
-            <button className="flex items-center text-lg text-white  hover:no-underline">
+            <button className="flex items-center text-lg text-white hover:no-underline">
               Explore pricing <ArrowRight className="ml-2 w-5 h-5" />
             </button>
           </div>
+
           <div>
             <p className="text-sm text-white mb-6">
               Our minimum order value is {currencySymbol}350. All orders include
               free delivery.
             </p>
-            <Link to="/book-now">
-              <button className="bg-white text-[#1E3A8A] px-6 py-3 rounded-full font-semibold text-base shadow-md hover:bg-gray-100 transition">
-                Schedule Pickup
-              </button>
-            </Link>
+
+            {/* ✅ Updated Button */}
+            <button
+              onClick={() => navigate(createLink("/book"))}
+              className="bg-white text-[#1E3A8A] px-6 py-3 rounded-full font-semibold text-base shadow-md hover:bg-gray-100 transition"
+            >
+              Schedule Pickup
+            </button>
           </div>
         </div>
 

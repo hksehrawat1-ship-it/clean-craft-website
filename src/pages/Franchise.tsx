@@ -15,6 +15,7 @@ import AsFeaturedOn from "@/components/franchise/AsFeaturedOn";
 import SuccessStories from "@/components/franchise/SuccessStories";
 import StudentGallery from "@/components/franchise/StudentGallery";
 import WhyCleancraft from "@/components/franchise/WhyCleancraft";
+import InTheHeadlines from "@/components/franchise/InTheHeadlines";
 
 const Franchise = () => {
   return (
@@ -33,6 +34,7 @@ const Franchise = () => {
 
       <main className="franchise-page">
         <HeroSection />
+        <InTheHeadlines />
         <WhyCleancraft />
         <IdealCustomerSection />
         <ComparisonSection />
