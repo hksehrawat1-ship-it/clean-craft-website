@@ -29,25 +29,25 @@ const ProcessStepsSection = () => {
       id: 1,
       title: "Select Order Type",
       description: "Choose between on-demand or scheduling ahead.",
-      imageSrc: `/lovable-uploads/step-1-steps-laundry${countrySuffix}.png`,
+      imageSrc: `/lovable-uploads/step-1-steps-laundry${countrySuffix}.webp`,
     },
     {
       id: 2,
       title: "Pick Your Services",
       description: "Your one-stop solution for all laundry needs.",
-      imageSrc: `/lovable-uploads/step-2-steps-laundry${countrySuffix}.png`,
+      imageSrc: `/lovable-uploads/step-2-steps-laundry${countrySuffix}.webp`,
     },
     {
       id: 3,
       title: "Choose Payment Method",
       description: "Secure payments via Apple Pay, Google Pay, or card.",
-      imageSrc: `/lovable-uploads/step-3-steps-laundry${countrySuffix}.png`,
+      imageSrc: `/lovable-uploads/step-3-steps-laundry${countrySuffix}.webp`,
     },
     {
       id: 4,
       title: "Place Your Order & Track It",
       description: "Get real-time updates on your order status.",
-      imageSrc: `/lovable-uploads/step-4-steps-laundry${countrySuffix}.png`,
+      imageSrc: `/lovable-uploads/step-4-steps-laundry${countrySuffix}.webp`,
     },
   ];
 

@@ -67,7 +67,7 @@ const HeroSection = () => {
               <div className="relative">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                   <img
-                    src="/lovable-uploads/8063ac1a-50bd-4822-8682-f789a3038092.png"
+                    src="/lovable-uploads/FranchisHero.webp"
                     alt="Clean Craft Store"
                     className="w-full h-auto object-cover"
                   />

@@ -12,19 +12,19 @@ import {
 const StudentGallery = () => {
   const studentImages = [
     {
-      src: "/lovable-uploads/9f1b2cf2-0c44-4cfa-b3f2-7f15ad24e442.png",
+      src: "/lovable-uploads/student1.webp",
       alt: "Successful Students Group 1",
     },
     {
-      src: "/lovable-uploads/0484205e-5795-42e8-a444-643499d17fcf.png",
+      src: "/lovable-uploads/student2.webp",
       alt: "Successful Students Group 2",
     },
     {
-      src: "/lovable-uploads/664e87bb-3aca-4a3e-a09f-b515a2567fb8.png",
+      src: "/lovable-uploads/student3.webp",
       alt: "Successful Students Group 3",
     },
     {
-      src: "/lovable-uploads/fcc4bcf6-fc01-45e3-8d5d-6d59267a6d7c.png",
+      src: "/lovable-uploads/student4.webp",
       alt: "Successful Students Group 4",
     },
   ];

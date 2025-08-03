@@ -82,10 +82,9 @@ const Footer: React.FC = () => {
         <div className="mt-6 md:mt-0">
           <h3 className="font-semibold text-xl mb-6 text-gray-800">Company</h3>
           <ul className="space-y-4">
-            <li style={{ textDecoration: "none" }}>
+            <li>
               <Link
                 to={createLink("/discover-cleancraft")}
-                style={{ textDecoration: "none" }}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
                 Discover Clean Craft
@@ -116,7 +115,6 @@ const Footer: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                style={{ textDecoration: "none" }}
                 to={createLink("/blog")}
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
@@ -151,20 +149,26 @@ const Footer: React.FC = () => {
             <li className="flex gap-3">
               <MapPin className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <span className="text-gray-600">
-                Plot No. 9 & Police enclave, Kotla Vihar Phase 4, Tilangpur
-                Kotla, Delhi, 110043
+                {currentCountry?.toLowerCase() === "au"
+                  ? "Shop 13/3 Hewish Rd, Croydon VIC 3136, Australia"
+                  : "Plot No. 9 & Police enclave, Kotla Vihar Phase 4, Tilangpur Kotla, Delhi, 110043"}
               </span>
             </li>
             <li className="flex gap-3">
               <Phone className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <a
-                href="tel:+918800771349"
+                href={
+                  currentCountry?.toLowerCase() === "au"
+                    ? "tel:+61415635261"
+                    : "tel:+918800771349"
+                }
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                (+91) 88-00-77-1349
+                {currentCountry?.toLowerCase() === "au"
+                  ? "(+61) 415 635 261"
+                  : "(+91) 88-00-77-1349"}
               </a>
             </li>
-
             <li className="flex gap-3 items-start">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <a
@@ -194,8 +198,7 @@ const Footer: React.FC = () => {
         <div className="flex items-center space-x-6">
           <Link
             to={createLink("/policies")}
-            className="inline-flex h-8 items-center text-sm text-gray-500
-             hover:text-blue-500 transition-colors"
+            className="inline-flex h-8 items-center text-sm text-gray-500 hover:text-blue-500 transition-colors"
           >
             All Policies
           </Link>

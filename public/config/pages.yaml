@@ -158,7 +158,11 @@ global:
 
 # Country-specific page availability
 au:
-  pages: []  # Uses only global pages
+  pages:
+    - path: "/services"
+      navbar: true
+      title: "Services"
+      order: 2
 
 in:
   pages:

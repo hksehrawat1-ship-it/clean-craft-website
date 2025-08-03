@@ -17,7 +17,12 @@ export const BookingButton: React.FC<BookingButtonProps> = ({ onClick }) => {
 
   const handleClick = () => {
     if (onClick) onClick();
-    navigate(createLink("/book")); // ✅ Redirect to /in/book, /au/book, etc.
+
+    if (currentCountry?.toLowerCase() === "au") {
+      window.open("https://cleancloudapp.com/s3/27145", "_blank");
+    } else {
+      navigate(createLink("/book")); // ✅ Redirect to /in/book, /au/book, etc.
+    }
   };
 
   return (

@@ -221,7 +221,13 @@ const ServicesPage: React.FC = () => {
                 All orders include free delivery.
               </p>
               <button
-                onClick={() => navigate(createLink("/book"))}
+                onClick={() => {
+                  if (countryCode === "au") {
+                    window.open("https://cleancloudapp.com/s3/27145", "_blank");
+                  } else {
+                    navigate(createLink("/book"));
+                  }
+                }}
                 className="w-full text-center px-6 py-3 bg-white text-[#1E3A8A] font-semibold rounded-full text-sm hover:bg-gray-100 transition"
               >
                 Pickup address
@@ -253,7 +259,16 @@ const ServicesPage: React.FC = () => {
                   All orders include free delivery.
                 </p>
                 <button
-                  onClick={() => navigate(createLink("/book"))}
+                  onClick={() => {
+                    if (countryCode === "au") {
+                      window.open(
+                        "https://cleancloudapp.com/s3/27145",
+                        "_blank"
+                      );
+                    } else {
+                      navigate(createLink("/book"));
+                    }
+                  }}
                   className="inline-block bg-white text-[#1E3A8A] px-6 py-3 rounded-full text-sm font-semibold hover:bg-gray-100 transition"
                 >
                   Schedule Pickup

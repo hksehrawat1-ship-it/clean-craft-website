@@ -82,12 +82,12 @@ const HeroSection = () => {
             </motion.div>
           )}
 
-          {/* Background Glow */}
           <motion.div
             className="hidden lg:block absolute -top-16 -left-24 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-[#eaf3fb] to-[#b3d8fa] blur-3xl opacity-60 z-[-2]"
             animate={{ y: [0, 20, 0] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
+
           <div
             className="hidden lg:block absolute top-0 left-1/4 w-1/2 h-full pointer-events-none z-[-1]"
             style={{
@@ -98,7 +98,6 @@ const HeroSection = () => {
             }}
           ></div>
 
-          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -116,9 +115,14 @@ const HeroSection = () => {
               We wash. We press. We impress <br /> Book your clean slot today
             </p>
 
-            {/* 🔽 Booking Button with Navigation 🔽 */}
             <button
-              onClick={() => navigate(`/${pathCountry}/book`)}
+              onClick={() => {
+                if (pathCountry === "au") {
+                  window.open("https://cleancloudapp.com/s3/27145", "_blank");
+                } else {
+                  navigate(`/${pathCountry}/book`);
+                }
+              }}
               className="bg-[#E8F1FD] border border-[#488FED] rounded-full flex items-center justify-between p-1 pl-6 w-full max-w-[280px] lg:max-w-[320px] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[#1869D3] hover:text-white mb-4"
             >
               <span className="flex items-center gap-3">
@@ -155,7 +159,6 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Right Image */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -183,7 +186,6 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Bottom Stats */}
         <div>
           <Trusted />
         </div>
