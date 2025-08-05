@@ -76,8 +76,8 @@ const BlogDetail = () => {
     return format(date, "MMMM dd, yyyy");
   };
 
-  const imageUrl = getStrapiImageUrl(blog?.featured_image);
-  const imageAlt = getStrapiImageAlt(blog?.featured_image, blog?.title || "");
+  const imageUrl = getStrapiImageUrl((blog as any)?.featured_image);
+  const imageAlt = getStrapiImageAlt((blog as any)?.featured_image, blog?.title || "");
 
   if (isLoading) {
     return (
@@ -260,7 +260,7 @@ const BlogDetail = () => {
 
               <div className="article-content prose max-w-none">
                 <BlocksRenderer
-                  content={blog.content}
+                  content={blog.content || [] as any}
                   blocks={customRenderers}
                 />
               </div>

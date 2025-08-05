@@ -27,7 +27,6 @@ const StrapiContentRenderer = ({ content, className = "" }: Props) => {
               {children}
             </a>
           ),
-          text: ({ text }) => <>{text}</>, // ✅ Required for rendering plain text
         }}
       />
     </div>

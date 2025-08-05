@@ -84,7 +84,7 @@ const FaqPage: React.FC = () => {
     <>
       <EnhancedSEO
         slug="/faq"
-        pageType="FAQPage"
+        pageType="Organization"
         defaultTitle="Frequently Asked Questions | CleanCraft"
         defaultDescription="Find answers to common questions about CleanCraft’s services, scheduling, payments, and more."
         customKeywords={[

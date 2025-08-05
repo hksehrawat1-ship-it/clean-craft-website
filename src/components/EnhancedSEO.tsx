@@ -30,7 +30,7 @@ export function EnhancedSEO({
 
   const cleanSlug = slug.replace(/^\/(in|au)(\/|$)/, "/");
 
-  const { data: seoData, isLoading } = usePageConfigSEO(cleanSlug, countryCode);
+  const { data: seoData, isLoading } = usePageConfigSEO(cleanSlug);
   if (isLoading) return null;
 
   // Debug Logs

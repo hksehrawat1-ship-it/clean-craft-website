@@ -51,6 +51,7 @@
     "@types/dompurify": "^3.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/qs": "^6.9.18",
+    "@types/react-helmet": "^6.1.11",
     "@types/uuid": "^10.0.0",
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
