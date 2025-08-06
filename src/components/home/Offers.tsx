@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Gift, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useCountry } from "../../contexts/CountryContext";
 
 const Offers = () => {
+  const navigate = useNavigate();
+  const { currentCountry } = useCountry();
+
   const offers = [
     {
       id: 1,
@@ -10,7 +14,7 @@ const Offers = () => {
       discount: "20% OFF",
       badge: "NEW",
       icon: "🎉",
-      color: "from-blue-500 to-blue-600"
+      color: "from-brand-blue to-brand-blue-dark"
     },
     {
       id: 2,
@@ -19,7 +23,7 @@ const Offers = () => {
       discount: "₹1000 OFF",
       badge: "HOT",
       icon: "👟",
-      color: "from-green-500 to-green-600"
+      color: "from-cleancraft-gold to-brand-blue"
     },
     {
       id: 3,
@@ -28,7 +32,7 @@ const Offers = () => {
       discount: "40% OFF",
       badge: "SPECIAL",
       icon: "🪖",
-      color: "from-purple-500 to-purple-600"
+      color: "from-brand-blue-dark to-brand-blue"
     },
     {
       id: 4,
@@ -37,7 +41,7 @@ const Offers = () => {
       discount: "₹99 ONLY",
       badge: "PREMIUM",
       icon: "🥻",
-      color: "from-pink-500 to-pink-600"
+      color: "from-brand-blue to-cleancraft-gold"
     },
     {
       id: 5,
@@ -46,7 +50,7 @@ const Offers = () => {
       discount: "₹199 ONLY",
       badge: "BUSINESS",
       icon: "🤵",
-      color: "from-gray-700 to-gray-800"
+      color: "from-cleancraft-gold to-brand-blue-dark"
     },
     {
       id: 6,
@@ -55,7 +59,7 @@ const Offers = () => {
       discount: "50% OFF",
       badge: "WINTER",
       icon: "🛏️",
-      color: "from-orange-500 to-orange-600"
+      color: "from-brand-blue-dark to-cleancraft-gold"
     }
   ];
 
@@ -66,67 +70,38 @@ const Offers = () => {
     if (!isHovered) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % offers.length);
-      }, 4000);
+      }, 5000);
 
       return () => clearInterval(interval);
     }
   }, [offers.length, isHovered]);
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + offers.length) % offers.length);
+  const handleClaimNow = () => {
+    const countryCode = currentCountry || 'in';
+    navigate(`/${countryCode}/book`);
   };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % offers.length);
-  };
-
-  const currentOffer = offers[currentIndex];
 
   return (
-    <div className="w-full bg-gradient-to-r from-brand-blue-light via-white to-cleancraft-light border-y border-gray-200 py-6 overflow-hidden">
+    <div className="w-full py-4 overflow-hidden">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Gift className="w-6 h-6 text-brand-blue" />
-            <h3 className="text-xl font-bold text-gray-900">Exclusive Offers</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={goToPrevious}
-              className="p-1.5 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200 hover:bg-gray-50"
-              aria-label="Previous offer"
-            >
-              <ChevronLeft className="w-4 h-4 text-gray-600" />
-            </button>
-            <button
-              onClick={goToNext}
-              className="p-1.5 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200 hover:bg-gray-50"
-              aria-label="Next offer"
-            >
-              <ChevronRight className="w-4 h-4 text-gray-600" />
-            </button>
-          </div>
-        </div>
-
-        {/* Single Full-Width Offer Card */}
+        {/* Pure Carousel Strip */}
         <div 
           className="relative overflow-hidden"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           <div 
-            className="flex transition-transform duration-500 ease-in-out"
+            className="flex transition-transform duration-700 ease-in-out"
             style={{
               transform: `translateX(-${currentIndex * 100}%)`,
             }}
           >
-            {offers.map((offer, index) => (
+            {offers.map((offer) => (
               <div
                 key={offer.id}
                 className="w-full flex-shrink-0"
               >
-                <div className={`relative bg-gradient-to-r ${offer.color} rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group`}>
+                <div className={`relative bg-gradient-to-r ${offer.color} rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 group`}>
                   {/* Background Pattern */}
                   <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/20 -mr-16 -mt-16"></div>
@@ -135,7 +110,7 @@ const Offers = () => {
                   
                   <div className="relative flex items-center justify-between">
                     {/* Left Content */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 flex-1">
                       {/* Icon */}
                       <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
                         <span className="text-3xl">{offer.icon}</span>
@@ -154,40 +129,31 @@ const Offers = () => {
                         <p className="text-white/90 text-base mb-1">
                           {offer.description}
                         </p>
-                        <p className="text-3xl font-bold text-white">
-                          {offer.discount}
-                        </p>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-3xl font-bold text-white">
+                            {offer.discount}
+                          </p>
+                          <p className="text-white/70 text-sm">
+                            *Valid for first-time customers only
+                          </p>
+                        </div>
                       </div>
                     </div>
                     
                     {/* Right Action */}
                     <div className="flex flex-col items-center gap-2">
-                      <button className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-md">
+                      <button 
+                        onClick={handleClaimNow}
+                        className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-md"
+                      >
                         Claim Now
                       </button>
-                      <ChevronRight className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" />
                     </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Progress Indicators */}
-        <div className="flex justify-center gap-2 mt-4">
-          {offers.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex 
-                  ? 'w-8 bg-brand-blue' 
-                  : 'w-2 bg-gray-300 hover:bg-gray-400'
-              }`}
-              aria-label={`Go to offer ${index + 1}`}
-            />
-          ))}
         </div>
       </div>
     </div>
