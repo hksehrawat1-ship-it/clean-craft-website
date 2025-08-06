@@ -93,23 +93,26 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto shadow-lg border border-gray-200">
-      <CardHeader>
-        <CardTitle className="text-center text-xl font-bold text-cleancraft-darkgold">
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-6">
+    <div className="bg-gradient-to-br from-yellow-50 via-yellow-100 to-orange-50 rounded-2xl p-8 shadow-xl border border-yellow-200">
+      <div className="bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full text-center font-semibold mb-6 inline-block">
+        {title}
+      </div>
+      
+      <div className="bg-white rounded-xl p-6 shadow-sm">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name *</FormLabel>
+                  <FormLabel className="text-gray-700 font-medium">Full Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your name" {...field} />
+                    <Input 
+                      placeholder="Enter your full name" 
+                      {...field} 
+                      className="border-gray-300 focus:border-yellow-500 focus:ring-yellow-500/20 rounded-lg h-12"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,9 +123,20 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone *</FormLabel>
+                  <FormLabel className="text-gray-700 font-medium">Phone Number *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your phone number" {...field} />
+                    <Input 
+                      placeholder="Enter 10-digit mobile number" 
+                      {...field} 
+                      inputMode="tel"
+                      pattern="[0-9]*"
+                      maxLength={10}
+                      onInput={(e) => {
+                        const target = e.target as HTMLInputElement;
+                        target.value = target.value.replace(/[^0-9]/g, '');
+                      }}
+                      className="border-gray-300 focus:border-yellow-500 focus:ring-yellow-500/20 rounded-lg h-12"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,25 +147,30 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email *</FormLabel>
+                  <FormLabel className="text-gray-700 font-medium">Email Address *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your email address" {...field} />
+                    <Input 
+                      placeholder="Enter your email address" 
+                      {...field} 
+                      type="email"
+                      className="border-gray-300 focus:border-yellow-500 focus:ring-yellow-500/20 rounded-lg h-12"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="mb-6 max-w-2xl mx-auto">
+            <div className="pt-2">
               <Button
                 type="submit"
-                className="w-full text-white"
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-lg text-lg font-semibold shadow-lg transform transition-all duration-200 hover:scale-[1.02] hover:shadow-xl"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
+                  <span className="flex items-center justify-center gap-3">
                     <svg
-                      className="animate-spin h-4 w-4 text-white"
+                      className="animate-spin h-5 w-5 text-white"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -173,14 +192,14 @@ const DynamicFranchiseForm: React.FC<DynamicFranchiseFormProps> = ({
                     Submitting...
                   </span>
                 ) : (
-                  "Submit Information"
+                  "Get Information Package"
                 )}
               </Button>
             </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

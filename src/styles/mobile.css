@@ -50,6 +50,23 @@ input, select, textarea {
   textarea:focus {
     font-size: 16px;
   }
+  
+  /* Improved mobile typography */
+  h1 { font-size: 2rem !important; }
+  h2 { font-size: 1.75rem !important; }
+  h3 { font-size: 1.5rem !important; }
+  p { font-size: 1.125rem !important; }
+  
+  /* Reduced mobile padding */
+  .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 }
 
 /* Fix mobile keyboard issues */

@@ -23,18 +23,18 @@ const FranchiseFormModal: React.FC<FranchiseFormModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          {/* Header title optional */}
-          <DialogTitle>Franchise Inquiry</DialogTitle>
+      <DialogContent className="max-w-xl w-full max-h-[95vh] p-6 overflow-hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Business Inquiry Form</DialogTitle>
         </DialogHeader>
 
-        {/* Directly render form without Suspense */}
-        <DynamicFranchiseForm
-          title={title}
-          sourceCta={sourceCta}
-          onClose={onClose}
-        />
+        <div className="overflow-y-auto max-h-[85vh]">
+          <DynamicFranchiseForm
+            title={title}
+            sourceCta={sourceCta}
+            onClose={onClose}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );

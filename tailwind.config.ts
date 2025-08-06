@@ -15,11 +15,11 @@ const config: Config = {
     container: {
       center: true,
       padding: {
-        DEFAULT: "1rem",
-        sm: "2rem",
-        lg: "4rem",
-        xl: "5rem",
-        "2xl": "6rem",
+        DEFAULT: "0.75rem",
+        sm: "1rem",
+        lg: "2rem",
+        xl: "3rem",
+        "2xl": "4rem",
       },
       screens: {
         sm: "640px",
@@ -104,55 +104,55 @@ const config: Config = {
       },
       fontSize: {
         "display-lg": [
-          "3rem",
+          "3.5rem",
           {
             lineHeight: "1.2",
-            letterSpacing: "0.1em",
+            letterSpacing: "0.02em",
             fontWeight: "700",
             textTransform: "uppercase",
           },
         ],
         "display-md": [
-          "2.625rem",
+          "3rem",
           {
             lineHeight: "1.2",
-            letterSpacing: "0.1em",
+            letterSpacing: "0.02em",
             fontWeight: "700",
             textTransform: "uppercase",
           },
         ],
         "display-sm": [
-          "2.25rem",
+          "2.5rem",
           {
             lineHeight: "1.25",
-            letterSpacing: "0.1em",
+            letterSpacing: "0.02em",
             fontWeight: "700",
             textTransform: "uppercase",
           },
         ],
         "heading-lg": [
-          "2.625rem",
+          "2.75rem",
           {
             lineHeight: "1.3",
-            letterSpacing: "0.075em",
+            letterSpacing: "0.025em",
             fontWeight: "600",
             textTransform: "uppercase",
           },
         ],
         "heading-md": [
-          "2.25rem",
+          "2.5rem",
           {
             lineHeight: "1.3",
-            letterSpacing: "0.075em",
+            letterSpacing: "0.025em",
             fontWeight: "600",
             textTransform: "uppercase",
           },
         ],
         "heading-sm": [
-          "2rem",
+          "2.25rem",
           {
             lineHeight: "1.35",
-            letterSpacing: "0.075em",
+            letterSpacing: "0.025em",
             fontWeight: "600",
             textTransform: "uppercase",
           },
@@ -184,9 +184,9 @@ const config: Config = {
             textTransform: "uppercase",
           },
         ],
-        "body-lg": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }],
-        "body-md": ["1rem", { lineHeight: "1.6", fontWeight: "400" }],
-        "body-sm": ["0.875rem", { lineHeight: "1.6", fontWeight: "400" }],
+        "body-lg": ["1.25rem", { lineHeight: "1.6", fontWeight: "400" }],
+        "body-md": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }],
+        "body-sm": ["1rem", { lineHeight: "1.6", fontWeight: "400" }],
         "button-lg": ["1rem", { lineHeight: "1.5", fontWeight: "500" }],
         "button-md": ["0.875rem", { lineHeight: "1.5", fontWeight: "500" }],
         "button-sm": ["0.75rem", { lineHeight: "1.5", fontWeight: "500" }],

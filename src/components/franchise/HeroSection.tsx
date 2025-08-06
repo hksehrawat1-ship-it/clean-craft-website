@@ -24,23 +24,12 @@ const HeroSection = () => {
                 #No. 1 Laundry Franchise opportunity in India
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 leading-tight mb-6">
-                Start Profitable
-                <br />
-                <span className="text-blue-600 font-normal">
-                  Laundry and Dry
-                </span>
-                <br />
-                <span className="text-blue-600 font-normal">Cleaning</span>{" "}
-                Store with
-                <br />
-                <span className="font-medium">Clean Craft Guarantee</span>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 leading-tight mb-6 tracking-normal">
+                Laundry Franchise Opportunity | Clean Craft
               </h1>
 
               <p className="text-xl text-gray-600 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0">
-                Join CleanCraft's all India laundry and dry cleaning franchise
-                business opportunity with 100% growth potential. Low investment,
-                high returns, and full training support included.
+                Join India's most trusted laundry franchise. Get assured break-even in 7 months or 100% royalty free for life. Premium territories available with low investment, high returns, and comprehensive training support.
               </p>
 
               {/* CTA Button (open modal) */}
