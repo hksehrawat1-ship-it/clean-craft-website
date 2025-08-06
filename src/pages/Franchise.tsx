@@ -16,6 +16,7 @@ import SuccessStories from "@/components/franchise/SuccessStories";
 import StudentGallery from "@/components/franchise/StudentGallery";
 import WhyCleancraft from "@/components/franchise/WhyCleancraft";
 import InTheHeadlines from "@/components/franchise/InTheHeadlines";
+import StickyBottomCTA from "@/components/franchise/StickyBottomCTA";
 
 const Franchise = () => {
   return (
@@ -47,6 +48,7 @@ const Franchise = () => {
         <SuccessStories />
         {/* <StudentGallery /> */}
         <FaqSection />
+        <StickyBottomCTA />
       </main>
     </Layout>
   );

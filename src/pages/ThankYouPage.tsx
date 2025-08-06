@@ -74,7 +74,7 @@ const ThankYouPage: React.FC = () => {
     <>
       <EnhancedSEO
         slug="/thank-you"
-        pageType="WebPage"
+        pageType="Organization"
         defaultTitle="Thank You | CleanCraft"
         defaultDescription="Thank you for your submission."
       />

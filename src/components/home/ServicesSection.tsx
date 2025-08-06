@@ -202,7 +202,13 @@ const ServicesSection: React.FC = () => {
             </p>
 
             <button
-              onClick={() => navigate(createLink("/book"))}
+              onClick={() => {
+                if (countryCode === "au") {
+                  window.open("https://cleancloudapp.com/s3/27145", "_blank");
+                } else {
+                  navigate(createLink("/book"));
+                }
+              }}
               className="bg-white text-[#1E3A8A] px-5 py-2 rounded-full font-semibold text-sm shadow-md hover:bg-gray-100 transition"
             >
               Schedule Pickup
@@ -236,9 +242,14 @@ const ServicesSection: React.FC = () => {
               free delivery.
             </p>
 
-            {/* ✅ Updated Button */}
             <button
-              onClick={() => navigate(createLink("/book"))}
+              onClick={() => {
+                if (countryCode === "au") {
+                  window.open("https://cleancloudapp.com/s3/27145", "_blank");
+                } else {
+                  navigate(createLink("/book"));
+                }
+              }}
               className="bg-white text-[#1E3A8A] px-6 py-3 rounded-full font-semibold text-base shadow-md hover:bg-gray-100 transition"
             >
               Schedule Pickup

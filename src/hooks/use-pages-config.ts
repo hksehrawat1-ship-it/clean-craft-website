@@ -50,3 +50,19 @@ export function isPageEnabled(currentCountry: string | null, path: string): bool
 export function getNavbarItems(currentCountry: string | null): PageData[] {
   return getPagesConfig(currentCountry).filter(page => page.navbar);
 }
+
+
+interface FooterLink {
+  title: string;
+  path: string;
+  enabled?: boolean;
+}
+
+export function getFooterItems(currentCountry: string | null): FooterLink[] {
+  if (!currentCountry) return [];
+
+  const countryCode = currentCountry.toLowerCase();
+  const footerConfig = (pagesConfig.footer?.[countryCode]?.items || []) as FooterLink[];
+
+  return footerConfig.filter(item => item.enabled !== false);
+}

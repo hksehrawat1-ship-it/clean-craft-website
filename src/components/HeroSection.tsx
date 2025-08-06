@@ -94,7 +94,7 @@ const HeroSection = () => {
               <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-blue-50/50"></div>
               <div className="relative rounded-2xl overflow-hidden">
                 <img
-                  src="/lovable-uploads/56259032-82fb-4843-a803-7ee5760a4d48.png"
+                  src="/lovable-uploads/CourseHero.webp"
                   alt="Clean Craft Laundry Training Facility"
                   className="w-full h-[400px] object-cover"
                 />

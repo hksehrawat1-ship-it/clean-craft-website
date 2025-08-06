@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useStrapiPolicies } from "@/hooks/useStrapi";
@@ -80,8 +79,9 @@ export default function PolicyDetails() {
                   policy.content.map((block: any, index: number) => {
                     if (block.type === "paragraph") {
                       const text =
-                        block.children?.map((child: { text: string }) => child.text).join("") ||
-                        "";
+                        block.children
+                          ?.map((child: { text: string }) => child.text)
+                          .join("") || "";
                       return <p key={index}>{text}</p>;
                     }
                     return null;

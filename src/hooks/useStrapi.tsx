@@ -1,11 +1,18 @@
-
-import { useQuery } from '@tanstack/react-query';
-import { PageService } from '@/lib/strapi/services/page.service';
-import { contentService, ContentCategory } from '@/lib/strapi/services/content.service';
-import { useCountry } from '@/contexts/CountryContext';
-import { useStrapiConnection } from '@/contexts/StrapiConnectionContext';
-import { StrapiFAQ, StrapiService, StrapiTestimonial, StrapiPolicy } from '@/types/strapi';
-import { useMemo } from 'react';
+import { useQuery } from "@tanstack/react-query";
+import { PageService } from "@/lib/strapi/services/page.service";
+import {
+  contentService,
+  ContentCategory,
+} from "@/lib/strapi/services/content.service";
+import { useCountry } from "@/contexts/CountryContext";
+import { useStrapiConnection } from "@/contexts/StrapiConnectionContext";
+import {
+  StrapiFAQ,
+  StrapiService,
+  StrapiTestimonial,
+  StrapiPolicy,
+} from "@/types/strapi";
+import { useMemo } from "react";
 
 interface StrapiResponse<T> {
   data: T[];
@@ -22,7 +29,7 @@ interface StrapiResponse<T> {
 export function useStrapiPage(slug: string) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
-  const countryCode = currentCountry?.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   return useQuery({
     queryKey: ["page", slug, countryCode],
@@ -41,14 +48,14 @@ export function useStrapiPage(slug: string) {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing,
     retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
 export function useStrapiPageSEO(slug: string) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
-  const countryCode = currentCountry?.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   return useQuery({
     queryKey: ["pageSEO", slug, countryCode],
@@ -67,14 +74,14 @@ export function useStrapiPageSEO(slug: string) {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing,
     retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
 export function useStrapiServices() {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
-  const countryCode = currentCountry?.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   return useQuery({
     queryKey: ["services", countryCode],
@@ -92,7 +99,7 @@ export function useStrapiServices() {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing,
     retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -104,13 +111,18 @@ export function useStrapiTestimonials(options?: {
 }) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
-  const countryCode = currentCountry?.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   // Serialize options to prevent unstable query keys
   const serializedOptions = useMemo(() => {
     if (!options) return null;
     return JSON.stringify(options);
-  }, [options?.category, options?.platform, options?.sortBy, options?.sortOrder]);
+  }, [
+    options?.category,
+    options?.platform,
+    options?.sortBy,
+    options?.sortOrder,
+  ]);
 
   const queryKey = useMemo(() => {
     return ["testimonials", countryCode, serializedOptions];
@@ -137,7 +149,7 @@ export function useStrapiTestimonials(options?: {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing,
     retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -148,7 +160,7 @@ export function useStrapiFAQs(options?: {
 }) {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
-  const countryCode = currentCountry?.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   // Serialize options to prevent unstable query keys
   const serializedOptions = useMemo(() => {
@@ -176,14 +188,14 @@ export function useStrapiFAQs(options?: {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing,
     retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
 export function useStrapiPolicies() {
   const { currentCountry } = useCountry();
   const { isConnected, isInitializing } = useStrapiConnection();
-  const countryCode = currentCountry?.toLowerCase() || 'in';
+  const countryCode = currentCountry?.toLowerCase() || "in";
 
   return useQuery({
     queryKey: ["policies", countryCode],
@@ -207,6 +219,6 @@ export function useStrapiPolicies() {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     enabled: !!currentCountry && isConnected && !isInitializing,
     retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }

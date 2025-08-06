@@ -13,14 +13,21 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useCountry } from "@/contexts/CountryContext";
 import CountrySelector from "@/components/CountrySelector";
+import { getFooterItems } from "@/hooks/use-pages-config";
 
 const Footer: React.FC = () => {
   const { currentCountry } = useCountry();
+  const footerItems = getFooterItems(currentCountry);
 
   const createLink = (path: string): string => {
-    if (!currentCountry) return "/";
+    if (!currentCountry) return path;
     return `/${currentCountry.toLowerCase()}${path}`;
   };
+
+  // You can adjust how you split the items based on your logic
+  const isAU = currentCountry?.toLowerCase() === "au";
+  const companyLinks = footerItems.slice(0, isAU ? 2 : 3);
+  const supportLinks = footerItems.slice(isAU ? 2 : 3);
 
   return (
     <footer className="bg-white py-12 px-8 md:px-16 lg:px-16">
@@ -82,31 +89,16 @@ const Footer: React.FC = () => {
         <div className="mt-6 md:mt-0">
           <h3 className="font-semibold text-xl mb-6 text-gray-800">Company</h3>
           <ul className="space-y-4">
-            <li style={{ textDecoration: "none" }}>
-              <Link
-                to={createLink("/discover-cleancraft")}
-                style={{ textDecoration: "none" }}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                Discover Clean Craft
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={createLink("/learning/laundry-training-book")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                Buy Laundry Book
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={createLink("/laundry-franchise")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                Open My Store
-              </Link>
-            </li>
+            {companyLinks.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={createLink(item.path)}
+                  className="text-gray-600 hover:text-blue-500 transition-colors"
+                >
+                  {item.title}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -114,35 +106,20 @@ const Footer: React.FC = () => {
         <div className="mt-6 md:mt-0">
           <h3 className="font-semibold text-xl mb-6 text-gray-800">Support</h3>
           <ul className="space-y-4">
-            <li>
-              <Link
-                style={{ textDecoration: "none" }}
-                to={createLink("/blog")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                Blogs
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={createLink("/faq")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                FAQs
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={createLink("/policies")}
-                className="text-gray-600 hover:text-blue-500 transition-colors"
-              >
-                All Policies
-              </Link>
-            </li>
+            {supportLinks.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={createLink(item.path)}
+                  className="text-gray-600 hover:text-blue-500 transition-colors"
+                >
+                  {item.title}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Contact Information */}
+        {/* Contact Info */}
         <div className="mt-6 md:mt-0">
           <h3 className="font-semibold text-xl mb-6 text-gray-800">
             Contact Us
@@ -151,20 +128,26 @@ const Footer: React.FC = () => {
             <li className="flex gap-3">
               <MapPin className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <span className="text-gray-600">
-                Plot No. 9 & Police enclave, Kotla Vihar Phase 4, Tilangpur
-                Kotla, Delhi, 110043
+                {currentCountry?.toLowerCase() === "au"
+                  ? "Shop 13/3 Hewish Rd, Croydon VIC 3136, Australia"
+                  : "Head Quarter | Delhi, India, 110043"}
               </span>
             </li>
             <li className="flex gap-3">
               <Phone className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <a
-                href="tel:+918800771349"
+                href={
+                  currentCountry?.toLowerCase() === "au"
+                    ? "tel:+61415635261"
+                    : "tel:+918800771349"
+                }
                 className="text-gray-600 hover:text-blue-500 transition-colors"
               >
-                (+91) 88-00-77-1349
+                {currentCountry?.toLowerCase() === "au"
+                  ? "(+61) 415 635 261"
+                  : "(+91) 88-00-77-1349"}
               </a>
             </li>
-
             <li className="flex gap-3 items-start">
               <Mail className="text-blue-500 mt-1 flex-shrink-0" size={18} />
               <a
@@ -194,8 +177,7 @@ const Footer: React.FC = () => {
         <div className="flex items-center space-x-6">
           <Link
             to={createLink("/policies")}
-            className="inline-flex h-8 items-center text-sm text-gray-500
-             hover:text-blue-500 transition-colors"
+            className="inline-flex h-8 items-center text-sm text-gray-500 hover:text-blue-500 transition-colors"
           >
             All Policies
           </Link>

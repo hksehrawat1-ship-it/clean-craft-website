@@ -55,10 +55,10 @@ const ModernBlogCard = ({ blog, variant = "default" }: ModernBlogCardProps) => {
     return isNaN(date.getTime()) ? "Recently" : format(date, "MMM dd, yyyy");
   };
 
-  const primaryImage = blog.featured_image || blog.image;
+  const primaryImage = (blog as any).featured_image || (blog as any).image;
   const imageUrl = getStrapiImageUrl(primaryImage);
   const imageAlt = getStrapiImageAlt(primaryImage, blog.title || "Blog Image");
-  const blogContentPreview = getPreviewContent(blog.content as BlocksContent);
+  const blogContentPreview = getPreviewContent(blog.content || [] as any);
 
   if (variant === "featured") {
     return (
