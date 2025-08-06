@@ -25,7 +25,10 @@ const HeroSection = () => {
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 leading-tight mb-6 tracking-normal">
-                Laundry Franchise Opportunity | Clean Craft
+                Start Profitable<br />
+                Laundry and Dry<br />
+                Cleaning Store with<br />
+                Clean Craft Guarantee
               </h1>
 
               <p className="text-xl text-gray-600 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0">
