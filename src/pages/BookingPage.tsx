@@ -5,24 +5,40 @@ import { useCountry } from "@/contexts/CountryContext";
 import { toast } from "sonner";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+// Enhanced booking components
+import { BookingSteps } from "@/components/booking/BookingSteps";
+import { CitySelection } from "@/components/booking/CitySelection";
+import { ServiceSelection } from "@/components/booking/ServiceSelection";
+import { ContactForm, ContactFormData } from "@/components/booking/ContactForm";
+import { BookingConfirmation } from "@/components/booking/BookingConfirmation";
 
 const BookingPage = () => {
+  // State management
+  const [currentStep, setCurrentStep] = useState(1);
   const [cities, setCities] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState("");
-  const [showOtherForm, setShowOtherForm] = useState(false);
+  const [showCustomCity, setShowCustomCity] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [showForm, setShowForm] = useState(false);
-
-  const [formData, setFormData] = useState({
+  const [contactData, setContactData] = useState<ContactFormData>({
     name: "",
     email: "",
     phone: "",
     customCity: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Hooks
   const { currentCountry } = useCountry();
   const { data: strapiServices, isLoading, error } = useStrapiServices();
-  const navigate = useNavigate(); // <-- Navigation hook
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
+  const totalSteps = 4;
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -39,14 +55,18 @@ const BookingPage = () => {
     fetchCities();
   }, []);
 
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedCity(value);
-    setShowOtherForm(value === "OTHER");
-    setShowForm(false);
+  // Event handlers
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+    setShowCustomCity(false);
   };
 
-  const handleCheckboxChange = (serviceId: string) => {
+  const handleOtherCity = () => {
+    setSelectedCity("");
+    setShowCustomCity(true);
+  };
+
+  const handleServiceToggle = (serviceId: string) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
@@ -54,38 +74,52 @@ const BookingPage = () => {
     );
   };
 
-  const handleContinue = () => {
-    if (!selectedCity) return toast.error("Please select a city");
-    if (selectedServices.length === 0)
-      return toast.error("Please select at least one service");
-    setShowForm(true);
+  const handleContactSubmit = (data: ContactFormData) => {
+    setContactData(data);
+    setCurrentStep(4);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleNextStep = () => {
+    if (currentStep === 1) {
+      if (!selectedCity && !showCustomCity) {
+        return toast.error("Please select a city");
+      }
+      setCurrentStep(2);
+    } else if (currentStep === 2) {
+      if (selectedServices.length === 0) {
+        return toast.error("Please select at least one service");
+      }
+      setCurrentStep(3);
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handlePreviousStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
 
-    const payload = showOtherForm
+  const handleFinalSubmit = async () => {
+    setIsSubmitting(true);
+
+    const payload = showCustomCity
       ? {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          manual_city: formData.customCity,
+          name: contactData.name,
+          email: contactData.email,
+          phone: contactData.phone,
+          manual_city: contactData.customCity,
           services: selectedServices.join(", "),
         }
       : {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
+          name: contactData.name,
+          email: contactData.email,
+          phone: contactData.phone,
           city: selectedCity,
           services: selectedServices.join(", "),
         };
 
     try {
-      const endpoint = showOtherForm ? "/interesting-leads" : "/bookings";
+      const endpoint = showCustomCity ? "/interesting-leads" : "/bookings";
       const baseUrl = import.meta.env.VITE_STRAPI_URL?.replace(/\/+$/, "");
 
       await axios.post(
@@ -98,20 +132,32 @@ const BookingPage = () => {
         }
       );
 
-      toast.success("Booking submitted successfully!");
-      setFormData({ name: "", email: "", phone: "", customCity: "" });
-      setSelectedServices([]);
+      toast.success("Booking submitted successfully! We'll contact you soon.");
+      
+      // Reset form and redirect
+      setCurrentStep(1);
       setSelectedCity("");
-      setShowForm(false);
+      setShowCustomCity(false);
+      setSelectedServices([]);
+      setContactData({
+        name: "",
+        email: "",
+        phone: "",
+        customCity: "",
+      });
 
-      // ✅ Redirect to homepage after successful submit
-      navigate(`/${currentCountry || "in"}`);
+      setTimeout(() => {
+        navigate(`/${currentCountry || "in"}`);
+      }, 2000);
     } catch (error) {
       console.error("Error submitting booking:", error);
-      toast.error("Something went wrong while submitting.");
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Process services data
   const displayServices = (strapiServices?.data || []).map((service: any) => {
     let priceType = service.price_type?.trim();
     const slug = service.slug?.toLowerCase() || "";
@@ -122,176 +168,178 @@ const BookingPage = () => {
     return { ...service, price_type: priceType };
   });
 
+  const selectedServiceObjects = displayServices.filter((s: any) =>
+    selectedServices.includes(s.id)
+  );
+
+  const canProceedFromStep = (step: number) => {
+    switch (step) {
+      case 1:
+        return selectedCity || showCustomCity;
+      case 2:
+        return selectedServices.length > 0;
+      case 3:
+        return contactData.name && contactData.email && contactData.phone;
+      default:
+        return false;
+    }
+  };
+
   return (
-    <div className="p-4 max-w-xl mx-auto shadow-lg">
-      <div className="flex items-center justify-center mb-4 space-x-2">
-        <Link to={`/${currentCountry || "in"}`}>
-          <img
-            src="/lovable-uploads/cleancraft-icon.png"
-            alt="CleanCraft Icon"
-            className="w-12 h-12"
-          />
-        </Link>
-        <span className="text-xl font-semibold text-gray-800">CleanCraft</span>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b bg-white sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link
+              to={`/${currentCountry || "in"}`}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
+              <img
+                src="/lovable-uploads/cleancraft-icon.png"
+                alt="CleanCraft"
+                className="w-10 h-10"
+              />
+              <span className="text-xl font-semibold text-foreground">
+                CleanCraft
+              </span>
+            </Link>
+            {!isMobile && currentStep > 1 && (
+              <Button
+                variant="ghost"
+                onClick={() => navigate(`/${currentCountry || "in"}`)}
+                className="text-muted-foreground"
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
 
-      <label className="block font-semibold mb-2">Select your city:</label>
-      <select
-        className="w-full border p-2 mb-4"
-        onChange={handleCityChange}
-        value={selectedCity}
-      >
-        <option disabled value="">
-          -- Select City --
-        </option>
-        {cities.map((city, idx) => (
-          <option key={idx} value={city}>
-            {city}
-          </option>
-        ))}
-        <option value="OTHER">Other</option>
-      </select>
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <BookingSteps currentStep={currentStep} totalSteps={totalSteps} />
 
-      <div className="mb-4">
-        <h3 className="text-xl font-semibold mb-2">Select Services</h3>
-        {isLoading ? (
-          <p>Loading services...</p>
-        ) : error ? (
-          <p className="text-red-500">Failed to load services</p>
-        ) : (
-          <div className="max-h-64 overflow-y-auto space-y-3">
-            {displayServices.map((service: any) => (
-              <label
-                key={service.id}
-                className="block border rounded-lg p-3 bg-white hover:shadow-md transition-all duration-200 cursor-pointer"
+        <Card className="p-6 md:p-8">
+          {/* Step Content */}
+          {currentStep === 1 && (
+            <CitySelection
+              cities={cities}
+              selectedCity={selectedCity}
+              onCitySelect={handleCitySelect}
+              onOtherCity={handleOtherCity}
+            />
+          )}
+
+          {currentStep === 2 && (
+            <ServiceSelection
+              services={displayServices}
+              selectedServices={selectedServices}
+              onServiceToggle={handleServiceToggle}
+              isLoading={isLoading}
+            />
+          )}
+
+          {currentStep === 3 && (
+            <ContactForm
+              defaultValues={contactData}
+              onSubmit={handleContactSubmit}
+              showCustomCity={showCustomCity}
+              selectedCity={selectedCity}
+              isSubmitting={isSubmitting}
+            />
+          )}
+
+          {currentStep === 4 && (
+            <BookingConfirmation
+              contactData={contactData}
+              selectedCity={selectedCity}
+              selectedServices={selectedServiceObjects}
+              showCustomCity={showCustomCity}
+            />
+          )}
+
+          {/* Error State */}
+          {error && currentStep === 2 && (
+            <div className="text-center py-8">
+              <p className="text-destructive mb-4">Failed to load services</p>
+              <Button
+                variant="outline"
+                onClick={() => window.location.reload()}
               >
-                <div className="flex items-start space-x-3">
-                  <input
-                    type="checkbox"
-                    className="mt-1 accent-blue-600"
-                    checked={selectedServices.includes(service.id)}
-                    onChange={() => handleCheckboxChange(service.id)}
-                  />
-                  <div>
-                    <div className="font-semibold text-gray-800">
-                      {service.name}
-                    </div>
-                    {service.description && (
-                      <div className="text-sm text-gray-500 line-clamp-2">
-                        {service.description}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </label>
-            ))}
+                Retry
+              </Button>
+            </div>
+          )}
+        </Card>
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-6">
+          <Button
+            variant="outline"
+            onClick={handlePreviousStep}
+            disabled={currentStep === 1}
+            className="flex items-center space-x-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
+          </Button>
+
+          {currentStep < 3 ? (
+            <Button
+              onClick={handleNextStep}
+              disabled={!canProceedFromStep(currentStep)}
+              className="flex items-center space-x-2"
+            >
+              <span>Continue</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          ) : currentStep === 3 ? (
+            <Button
+              onClick={() => {
+                // Form submission is handled by ContactForm
+              }}
+              disabled={!canProceedFromStep(currentStep)}
+              className="flex items-center space-x-2"
+            >
+              <span>Review Booking</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleFinalSubmit}
+              disabled={isSubmitting}
+              className="flex items-center space-x-2 bg-green-600 hover:bg-green-700"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <>
+                  <span>Submit Booking</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+
+        {/* Mobile Cancel Button */}
+        {isMobile && (
+          <div className="mt-4 text-center">
+            <Button
+              variant="ghost"
+              onClick={() => navigate(`/${currentCountry || "in"}`)}
+              className="text-muted-foreground"
+            >
+              Cancel Booking
+            </Button>
           </div>
         )}
       </div>
-
-      {selectedServices.length > 0 && (
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Selected Services:</label>
-          <ul className="space-y-2">
-            {displayServices
-              .filter((s: any) => selectedServices.includes(s.id))
-              .map((service: any) => (
-                <li
-                  key={service.id}
-                  className="flex justify-between items-center border p-2 bg-gray-50 rounded"
-                >
-                  <span className="text-gray-700 text-sm">{service.name}</span>
-                  <button
-                    onClick={() =>
-                      setSelectedServices((prev) =>
-                        prev.filter((s) => s !== service.id)
-                      )
-                    }
-                    className="text-red-500 hover:text-red-700 text-sm"
-                  >
-                    🗑️
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </div>
-      )}
-
-      {!showForm && (
-        <button
-          onClick={handleContinue}
-          disabled={!selectedCity || selectedServices.length === 0}
-          className={`w-full py-2 px-4 rounded text-white font-semibold ${
-            selectedCity && selectedServices.length > 0
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-        >
-          Continue
-        </button>
-      )}
-
-      {showForm && (
-        <form className="space-y-3 mt-6" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="border w-full p-2"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="border w-full p-2"
-            required
-          />
-          <input
-            type="tel"
-            placeholder="Phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-            className="border w-full p-2"
-            required
-          />
-          {showOtherForm ? (
-            <input
-              type="text"
-              name="customCity"
-              placeholder="Enter your city"
-              value={formData.customCity}
-              onChange={handleInputChange}
-              className="border w-full p-2"
-              required
-            />
-          ) : (
-            <input
-              type="text"
-              value={selectedCity}
-              readOnly
-              className="border w-full p-2 bg-gray-100"
-            />
-          )}
-          <input
-            type="text"
-            value={displayServices
-              .filter((s: any) => selectedServices.includes(s.id))
-              .map((s: any) => s.name)
-              .join(", ")}
-            readOnly
-            className="border w-full p-2 bg-gray-100"
-          />
-          <button className="bg-blue-600 text-white px-4 py-2 rounded w-full">
-            Submit Booking
-          </button>
-        </form>
-      )}
     </div>
   );
 };
