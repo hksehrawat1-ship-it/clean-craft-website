@@ -246,3 +246,39 @@ sg:
           category: "services"
         - type: "testimonial"
           category: "services"
+
+
+          # Footer links per country
+footer:
+  in:
+    items:
+      - title: "Discover Clean Craft"
+        path: "/discover-cleancraft"
+      - title: "Buy Laundry Book"
+        path: "/learning/laundry-training-book"
+      - title: "Open My Store"
+        path: "/laundry-franchise"
+      - title: "Blogs"
+        path: "/blog"
+      - title: "FAQs"
+        path: "/faq"
+      - title: "All Policies"
+        path: "/policies"
+
+  au:
+    items:
+      - title: "Discover Clean Craft"
+        path: "/discover-cleancraft"
+        enabled: false
+      - title: "Buy Laundry Book"
+        path: "/learning/laundry-training-book"
+        enabled: false
+      - title: "Open My Store"
+        path: "/laundry-franchise"
+        enabled: false
+      - title: "Blogs"
+        path: "/blog"
+      - title: "FAQs"
+        path: "/faq"
+      - title: "All Policies"
+        path: "/policies"

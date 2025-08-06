@@ -25,14 +25,20 @@ const HeroSection = () => {
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 leading-tight mb-6 tracking-normal">
-                Start Profitable<br />
-                Laundry and Dry<br />
-                Cleaning Store with<br />
+                Start Profitable
+                <br />
+                <span style={{ color: "#2779E1" }}>Laundry and Dry</span>
+                <br />
+                <span style={{ color: "#2779E1" }}>Cleaning</span> Store with
+                <br />
                 Clean Craft Guarantee
               </h1>
 
               <p className="text-xl text-gray-600 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0">
-                Join India's most trusted laundry franchise. Get assured break-even in 7 months or 100% royalty free for life. Premium territories available with low investment, high returns, and comprehensive training support.
+                Join India's most trusted laundry franchise. Get assured
+                break-even in 7 months or 100% royalty free for life. Premium
+                territories available with low investment, high returns, and
+                comprehensive training support.
               </p>
 
               {/* CTA Button (open modal) */}

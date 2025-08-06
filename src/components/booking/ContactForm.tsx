@@ -2,10 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Phone, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { User, Mail, Phone, MapPin, Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -74,6 +74,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {/* Name */}
           <FormField
             control={form.control}
             name="name"
@@ -95,6 +96,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
             )}
           />
 
+          {/* Email */}
           <FormField
             control={form.control}
             name="email"
@@ -117,6 +119,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
             )}
           />
 
+          {/* Phone */}
           <FormField
             control={form.control}
             name="phone"
@@ -133,9 +136,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({
                     {...field}
                     disabled={isSubmitting}
                     onChange={(e) => {
-                      // Format phone number as user types
-                      const value = e.target.value.replace(/\D/g, '');
-                      const formatted = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                      const value = e.target.value.replace(/\D/g, "");
+                      const formatted = value.replace(
+                        /(\d{3})(\d{3})(\d{4})/,
+                        "$1-$2-$3"
+                      );
                       field.onChange(formatted);
                     }}
                   />
@@ -145,7 +150,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
             )}
           />
 
-          {/* City Display */}
+          {/* City */}
           <div>
             <Label className="flex items-center space-x-2 mb-2">
               <MapPin className="w-4 h-4" />
@@ -175,6 +180,20 @@ export const ContactForm: React.FC<ContactFormProps> = ({
                 className="bg-muted cursor-not-allowed"
               />
             )}
+          </div>
+
+          {/* ✅ Submit Button */}
+          <div className="pt-4">
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Continue"
+              )}
+            </Button>
           </div>
         </form>
       </Form>

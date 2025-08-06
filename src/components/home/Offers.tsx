@@ -18,7 +18,7 @@ const Offers = () => {
       discount: "20% OFF",
       badge: "NEW",
       icon: "🎉",
-      color: "from-brand-blue to-brand-blue-dark"
+      color: "from-brand-blue to-brand-blue-dark",
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ const Offers = () => {
       discount: "₹1000 OFF",
       badge: "HOT",
       icon: "👟",
-      color: "from-cleancraft-gold to-brand-blue"
+      color: "from-cleancraft-gold to-brand-blue",
     },
     {
       id: 3,
@@ -36,7 +36,7 @@ const Offers = () => {
       discount: "40% OFF",
       badge: "SPECIAL",
       icon: "🪖",
-      color: "from-brand-blue-dark to-brand-blue"
+      color: "from-brand-blue-dark to-brand-blue",
     },
     {
       id: 4,
@@ -45,7 +45,7 @@ const Offers = () => {
       discount: "₹99 ONLY",
       badge: "PREMIUM",
       icon: "🥻",
-      color: "from-brand-blue to-cleancraft-gold"
+      color: "from-brand-blue to-cleancraft-gold",
     },
     {
       id: 5,
@@ -54,7 +54,7 @@ const Offers = () => {
       discount: "₹199 ONLY",
       badge: "BUSINESS",
       icon: "🤵",
-      color: "from-cleancraft-gold to-brand-blue-dark"
+      color: "from-cleancraft-gold to-brand-blue-dark",
     },
     {
       id: 6,
@@ -63,17 +63,17 @@ const Offers = () => {
       discount: "50% OFF",
       badge: "WINTER",
       icon: "🛏️",
-      color: "from-brand-blue-dark to-cleancraft-gold"
-    }
+      color: "from-brand-blue-dark to-cleancraft-gold",
+    },
   ];
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: 'start',
-    containScroll: 'trimSnaps',
-    dragFree: isMobile
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: isMobile,
   });
-  
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -87,9 +87,12 @@ const Offers = () => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const scrollTo = useCallback((index: number) => {
-    if (emblaApi) emblaApi.scrollTo(index);
-  }, [emblaApi]);
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (emblaApi) emblaApi.scrollTo(index);
+    },
+    [emblaApi]
+  );
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -101,14 +104,14 @@ const Offers = () => {
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
   }, [emblaApi, onSelect]);
 
   // Auto-scroll functionality
   useEffect(() => {
     if (!emblaApi || isHovered) return;
-    
+
     const interval = setInterval(() => {
       emblaApi.scrollNext();
     }, 5000);
@@ -119,26 +122,26 @@ const Offers = () => {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft') {
+      if (event.key === "ArrowLeft") {
         scrollPrev();
-      } else if (event.key === 'ArrowRight') {
+      } else if (event.key === "ArrowRight") {
         scrollNext();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [scrollPrev, scrollNext]);
 
   const handleClaimNow = () => {
-    const countryCode = currentCountry || 'in';
+    const countryCode = currentCountry || "in";
     navigate(`/${countryCode}/book`);
   };
 
   return (
     <div className="w-full py-4 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div 
+        <div
           className="relative group"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -147,17 +150,16 @@ const Offers = () => {
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {offers.map((offer) => (
-                <div
-                  key={offer.id}
-                  className="flex-[0_0_100%] min-w-0"
-                >
-                  <div className={`relative bg-gradient-to-r ${offer.color} rounded-xl mx-2 shadow-lg hover:shadow-xl transition-all duration-300 group/card`}>
+                <div key={offer.id} className="flex-[0_0_100%] min-w-0">
+                  <div
+                    className={`relative bg-gradient-to-r ${offer.color} rounded-xl mx-2 shadow-lg hover:shadow-xl transition-all duration-300 group/card`}
+                  >
                     {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-10">
                       <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/20 -mr-16 -mt-16"></div>
                       <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/10 -ml-12 -mb-12"></div>
                     </div>
-                    
+
                     {/* Mobile Layout */}
                     {isMobile ? (
                       <div className="relative p-4">
@@ -179,7 +181,7 @@ const Offers = () => {
                             </p>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-2xl font-bold text-white mb-1">
@@ -189,7 +191,7 @@ const Offers = () => {
                               *Valid for first-time customers only
                             </p>
                           </div>
-                          <button 
+                          <button
                             onClick={handleClaimNow}
                             className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-md text-sm min-h-[44px]"
                           >
@@ -205,7 +207,7 @@ const Offers = () => {
                             <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover/card:scale-110 transition-transform duration-300">
                               <span className="text-3xl">{offer.icon}</span>
                             </div>
-                            
+
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h4 className="text-2xl font-bold text-white">
@@ -228,9 +230,9 @@ const Offers = () => {
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex flex-col items-center gap-2">
-                            <button 
+                            <button
                               onClick={handleClaimNow}
                               className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-md"
                             >
@@ -257,7 +259,7 @@ const Offers = () => {
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              
+
               <button
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed z-10"
                 onClick={scrollNext}
@@ -270,14 +272,14 @@ const Offers = () => {
           )}
 
           {/* Progress Dots */}
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="hidden justify-center gap-2 mt-4 ">
             {offers.map((_, index) => (
               <button
                 key={index}
                 className={`w-2 h-2 rounded-full transition-all duration-200 ${
                   index === selectedIndex
-                    ? 'bg-brand-blue w-6'
-                    : 'bg-gray-300 hover:bg-gray-400'
+                    ? "bg-brand-blue w-6"
+                    : "bg-gray-300 hover:bg-gray-400"
                 }`}
                 onClick={() => scrollTo(index)}
                 aria-label={`Go to offer ${index + 1}`}
