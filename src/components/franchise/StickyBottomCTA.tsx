@@ -7,7 +7,7 @@ const StickyBottomCTA = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleCall = () => {
-    window.location.href = "tel:+918800000000";
+    window.location.href = "tel:+918800771349";
   };
 
   const handleInquire = () => {
