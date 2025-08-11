@@ -214,38 +214,44 @@ class ContentService {
     return getCollection<StrapiPolicy>("policies", clean(params));
   }
 
-async getCitiesForBooking(): Promise<string[]> {
-  try {
-    const result = await getCollection<any>("franchises", {
-      sort: ["city:asc"],
-    });
+  async getCitiesForBooking(): Promise<string[]> {
+    let allCities: string[] = [];
+    let page = 1;
+    let pageCount = 1; // assume 1 initially
 
-    console.log("✅ Franchise API Response:", result);
+    try {
+      while (page <= pageCount) {
+        const result = await getCollection<any>("franchises", {
+          sort: ["city:asc"],
+          pagination: { page, pageSize: 50 }, // 50 per page
+        });
 
-    if (!result || !Array.isArray(result.data)) {
-      console.warn("⚠️ Invalid franchise data format");
+        if (!result || !Array.isArray(result.data)) {
+          console.warn("⚠️ Invalid franchise data format");
+          break;
+        }
+
+        const citiesOnPage = result.data
+          .map((item: any) => item.city || item.attributes?.city)
+          .filter((city: string) => city && city.trim() !== "")
+          .map((city: string) => city.trim());
+
+        allCities = allCities.concat(citiesOnPage);
+
+        pageCount = result.meta.pagination.pageCount;
+        page++;
+      }
+
+      const uniqueCities = Array.from(new Set(allCities));
+
+      console.log("🏙️ Final Unique Cities List:", uniqueCities);
+
+      return uniqueCities;
+    } catch (error) {
+      console.error("❌ Error fetching cities from Strapi:", error);
       return [];
     }
-
-    const cities: string[] = result.data
-      .map((item: any) => {
-        const city = item.city || item.attributes?.city;
-        return typeof city === "string" && city.trim() !== "" ? city.trim() : null;
-      })
-      .filter((city: string | null) => !!city) as string[];
-
-    const uniqueCities = [...new Set(cities)];
-
-    console.log("🏙️ Final Unique Cities List:", uniqueCities);
-
-    return uniqueCities;
-  } catch (error) {
-    console.error("❌ Error fetching cities from Strapi:", error);
-    return [];
   }
-}
-
-
 }
 
 export const contentService = ContentService.getInstance();
