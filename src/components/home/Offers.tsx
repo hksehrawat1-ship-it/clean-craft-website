@@ -193,7 +193,7 @@ const Offers = () => {
                           </div>
                           <button
                             onClick={handleClaimNow}
-                            className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-md text-sm min-h-[44px]"
+                            className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-gray-50 hover:shadow-lg hover:scale-105 focus:ring-2 focus:ring-white/50 focus:outline-none active:scale-95 transition-all duration-300 shadow-md text-sm min-h-[44px] will-change-transform"
                           >
                             Claim Now
                           </button>
@@ -234,7 +234,7 @@ const Offers = () => {
                           <div className="flex flex-col items-center gap-2">
                             <button
                               onClick={handleClaimNow}
-                              className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-md"
+                              className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 hover:shadow-xl hover:scale-105 hover:-translate-y-1 focus:ring-2 focus:ring-white/50 focus:outline-none active:scale-95 active:translate-y-0 transition-all duration-300 shadow-md will-change-transform"
                             >
                               Claim Now
                             </button>
@@ -252,7 +252,7 @@ const Offers = () => {
           {!isMobile && (
             <>
               <button
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 hover:shadow-lg focus:ring-2 focus:ring-white/50 focus:outline-none active:scale-95 transition-all duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 z-10 will-change-transform"
                 onClick={scrollPrev}
                 disabled={!canScrollPrev}
                 aria-label="Previous offer"
@@ -261,7 +261,7 @@ const Offers = () => {
               </button>
 
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 hover:shadow-lg focus:ring-2 focus:ring-white/50 focus:outline-none active:scale-95 transition-all duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 z-10 will-change-transform"
                 onClick={scrollNext}
                 disabled={!canScrollNext}
                 aria-label="Next offer"
