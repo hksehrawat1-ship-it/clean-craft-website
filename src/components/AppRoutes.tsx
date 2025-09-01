@@ -24,6 +24,7 @@ const LazyPoliciesPage = lazy(() => import("../pages/Policies"));
 const LazyDiscoverCleanCraftPage = lazy(
   () => import("../pages/DiscoverCleanCraft")
 );
+const LazyDynamicLandingPage = lazy(() => import("../pages/DynamicLandingPage"));
 
 export function AppRoutes() {
   return (
@@ -199,6 +200,24 @@ export function AppRoutes() {
                   element={<ThankYouPage />}
                   allowEmptyContent
                 />
+              }
+            />
+
+            {/* Dynamic Landing Pages */}
+            <Route
+              path=":city"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <LazyDynamicLandingPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path=":city/:service"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <LazyDynamicLandingPage />
+                </Suspense>
               }
             />
 
