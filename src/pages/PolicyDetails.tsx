@@ -37,7 +37,6 @@ export default function PolicyDetails() {
             </h1>
           </div>
         </div>
-        <Footer />
       </>
     );
   }
@@ -91,7 +90,6 @@ export default function PolicyDetails() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }
