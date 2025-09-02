@@ -53,7 +53,6 @@
     "@types/qs": "^6.9.18",
     "@types/react-helmet": "^6.1.11",
     "@types/uuid": "^10.0.0",
-    "@wroud/vite-plugin-ssg": "^5.3.0",
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -99,7 +98,7 @@
     "@eslint/js": "^9.9.0",
     "@rollup/plugin-yaml": "^4.1.2",
     "@tailwindcss/typography": "^0.5.16",
-    "@types/node": "^22.17.2",
+    "@types/node": "^22.5.5",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-legacy": "^5.4.3",
@@ -115,12 +114,10 @@
     "react-ipgeolocation": "^1.4.0",
     "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.11",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
+    "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
-    "vite-plugin-remove-console": "^2.2.0",
-    "vite-plugin-ssr": "^0.4.142"
+    "vite-plugin-remove-console": "^2.2.0"
   },
   "reactSnap": {
     "source": "dist",
