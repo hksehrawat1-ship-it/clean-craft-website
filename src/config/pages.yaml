@@ -140,6 +140,19 @@ seo:
         description: "Service policies for dry cleaning, wet cleaning, and garment care in Australia. Terms of service, privacy policy, and professional cleaning guidelines."
         keywords: ["dry cleaning policies australia", "wet cleaning terms", "garment care policies", "cleaning service policies australia", "professional cleaning terms", "sustainable cleaning policies"]
 
+    "/locations":
+      priority: 0.9
+      changefreq: "weekly"
+      lastmod: "2025-01-02"
+      in:
+        title: "CleanCraft Locations in India | Professional Laundry Services Near You"
+        description: "Find CleanCraft professional laundry and dry cleaning services in 50+ cities across India. Book pickup & delivery service in your city today!"
+        keywords: ["laundry services near me", "dry cleaning locations india", "pickup and delivery laundry", "professional cleaning services", "laundry franchise locations", "city wise laundry services", "doorstep laundry pickup", "local dry cleaning services"]
+      au:
+        title: "CleanCraft Locations in Australia | Professional Dry Cleaning Near You"
+        description: "Find CleanCraft professional dry cleaning and wet cleaning services across major Australian cities. Book convenient pickup & delivery today!"
+        keywords: ["dry cleaning near me australia", "wet cleaning locations", "professional garment care australia", "pickup delivery dry cleaning", "local cleaning services", "city dry cleaning services", "australian laundry locations", "premium cleaning near me"]
+
 # Global pages available by default
 global:
   pages:
@@ -165,6 +178,13 @@ au:
           category: "services"
         - type: "testimonial"
           category: "services"
+    - path: "/locations"
+      navbar: true
+      title: "Locations"
+      order: 3
+      sections:
+        - type: "faq"
+          category: "locations"
     - path: "/policies"
       navbar: false
       title: "Policies"
@@ -198,6 +218,13 @@ in:
           category: "services"
         - type: "testimonial"
           category: "services"
+    - path: "/locations"
+      navbar: true
+      title: "Locations"
+      order: 5
+      sections:
+        - type: "faq"
+          category: "locations"
     - path: "/laundry-franchise"
       navbar: true
       title: "⁠Apply for Franchise"
@@ -258,6 +285,8 @@ footer:
         path: "/learning/laundry-training-book"
       - title: "Open My Store"
         path: "/laundry-franchise"
+      - title: "Locations"
+        path: "/locations"
       - title: "Blogs"
         path: "/blog"
       - title: "FAQs"
@@ -276,6 +305,8 @@ footer:
       - title: "Open My Store"
         path: "/laundry-franchise"
         enabled: false
+      - title: "Locations"
+        path: "/locations"
       - title: "Blogs"
         path: "/blog"
       - title: "FAQs"

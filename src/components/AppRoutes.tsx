@@ -25,6 +25,8 @@ const LazyDiscoverCleanCraftPage = lazy(
   () => import("../pages/DiscoverCleanCraft")
 );
 const LazyDynamicLandingPage = lazy(() => import("../pages/DynamicLandingPage"));
+const LazyLocationsListPage = lazy(() => import("../pages/LocationsList"));
+const LazyLocationItemPage = lazy(() => import("../pages/LocationItemPage"));
 
 export function AppRoutes() {
   return (
@@ -202,6 +204,38 @@ export function AppRoutes() {
                 />
               }
             />
+
+            {/* Locations Routes */}
+            <Route path="locations">
+              <Route
+                index
+                element={
+                  <CountryRouteGuard
+                    pagePath="/locations"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyLocationsListPage />
+                      </Suspense>
+                    }
+                    allowEmptyContent
+                  />
+                }
+              />
+              <Route
+                path=":service"
+                element={
+                  <CountryRouteGuard
+                    pagePath="/locations"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyLocationItemPage />
+                      </Suspense>
+                    }
+                    allowEmptyContent
+                  />
+                }
+              />
+            </Route>
 
             {/* Dynamic Landing Pages */}
             <Route
