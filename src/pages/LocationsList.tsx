@@ -1,12 +1,13 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { MapPin, ArrowRight, Search, Users, Star, CheckCircle } from "lucide-react";
-import { useCountry } from "@/contexts/CountryContext";
-import { useStrapiServices } from "@/hooks/useStrapi";
-import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { EnhancedSEO } from "@/components/EnhancedSEO";
-import Layout from "@/components/home/Layout";
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { MapPin, Users, Star, Search, CheckCircle, ArrowRight, Award } from 'lucide-react';
+import Layout from '@/components/home/Layout';
+import { EnhancedSEO } from '@/components/EnhancedSEO';
+import { useCountry } from '@/contexts/CountryContext';
+import { useStrapiServices } from '@/hooks/useStrapi';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface Franchise {
   city: string;
@@ -14,164 +15,257 @@ interface Franchise {
   franchise_name: string;
 }
 
-const LocationsList = () => {
+const LocationsList: React.FC = () => {
   const navigate = useNavigate();
   const { currentCountry } = useCountry();
-  const { data: servicesData, isLoading: servicesLoading } = useStrapiServices();
-  
-  // Mock franchise locations data (can be replaced with API call when needed)
-  const { data: locations = [], isLoading: locationsLoading } = useQuery({
-    queryKey: ["franchise-locations", currentCountry],
+  const { data: services, isLoading: servicesLoading } = useStrapiServices();
+  const [selectedState, setSelectedState] = useState<string>('All States');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  // Mock franchise data - Enhanced with more cities
+  const { data: franchises, isLoading } = useQuery<Franchise[]>({
+    queryKey: ['franchises', currentCountry?.code],
     queryFn: async () => {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Return mock data based on country
-      const mockLocations = currentCountry === 'AU' ? [
-        { city: "Sydney", state: "New South Wales", franchise_name: "CleanCraft Sydney" },
-        { city: "Melbourne", state: "Victoria", franchise_name: "CleanCraft Melbourne" },
-        { city: "Brisbane", state: "Queensland", franchise_name: "CleanCraft Brisbane" },
-        { city: "Perth", state: "Western Australia", franchise_name: "CleanCraft Perth" },
-        { city: "Adelaide", state: "South Australia", franchise_name: "CleanCraft Adelaide" },
-        { city: "Canberra", state: "ACT", franchise_name: "CleanCraft Canberra" },
+      const mockFranchises: Franchise[] = currentCountry === 'AU' ? [
+        { city: 'Sydney', state: 'New South Wales', franchise_name: 'CleanCraft Sydney Central' },
+        { city: 'Melbourne', state: 'Victoria', franchise_name: 'CleanCraft Melbourne Premium' },
+        { city: 'Brisbane', state: 'Queensland', franchise_name: 'CleanCraft Brisbane Express' },
+        { city: 'Perth', state: 'Western Australia', franchise_name: 'CleanCraft Perth Elite' },
+        { city: 'Adelaide', state: 'South Australia', franchise_name: 'CleanCraft Adelaide Pride' },
+        { city: 'Canberra', state: 'Australian Capital Territory', franchise_name: 'CleanCraft Canberra' },
+        { city: 'Darwin', state: 'Northern Territory', franchise_name: 'CleanCraft Darwin' },
       ] : [
-        { city: "Mumbai", state: "Maharashtra", franchise_name: "CleanCraft Mumbai" },
-        { city: "Delhi", state: "Delhi", franchise_name: "CleanCraft Delhi" },
-        { city: "Bangalore", state: "Karnataka", franchise_name: "CleanCraft Bangalore" },
-        { city: "Chennai", state: "Tamil Nadu", franchise_name: "CleanCraft Chennai" },
-        { city: "Hyderabad", state: "Telangana", franchise_name: "CleanCraft Hyderabad" },
-        { city: "Pune", state: "Maharashtra", franchise_name: "CleanCraft Pune" },
-        { city: "Kolkata", state: "West Bengal", franchise_name: "CleanCraft Kolkata" },
-        { city: "Ahmedabad", state: "Gujarat", franchise_name: "CleanCraft Ahmedabad" },
+        { city: 'Mumbai', state: 'Maharashtra', franchise_name: 'CleanCraft Mumbai Central' },
+        { city: 'Delhi', state: 'Delhi', franchise_name: 'CleanCraft Delhi North' },
+        { city: 'Bangalore', state: 'Karnataka', franchise_name: 'CleanCraft Bangalore Tech City' },
+        { city: 'Chennai', state: 'Tamil Nadu', franchise_name: 'CleanCraft Chennai Express' },
+        { city: 'Hyderabad', state: 'Telangana', franchise_name: 'CleanCraft Hyderabad Premium' },
+        { city: 'Pune', state: 'Maharashtra', franchise_name: 'CleanCraft Pune Elite' },
+        { city: 'Kolkata', state: 'West Bengal', franchise_name: 'CleanCraft Kolkata Heritage' },
+        { city: 'Ahmedabad', state: 'Gujarat', franchise_name: 'CleanCraft Ahmedabad Pride' },
+        { city: 'Jaipur', state: 'Rajasthan', franchise_name: 'CleanCraft Jaipur Royal' },
+        { city: 'Lucknow', state: 'Uttar Pradesh', franchise_name: 'CleanCraft Lucknow Heritage' },
+        { city: 'Indore', state: 'Madhya Pradesh', franchise_name: 'CleanCraft Indore Central' },
+        { city: 'Bhopal', state: 'Madhya Pradesh', franchise_name: 'CleanCraft Bhopal Elite' },
+        { city: 'Nagpur', state: 'Maharashtra', franchise_name: 'CleanCraft Nagpur Express' },
+        { city: 'Coimbatore', state: 'Tamil Nadu', franchise_name: 'CleanCraft Coimbatore Premium' },
+        { city: 'Kochi', state: 'Kerala', franchise_name: 'CleanCraft Kochi Marine' },
+        { city: 'Visakhapatnam', state: 'Andhra Pradesh', franchise_name: 'CleanCraft Vizag Coastal' },
       ];
-      
-      return mockLocations;
+      return mockFranchises;
     },
+    enabled: !!currentCountry,
   });
 
-  const handleCityClick = (city: string) => {
-    navigate(`/${currentCountry?.toLowerCase()}/locations/laundry-services-near-me-in-${city.toLowerCase().replace(/\s+/g, '-')}`);
-  };
+  // Get unique states and sort alphabetically
+  const states = useMemo(() => {
+    if (!franchises) return [];
+    const uniqueStates = [...new Set(franchises.map(f => f.state))];
+    return uniqueStates.sort();
+  }, [franchises]);
 
-  const handleServiceClick = (service: any, city?: string) => {
-    const serviceSlug = service.slug || service.name.toLowerCase().replace(/\s+/g, '-');
-    if (city) {
-      navigate(`/${currentCountry?.toLowerCase()}/locations/${serviceSlug}-near-me-in-${city.toLowerCase().replace(/\s+/g, '-')}`);
-    } else {
-      // Navigate to first available city
-      if (locations.length > 0) {
-        navigate(`/${currentCountry?.toLowerCase()}/locations/${serviceSlug}-near-me-in-${locations[0].city.toLowerCase().replace(/\s+/g, '-')}`);
-      }
+  // Filter franchises based on selected state and search term
+  const filteredFranchises = useMemo(() => {
+    if (!franchises) return [];
+    
+    let filtered = franchises;
+    
+    // Filter by state
+    if (selectedState !== 'All States') {
+      filtered = filtered.filter(f => f.state === selectedState);
     }
+    
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(f => 
+        f.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        f.state.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [franchises, selectedState, searchTerm]);
+
+  const handleCityClick = (city: string) => {
+    const path = `/${currentCountry?.toLowerCase()}/locations/laundry-and-dry-cleaning-near-me-in-${city.toLowerCase().replace(/\s+/g, '-')}`;
+    navigate(path);
   };
 
+  // Statistics data
   const statsData = [
-    { label: "Cities Served", value: locations.length, icon: MapPin },
-    { label: "Happy Customers", value: "50K+", icon: Users },
-    { label: "Average Rating", value: "4.8", icon: Star },
-    { label: "Years of Service", value: "10+", icon: CheckCircle },
+    { label: 'Cities Served', value: franchises?.length || 0, icon: MapPin },
+    { label: 'Happy Customers', value: '25,000+', icon: Users },
+    { label: 'Average Rating', value: '4.9', icon: Star },
+    { label: 'Years of Excellence', value: '8+', icon: Award },
   ];
 
   return (
     <Layout>
-      <EnhancedSEO
+      <EnhancedSEO 
         slug="/locations"
         defaultTitle={`CleanCraft Locations in ${currentCountry === 'IN' ? 'India' : 'Australia'} | Professional Laundry Services`}
-        defaultDescription={`Find CleanCraft professional laundry and dry cleaning services in ${locations.length}+ cities across ${currentCountry === 'IN' ? 'India' : 'Australia'}. Book pickup & delivery today!`}
+        defaultDescription={`Find CleanCraft laundry and dry cleaning services near you. Professional pickup and delivery available in ${franchises?.length || 0} cities across ${currentCountry === 'IN' ? 'India' : 'Australia'}.`}
         pageType="Organization"
       />
-
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-white via-brand-blue-light to-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-display-sm md:text-display-md font-bold text-gray-900 mb-6">
-              CleanCraft Locations in {currentCountry === 'IN' ? 'India' : 'Australia'}
-            </h1>
-            <p className="text-body-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Find professional laundry and dry cleaning services near you. We serve {locations.length}+ cities with pickup & delivery.
-            </p>
-            
-            {/* Search Bar */}
-            <div className="relative max-w-md mx-auto mb-8">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
+      
+      {/* Hero Section - Sabri Suby Style */}
+      <section className="bg-gradient-to-br from-brand-blue to-brand-blue-dark text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            Tired of Poor Laundry Service?
+          </h1>
+          <h2 className="text-2xl md:text-3xl mb-6 text-blue-100">
+            Experience Premium Care in {currentCountry?.code === 'IN' ? 'India' : 'Australia'}
+          </h2>
+          <p className="text-xl mb-8 text-blue-100">
+            Join 25,000+ satisfied customers across {franchises?.length || 0} cities
+          </p>
+          
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto mb-6">
+            <div className="relative">
+              <Input
                 type="text"
                 placeholder="Search by city name..."
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-3 pr-10 rounded-lg text-gray-800 border-0"
               />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            </div>
+          </div>
+          
+          {/* Trust Indicators */}
+          <div className="flex justify-center items-center space-x-6 text-sm flex-wrap gap-4">
+            <div className="flex items-center">
+              <Star className="w-5 h-5 text-cleancraft-gold mr-1" />
+              <span>4.9/5 Rating</span>
+            </div>
+            <div className="flex items-center">
+              <Users className="w-5 h-5 text-blue-200 mr-1" />
+              <span>25,000+ Happy Customers</span>
+            </div>
+            <div className="flex items-center">
+              <Award className="w-5 h-5 text-cleancraft-gold mr-1" />
+              <span>Premium Service</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 bg-gray-50">
+      {/* State Filter Section */}
+      <section className="py-8 bg-white border-b">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="flex flex-wrap gap-2 justify-center">
+            <Button
+              variant={selectedState === 'All States' ? 'default' : 'outline'}
+              onClick={() => setSelectedState('All States')}
+              className="mb-2"
+            >
+              All States ({franchises?.length || 0})
+            </Button>
+            {states.map((state) => {
+              const stateCount = franchises?.filter(f => f.state === state).length || 0;
+              return (
+                <Button
+                  key={state}
+                  variant={selectedState === state ? 'default' : 'outline'}
+                  onClick={() => setSelectedState(state)}
+                  className="mb-2"
+                >
+                  {state} ({stateCount})
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust-Building Stats Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Why Choose CleanCraft?
+            </h2>
+            <p className="text-lg text-gray-600">
+              Trusted by families across {currentCountry?.code === 'IN' ? 'India' : 'Australia'}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {statsData.map((stat, index) => (
-              <div key={index} className="text-center bg-white rounded-xl p-6 shadow-card">
-                <stat.icon className="h-8 w-8 text-brand-blue mx-auto mb-3" />
-                <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+              <div key={index} className="text-center bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <stat.icon className="w-10 h-10 text-brand-blue mx-auto mb-3" />
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{stat.value}</h3>
+                <p className="text-gray-600 text-sm">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Cities Grid */}
+      {/* Cities Grid Section - Scalable Design */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-heading-sm md:text-heading-md font-semibold text-gray-900 mb-4">
-              Our Service Locations
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Premium Laundry Service in Your City
             </h2>
-            <p className="text-body-md text-gray-600 max-w-2xl mx-auto">
-              Choose your city to explore our premium laundry services with doorstep pickup and delivery.
+            <p className="text-lg text-gray-600">
+              {selectedState === 'All States' 
+                ? `Available in ${filteredFranchises.length} cities` 
+                : `${filteredFranchises.length} cities in ${selectedState}`}
             </p>
           </div>
-
-          {locationsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
-                  <div className="h-40 bg-gray-200 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
+          
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[...Array(8)].map((_, index) => (
+                <div key={index} className="bg-gray-200 animate-pulse rounded-lg h-32"></div>
               ))}
             </div>
+          ) : filteredFranchises.length === 0 ? (
+            <div className="text-center py-12">
+              <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No cities found</h3>
+              <p className="text-gray-500">Try adjusting your search or state filter</p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {locations.map((location, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {filteredFranchises.map((franchise, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl border border-gray-200 hover:border-brand-blue hover:shadow-card-hover transition-all duration-300 overflow-hidden group cursor-pointer"
-                  onClick={() => handleCityClick(location.city)}
+                  onClick={() => handleCityClick(franchise.city)}
+                  className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer p-6 border border-gray-100 hover:border-brand-blue/20 transform hover:-translate-y-1"
                 >
-                  <div className="bg-gradient-to-br from-brand-blue to-brand-blue-dark h-40 relative">
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <MapPin className="h-5 w-5 mb-1" />
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                      <MapPin className="w-6 h-6 text-white" />
                     </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-title-md font-semibold text-gray-900 mb-2">
-                      {location.city}
-                    </h3>
-                    <p className="text-body-sm text-gray-600 mb-4">
-                      {location.state} • All services available
-                    </p>
                     
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-brand-blue font-medium">
-                        View Services
-                      </span>
-                      <ArrowRight className="h-4 w-4 text-brand-blue group-hover:translate-x-1 transition-transform" />
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">
+                      {franchise.city}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-3">{franchise.state}</p>
+                    
+                    <div className="space-y-1 mb-4">
+                      <div className="flex items-center justify-center text-xs text-gray-600">
+                        <Star className="w-3 h-3 mr-1 text-cleancraft-gold" />
+                        <span>4.9 Rating</span>
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Same-day service
+                      </div>
                     </div>
+                    
+                    <Button 
+                      size="sm" 
+                      className="w-full group-hover:bg-brand-blue-dark transition-colors"
+                    >
+                      Book Now
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -180,89 +274,85 @@ const LocationsList = () => {
         </div>
       </section>
 
-      {/* Services Overview */}
-      <section className="py-16 bg-gray-50">
+      {/* Guarantee & Benefits Section */}
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-heading-sm md:text-heading-md font-semibold text-gray-900 mb-4">
-              Our Services Available in All Locations
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              The CleanCraft Guarantee
             </h2>
-            <p className="text-body-md text-gray-600 max-w-2xl mx-auto">
-              Professional laundry services with quality guarantee and convenient pickup & delivery.
+            <p className="text-lg text-gray-600">
+              Premium service you can trust, delivered to your door
             </p>
           </div>
-
-          {servicesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl p-6 animate-pulse">
-                  <div className="h-12 w-12 bg-gray-200 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-16 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
-              ))}
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-16 h-16 bg-brand-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-brand-blue" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">100% Satisfaction</h3>
+              <p className="text-gray-600">Not happy? We'll re-clean for free or money back</p>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {servicesData?.data?.slice(0, 6).map((service: any, index: number) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl border border-gray-200 p-6 hover:border-brand-blue hover:shadow-card-hover transition-all duration-300 group cursor-pointer"
-                  onClick={() => handleServiceClick(service)}
-                >
-                  <div className="h-12 w-12 bg-brand-blue-light rounded-lg flex items-center justify-center mb-4 group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                    <CheckCircle className="h-6 w-6 text-brand-blue group-hover:text-white" />
-                  </div>
-                  
-                  <h3 className="text-title-sm font-semibold text-gray-900 mb-2">
-                    {service.name}
-                  </h3>
-                  
-                  <p className="text-body-sm text-gray-600 mb-4 line-clamp-3">
-                    {service.description}
-                  </p>
-                  
-                  {service.price_from && (
-                    <p className="text-sm font-medium text-cleancraft-gold mb-4">
-                      Starting from ₹{service.price_from}
-                    </p>
-                  )}
-                  
-                  <button className="text-brand-blue font-medium text-sm hover:text-brand-blue-dark transition-colors">
-                    Find Near Me →
-                  </button>
-                </div>
-              ))}
+            
+            <div className="text-center bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-16 h-16 bg-cleancraft-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-cleancraft-gold" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Same-Day Service</h3>
+              <p className="text-gray-600">Book before 10 AM for same-day pickup & delivery</p>
             </div>
-          )}
+            
+            <div className="text-center bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Trusted by 25,000+</h3>
+              <p className="text-gray-600">Join thousands of satisfied customers</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-brand-blue to-brand-blue-dark">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h2 className="text-heading-sm md:text-heading-md font-semibold mb-4">
-              Don't See Your City?
-            </h2>
-            <p className="text-body-lg mb-8 opacity-90">
-              We're rapidly expanding across {currentCountry === 'IN' ? 'India' : 'Australia'}. 
-              Get in touch and we'll notify you when we launch in your area.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                onClick={() => navigate(`/${currentCountry?.toLowerCase()}/book`)}
-                className="bg-white text-brand-blue px-8 py-3 rounded-full font-medium hover:bg-gray-100 transition-colors"
-              >
-                Book Service Now
-              </button>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-full font-medium hover:bg-white hover:text-brand-blue transition-colors">
-                Request New Location
-              </button>
-            </div>
+      {/* Final CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-brand-blue to-brand-blue-dark text-white text-center">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Stop Wasting Time on Laundry!
+          </h2>
+          <p className="text-xl mb-2 text-blue-100">
+            Get your clothes professionally cleaned and delivered
+          </p>
+          <p className="text-lg mb-8 text-blue-200">
+            <strong>Book within 2 hours for same-day pickup</strong>
+          </p>
+          
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+            <Button 
+              size="lg" 
+              onClick={() => navigate(`/${currentCountry?.code.toLowerCase()}/book`)}
+              className="bg-white text-brand-blue hover:bg-gray-100 font-semibold px-8 py-4"
+            >
+              Book Free Pickup Now
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-2 border-white text-white hover:bg-white hover:text-brand-blue font-semibold px-8 py-4"
+            >
+              Call Us Now
+            </Button>
           </div>
+          
+          <div className="flex justify-center items-center space-x-6 text-sm text-blue-200 flex-wrap gap-2">
+            <span>✓ Free pickup & delivery</span>
+            <span>✓ Same-day service</span>
+            <span>✓ 100% guarantee</span>
+          </div>
+          
+          <p className="mt-8 text-blue-200 text-sm">
+            Don't see your city? We're rapidly expanding! Contact us to request service in your area.
+          </p>
         </div>
       </section>
     </Layout>
