@@ -24,7 +24,7 @@ const LocationsList: React.FC = () => {
 
   // Mock franchise data - Enhanced with more cities
   const { data: franchises, isLoading } = useQuery<Franchise[]>({
-    queryKey: ['franchises', currentCountry?.code],
+    queryKey: ['franchises', currentCountry],
     queryFn: async () => {
       await new Promise(resolve => setTimeout(resolve, 800));
       
