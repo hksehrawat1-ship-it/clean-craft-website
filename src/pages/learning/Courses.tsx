@@ -12,6 +12,7 @@ import FAQs from "@/components/shared/FAQs";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
 import StudentGallery from "@/components/franchise/StudentGallery";
 import ProblemSection from "@/components/courses/ProblemSection";
+import EbookOfferSection from "@/components/courses/EbookOfferSection";
 
 const Courses = () => {
   useEffect(() => {
@@ -124,6 +125,9 @@ const Courses = () => {
             </div>
             <div className="fade-in-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <FAQs category="courses" />
+            </div>
+            <div className="fade-in-section">
+              <EbookOfferSection />
             </div>
           </div>
         </main>
