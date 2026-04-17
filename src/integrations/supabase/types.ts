@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
       admin_permissions: {
@@ -606,20 +611,89 @@ export type Database = {
           },
         ]
       }
+      bookings: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          email: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          phone: string | null
+          published_at: string | null
+          services: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          phone?: string | null
+          published_at?: string | null
+          services?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          phone?: string | null
+          published_at?: string | null
+          services?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       components_seo_seos: {
         Row: {
+          canonical_url: string | null
           id: number
           meta_description: string | null
+          meta_keywords: string | null
           meta_title: string | null
         }
         Insert: {
+          canonical_url?: string | null
           id?: number
           meta_description?: string | null
+          meta_keywords?: string | null
           meta_title?: string | null
         }
         Update: {
+          canonical_url?: string | null
           id?: number
           meta_description?: string | null
+          meta_keywords?: string | null
           meta_title?: string | null
         }
         Relationships: []
@@ -802,6 +876,63 @@ export type Database = {
             columns: ["locale_id"]
             isOneToOne: false
             referencedRelation: "locales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          created_by_id: number | null
+          customer_id: string | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          order_id: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          customer_id?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          order_id?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          customer_id?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          order_id?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
             referencedColumns: ["id"]
           },
         ]
@@ -1095,11 +1226,15 @@ export type Database = {
           email: string
           id: string
           investment_range: string | null
+          is_phone_verified: boolean | null
           lead_type: string
           name: string
           phone: string
           source_cta: string | null
           updated_at: string
+          verification_method: string | null
+          verification_token: string | null
+          verified_at: string | null
         }
         Insert: {
           city?: string | null
@@ -1108,11 +1243,15 @@ export type Database = {
           email: string
           id?: string
           investment_range?: string | null
+          is_phone_verified?: boolean | null
           lead_type?: string
           name: string
           phone: string
           source_cta?: string | null
           updated_at?: string
+          verification_method?: string | null
+          verification_token?: string | null
+          verified_at?: string | null
         }
         Update: {
           city?: string | null
@@ -1121,13 +1260,380 @@ export type Database = {
           email?: string
           id?: string
           investment_range?: string | null
+          is_phone_verified?: boolean | null
           lead_type?: string
           name?: string
           phone?: string
           source_cta?: string | null
           updated_at?: string
+          verification_method?: string | null
+          verification_token?: string | null
+          verified_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "franchise_leads_verification_token_fkey"
+            columns: ["verification_token"]
+            isOneToOne: false
+            referencedRelation: "otp_verifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchises: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          email: string | null
+          fablean_user_details: string | null
+          franchise_name: string | null
+          franchise_owner_phone: string | null
+          google_place_id: string | null
+          id: number
+          locale: string | null
+          opening_date: string | null
+          owner_name: string | null
+          published_at: string | null
+          sr_no: number | null
+          state: string | null
+          store_incharge_name: string | null
+          store_incharge_phone: string | null
+          store_phone: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          fablean_user_details?: string | null
+          franchise_name?: string | null
+          franchise_owner_phone?: string | null
+          google_place_id?: string | null
+          id?: number
+          locale?: string | null
+          opening_date?: string | null
+          owner_name?: string | null
+          published_at?: string | null
+          sr_no?: number | null
+          state?: string | null
+          store_incharge_name?: string | null
+          store_incharge_phone?: string | null
+          store_phone?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          fablean_user_details?: string | null
+          franchise_name?: string | null
+          franchise_owner_phone?: string | null
+          google_place_id?: string | null
+          id?: number
+          locale?: string | null
+          opening_date?: string | null
+          owner_name?: string | null
+          published_at?: string | null
+          sr_no?: number | null
+          state?: string | null
+          store_incharge_name?: string | null
+          store_incharge_phone?: string | null
+          store_phone?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchises_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "franchises_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      global_blogs: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: Json | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          excerpt: string | null
+          id: number
+          is_featured: boolean | null
+          locale: string | null
+          published_at: string | null
+          published_date: string | null
+          slug: string | null
+          tags: string | null
+          title: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          excerpt?: string | null
+          id?: number
+          is_featured?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          published_date?: string | null
+          slug?: string | null
+          tags?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          excerpt?: string | null
+          id?: number
+          is_featured?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          published_date?: string | null
+          slug?: string | null
+          tags?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_blogs_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "global_blogs_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      global_blogs_cmps: {
+        Row: {
+          cmp_id: number | null
+          component_type: string | null
+          entity_id: number | null
+          field: string | null
+          id: number
+          order: number | null
+        }
+        Insert: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Update: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_blogs_entity_fk"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "global_blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      global_faqs: {
+        Row: {
+          answer: string | null
+          category: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          order: number | null
+          published_at: string | null
+          question: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          answer?: string | null
+          category?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          order?: number | null
+          published_at?: string | null
+          question?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          answer?: string | null
+          category?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          order?: number | null
+          published_at?: string | null
+          question?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_faqs_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "global_faqs_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      global_policies: {
+        Row: {
+          content: Json | null
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          published_at: string | null
+          slug: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          slug?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          published_at?: string | null
+          slug?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_policies_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "global_policies_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      global_policies_cmps: {
+        Row: {
+          cmp_id: number | null
+          component_type: string | null
+          entity_id: number | null
+          field: string | null
+          id: number
+          order: number | null
+        }
+        Insert: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Update: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_policies_entity_fk"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "global_policies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i18n_locale: {
         Row: {
@@ -1182,6 +1688,284 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      interesting_leads: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          email: string | null
+          id: number
+          locale: string | null
+          manual_city: string | null
+          name: string | null
+          phone: string | null
+          published_at: string | null
+          services: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          id?: number
+          locale?: string | null
+          manual_city?: string | null
+          name?: string | null
+          phone?: string | null
+          published_at?: string | null
+          services?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          email?: string | null
+          id?: number
+          locale?: string | null
+          manual_city?: string | null
+          name?: string | null
+          phone?: string | null
+          published_at?: string | null
+          services?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interesting_leads_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interesting_leads_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      laundromat_communications: {
+        Row: {
+          communication_type: string
+          created_at: string
+          customer_id: string
+          delivered_at: string | null
+          email_address: string | null
+          error_message: string | null
+          id: string
+          message_content: string | null
+          phone_number: string | null
+          provider: string
+          provider_id: string | null
+          status: string
+        }
+        Insert: {
+          communication_type: string
+          created_at?: string
+          customer_id: string
+          delivered_at?: string | null
+          email_address?: string | null
+          error_message?: string | null
+          id?: string
+          message_content?: string | null
+          phone_number?: string | null
+          provider: string
+          provider_id?: string | null
+          status: string
+        }
+        Update: {
+          communication_type?: string
+          created_at?: string
+          customer_id?: string
+          delivered_at?: string | null
+          email_address?: string | null
+          error_message?: string | null
+          id?: string
+          message_content?: string | null
+          phone_number?: string | null
+          provider?: string
+          provider_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_customer"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "laundromat_customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      laundromat_customers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          loyalty_card_id: string | null
+          name: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          loyalty_card_id?: string | null
+          name: string
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          loyalty_card_id?: string | null
+          name?: string
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "laundromat_customers_loyalty_card_id_fkey"
+            columns: ["loyalty_card_id"]
+            isOneToOne: false
+            referencedRelation: "laundromat_loyalty_card"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      laundromat_loyalty_card: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          id: string
+          loyalty_card: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          loyalty_card?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          loyalty_card?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "laundromat_loyalty_card_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "laundromat_customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      laundromat_vouchers: {
+        Row: {
+          assigned_at: string | null
+          campaign: string
+          created_at: string
+          customer_id: string | null
+          id: string
+          is_used: boolean | null
+          updated_at: string
+          voucher: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          campaign: string
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          is_used?: boolean | null
+          updated_at?: string
+          voucher: string
+        }
+        Update: {
+          assigned_at?: string | null
+          campaign?: string
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          is_used?: boolean | null
+          updated_at?: string
+          voucher?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "laundromat_vouchers_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "laundromat_customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          created_at: string
+          email: string
+          email_sent: boolean
+          id: string
+          mobile: string
+          name: string
+          sms_sent: boolean
+          source: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          voucher_code: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          email_sent?: boolean
+          id?: string
+          mobile: string
+          name: string
+          sms_sent?: boolean
+          source?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          voucher_code?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          email_sent?: boolean
+          id?: string
+          mobile?: string
+          name?: string
+          sms_sent?: boolean
+          source?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          voucher_code?: string
+        }
+        Relationships: []
       }
       locales: {
         Row: {
@@ -1280,6 +2064,323 @@ export type Database = {
           },
           {
             foreignKeyName: "locales_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          google_map_url: string | null
+          google_place_id: string | null
+          id: number
+          is_active: boolean | null
+          locale: string | null
+          location: string | null
+          phone: string | null
+          published_at: string | null
+          slug: string | null
+          state: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          google_map_url?: string | null
+          google_place_id?: string | null
+          id?: number
+          is_active?: boolean | null
+          locale?: string | null
+          location?: string | null
+          phone?: string | null
+          published_at?: string | null
+          slug?: string | null
+          state?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          google_map_url?: string | null
+          google_place_id?: string | null
+          id?: number
+          is_active?: boolean | null
+          locale?: string | null
+          location?: string | null
+          phone?: string | null
+          published_at?: string | null
+          slug?: string | null
+          state?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+          whatsapp_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locations_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locations_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations_cmps: {
+        Row: {
+          cmp_id: number | null
+          component_type: string | null
+          entity_id: number | null
+          field: string | null
+          id: number
+          order: number | null
+        }
+        Insert: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Update: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locations_entity_fk"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations_country_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          location_id: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          location_id?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          location_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locations_country_lnk_fk"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locations_country_lnk_ifk"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          city: string
+          created_at: string | null
+          full_name: string
+          id: string
+          note: string | null
+          phone_number: string
+          pickup_date: string | null
+          pickup_time: string | null
+          service_type: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string | null
+          full_name: string
+          id?: string
+          note?: string | null
+          phone_number: string
+          pickup_date?: string | null
+          pickup_time?: string | null
+          service_type: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          note?: string | null
+          phone_number?: string
+          pickup_date?: string | null
+          pickup_time?: string | null
+          service_type?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      otp_verifications: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          expires_at: string
+          id: string
+          is_verified: boolean | null
+          last_request_at: string | null
+          otp_code: string
+          phone_number: string
+          verified_at: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          is_verified?: boolean | null
+          last_request_at?: string | null
+          otp_code: string
+          phone_number: string
+          verified_at?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          is_verified?: boolean | null
+          last_request_at?: string | null
+          otp_code?: string
+          phone_number?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      page_seos: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          description: string | null
+          document_id: string | null
+          id: number
+          keywords: string | null
+          locale: string | null
+          published_at: string | null
+          slug: string | null
+          title: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          keywords?: string | null
+          locale?: string | null
+          published_at?: string | null
+          slug?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          description?: string | null
+          document_id?: string | null
+          id?: number
+          keywords?: string | null
+          locale?: string | null
+          published_at?: string | null
+          slug?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_seos_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_seos_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_seos_country_lnk: {
+        Row: {
+          country_id: number | null
+          id: number
+          page_seo_id: number | null
+        }
+        Insert: {
+          country_id?: number | null
+          id?: number
+          page_seo_id?: number | null
+        }
+        Update: {
+          country_id?: number | null
+          id?: number
+          page_seo_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_seos_country_lnk_fk"
+            columns: ["page_seo_id"]
+            isOneToOne: false
+            referencedRelation: "page_seos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_seos_country_lnk_ifk"
             columns: ["country_id"]
             isOneToOne: false
             referencedRelation: "countries"
@@ -1587,6 +2688,41 @@ export type Database = {
             columns: ["updated_by_id"]
             isOneToOne: false
             referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services_cmps: {
+        Row: {
+          cmp_id: number | null
+          component_type: string | null
+          entity_id: number | null
+          field: string | null
+          id: number
+          order: number | null
+        }
+        Insert: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Update: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_entity_fk"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "services"
             referencedColumns: ["id"]
           },
         ]
@@ -2494,6 +3630,60 @@ export type Database = {
           },
         ]
       }
+      syllabus_downloads: {
+        Row: {
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          id: number
+          locale: string | null
+          name: string | null
+          phone: string | null
+          published_at: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          phone?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          id?: number
+          locale?: string | null
+          name?: string | null
+          phone?: string | null
+          published_at?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syllabus_downloads_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "syllabus_downloads_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       testimonials: {
         Row: {
           category: string | null
@@ -2980,12 +4170,42 @@ export type Database = {
           },
         ]
       }
+      voucher_tracking: {
+        Row: {
+          claimed_count: number
+          code: string
+          created_at: string
+          id: string
+          location: string
+          total_available: number
+          updated_at: string
+        }
+        Insert: {
+          claimed_count?: number
+          code: string
+          created_at?: string
+          id?: string
+          location?: string
+          total_available?: number
+          updated_at?: string
+        }
+        Update: {
+          claimed_count?: number
+          code?: string
+          created_at?: string
+          id?: string
+          location?: string
+          total_available?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_expired_otps: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
@@ -2996,21 +4216,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -3028,14 +4252,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -3051,14 +4277,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -3074,14 +4302,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -3089,14 +4319,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
