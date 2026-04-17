@@ -1,11 +1,11 @@
-import { AlertTriangle, XCircle, TrendingDown } from "lucide-react";
+import { AlertTriangle, XCircle, TrendingDown, Wrench, FlaskConical, IndianRupee, Workflow } from "lucide-react";
 
 const ProblemSection = () => {
   const failureReasons = [
-    "Wrong machine investment",
-    "No knowledge of chemicals",
-    "Pricing mistakes",
-    "No real process understanding",
+    { text: "Wrong machine investment", icon: Wrench },
+    { text: "No knowledge of chemicals", icon: FlaskConical },
+    { text: "Pricing mistakes", icon: IndianRupee },
+    { text: "No real process understanding", icon: Workflow },
   ];
 
   return (
@@ -41,23 +41,27 @@ const ProblemSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-          {failureReasons.map((reason, index) => (
-            <div
-              key={index}
-              className="bg-white border-2 border-red-100 rounded-xl p-6 hover:border-red-300 hover:shadow-md transition-all duration-300 group"
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-red-50 group-hover:bg-red-100 rounded-lg flex items-center justify-center transition-colors">
-                  <XCircle className="w-5 h-5 text-red-600" />
-                </div>
-                <div>
-                  <p className="text-base md:text-lg font-semibold text-gray-900">
-                    {reason}
-                  </p>
+          {failureReasons.map((reason, index) => {
+            const Icon = reason.icon;
+            return (
+              <div
+                key={index}
+                className="bg-white border-2 border-red-100 rounded-xl p-6 hover:border-red-300 hover:shadow-md transition-all duration-300 group"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-11 h-11 bg-red-50 group-hover:bg-red-100 rounded-lg flex items-center justify-center transition-colors">
+                    <Icon className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-base md:text-lg font-semibold text-gray-900">
+                      {reason.text}
+                    </p>
+                  </div>
+                  <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-1" />
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Result Banner */}
