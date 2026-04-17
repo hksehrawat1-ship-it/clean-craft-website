@@ -1,11 +1,25 @@
-import { AlertTriangle, XCircle, TrendingDown, Wrench, FlaskConical, IndianRupee, Workflow } from "lucide-react";
-
 const ProblemSection = () => {
   const failureReasons = [
-    { text: "Wrong machine investment", icon: Wrench },
-    { text: "No knowledge of chemicals", icon: FlaskConical },
-    { text: "Pricing mistakes", icon: IndianRupee },
-    { text: "No real process understanding", icon: Workflow },
+    {
+      emoji: "⚙️",
+      title: "Wrong machine investment",
+      description: "Buying expensive machines without understanding your actual needs.",
+    },
+    {
+      emoji: "🧪",
+      title: "No knowledge of chemicals",
+      description: "Using wrong chemicals ruins garments and your reputation.",
+    },
+    {
+      emoji: "💰",
+      title: "Pricing mistakes",
+      description: "Underpricing or overpricing drives customers away.",
+    },
+    {
+      emoji: "📋",
+      title: "No real process understanding",
+      description: "Without proper SOPs, quality stays inconsistent.",
+    },
   ];
 
   return (
@@ -28,57 +42,44 @@ const ProblemSection = () => {
       </section>
 
       {/* Section 2: Why 90% People Fail */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-            <AlertTriangle className="w-4 h-4" />
-            The Harsh Reality
-          </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Why <span className="text-red-600">90% People Fail</span> in the
-            Laundry Business
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 md:mb-12">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            Why <span className="text-[#FF5A3C]">90% People Fail</span> in the Laundry Business
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-          {failureReasons.map((reason, index) => {
-            const Icon = reason.icon;
-            return (
-              <div
-                key={index}
-                className="bg-white border-2 border-red-100 rounded-xl p-6 hover:border-red-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-11 h-11 bg-red-50 group-hover:bg-red-100 rounded-lg flex items-center justify-center transition-colors">
-                    <Icon className="w-5 h-5 text-red-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-base md:text-lg font-semibold text-gray-900">
-                      {reason.text}
-                    </p>
-                  </div>
-                  <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-1" />
+        <div className="space-y-4 md:space-y-5 mb-8">
+          {failureReasons.map((reason, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl p-5 md:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 text-3xl md:text-4xl leading-none mt-0.5">
+                  {reason.emoji}
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1">
+                    {reason.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-500 leading-relaxed">
+                    {reason.description}
+                  </p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         {/* Result Banner */}
-        <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-6 md:p-8 shadow-lg">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-center md:text-left">
-            <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <TrendingDown className="w-7 h-7 md:w-8 md:h-8 text-white" />
-            </div>
-            <div>
-              <p className="text-sm uppercase tracking-wider text-red-100 font-semibold mb-1">
-                Result
-              </p>
-              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-white">
-                Heavy Loss + Business Shut Down
-              </p>
-            </div>
-          </div>
+        <div className="bg-[#FFEBE6] border border-[#FFD4CC] rounded-2xl p-6 md:p-8 text-center">
+          <p className="text-base md:text-lg font-bold text-[#FF5A3C] mb-2">
+            Result
+          </p>
+          <p className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">
+            ₹5-7 lakhs loss + business shutdown
+          </p>
         </div>
       </section>
     </div>
