@@ -28,7 +28,7 @@ const LocationsList: React.FC = () => {
     queryFn: async () => {
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      const mockFranchises: Franchise[] = currentCountry === 'AU' ? [
+      const mockFranchises: Franchise[] = currentCountry?.toLowerCase() === 'au' ? [
         { city: 'Sydney', state: 'New South Wales', franchise_name: 'CleanCraft Sydney Central' },
         { city: 'Melbourne', state: 'Victoria', franchise_name: 'CleanCraft Melbourne Premium' },
         { city: 'Brisbane', state: 'Queensland', franchise_name: 'CleanCraft Brisbane Express' },
@@ -105,8 +105,8 @@ const LocationsList: React.FC = () => {
     <Layout>
       <EnhancedSEO 
         slug="/locations"
-        defaultTitle={`CleanCraft Locations in ${currentCountry === 'IN' ? 'India' : 'Australia'} | Professional Laundry Services`}
-        defaultDescription={`Find CleanCraft laundry and dry cleaning services near you. Professional pickup and delivery available in ${franchises?.length || 0} cities across ${currentCountry === 'IN' ? 'India' : 'Australia'}.`}
+        defaultTitle={`CleanCraft Locations in ${currentCountry?.toLowerCase() === 'in' ? 'India' : 'Australia'} | Professional Laundry Services`}
+        defaultDescription={`Find CleanCraft laundry and dry cleaning services near you. Professional pickup and delivery available in ${franchises?.length || 0} cities across ${currentCountry?.toLowerCase() === 'in' ? 'India' : 'Australia'}.`}
         pageType="Organization"
       />
       
@@ -117,7 +117,7 @@ const LocationsList: React.FC = () => {
             Tired of Poor Laundry Service?
           </h1>
           <h2 className="text-2xl md:text-3xl mb-6 text-blue-100">
-            Experience Premium Care in {currentCountry?.code === 'IN' ? 'India' : 'Australia'}
+            Experience Premium Care in {currentCountry?.toLowerCase() === 'in' ? 'India' : 'Australia'}
           </h2>
           <p className="text-xl mb-8 text-blue-100">
             Join 25,000+ satisfied customers across {franchises?.length || 0} cities
@@ -191,7 +191,7 @@ const LocationsList: React.FC = () => {
               Why Choose CleanCraft?
             </h2>
             <p className="text-lg text-gray-600">
-              Trusted by families across {currentCountry?.code === 'IN' ? 'India' : 'Australia'}
+              Trusted by families across {currentCountry?.toLowerCase() === 'in' ? 'India' : 'Australia'}
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -330,7 +330,7 @@ const LocationsList: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
             <Button 
               size="lg" 
-              onClick={() => navigate(`/${currentCountry?.code.toLowerCase()}/book`)}
+              onClick={() => navigate(`/${currentCountry?.toLowerCase()}/book`)}
               className="bg-white text-brand-blue hover:bg-gray-100 font-semibold px-8 py-4"
             >
               Book Free Pickup Now
