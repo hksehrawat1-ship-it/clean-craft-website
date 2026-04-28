@@ -209,9 +209,16 @@ const CoursesSales = () => {
 
                     <a
                       href={registrationHref}
-                      className="block text-center rounded-md bg-gray-900 hover:bg-gray-800 text-white font-semibold px-5 py-3 transition-colors"
+                      className="block text-center rounded-md bg-gray-900 hover:bg-gray-800 text-white font-semibold px-5 py-3.5 transition-colors"
                     >
                       Enroll in This Course
+                    </a>
+                    <a
+                      href={`${registrationHref}&syllabus=${encodeURIComponent(c.title)}`}
+                      className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 underline underline-offset-4"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download the syllabus
                     </a>
                   </div>
                 ))}
