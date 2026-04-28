@@ -1,7 +1,9 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Link, useParams } from "react-router-dom";
 
 const ClassModeSection = () => {
+  const { countryCode = "in" } = useParams();
+
   return (
     <section className="py-10 md:py-16 px-4">
       <div className="max-w-5xl mx-auto text-center">
@@ -11,12 +13,12 @@ const ClassModeSection = () => {
         <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-6 md:mb-8">
           Choose the class mode that fits your schedule and location. Both options include the same expert training and certification.
         </p>
-        <a
-          href="#registration-form"
+        <Link
+          to={`/${countryCode}/learning/laundry-courses`}
           className="inline-flex items-center justify-center rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold text-base md:text-lg px-8 py-4 shadow-lg transition-colors"
         >
           Know More About Courses
-        </a>
+        </Link>
       </div>
     </section>
   );

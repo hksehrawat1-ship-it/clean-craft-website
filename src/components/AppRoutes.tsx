@@ -16,6 +16,7 @@ import ThankYouPage from "../pages/ThankYouPage";
 import BookingPage from "@/pages/BookingPage";
 
 const LazyCoursesPage = lazy(() => import("../pages/learning/Courses"));
+const LazyCoursesSalesPage = lazy(() => import("../pages/learning/CoursesSales"));
 const LazyBookPage = lazy(() => import("../pages/learning/Book"));
 const LazyBlogPage = lazy(() => import("../pages/Blog"));
 const LazyBlogDetailPage = lazy(() => import("../pages/BlogDetail"));
@@ -54,6 +55,20 @@ export function AppRoutes() {
                         <LazyCoursesPage />
                       </Suspense>
                     }
+                  />
+                }
+              />
+              <Route
+                path="laundry-courses"
+                element={
+                  <CountryRouteGuard
+                    pagePath="/learning/laundry-courses"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <LazyCoursesSalesPage />
+                      </Suspense>
+                    }
+                    allowEmptyContent
                   />
                 }
               />
