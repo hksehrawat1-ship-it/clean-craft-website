@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
-import { CheckCircle2, Flame, Clock, Shield, Star, TrendingUp, Award, Sparkles, Download, Users } from "lucide-react";
+import { CheckCircle2, Flame, Clock, Shield, Star, TrendingUp, Award, Sparkles, Download, Users, Calendar } from "lucide-react";
 
 type Course = {
   title: string;
