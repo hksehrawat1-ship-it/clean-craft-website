@@ -176,7 +176,7 @@ const CoursesSales = () => {
                   { icon: "📱", title: "Mobile Friendly", desc: "Learn on phone or laptop" },
                   { icon: "🎥", title: "HD Video Lessons", desc: "Recorded by experts" },
                   { icon: "♾️", title: "Lifetime Access", desc: "Re-watch anytime" },
-                  { icon: "🇮🇳", title: "Hindi + English", desc: "Learn in your language" },
+                  { icon: "🇮🇳", title: "Hinglish", desc: "Learn in your language" },
                 ].map((f) => (
                   <div key={f.title} className="text-center p-4 rounded-xl border border-gray-200 bg-gray-50">
                     <div className="text-2xl md:text-3xl mb-2">{f.icon}</div>
@@ -184,28 +184,6 @@ const CoursesSales = () => {
                     <div className="text-xs md:text-sm text-gray-600 mt-1">{f.desc}</div>
                   </div>
                 ))}
-              </div>
-            </div>
-          </section>
-
-          {/* SOCIAL PROOF STRIP */}
-          <section className="bg-gray-900 text-white py-6 px-4">
-            <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">500+</div>
-                <div className="text-xs md:text-sm text-gray-300">Stores Launched</div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">87.3%</div>
-                <div className="text-xs md:text-sm text-gray-300">Choose Full Mastery</div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">₹1.24L</div>
-                <div className="text-xs md:text-sm text-gray-300">Real Course Value</div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">4.9★</div>
-                <div className="text-xs md:text-sm text-gray-300">Student Rating</div>
               </div>
             </div>
           </section>
@@ -398,13 +376,6 @@ const CoursesSales = () => {
                 costs just <strong>3.9%</strong> of a typical ₹10L setup — and removes every one of
                 those mistakes before you make them.
               </p>
-              <a
-                href={registrationHref}
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold text-base md:text-lg px-8 py-4 shadow-lg transition-colors"
-              >
-                Reserve My Seat Now
-              </a>
-              <p className="text-xs text-gray-500 mt-3">Only a limited number of seats at this price.</p>
             </div>
           </section>
         </main>
