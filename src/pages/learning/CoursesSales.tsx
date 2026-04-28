@@ -39,7 +39,6 @@ const courses: Course[] = [
       "Operations dashboard & KPIs",
       "Quality control & customer retention",
     ],
-    featured: true,
   },
   {
     title: "Laundry Marketing & Profit Growth Accelerator",
