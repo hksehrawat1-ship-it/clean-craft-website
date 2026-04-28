@@ -59,10 +59,10 @@ export function AppRoutes() {
                 }
               />
               <Route
-                path="laundry-courses"
+                path="online-course"
                 element={
                   <CountryRouteGuard
-                    pagePath="/learning/laundry-courses"
+                    pagePath="/learning/online-course"
                     element={
                       <Suspense fallback={<PageLoader />}>
                         <LazyCoursesSalesPage />
