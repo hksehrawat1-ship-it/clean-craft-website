@@ -68,6 +68,22 @@ const courses: Course[] = [
 
 const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
+const getNextBatchDate = () => {
+  const today = new Date();
+  const day = 24;
+  let month = today.getMonth();
+  let year = today.getFullYear();
+  if (today.getDate() > day) {
+    month += 1;
+    if (month > 11) {
+      month = 0;
+      year += 1;
+    }
+  }
+  const d = new Date(year, month, day);
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+};
+
 const CoursesSales = () => {
   const { countryCode = "in" } = useParams();
 
