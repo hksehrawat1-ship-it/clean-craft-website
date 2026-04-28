@@ -360,6 +360,7 @@ const CoursesSales = () => {
                 </div>
                 <div className="mt-2 text-right text-xs md:text-sm text-red-600 font-semibold">
                   You save {formatINR(totalValue - bundlePrice)} ({bundleSavings}% OFF)
+                </div>
                 <div className="mt-4 flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-3 text-left">
                   <Calendar className="w-4 h-4 md:w-5 md:h-5 text-blue-700 shrink-0 mt-0.5" />
                   <p className="text-xs md:text-sm text-blue-900">
