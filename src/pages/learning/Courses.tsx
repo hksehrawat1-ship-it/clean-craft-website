@@ -12,6 +12,7 @@ import FAQs from "@/components/shared/FAQs";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
 import StudentGallery from "@/components/franchise/StudentGallery";
 import ProblemSection from "@/components/courses/ProblemSection";
+import ClassModeSection from "@/components/courses/ClassModeSection";
 import EbookOfferSection from "@/components/courses/EbookOfferSection";
 
 const Courses = () => {
@@ -93,6 +94,9 @@ const Courses = () => {
         <main className="flex-1">
           <div className="space-y-16 md:space-y-24">
             <HeroSection />
+            <div className="fade-in-section">
+              <ClassModeSection />
+            </div>
             <div className="fade-in-section">
               <ProblemSection />
             </div>
