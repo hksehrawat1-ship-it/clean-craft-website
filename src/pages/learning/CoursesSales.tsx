@@ -311,7 +311,7 @@ const CoursesSales = () => {
                 Claim the Mastery Bundle →
               </a>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs md:text-sm text-white/90 mt-5">
-                <div className="flex items-center gap-1.5"><Shield className="w-4 h-4" /> 7-day money-back</div>
+                <div className="flex items-center gap-1.5">💻 100% Online Access</div>
                 <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> Lifetime access</div>
                 <div className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4" /> ROI in 90 days</div>
               </div>
