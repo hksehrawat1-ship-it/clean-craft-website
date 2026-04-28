@@ -140,6 +140,38 @@ const CoursesSales = () => {
             </div>
           </section>
 
+          {/* ONLINE TRAINING ADVANTAGES */}
+          <section className="py-10 md:py-14 px-4 bg-white">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-8">
+                <div className="inline-block bg-green-100 text-green-800 text-xs md:text-sm font-bold px-3 py-1 rounded-full mb-3">
+                  100% ONLINE LAUNDRY TRAINING
+                </div>
+                <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-[0.02em] mb-3">
+                  Learn Laundry Business Online — From Any City in India
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
+                  No travel. No hotels. No time off work. Watch, learn, and launch your laundry
+                  business on your own schedule — from your phone, laptop, or tablet.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+                {[
+                  { icon: "📱", title: "Mobile Friendly", desc: "Learn on phone or laptop" },
+                  { icon: "🎥", title: "HD Video Lessons", desc: "Recorded by experts" },
+                  { icon: "♾️", title: "Lifetime Access", desc: "Re-watch anytime" },
+                  { icon: "🇮🇳", title: "Hindi + English", desc: "Learn in your language" },
+                ].map((f) => (
+                  <div key={f.title} className="text-center p-4 rounded-xl border border-gray-200 bg-gray-50">
+                    <div className="text-2xl md:text-3xl mb-2">{f.icon}</div>
+                    <div className="font-bold text-gray-900 text-sm md:text-base">{f.title}</div>
+                    <div className="text-xs md:text-sm text-gray-600 mt-1">{f.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* SOCIAL PROOF STRIP */}
           <section className="bg-gray-900 text-white py-6 px-4">
             <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
