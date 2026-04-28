@@ -14,7 +14,7 @@ const ClassModeSection = () => {
           Choose the class mode that fits your schedule and location. Both options include the same expert training and certification.
         </p>
         <Link
-          to={`/${countryCode}/learning/online-course`}
+          to={`/${countryCode}/learning/laundry-courses`}
           className="inline-flex items-center justify-center rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold text-base md:text-lg px-8 py-4 shadow-lg transition-colors"
         >
           Know More About Courses
