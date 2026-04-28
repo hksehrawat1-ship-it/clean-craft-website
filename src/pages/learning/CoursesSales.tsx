@@ -72,7 +72,7 @@ const CoursesSales = () => {
   const { countryCode = "in" } = useParams();
 
   useEffect(() => {
-    document.title = "Laundry Business Courses — Save up to 68% | Clean Craft";
+    document.title = "Online Laundry Training Course India — Learn from Home | Clean Craft";
     window.scrollTo(0, 0);
   }, []);
 
@@ -87,7 +87,14 @@ const CoursesSales = () => {
       <EnhancedSEO
         slug="/learning/laundry-training-course"
         pageType="Course"
-        customKeywords={["laundry business course", "laundry training discount", "laundry mastery bundle"]}
+        customKeywords={[
+          "online laundry training course",
+          "online laundry course India",
+          "laundry business course online",
+          "learn laundry business from home",
+          "laundry training online",
+          "laundry mastery bundle",
+        ]}
       />
       <div className="min-h-screen flex flex-col bg-white">
         <EnhancedNavbar />
@@ -103,13 +110,16 @@ const CoursesSales = () => {
                 Build a Profitable Laundry Business —{" "}
                 <span className="text-primary">Without Losing Money</span>
               </h1>
-              <p className="text-[15px] md:text-xl text-gray-600 max-w-3xl mx-auto mb-5">
+              <p className="text-[16px] md:text-2xl font-bold text-green-700 max-w-3xl mx-auto mb-5">
                 Ask yourself — what are the chances of your success without learning?
               </p>
+              <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 rounded-full px-3 py-1 text-xs md:text-sm font-semibold mb-5">
+                💻 100% Online — Learn from Anywhere in India
+              </div>
               <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs md:text-sm text-gray-600 mb-6">
                 <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> 4.9/5 from 1,200+ students</div>
-                <div className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-green-600" /> 7-day money-back</div>
                 <div className="flex items-center gap-1.5"><Award className="w-4 h-4 text-primary" /> Certified</div>
+                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" /> Lifetime access</div>
               </div>
               <a
                 href="#bundle"
@@ -127,6 +137,38 @@ const CoursesSales = () => {
               <p className="text-sm md:text-lg font-semibold text-yellow-900 tracking-[0.01em]">
                 India needs <span className="text-red-700">36,000+ laundries</span> to cater for the growing demand by 2030
               </p>
+            </div>
+          </section>
+
+          {/* ONLINE TRAINING ADVANTAGES */}
+          <section className="py-10 md:py-14 px-4 bg-white">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-8">
+                <div className="inline-block bg-green-100 text-green-800 text-xs md:text-sm font-bold px-3 py-1 rounded-full mb-3">
+                  100% ONLINE LAUNDRY TRAINING
+                </div>
+                <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-[0.02em] mb-3">
+                  Learn Laundry Business Online — From Any City in India
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
+                  No travel. No hotels. No time off work. Watch, learn, and launch your laundry
+                  business on your own schedule — from your phone, laptop, or tablet.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+                {[
+                  { icon: "📱", title: "Mobile Friendly", desc: "Learn on phone or laptop" },
+                  { icon: "🎥", title: "HD Video Lessons", desc: "Recorded by experts" },
+                  { icon: "♾️", title: "Lifetime Access", desc: "Re-watch anytime" },
+                  { icon: "🇮🇳", title: "Hindi + English", desc: "Learn in your language" },
+                ].map((f) => (
+                  <div key={f.title} className="text-center p-4 rounded-xl border border-gray-200 bg-gray-50">
+                    <div className="text-2xl md:text-3xl mb-2">{f.icon}</div>
+                    <div className="font-bold text-gray-900 text-sm md:text-base">{f.title}</div>
+                    <div className="text-xs md:text-sm text-gray-600 mt-1">{f.desc}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
 
@@ -301,7 +343,7 @@ const CoursesSales = () => {
                 Claim the Mastery Bundle →
               </a>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs md:text-sm text-white/90 mt-5">
-                <div className="flex items-center gap-1.5"><Shield className="w-4 h-4" /> 7-day money-back</div>
+                <div className="flex items-center gap-1.5">💻 100% Online Access</div>
                 <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> Lifetime access</div>
                 <div className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4" /> ROI in 90 days</div>
               </div>
