@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import EnhancedNavbar from "@/components/EnhancedNavbar";
 import Footer from "@/components/Footer";
 import { EnhancedSEO } from "@/components/EnhancedSEO";
-import { CheckCircle2, Flame, Clock, Shield, Star, TrendingUp, Award, Sparkles, Download, Users } from "lucide-react";
+import { CheckCircle2, Flame, Clock, Shield, Star, TrendingUp, Award, Sparkles, Download, Users, Calendar } from "lucide-react";
 
 type Course = {
   title: string;
@@ -67,6 +67,22 @@ const courses: Course[] = [
 ];
 
 const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+
+const getNextBatchDate = () => {
+  const today = new Date();
+  const day = 24;
+  let month = today.getMonth();
+  let year = today.getFullYear();
+  if (today.getDate() > day) {
+    month += 1;
+    if (month > 11) {
+      month = 0;
+      year += 1;
+    }
+  }
+  const d = new Date(year, month, day);
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+};
 
 const CoursesSales = () => {
   const { countryCode = "in" } = useParams();
@@ -230,6 +246,17 @@ const CoursesSales = () => {
                     </h3>
                     <p className="text-sm text-gray-600 mb-4">{c.tagline}</p>
 
+                    {c.title === "5-Day Practical Laundry Training" && (
+                      <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-4">
+                        <Calendar className="w-4 h-4 text-green-700 shrink-0" />
+                        <div className="text-xs md:text-sm">
+                          <span className="font-bold text-green-800">Next Batch:</span>{" "}
+                          <span className="font-semibold text-gray-900">{getNextBatchDate()}</span>
+                          <span className="text-gray-600"> • One batch every month</span>
+                        </div>
+                      </div>
+                    )}
+
                     <ul className="space-y-2 mb-5">
                       {c.highlights.map((h) => (
                         <li key={h} className="flex items-start gap-2 text-sm text-gray-700">
@@ -333,6 +360,15 @@ const CoursesSales = () => {
                 </div>
                 <div className="mt-2 text-right text-xs md:text-sm text-red-600 font-semibold">
                   You save {formatINR(totalValue - bundlePrice)} ({bundleSavings}% OFF)
+                </div>
+                <div className="mt-4 flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-3 text-left">
+                  <Calendar className="w-4 h-4 md:w-5 md:h-5 text-blue-700 shrink-0 mt-0.5" />
+                  <p className="text-xs md:text-sm text-blue-900">
+                    <span className="font-bold">Practical Session Included:</span> After you
+                    purchase the bundle, you can book a practical session by just informing the
+                    team. We run hands-on sessions <span className="font-semibold">every month</span>
+                    {" "}(next batch: <span className="font-semibold">{getNextBatchDate()}</span>).
+                  </p>
                 </div>
               </div>
 
