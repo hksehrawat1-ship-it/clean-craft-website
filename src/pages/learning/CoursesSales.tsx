@@ -101,11 +101,10 @@ const CoursesSales = () => {
               </div>
               <h1 className="text-[26px] leading-[1.15] md:text-5xl font-bold text-gray-900 mb-4 tracking-[0.02em]">
                 Build a Profitable Laundry Business —{" "}
-                <span className="text-primary">Without Guesswork</span>
+                <span className="text-primary">Without Losing Money</span>
               </h1>
               <p className="text-[15px] md:text-xl text-gray-600 max-w-3xl mx-auto mb-5">
-                Get the exact playbooks, SOPs, and marketing systems used by 500+ successful laundry
-                owners across India. Pick a single course or save <strong>68%</strong> with the Complete Mastery Bundle.
+                Ask yourself — what are the chances of your success without learning?
               </p>
               <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs md:text-sm text-gray-600 mb-6">
                 <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> 4.9/5 from 1,200+ students</div>
@@ -181,7 +180,7 @@ const CoursesSales = () => {
                         MOST POPULAR
                       </div>
                     )}
-                    <div className="inline-block bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded mb-3">
+                    <div className="inline-block bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded mb-3">
                       {c.discountPct}% OFF
                     </div>
                     <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 tracking-[0.02em]">
