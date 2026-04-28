@@ -234,26 +234,29 @@ const CoursesSales = () => {
           </section>
 
           {/* BUNDLE OFFER */}
-          <section id="bundle" className="py-12 md:py-20 px-4 bg-gradient-to-br from-primary via-primary to-blue-700 text-white">
+          <section id="bundle" className="relative py-12 md:py-20 px-4 bg-gradient-to-br from-primary via-primary to-blue-700 text-white">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-sm font-semibold mb-5">
+              <div className="inline-flex items-center gap-2 bg-yellow-400 text-gray-900 rounded-full px-3 py-1 text-xs font-bold mb-4 shadow-lg">
+                ⭐ MOST POPULAR
+              </div>
+              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-xs md:text-sm font-semibold mb-5 ml-0 md:ml-2">
                 <Sparkles className="w-4 h-4" />
                 Complete Laundry Mastery Bundle
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-[0.02em] leading-tight">
+              <h2 className="text-[26px] leading-[1.15] md:text-5xl font-bold mb-4 tracking-[0.02em]">
                 Get ₹1.24L Value at Just{" "}
                 <span className="text-yellow-300">₹39,999</span>
               </h2>
-              <p className="text-lg md:text-xl text-white/90 mb-2">
+              <p className="text-base md:text-xl text-white/90 mb-2">
                 Save 68% — all 4 courses, every playbook, lifetime access.
               </p>
-              <p className="text-sm md:text-base text-white/80 mb-8 max-w-2xl mx-auto">
+              <p className="text-sm md:text-base text-white/80 mb-7 max-w-2xl mx-auto">
                 <strong>87.3%</strong> of our students choose the Complete Laundry Mastery Course —
                 because it's just <strong>3.9%</strong> of your ₹10L business investment and covers
                 everything from setup to scale.
               </p>
 
-              <div className="bg-white text-gray-900 rounded-2xl p-6 md:p-8 text-left max-w-2xl mx-auto mb-8 shadow-2xl">
+              <div className="bg-white text-gray-900 rounded-2xl p-5 md:p-8 text-left max-w-2xl mx-auto mb-6 md:mb-8 shadow-2xl">
                 <div className="flex items-center justify-between mb-4 pb-4 border-b">
                   <span className="font-semibold">What's Included</span>
                   <span className="text-sm text-gray-500">4 Courses</span>
@@ -265,7 +268,7 @@ const CoursesSales = () => {
                         <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
                         <span className="text-gray-800">{c.title}</span>
                       </div>
-                      <span className="text-gray-500 line-through shrink-0 text-sm">
+                      <span className="text-gray-500 line-through shrink-0 text-xs md:text-sm">
                         {formatINR(c.originalPrice)}
                       </span>
                     </li>
@@ -273,28 +276,32 @@ const CoursesSales = () => {
                 </ul>
                 <div className="mt-5 pt-5 border-t flex items-center justify-between">
                   <span className="text-gray-600">Total Value</span>
-                  <span className="text-lg font-bold text-gray-900 line-through">
+                  <span className="text-base md:text-lg font-bold text-gray-900 line-through">
                     {formatINR(totalValue)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-1">
                   <span className="text-gray-900 font-semibold">Your Price Today</span>
                   <span className="text-2xl md:text-3xl font-bold text-green-600">
                     {formatINR(bundlePrice)}
                   </span>
                 </div>
-                <div className="mt-2 text-right text-sm text-red-600 font-semibold">
+                <div className="mt-3 flex items-center justify-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-sm font-semibold text-green-800">
+                  <Users className="w-4 h-4 shrink-0" />
+                  87.3% of students choose this bundle
+                </div>
+                <div className="mt-2 text-right text-xs md:text-sm text-red-600 font-semibold">
                   You save {formatINR(totalValue - bundlePrice)} ({bundleSavings}% OFF)
                 </div>
               </div>
 
               <a
                 href={registrationHref}
-                className="inline-flex items-center justify-center rounded-md bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold text-lg md:text-xl px-10 py-5 shadow-xl transition-colors"
+                className="inline-flex w-full sm:w-auto items-center justify-center rounded-md bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold text-base md:text-xl px-6 md:px-10 py-4 md:py-5 shadow-xl transition-colors"
               >
                 Claim the Mastery Bundle →
               </a>
-              <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm text-white/90 mt-6">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs md:text-sm text-white/90 mt-5">
                 <div className="flex items-center gap-1.5"><Shield className="w-4 h-4" /> 7-day money-back</div>
                 <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> Lifetime access</div>
                 <div className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4" /> ROI in 90 days</div>
@@ -303,7 +310,7 @@ const CoursesSales = () => {
           </section>
 
           {/* WHY NOW */}
-          <section className="py-12 md:py-16 px-4 bg-gray-50">
+          <section className="py-12 md:py-16 px-4 bg-gray-50 pb-24 md:pb-16">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-[0.02em]">
                 Why This Costs Less Than a Single Mistake
@@ -316,7 +323,7 @@ const CoursesSales = () => {
               </p>
               <a
                 href={registrationHref}
-                className="inline-flex items-center justify-center rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold text-base md:text-lg px-8 py-4 shadow-lg transition-colors"
+                className="inline-flex w-full sm:w-auto items-center justify-center rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold text-base md:text-lg px-8 py-4 shadow-lg transition-colors"
               >
                 Reserve My Seat Now
               </a>
