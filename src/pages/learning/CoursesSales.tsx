@@ -246,6 +246,17 @@ const CoursesSales = () => {
                     </h3>
                     <p className="text-sm text-gray-600 mb-4">{c.tagline}</p>
 
+                    {c.title === "5-Day Practical Laundry Training" && (
+                      <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-4">
+                        <Calendar className="w-4 h-4 text-green-700 shrink-0" />
+                        <div className="text-xs md:text-sm">
+                          <span className="font-bold text-green-800">Next Batch:</span>{" "}
+                          <span className="font-semibold text-gray-900">{getNextBatchDate()}</span>
+                          <span className="text-gray-600"> • One batch every month</span>
+                        </div>
+                      </div>
+                    )}
+
                     <ul className="space-y-2 mb-5">
                       {c.highlights.map((h) => (
                         <li key={h} className="flex items-start gap-2 text-sm text-gray-700">
