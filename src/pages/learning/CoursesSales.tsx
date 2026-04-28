@@ -72,7 +72,7 @@ const CoursesSales = () => {
   const { countryCode = "in" } = useParams();
 
   useEffect(() => {
-    document.title = "Laundry Business Courses — Save up to 68% | Clean Craft";
+    document.title = "Online Laundry Training Course India — Learn from Home | Clean Craft";
     window.scrollTo(0, 0);
   }, []);
 
@@ -87,7 +87,14 @@ const CoursesSales = () => {
       <EnhancedSEO
         slug="/learning/laundry-training-course"
         pageType="Course"
-        customKeywords={["laundry business course", "laundry training discount", "laundry mastery bundle"]}
+        customKeywords={[
+          "online laundry training course",
+          "online laundry course India",
+          "laundry business course online",
+          "learn laundry business from home",
+          "laundry training online",
+          "laundry mastery bundle",
+        ]}
       />
       <div className="min-h-screen flex flex-col bg-white">
         <EnhancedNavbar />
@@ -103,13 +110,16 @@ const CoursesSales = () => {
                 Build a Profitable Laundry Business —{" "}
                 <span className="text-primary">Without Losing Money</span>
               </h1>
-              <p className="text-[15px] md:text-xl text-gray-600 max-w-3xl mx-auto mb-5">
+              <p className="text-[16px] md:text-2xl font-bold text-green-700 max-w-3xl mx-auto mb-5">
                 Ask yourself — what are the chances of your success without learning?
               </p>
+              <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 rounded-full px-3 py-1 text-xs md:text-sm font-semibold mb-5">
+                💻 100% Online — Learn from Anywhere in India
+              </div>
               <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs md:text-sm text-gray-600 mb-6">
                 <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> 4.9/5 from 1,200+ students</div>
-                <div className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-green-600" /> 7-day money-back</div>
                 <div className="flex items-center gap-1.5"><Award className="w-4 h-4 text-primary" /> Certified</div>
+                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" /> Lifetime access</div>
               </div>
               <a
                 href="#bundle"
