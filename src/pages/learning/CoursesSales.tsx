@@ -116,30 +116,30 @@ const CoursesSales = () => {
         <EnhancedNavbar />
         <main className="flex-1">
           {/* HERO */}
-          <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-white to-green-50 py-10 md:py-20 px-4">
+          <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-white to-green-50 py-7 md:py-20 px-3 md:px-4">
             <div className="max-w-5xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 bg-red-50 text-red-700 border border-red-200 rounded-full px-3 py-1 text-xs md:text-sm font-semibold mb-4">
+              <div className="inline-flex items-center gap-1.5 bg-red-50 text-red-700 border border-red-200 rounded-full px-2.5 py-1 text-[11px] md:text-sm font-semibold mb-3">
                 <Flame className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 Limited Time — Founder's Pricing
               </div>
-              <h1 className="text-[26px] leading-[1.15] md:text-5xl font-bold text-gray-900 mb-4 tracking-[0.02em]">
+              <h1 className="text-[24px] leading-[1.2] md:text-5xl font-bold text-gray-900 mb-3 md:mb-4 tracking-[0.02em]">
                 Build a Profitable Laundry Business —{" "}
                 <span className="text-primary">Without Losing Money</span>
               </h1>
-              <p className="text-[16px] md:text-2xl font-bold text-green-700 max-w-3xl mx-auto mb-5">
+              <p className="text-[15px] leading-snug md:text-2xl font-bold text-green-700 max-w-3xl mx-auto mb-4">
                 Ask yourself — what are the chances of your success without learning?
               </p>
-              <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 rounded-full px-3 py-1 text-xs md:text-sm font-semibold mb-5">
+              <div className="inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-800 rounded-full px-2.5 py-1 text-[11px] md:text-sm font-semibold mb-4">
                 💻 100% Online — Learn from Anywhere in India
               </div>
-              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs md:text-sm text-gray-600 mb-6">
-                <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> 4.9/5 from 1,200+ students</div>
-                <div className="flex items-center gap-1.5"><Award className="w-4 h-4 text-primary" /> Certified</div>
-                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" /> Lifetime access</div>
+              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] md:text-sm text-gray-600 mb-5">
+                <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 md:w-4 md:h-4 text-yellow-500 fill-yellow-500" /> 4.9/5 from 1,200+ students</div>
+                <div className="flex items-center gap-1"><Award className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Certified</div>
+                <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Lifetime access</div>
               </div>
               <a
                 href="#bundle"
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold text-base md:text-lg px-6 md:px-8 py-4 shadow-lg transition-colors"
+                className="inline-flex w-full sm:w-auto items-center justify-center rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-semibold text-[15px] md:text-lg px-5 md:px-8 py-3.5 md:py-4 shadow-lg transition-colors"
               >
                 See the Complete Mastery Bundle →
               </a>
