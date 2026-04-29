@@ -189,45 +189,45 @@ const CoursesSales = () => {
           </section>
 
           {/* INDIVIDUAL COURSES */}
-          <section className="py-12 md:py-20 px-4">
+          <section className="py-9 md:py-20 px-3 md:px-4">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-10 md:mb-14">
-                <div className="inline-block bg-primary/10 text-primary text-sm font-semibold px-3 py-1 rounded-full mb-3">
+              <div className="text-center mb-7 md:mb-14">
+                <div className="inline-block bg-primary/10 text-primary text-[11px] md:text-sm font-semibold px-2.5 py-1 rounded-full mb-2.5">
                   INDIVIDUAL COURSES (DISCOUNTED)
                 </div>
-                <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-[0.02em] mb-3">
+                <h2 className="text-[22px] leading-[1.2] md:text-4xl font-bold text-gray-900 tracking-[0.02em] mb-2.5">
                   Pick the Exact Course You Need
                 </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
+                <p className="text-gray-600 max-w-2xl mx-auto text-[14px] md:text-base">
                   Every course is standalone — but students save far more with the bundle below.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                 {courses.map((c) => (
                   <div
                     key={c.title}
-                    className={`relative rounded-2xl border bg-white p-6 md:p-8 shadow-sm hover:shadow-lg transition-shadow ${
+                    className={`relative rounded-2xl border bg-white p-4 md:p-8 shadow-sm hover:shadow-lg transition-shadow ${
                       c.featured ? "border-primary ring-2 ring-primary/20" : "border-gray-200"
                     }`}
                   >
                     {c.featured && (
-                      <div className="absolute -top-3 left-6 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
+                      <div className="absolute -top-3 left-4 md:left-6 bg-primary text-white text-[11px] md:text-xs font-bold px-2.5 py-1 rounded-full">
                         MOST POPULAR
                       </div>
                     )}
-                    <div className="inline-block bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded mb-3">
+                    <div className="inline-block bg-green-100 text-green-700 text-[11px] md:text-xs font-bold px-2 py-0.5 rounded mb-2.5">
                       {c.discountPct}% OFF
                     </div>
-                    <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 tracking-[0.02em]">
+                    <h3 className="text-[17px] md:text-xl font-bold text-gray-900 mb-1.5 leading-snug tracking-[0.02em]">
                       {c.title}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-4">{c.tagline}</p>
+                    <p className="text-[13px] md:text-sm text-gray-600 mb-3 md:mb-4 leading-snug">{c.tagline}</p>
 
                     {c.title === "5-Day Practical Laundry Training" && (
-                      <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-4">
-                        <Calendar className="w-4 h-4 text-green-700 shrink-0" />
-                        <div className="text-xs md:text-sm">
+                      <div className="flex items-start gap-2 bg-green-50 border border-green-200 rounded-lg px-2.5 py-2 mb-3 md:mb-4">
+                        <Calendar className="w-4 h-4 text-green-700 shrink-0 mt-0.5" />
+                        <div className="text-[12px] md:text-sm leading-snug">
                           <span className="font-bold text-green-800">Next Batch:</span>{" "}
                           <span className="font-semibold text-gray-900">{getNextBatchDate()}</span>
                           <span className="text-gray-600"> • One batch every month</span>
@@ -235,33 +235,33 @@ const CoursesSales = () => {
                       </div>
                     )}
 
-                    <ul className="space-y-2 mb-5">
+                    <ul className="space-y-1.5 md:space-y-2 mb-4 md:mb-5">
                       {c.highlights.map((h) => (
-                        <li key={h} className="flex items-start gap-2 text-sm text-gray-700">
+                        <li key={h} className="flex items-start gap-2 text-[13px] md:text-sm text-gray-700">
                           <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
                           <span>{h}</span>
                         </li>
                       ))}
                     </ul>
 
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <div className="flex items-baseline gap-2 mb-3 md:mb-4">
+                      <span className="text-[22px] md:text-3xl font-bold text-gray-900">
                         {formatINR(c.discountedPrice)}
                       </span>
-                      <span className="text-base text-gray-400 line-through">
+                      <span className="text-sm md:text-base text-gray-400 line-through">
                         {formatINR(c.originalPrice)}
                       </span>
                     </div>
 
                     <a
                       href={registrationHref}
-                      className="block text-center rounded-md bg-gray-900 hover:bg-gray-800 text-white font-semibold px-5 py-3.5 transition-colors"
+                      className="block text-center rounded-lg bg-gray-900 hover:bg-gray-800 active:bg-black text-white font-semibold text-[15px] md:text-base px-5 py-3.5 transition-colors"
                     >
                       Enroll in This Course
                     </a>
                     <a
                       href={`${registrationHref}&syllabus=${encodeURIComponent(c.title)}`}
-                      className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 underline underline-offset-4"
+                      className="mt-2.5 flex items-center justify-center gap-1.5 text-[13px] md:text-sm font-semibold text-primary hover:text-primary/80 underline underline-offset-4 py-1"
                     >
                       <Download className="w-4 h-4" />
                       Download the syllabus
@@ -270,8 +270,8 @@ const CoursesSales = () => {
                 ))}
               </div>
 
-              <div className="mt-8 text-center">
-                <p className="text-gray-700 text-base md:text-lg">
+              <div className="mt-6 md:mt-8 text-center">
+                <p className="text-gray-700 text-[14px] md:text-lg">
                   Total Real Value:{" "}
                   <span className="font-bold text-gray-900">₹1,24,000</span>
                 </p>
