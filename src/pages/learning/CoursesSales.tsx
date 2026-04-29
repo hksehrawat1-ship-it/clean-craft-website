@@ -147,41 +147,41 @@ const CoursesSales = () => {
           </section>
 
           {/* MARKET DEMAND BANNER */}
-          <section className="bg-yellow-50 border-y border-yellow-200 py-4 md:py-5 px-4">
-            <div className="max-w-5xl mx-auto flex items-center justify-center gap-3 text-center">
-              <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-yellow-700 shrink-0" />
-              <p className="text-sm md:text-lg font-semibold text-yellow-900 tracking-[0.01em]">
+          <section className="bg-yellow-50 border-y border-yellow-200 py-3 md:py-5 px-3 md:px-4">
+            <div className="max-w-5xl mx-auto flex items-center justify-center gap-2 md:gap-3 text-center">
+              <TrendingUp className="w-4 h-4 md:w-6 md:h-6 text-yellow-700 shrink-0" />
+              <p className="text-[13px] leading-snug md:text-lg font-semibold text-yellow-900 tracking-[0.01em]">
                 India needs <span className="text-red-700">36,000+ laundries</span> to cater for the growing demand by 2030
               </p>
             </div>
           </section>
 
           {/* ONLINE TRAINING ADVANTAGES */}
-          <section className="py-10 md:py-14 px-4 bg-white">
+          <section className="py-8 md:py-14 px-3 md:px-4 bg-white">
             <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-8">
-                <div className="inline-block bg-green-100 text-green-800 text-xs md:text-sm font-bold px-3 py-1 rounded-full mb-3">
+              <div className="text-center mb-6 md:mb-8">
+                <div className="inline-block bg-green-100 text-green-800 text-[11px] md:text-sm font-bold px-2.5 py-1 rounded-full mb-2.5">
                   100% ONLINE LAUNDRY TRAINING
                 </div>
-                <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-[0.02em] mb-3">
+                <h2 className="text-[22px] leading-[1.2] md:text-4xl font-bold text-gray-900 tracking-[0.02em] mb-2.5">
                   Learn Laundry Business Online — From Any City in India
                 </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
+                <p className="text-gray-600 max-w-2xl mx-auto text-[14px] md:text-base">
                   No travel. No hotels. No time off work. Watch, learn, and launch your laundry
                   business on your own schedule — from your phone, laptop, or tablet.
                 </p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-5">
                 {[
                   { icon: "📱", title: "Mobile Friendly", desc: "Learn on phone or laptop" },
                   { icon: "🎥", title: "HD Video Lessons", desc: "Recorded by experts" },
                   { icon: "♾️", title: "Lifetime Access", desc: "Re-watch anytime" },
                   { icon: "🇮🇳", title: "Hinglish", desc: "Learn in your language" },
                 ].map((f) => (
-                  <div key={f.title} className="text-center p-4 rounded-xl border border-gray-200 bg-gray-50">
-                    <div className="text-2xl md:text-3xl mb-2">{f.icon}</div>
-                    <div className="font-bold text-gray-900 text-sm md:text-base">{f.title}</div>
-                    <div className="text-xs md:text-sm text-gray-600 mt-1">{f.desc}</div>
+                  <div key={f.title} className="text-center p-3 md:p-4 rounded-xl border border-gray-200 bg-gray-50">
+                    <div className="text-2xl md:text-3xl mb-1.5">{f.icon}</div>
+                    <div className="font-bold text-gray-900 text-[13px] md:text-base leading-tight">{f.title}</div>
+                    <div className="text-[11px] md:text-sm text-gray-600 mt-1 leading-tight">{f.desc}</div>
                   </div>
                 ))}
               </div>
