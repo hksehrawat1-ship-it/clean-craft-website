@@ -92,7 +92,7 @@ const CoursesSales = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const totalValue = 124000;
+  const totalValue = 133000;
   const bundlePrice = 39999;
   const bundleSavings = Math.round(((totalValue - bundlePrice) / totalValue) * 100);
 
@@ -273,7 +273,7 @@ const CoursesSales = () => {
               <div className="mt-6 md:mt-8 text-center">
                 <p className="text-gray-700 text-[14px] md:text-lg">
                   Total Real Value:{" "}
-                  <span className="font-bold text-gray-900">₹1,24,000</span>
+                  <span className="font-bold text-gray-900">₹1,33,000</span>
                 </p>
               </div>
             </div>
@@ -290,7 +290,7 @@ const CoursesSales = () => {
                 Complete Laundry Mastery Bundle
               </div>
               <h2 className="text-[24px] leading-[1.2] md:text-5xl font-bold mb-3 tracking-[0.02em]">
-                Get ₹1.24L Value at Just{" "}
+                Get ₹1.33L Value at Just{" "}
                 <span className="text-yellow-300">₹39,999</span>
               </h2>
               <p className="text-[15px] md:text-xl text-white/90 mb-2">
@@ -319,6 +319,17 @@ const CoursesSales = () => {
                       </span>
                     </li>
                   ))}
+                  <li className="flex items-start justify-between gap-2 md:gap-3 text-[13px] md:text-base bg-yellow-50 border border-yellow-200 rounded-lg p-2 -mx-1">
+                    <div className="flex items-start gap-1.5 md:gap-2 min-w-0">
+                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-yellow-600 shrink-0 mt-0.5" />
+                      <span className="text-gray-900 leading-snug font-semibold">
+                        🎁 BONUS: Stain Master — Lifetime Access
+                      </span>
+                    </div>
+                    <span className="text-gray-500 line-through shrink-0 text-[11px] md:text-sm">
+                      {formatINR(9999)}
+                    </span>
+                  </li>
                 </ul>
                 <div className="mt-4 md:mt-5 pt-4 md:pt-5 border-t flex items-center justify-between">
                   <span className="text-gray-600 text-[13px] md:text-base">Total Value</span>

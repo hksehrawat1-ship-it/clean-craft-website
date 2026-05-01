@@ -1330,6 +1330,51 @@ export type Database = {
           },
         ]
       }
+      franchise_ledger: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          note: string | null
+          order_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          order_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          order_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_ledger_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "franchise_ledger_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "store_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       franchises: {
         Row: {
           address: string | null
@@ -2986,48 +3031,114 @@ export type Database = {
           },
         ]
       }
+      store_settings: {
+        Row: {
+          address: string | null
+          bank_account_no: string | null
+          bank_holder: string | null
+          bank_ifsc: string | null
+          bank_name: string | null
+          company_aka: string | null
+          company_name: string
+          email: string | null
+          gstin: string | null
+          id: number
+          phone: string | null
+          state_code: string | null
+          terms: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          bank_account_no?: string | null
+          bank_holder?: string | null
+          bank_ifsc?: string | null
+          bank_name?: string | null
+          company_aka?: string | null
+          company_name?: string
+          email?: string | null
+          gstin?: string | null
+          id?: number
+          phone?: string | null
+          state_code?: string | null
+          terms?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          bank_account_no?: string | null
+          bank_holder?: string | null
+          bank_ifsc?: string | null
+          bank_name?: string | null
+          company_aka?: string | null
+          company_name?: string
+          email?: string | null
+          gstin?: string | null
+          id?: number
+          phone?: string | null
+          state_code?: string | null
+          terms?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       store_users: {
         Row: {
           auth_id: string | null
           billing_address: string | null
           created_at: string | null
+          credit_limit: number
+          discount_pct: number
           email: string
           franchise_id: string | null
+          franchise_status: string
           gstin: string | null
           id: string
           is_approved: boolean | null
           name: string
+          outstanding: number
           phone: string | null
           pincode: string | null
           shipping_address: string | null
+          territory: string | null
         }
         Insert: {
           auth_id?: string | null
           billing_address?: string | null
           created_at?: string | null
+          credit_limit?: number
+          discount_pct?: number
           email: string
           franchise_id?: string | null
+          franchise_status?: string
           gstin?: string | null
           id?: string
           is_approved?: boolean | null
           name: string
+          outstanding?: number
           phone?: string | null
           pincode?: string | null
           shipping_address?: string | null
+          territory?: string | null
         }
         Update: {
           auth_id?: string | null
           billing_address?: string | null
           created_at?: string | null
+          credit_limit?: number
+          discount_pct?: number
           email?: string
           franchise_id?: string | null
+          franchise_status?: string
           gstin?: string | null
           id?: string
           is_approved?: boolean | null
           name?: string
+          outstanding?: number
           phone?: string | null
           pincode?: string | null
           shipping_address?: string | null
+          territory?: string | null
         }
         Relationships: []
       }
