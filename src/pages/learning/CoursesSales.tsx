@@ -273,7 +273,7 @@ const CoursesSales = () => {
               <div className="mt-6 md:mt-8 text-center">
                 <p className="text-gray-700 text-[14px] md:text-lg">
                   Total Real Value:{" "}
-                  <span className="font-bold text-gray-900">₹1,24,000</span>
+                  <span className="font-bold text-gray-900">₹1,33,000</span>
                 </p>
               </div>
             </div>
