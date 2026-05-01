@@ -290,7 +290,7 @@ const CoursesSales = () => {
                 Complete Laundry Mastery Bundle
               </div>
               <h2 className="text-[24px] leading-[1.2] md:text-5xl font-bold mb-3 tracking-[0.02em]">
-                Get ₹1.24L Value at Just{" "}
+                Get ₹1.33L Value at Just{" "}
                 <span className="text-yellow-300">₹39,999</span>
               </h2>
               <p className="text-[15px] md:text-xl text-white/90 mb-2">
