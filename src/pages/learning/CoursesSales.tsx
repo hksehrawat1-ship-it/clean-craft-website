@@ -92,7 +92,7 @@ const CoursesSales = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const totalValue = 124000;
+  const totalValue = 133000;
   const bundlePrice = 39999;
   const bundleSavings = Math.round(((totalValue - bundlePrice) / totalValue) * 100);
 
