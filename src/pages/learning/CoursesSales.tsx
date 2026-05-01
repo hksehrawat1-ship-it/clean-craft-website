@@ -319,6 +319,17 @@ const CoursesSales = () => {
                       </span>
                     </li>
                   ))}
+                  <li className="flex items-start justify-between gap-2 md:gap-3 text-[13px] md:text-base bg-yellow-50 border border-yellow-200 rounded-lg p-2 -mx-1">
+                    <div className="flex items-start gap-1.5 md:gap-2 min-w-0">
+                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-yellow-600 shrink-0 mt-0.5" />
+                      <span className="text-gray-900 leading-snug font-semibold">
+                        🎁 BONUS: Stain Master — Lifetime Access
+                      </span>
+                    </div>
+                    <span className="text-gray-500 line-through shrink-0 text-[11px] md:text-sm">
+                      {formatINR(9999)}
+                    </span>
+                  </li>
                 </ul>
                 <div className="mt-4 md:mt-5 pt-4 md:pt-5 border-t flex items-center justify-between">
                   <span className="text-gray-600 text-[13px] md:text-base">Total Value</span>
