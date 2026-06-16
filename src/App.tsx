@@ -4,6 +4,7 @@ import { AppRoutes } from "./components/AppRoutes";
 import { createQueryClient } from "./config/query-client";
 import { initializePerformanceOptimizations } from "./utils/performance-setup";
 import ScrollToTop from "./components/ScrollToTop";
+import OfferPopup from "./components/OfferPopup";
 
 function App() {
   const [queryClient] = useState(() => createQueryClient());
@@ -18,6 +19,7 @@ function App() {
     <AppProviders queryClient={queryClient}>
       <ScrollToTop />
       <AppRoutes />
+      <OfferPopup />
     </AppProviders>
   );
 }
