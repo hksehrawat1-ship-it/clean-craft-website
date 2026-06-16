@@ -1270,51 +1270,81 @@ export type Database = {
       }
       franchise_leads: {
         Row: {
+          annual_income: string | null
+          biggest_concern: string | null
           city: string | null
           country: string
           created_at: string
+          current_profession: string | null
+          decision_maker: string | null
           email: string
+          franchise_reason: string | null
+          funding_source: string | null
           id: string
+          investment_budget: string | null
           investment_range: string | null
           is_phone_verified: boolean | null
+          lead_score: string | null
           lead_type: string
+          motivation: string | null
           name: string
           phone: string
           source_cta: string | null
+          start_timeline: string | null
           updated_at: string
           verification_method: string | null
           verification_token: string | null
           verified_at: string | null
         }
         Insert: {
+          annual_income?: string | null
+          biggest_concern?: string | null
           city?: string | null
           country?: string
           created_at?: string
+          current_profession?: string | null
+          decision_maker?: string | null
           email: string
+          franchise_reason?: string | null
+          funding_source?: string | null
           id?: string
+          investment_budget?: string | null
           investment_range?: string | null
           is_phone_verified?: boolean | null
+          lead_score?: string | null
           lead_type?: string
+          motivation?: string | null
           name: string
           phone: string
           source_cta?: string | null
+          start_timeline?: string | null
           updated_at?: string
           verification_method?: string | null
           verification_token?: string | null
           verified_at?: string | null
         }
         Update: {
+          annual_income?: string | null
+          biggest_concern?: string | null
           city?: string | null
           country?: string
           created_at?: string
+          current_profession?: string | null
+          decision_maker?: string | null
           email?: string
+          franchise_reason?: string | null
+          funding_source?: string | null
           id?: string
+          investment_budget?: string | null
           investment_range?: string | null
           is_phone_verified?: boolean | null
+          lead_score?: string | null
           lead_type?: string
+          motivation?: string | null
           name?: string
           phone?: string
           source_cta?: string | null
+          start_timeline?: string | null
           updated_at?: string
           verification_method?: string | null
           verification_token?: string | null
@@ -1726,6 +1756,116 @@ export type Database = {
             columns: ["entity_id"]
             isOneToOne: false
             referencedRelation: "global_policies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      himanshu_blogs: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: Json | null
+          created_at: string | null
+          created_by_id: number | null
+          document_id: string | null
+          excerpt: string | null
+          id: number
+          is_featured: boolean | null
+          locale: string | null
+          published_at: string | null
+          published_date: string | null
+          slug: string | null
+          tags: string | null
+          title: string | null
+          updated_at: string | null
+          updated_by_id: number | null
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          excerpt?: string | null
+          id?: number
+          is_featured?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          published_date?: string | null
+          slug?: string | null
+          tags?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: Json | null
+          created_at?: string | null
+          created_by_id?: number | null
+          document_id?: string | null
+          excerpt?: string | null
+          id?: number
+          is_featured?: boolean | null
+          locale?: string | null
+          published_at?: string | null
+          published_date?: string | null
+          slug?: string | null
+          tags?: string | null
+          title?: string | null
+          updated_at?: string | null
+          updated_by_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "himanshu_blogs_created_by_id_fk"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "himanshu_blogs_updated_by_id_fk"
+            columns: ["updated_by_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      himanshu_blogs_cmps: {
+        Row: {
+          cmp_id: number | null
+          component_type: string | null
+          entity_id: number | null
+          field: string | null
+          id: number
+          order: number | null
+        }
+        Insert: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Update: {
+          cmp_id?: number | null
+          component_type?: string | null
+          entity_id?: number | null
+          field?: string | null
+          id?: number
+          order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "himanshu_blogs_entity_fk"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "himanshu_blogs"
             referencedColumns: ["id"]
           },
         ]
@@ -2367,17 +2507,35 @@ export type Database = {
           address_id: string | null
           awb_number: string | null
           bigship_order_id: string | null
+          bigship_system_order_id: number | null
+          courier_id: string | null
+          courier_name: string | null
           created_at: string | null
+          credit_restored: boolean
+          delivered_at: string | null
           gst_amount: number | null
           id: string
+          label_url: string | null
+          last_ndr_at: string | null
           lr_number: string | null
+          ndr_attempts: number
+          ndr_reason: string | null
           notes: string | null
           order_number: number
+          package_weight: number | null
           payment_mode: string | null
           payment_verified: boolean | null
+          return_awb: string | null
+          return_courier: string | null
+          rto_at: string | null
+          rto_initiated_at: string | null
+          rto_reason: string | null
+          shipped_at: string | null
+          shipping_charge: number | null
           status: string | null
           total_amount: number
           tracking_status: string | null
+          tracking_url: string | null
           updated_at: string | null
           user_id: string | null
           utr_number: string | null
@@ -2386,17 +2544,35 @@ export type Database = {
           address_id?: string | null
           awb_number?: string | null
           bigship_order_id?: string | null
+          bigship_system_order_id?: number | null
+          courier_id?: string | null
+          courier_name?: string | null
           created_at?: string | null
+          credit_restored?: boolean
+          delivered_at?: string | null
           gst_amount?: number | null
           id?: string
+          label_url?: string | null
+          last_ndr_at?: string | null
           lr_number?: string | null
+          ndr_attempts?: number
+          ndr_reason?: string | null
           notes?: string | null
           order_number?: number
+          package_weight?: number | null
           payment_mode?: string | null
           payment_verified?: boolean | null
+          return_awb?: string | null
+          return_courier?: string | null
+          rto_at?: string | null
+          rto_initiated_at?: string | null
+          rto_reason?: string | null
+          shipped_at?: string | null
+          shipping_charge?: number | null
           status?: string | null
           total_amount: number
           tracking_status?: string | null
+          tracking_url?: string | null
           updated_at?: string | null
           user_id?: string | null
           utr_number?: string | null
@@ -2405,17 +2581,35 @@ export type Database = {
           address_id?: string | null
           awb_number?: string | null
           bigship_order_id?: string | null
+          bigship_system_order_id?: number | null
+          courier_id?: string | null
+          courier_name?: string | null
           created_at?: string | null
+          credit_restored?: boolean
+          delivered_at?: string | null
           gst_amount?: number | null
           id?: string
+          label_url?: string | null
+          last_ndr_at?: string | null
           lr_number?: string | null
+          ndr_attempts?: number
+          ndr_reason?: string | null
           notes?: string | null
           order_number?: number
+          package_weight?: number | null
           payment_mode?: string | null
           payment_verified?: boolean | null
+          return_awb?: string | null
+          return_courier?: string | null
+          rto_at?: string | null
+          rto_initiated_at?: string | null
+          rto_reason?: string | null
+          shipped_at?: string | null
+          shipping_charge?: number | null
           status?: string | null
           total_amount?: number
           tracking_status?: string | null
+          tracking_url?: string | null
           updated_at?: string | null
           user_id?: string | null
           utr_number?: string | null
@@ -3027,6 +3221,50 @@ export type Database = {
             columns: ["country_id"]
             isOneToOne: false
             referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shipment_events: {
+        Row: {
+          awb_number: string
+          id: string
+          location: string | null
+          occurred_at: string
+          order_id: string | null
+          raw_payload: Json | null
+          received_at: string
+          status: string
+          status_detail: string | null
+        }
+        Insert: {
+          awb_number: string
+          id?: string
+          location?: string | null
+          occurred_at: string
+          order_id?: string | null
+          raw_payload?: Json | null
+          received_at?: string
+          status: string
+          status_detail?: string | null
+        }
+        Update: {
+          awb_number?: string
+          id?: string
+          location?: string | null
+          occurred_at?: string
+          order_id?: string | null
+          raw_payload?: Json | null
+          received_at?: string
+          status?: string
+          status_detail?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipment_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
