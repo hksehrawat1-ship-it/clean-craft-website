@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { X, Smartphone, ShieldCheck, Sparkles } from "lucide-react";
-import popupBg from "@/assets/popup-offer-bg.jpg";
 
 const OfferPopup = () => {
   const [open, setOpen] = useState(false);
