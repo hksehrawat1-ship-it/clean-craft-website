@@ -42,7 +42,7 @@ const OfferPopup = () => {
         <button
           onClick={() => setOpen(false)}
           aria-label="Close"
-          className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center"
+          className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center"
         >
           <X className="w-5 h-5" />
         </button>
