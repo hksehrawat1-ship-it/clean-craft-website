@@ -47,53 +47,55 @@ const OfferPopup = () => {
           <X className="w-5 h-5" />
         </button>
 
-        {/* Hero image with overlay text */}
-        <div className="relative">
-          <img
-            src={popupBg}
-            alt="Spotless Shuruat - First dry cleaning free up to ₹200"
-            width={1024}
-            height={1024}
-            className="w-full h-auto object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#f5efe6] via-[#f5efe6]/85 to-transparent" />
-          <div className="absolute inset-0 p-5 sm:p-6 flex flex-col justify-start">
-            <p
-              className="text-3xl sm:text-4xl text-[#3a2a1a] leading-none"
-              style={{ fontFamily: "'Brush Script MT', 'Dancing Script', cursive" }}
+        {/* Hero */}
+        <div className="relative bg-[#f5efe6] px-5 sm:px-6 pt-7 pb-6 text-center">
+          <div className="relative inline-flex items-center justify-center">
+            <Sparkles className="absolute -left-5 top-3 w-4 h-4 text-[#c9941e] rotate-12" />
+            <h2
+              className="text-6xl sm:text-7xl text-[#2b1d10] leading-none italic"
+              style={{
+                fontFamily: "'Pinyon Script', 'Great Vibes', 'Allura', 'Brush Script MT', cursive",
+                fontWeight: 400,
+              }}
             >
-              <Sparkles className="inline w-4 h-4 text-[#c9941e] mr-1" />
               Spotless
-            </p>
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#2b1d10] leading-none mt-1">
-              SHURUAT
             </h2>
-            <div className="flex items-center gap-2 mt-1 text-[#3a2a1a] text-[11px] sm:text-xs">
-              <span className="h-px w-5 bg-[#c9941e]" />
-              <span className="font-medium">First Order, On Us!</span>
-              <span className="h-px w-5 bg-[#c9941e]" />
-            </div>
+            <Sparkles className="absolute -right-6 top-2 w-5 h-5 text-[#c9941e]" />
+            <Sparkles className="absolute -right-3 bottom-0 w-3 h-3 text-[#c9941e]" />
+          </div>
 
-            <div className="mt-3 sm:mt-4">
-              <p className="text-sm sm:text-base font-semibold text-[#2b1d10]">
-                First Dry Cleaning
-              </p>
-              <p className="text-5xl sm:text-6xl font-black text-[#c9941e] leading-none">
-                FREE
-              </p>
-              <p className="text-base sm:text-lg font-semibold text-[#2b1d10] mt-1">
-                upto ₹200
-              </p>
-            </div>
+          <p className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-[0.18em] text-[#2b1d10]">
+            SHURUAT
+          </p>
 
-            <div className="mt-3 inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full border border-[#c9941e] bg-white/60 text-[11px] sm:text-xs text-[#2b1d10] font-medium">
-              <Smartphone className="w-3.5 h-3.5 text-[#c9941e]" />
-              Only on CleanCraft
-            </div>
-            <p className="mt-2 text-[11px] sm:text-xs text-[#3a2a1a]">
-              Clean Start. Fresh You. <Sparkles className="inline w-3 h-3 text-[#c9941e]" />
+          <div className="flex items-center justify-center gap-2 mt-2 text-[#3a2a1a] text-[11px] sm:text-xs">
+            <span className="h-px w-6 bg-[#c9941e]" />
+            <span className="font-medium">First Order, On Us!</span>
+            <span className="h-px w-6 bg-[#c9941e]" />
+          </div>
+
+          <div className="mt-5">
+            <p className="text-xl sm:text-2xl font-extrabold text-[#2b1d10] leading-tight">
+              First Dry Cleaning
+            </p>
+            <p
+              className="text-[88px] sm:text-[104px] font-black text-[#c9941e] leading-[0.9] tracking-tight"
+              style={{ fontFamily: "'Arial Black', 'Helvetica Neue', sans-serif" }}
+            >
+              FREE
+            </p>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#2b1d10] mt-1">
+              upto ₹200
             </p>
           </div>
+
+          <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#c9941e] bg-white/70 text-[11px] sm:text-xs text-[#2b1d10] font-medium">
+            <Smartphone className="w-3.5 h-3.5 text-[#c9941e]" />
+            Only on CleanCraft
+          </div>
+          <p className="mt-2 text-xs sm:text-sm font-semibold text-[#3a2a1a]">
+            We wash. We press. We impress. <Sparkles className="inline w-3 h-3 text-[#c9941e]" />
+          </p>
         </div>
 
         {/* Form */}
