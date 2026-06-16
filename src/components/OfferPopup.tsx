@@ -57,18 +57,12 @@ const OfferPopup = () => {
 
           <div className="relative z-10">
             <div className="relative inline-flex items-center justify-center">
-              <Sparkles className="absolute -left-5 top-3 w-4 h-4 text-[#c9941e] rotate-12" />
               <h2
-                className="text-6xl sm:text-7xl text-white leading-none italic drop-shadow-lg"
-                style={{
-                  fontFamily: "'Pinyon Script', 'Great Vibes', 'Allura', 'Brush Script MT', cursive",
-                  fontWeight: 400,
-                }}
+                className="text-4xl sm:text-5xl text-white leading-none font-light uppercase tracking-[0.35em] drop-shadow-lg"
+                style={{ fontFamily: "'Tenor Sans', sans-serif" }}
               >
                 Spotless
               </h2>
-              <Sparkles className="absolute -right-6 top-2 w-5 h-5 text-[#c9941e]" />
-              <Sparkles className="absolute -right-3 bottom-0 w-3 h-3 text-[#c9941e]" />
             </div>
 
             <p className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-[0.18em] text-white drop-shadow-md">
