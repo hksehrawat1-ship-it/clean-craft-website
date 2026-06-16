@@ -1273,6 +1273,7 @@ export type Database = {
           annual_income: string | null
           biggest_concern: string | null
           city: string | null
+          consideration_reason: string | null
           country: string
           created_at: string
           current_profession: string | null
@@ -1289,6 +1290,7 @@ export type Database = {
           motivation: string | null
           name: string
           phone: string
+          primary_goal: string | null
           source_cta: string | null
           start_timeline: string | null
           updated_at: string
@@ -1300,6 +1302,7 @@ export type Database = {
           annual_income?: string | null
           biggest_concern?: string | null
           city?: string | null
+          consideration_reason?: string | null
           country?: string
           created_at?: string
           current_profession?: string | null
@@ -1316,6 +1319,7 @@ export type Database = {
           motivation?: string | null
           name: string
           phone: string
+          primary_goal?: string | null
           source_cta?: string | null
           start_timeline?: string | null
           updated_at?: string
@@ -1327,6 +1331,7 @@ export type Database = {
           annual_income?: string | null
           biggest_concern?: string | null
           city?: string | null
+          consideration_reason?: string | null
           country?: string
           created_at?: string
           current_profession?: string | null
@@ -1343,6 +1348,7 @@ export type Database = {
           motivation?: string | null
           name?: string
           phone?: string
+          primary_goal?: string | null
           source_cta?: string | null
           start_timeline?: string | null
           updated_at?: string
