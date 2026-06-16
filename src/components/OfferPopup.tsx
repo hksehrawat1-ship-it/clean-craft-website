@@ -1,3 +1,4 @@
+import popupBg from "@/assets/popup-laundry-bg.png.asset.json";
 import { useEffect, useState } from "react";
 import { X, Smartphone, ShieldCheck, Sparkles } from "lucide-react";
 
