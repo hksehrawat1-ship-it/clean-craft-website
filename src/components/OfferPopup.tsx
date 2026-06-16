@@ -109,7 +109,7 @@ const OfferPopup = () => {
           </div>
           <p className="mt-2 text-center text-sm text-[#3a2a1a]">
             Get your first Dry Cleaning <span className="font-bold text-[#c9941e]">FREE</span> upto{" "}
-            <span className="font-bold text-[#c9941e]">₹200</span> when you book online.
+            <span className="font-bold text-[#c9941e]">₹200</span> when you book through app.
           </p>
 
           <form onSubmit={handleClaim} className="mt-4 space-y-3">
